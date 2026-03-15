@@ -122,68 +122,128 @@ Three bento cards at top (white, bordered, `border-radius: 12px`):
 
 ## 6. Listing Detail (`app/(dashboard)/listings/[id]/page.tsx`)
 
-Two-column layout on desktop (single column on mobile):
+This page is complex and must preserve all existing functionality. Only the visual treatment changes — no logic changes.
 
-**Left column:** Edit form in a white card
-- All listing fields: property type, bedrooms, bathrooms, size, community, building, price, listing type
-- Bordered inputs, blue Save button
+**Property summary bar (sticky below sidebar top)**
+- Replaces the current `top-16` sticky bar
+- White card with property badge, bed/bath, price, community, "← All Listings" link
+- Uses the new border/badge tokens
 
-**Right column:** Generated copy cards
-- EN copy: dark card (`#0F1829`) with "AI Copy — EN" label, JetBrains Mono text, green "Generated" badge
-- AR copy: same dark card with "AI Copy — AR" label
-- "Regenerate" button below each card
+**EN / AR double-spread**
+- Replaces the parchment two-column split
+- EN panel: white card with "AI Copy — EN" label (SectionLabel component), editable textarea (bordered), CopyButton (restyled to blue border), WordCount (muted)
+- AR panel: same white card, `dir="rtl"`, "AI Copy — AR" label, editable textarea, CopyButton, WordCount
+
+**Output Variants tabs (WhatsApp / Instagram / Short Teaser)**
+- Preserve the three-tab pattern
+- Tab bar: restyled with blue active underline/text instead of copper
+- WhatsApp panel: light blue-tinted bg (`#EFF6FF`) instead of green-50
+- Instagram panel: keep gradient bg, restyle copy buttons to blue border
+- Teaser panel: white card, Jakarta Sans instead of Cormorant
+
+**Portal Publishing section**
+- Preserve the three-portal "Mark Published" / "Live on X" pattern
+- Restyle portal cards to BentoCard components with green badges for published state
+- "Mark Published" button: blue border + blue text (not copper)
+
+**Fixed bottom action bar**
+- Preserve the fixed bottom bar
+- Fix positioning: `left-[240px]` instead of `left-0` to account for sidebar width
+- On mobile (sidebar hidden): `left-0`
+- Restyle: white background, `border-top: 1px solid #DDE3EC`, blue "Save Changes" button, muted "← Back to Listings" link
 
 ---
 
 ## 7. New Listing (`app/(dashboard)/new/page.tsx`)
 
-- White card, centered (`640px` max-width)
-- Step indicator at top: 3 steps (Details → Generate → Publish), active step in blue
-- Step 1: listing fields (bordered inputs)
-- Step 2: generated copy rendered in dark card (EN + AR), "Regenerate" button
-- Step 3: portal selection checkboxes + blue "Publish to Portals" button
-- Back / Next navigation buttons
+Keep the existing single-scroll form structure and all business logic unchanged. Only restyle visually.
+
+**VoiceInput component:** Keep it. Restyle the component's button/card to use the new tokens (blue border, white bg) — no logic changes.
+
+**Section labels:** Replace copper `text-copper` section labels ("01 — Property Type" etc.) with SectionLabel component (uppercase blue, letter-spacing).
+
+**Property type buttons:** Active state uses `#1D4ED8` bg + white text instead of copper. Inactive: `#DDE3EC` border + muted text.
+
+**Listing type (Sale/Rent) toggle:** Active: `#0F1829` dark bg + white text. Matches landing page button pattern.
+
+**Stepper (Bedrooms/Bathrooms/Parking):** Replace Cormorant numeral with Jakarta Sans 800. Buttons: `#DDE3EC` border, blue on hover.
+
+**Text inputs:** Replace bare border-b style with full bordered inputs: `border: 1.5px solid #DDE3EC`, `border-radius: 6px`, `padding: 10px 12px`. Focus: `border-color: #1D4ED8`.
+
+**Community select:** Same bordered style. Background: white.
+
+**Features grid:** Active feature: blue pale bg (`#EFF6FF`) + blue border + blue text. Inactive: `#DDE3EC` border + muted text.
+
+**Tone cards:** Active: blue pale bg + blue border. Inactive: `#DDE3EC` border.
+
+**Generate button:** Full-width blue button matching landing page CTA style. Loading skeleton bars: blue-tinted.
 
 ---
 
 ## 8. Portals (`app/(dashboard)/portals/page.tsx`)
 
-- Page heading "Portal Connections" + section label
-- Three bento cards (one per portal: Bayut, Property Finder, Dubizzle):
-  - Portal name (Jakarta Sans 700)
-  - Status badge: green "● Live" or amber "● Syncing" or grey "Not Connected"
-  - Last synced timestamp in JetBrains Mono
-  - Connect / Disconnect button
-- Sync All button (blue, top right)
+Preserve all connect/disconnect/API-key logic unchanged. Only restyle.
+
+**Page heading:** Jakarta Sans 800 "Portal Connections" + muted subtitle.
+
+**Info banner:** Restyle amber `bg-amber-50 border-amber-200` banner to use `#FFFBEB` bg and `#D97706` border (amber token).
+
+**Each portal card (BentoCard):**
+- Portal name: Jakarta Sans 700, `#1E293B` text (not colored per portal)
+- Description: muted 13px
+- **Connected state:** green "● Connected" badge (top right), masked API key in JetBrains Mono, listings count in muted, red "Disconnect" button with border
+- **Disconnected state:** grey "● Disconnected" badge, inline API Key + API Secret bordered inputs (replacing bare border-b style), blue "Connect [Portal]" button
+
+**No "Sync All" button** — it doesn't exist in current code, do not add it.
 
 ---
 
 ## 9. Analytics (`app/(dashboard)/analytics/page.tsx`)
 
-- Stat bento row: Total Listings, Published, Portals Live
-- Bar chart card: "Listing Activity" with weekly bars (matching landing page chart style)
-- Top Listings table: white card with columns — Property, Portal, Status, Views (mock data if no real analytics)
+Preserve all real-data sections. Only restyle — no logic changes.
+
+**Stat row (4 bento cards):** Total Listings, Published, Top Community, Hours Saved — each as a BentoCard with the stat value in Jakarta Sans 800 dark, label in muted small caps. Replace Cormorant italic with Jakarta Sans.
+
+**Listings per Month chart:** Replace copper bar color with `#1D4ED8` blue. Keep existing month-label logic. Wrap in a white BentoCard with "Listings per Month" heading.
+
+**By Property Type:** Replace `bg-navy` bar with `#1D4ED8` blue. Replace Cormorant heading with Jakarta Sans 700. Wrap in white BentoCard.
+
+**Portal Distribution:** Three portal cards → BentoCard each. Replace Cormorant italic count with Jakarta Sans 800. Replace colored dot with colored Badge (blue/green/amber per portal). Keep existing `portalCounts` data.
+
+**Time Saved callout:** Replace copper Cormorant giant number with Jakarta Sans 800 `#1D4ED8` blue. Keep the callout as a BentoCard with dark bg (`#0F1829`) and white text for visual emphasis.
 
 ---
 
 ## 10. Settings (`app/(dashboard)/settings/page.tsx`)
 
-- White card with section headings (Jakarta Sans 700)
-- Sections: Profile (name, email), Agency (agency name), Security (change password)
-- Each section: bordered inputs, blue Save button per section
-- Danger zone: red-tinted "Delete Account" section at bottom
+Preserve both tabs and all existing fields. Only restyle.
+
+**Tabs (Agency Profile / Subscription):** Replace copper active tab underline with blue (`#1D4ED8`).
+
+**Agency Profile tab — all fields preserved:**
+- Agency Name, RERA License, Phone, Email — replace bare border-b inputs with full bordered inputs
+- Default Listing Tone cards — active: blue pale bg + blue border (not copper)
+- Default Disclaimer textarea — bordered style
+- "Save Profile" button — blue (not copper)
+
+**Subscription tab — all sections preserved:**
+- Current Plan card: BentoCard, Jakarta Sans headings
+- Monthly Usage progress bar — replace copper fill with `#1D4ED8` blue; red at >80% stays
+- Agency Plan upgrade card: replace copper border with blue border, blue "Upgrade" button
+
+**No "Danger Zone"** — it doesn't exist in current code, do not add it.
 
 ---
 
 ## 11. Component Extraction
 
-To avoid duplication, extract shared primitives to `components/ui/`:
+Extract shared primitives to `components/ui/`. Use these consistently across ALL pages.
 
-- `Badge` — blue / green / amber variants (port from landing page)
-- `SectionLabel` — uppercase blue label
-- `BentoCard` — white bordered card with border-radius 12
-- `PageHeading` — Jakarta Sans 800 page title + optional right-side action slot
-- `StatusBadge` — Published (green) / Draft (grey) / Live (green) etc.
+- `Badge` — blue / green / amber variants (port from landing page). Used in: dashboard stats, listing status, portal status, output tabs, all badge instances.
+- `SectionLabel` — uppercase blue label (replaces copper section labels everywhere). Used in: all section headers across all pages.
+- `BentoCard` — white bordered card with `border-radius: 12px`, `border: 1px solid #DDE3EC`, white bg. Used in: every card container across all pages.
+- `PageHeading` — Jakarta Sans 800 page title + optional right-side action slot (e.g. "+ New Listing" button). Used in: listings, analytics, portals, settings page tops.
+- `StatusBadge` — Published (green) / Draft (grey) / Live (green) / Disconnected (grey) etc. Thin wrapper around Badge with preset colors per status string.
 
 ---
 
@@ -207,7 +267,19 @@ To avoid duplication, extract shared primitives to `components/ui/`:
 
 ---
 
-## 13. Out of Scope
+## 13. Additional Changes
+
+**`app/layout.tsx` — font + Toaster update:**
+- Replace `Cormorant_Garamond` and `DM_Sans` imports with `Plus_Jakarta_Sans` and `JetBrains_Mono`
+- Replace CSS variables `--font-cormorant` and `--font-dm-sans` with `--font-jakarta` and `--font-jetbrains`
+- Update `<body>` className: `font-sans bg-[#F2F4F7] text-[#1E293B]`
+- Update `<Toaster>` styles: `background: "#FFFFFF"`, `color: "#1E293B"`, `border: "1px solid #DDE3EC"`, `borderRadius: "8px"`
+
+**`components/VoiceInput.tsx` — restyle only:**
+- Replace all copper/parchment/navy tokens with new tokens
+- No logic changes
+
+## 14. Out of Scope
 
 - No changes to Supabase queries or business logic
 - No changes to API routes
