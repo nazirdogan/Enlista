@@ -58,6 +58,13 @@ Replace the current top-navbar with a fixed left sidebar layout.
 - Inner padding: `32px`
 - No max-width constraint on the outer wrapper (each page controls its own max-width)
 
+### Preserved Logic
+Preserve the following exactly — only markup and styling change:
+- `supabase.auth.signOut()` + `router.push('/login')` sign-out handler
+- `usePathname` for active nav item detection
+- `useRouter` hook
+- `menuOpen` useState for mobile menu toggle
+
 ### Mobile (< 768px)
 - Sidebar hidden by default
 - Slim top bar (`48px`) with wordmark + hamburger button
@@ -85,6 +92,8 @@ Replace the current top-navbar with a fixed left sidebar layout.
 ---
 
 ## 4. Dashboard Home (`app/(dashboard)/page.tsx`)
+
+Max-width: `1280px`. All sections inside a `max-w-7xl` wrapper with `32px` padding.
 
 ### Stat Row
 Three bento cards at top (white, bordered, `border-radius: 12px`):
@@ -124,8 +133,10 @@ Three bento cards at top (white, bordered, `border-radius: 12px`):
 
 This page is complex and must preserve all existing functionality. Only the visual treatment changes — no logic changes.
 
-**Property summary bar (sticky below sidebar top)**
+**Property summary bar (sticky)**
 - Replaces the current `top-16` sticky bar
+- Desktop (sidebar layout, no top nav): `top-0`
+- Mobile (with 48px top bar): `top-[48px]`
 - White card with property badge, bed/bath, price, community, "← All Listings" link
 - Uses the new border/badge tokens
 
@@ -148,8 +159,7 @@ This page is complex and must preserve all existing functionality. Only the visu
 
 **Fixed bottom action bar**
 - Preserve the fixed bottom bar
-- Fix positioning: `left-[240px]` instead of `left-0` to account for sidebar width
-- On mobile (sidebar hidden): `left-0`
+- Positioning class string: `fixed bottom-0 left-0 md:left-[240px] right-0 z-50`
 - Restyle: white background, `border-top: 1px solid #DDE3EC`, blue "Save Changes" button, muted "← Back to Listings" link
 
 ---
@@ -252,17 +262,18 @@ Extract shared primitives to `components/ui/`. Use these consistently across ALL
 | File | Change |
 |---|---|
 | `tailwind.config.ts` | Replace color/font tokens |
-| `app/layout.tsx` | Update font imports (Plus Jakarta Sans, JetBrains Mono) |
-| `app/(dashboard)/layout.tsx` | Full rewrite — sidebar layout |
+| `app/layout.tsx` | Replace fonts (Plus Jakarta Sans + JetBrains Mono), rename CSS variables, update body className, restyle Toaster — see Section 13 |
+| `app/(dashboard)/layout.tsx` | Full rewrite — sidebar layout; preserve all auth/routing logic (see Section 2) |
 | `app/(dashboard)/page.tsx` | Full rewrite — bento stats + chart + listings |
 | `app/(dashboard)/listings/page.tsx` | Full rewrite — search + filter + card list |
-| `app/(dashboard)/listings/[id]/page.tsx` | Full rewrite — two-column edit + copy |
-| `app/(dashboard)/new/page.tsx` | Full rewrite — stepped form |
-| `app/(dashboard)/portals/page.tsx` | Full rewrite — portal bento cards |
-| `app/(dashboard)/analytics/page.tsx` | Full rewrite — stat row + chart + table |
-| `app/(dashboard)/settings/page.tsx` | Full rewrite — sectioned form card |
-| `app/(auth)/login/page.tsx` | Full rewrite — centered card |
-| `app/(auth)/signup/page.tsx` | Full rewrite — centered card |
+| `app/(dashboard)/listings/[id]/page.tsx` | Full rewrite — preserve all logic, restyle all sections (see Section 6) |
+| `app/(dashboard)/new/page.tsx` | Restyle only — keep all form logic and VoiceInput integration (see Section 7) |
+| `app/(dashboard)/portals/page.tsx` | Restyle only — preserve connect/disconnect logic (see Section 8) |
+| `app/(dashboard)/analytics/page.tsx` | Restyle only — preserve all data sections (see Section 9) |
+| `app/(dashboard)/settings/page.tsx` | Restyle only — preserve both tabs and all fields (see Section 10) |
+| `app/(auth)/login/page.tsx` | Full rewrite — centered card (see Section 3) |
+| `app/(auth)/signup/page.tsx` | Full rewrite — centered card (see Section 3) |
+| `components/VoiceInput.tsx` | Restyle only — no logic changes (see Section 13) |
 | `components/ui/` (new) | Badge, SectionLabel, BentoCard, PageHeading, StatusBadge |
 
 ---
