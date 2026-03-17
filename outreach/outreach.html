@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ListingAI — Outreach</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080b12;
+  --surface: #0e1420;
+  --surface2: #141c2e;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --subtle: #94a3b8;
+  --accent: #6366f1;
+  --accent-light: #a5b4fc;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --cyan: #06b6d4;
+  --red: #ef4444;
+  --wa: #25D366;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ─── TOP BAR ─── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  height: 56px;
+  flex-shrink: 0;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 32px;
+  border-right: 1px solid var(--border);
+  margin-right: 8px;
+}
+.topbar-brand h1 { font-size: 15px; font-weight: 700; color: #f8fafc; letter-spacing: -0.02em; white-space: nowrap; }
+.topbar-brand p { font-size: 11px; color: var(--muted); }
+
+.channel-tabs { display: flex; align-items: center; gap: 4px; padding: 0 8px; }
+.ch-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 18px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all .15s;
+  color: var(--muted); border: 1px solid transparent;
+  user-select: none; white-space: nowrap;
+}
+.ch-tab:hover { color: var(--subtle); background: rgba(255,255,255,0.04); }
+.ch-tab.active-email { background: rgba(99,102,241,0.12); color: var(--accent-light); border-color: rgba(99,102,241,0.25); }
+.ch-tab.active-wa    { background: rgba(37,211,102,0.1);  color: #6ee7b7;             border-color: rgba(37,211,102,0.2); }
+.ch-tab .tab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.tab-email .tab-dot { background: var(--accent); }
+.tab-wa    .tab-dot { background: var(--wa); }
+
+.topbar-kpis { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.kpi { text-align: center; padding: 5px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; }
+.kpi-val { font-size: 16px; font-weight: 800; }
+.kpi-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 1px; }
+
+/* KPI colours swap with channel */
+.email-kpis .kv1 { color: var(--accent-light); }
+.email-kpis .kv2 { color: var(--cyan); }
+.email-kpis .kv3 { color: var(--green); }
+.email-kpis .kv4 { color: var(--yellow); }
+.wa-kpis    .kv1 { color: var(--wa); }
+.wa-kpis    .kv2 { color: #6ee7b7; }
+.wa-kpis    .kv3 { color: var(--accent-light); }
+.wa-kpis    .kv4 { color: var(--yellow); }
+
+/* ─── CHANNEL PANELS ─── */
+.channel-panel { display: none; flex: 1; overflow: hidden; }
+.channel-panel.visible { display: flex; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 290px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  height: calc(100vh - 56px);
+}
+.sb-section { padding: 14px 12px 6px; }
+.sb-section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+.sb-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 10px; border-radius: 8px; cursor: pointer;
+  transition: background .1s; margin-bottom: 1px;
+  border: 1px solid transparent;
+}
+.sb-item:hover { background: rgba(255,255,255,0.04); }
+.sb-item.active-e  { background: rgba(99,102,241,0.1);  border-color: rgba(99,102,241,0.2); }
+.sb-item.active-wa { background: rgba(37,211,102,0.08); border-color: rgba(37,211,102,0.18); }
+
+.day-badge {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; border-radius: 5px; padding: 2px 6px;
+  border: 1px solid var(--border2); color: var(--subtle);
+  background: var(--surface2); white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.db-d0  { background: rgba(99,102,241,0.12); border-color: rgba(99,102,241,0.28); color: var(--accent-light); }
+.db-d3  { background: rgba(6,182,212,0.09);  border-color: rgba(6,182,212,0.22);  color: var(--cyan); }
+.db-d7  { background: rgba(139,92,246,0.1);  border-color: rgba(139,92,246,0.22); color: #c4b5fd; }
+.db-d14 { background: rgba(245,158,11,0.09); border-color: rgba(245,158,11,0.22); color: #fbbf24; }
+.db-d28 { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.2);   color: #f87171; }
+.db-wa1 { background: rgba(37,211,102,0.1);  border-color: rgba(37,211,102,0.25); color: #6ee7b7; }
+.db-wa2 { background: rgba(99,102,241,0.1);  border-color: rgba(99,102,241,0.22); color: var(--accent-light); }
+.db-wa3 { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.18);  color: #f87171; }
+
+.sb-meta { flex: 1; min-width: 0; }
+.sb-name { font-size: 12px; font-weight: 600; color: #f1f5f9; }
+.sb-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-angle { font-size: 10px; color: var(--accent); margin-top: 2px; font-weight: 500; }
+.sb-angle.wa-color { color: var(--wa); }
+
+.vpill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 999px; font-size: 9px; font-weight: 700; white-space: nowrap;
+}
+.vp-std  { background: rgba(99,102,241,0.1); color: var(--accent-light); border: 1px solid rgba(99,102,241,0.2); }
+.vp-lux  { background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+.vp-crm  { background: rgba(239,68,68,0.07); color: #fca5a5; border: 1px solid rgba(239,68,68,0.18); }
+.vp-li   { background: rgba(6,182,212,0.09); color: var(--cyan); border: 1px solid rgba(6,182,212,0.2); }
+.vp-wa   { background: rgba(37,211,102,0.09); color: #6ee7b7; border: 1px solid rgba(37,211,102,0.2); }
+.vp-off  { background: rgba(148,163,184,0.07); color: var(--muted); border: 1px solid var(--border2); }
+
+/* ─── MAIN ─── */
+.main-panel { flex: 1; overflow-y: auto; padding: 32px 40px 60px; height: calc(100vh - 56px); }
+
+/* ─── VIEW CARDS ─── */
+.view { display: none; max-width: 780px; }
+.view.show { display: block; }
+
+.email-title-lg { font-size: 22px; font-weight: 800; color: #f8fafc; letter-spacing: -0.02em; margin-bottom: 4px; }
+.email-angle    { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+.page-title-lg  { font-size: 22px; font-weight: 800; color: #f8fafc; letter-spacing: -0.02em; margin-bottom: 4px; }
+.page-subtitle  { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+.e-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.e-num  { font-size: 11px; font-weight: 700; background: var(--surface2); border: 1px solid var(--border2); padding: 3px 9px; border-radius: 6px; color: var(--subtle); }
+.send-badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px; }
+.sb-d0  { background: rgba(99,102,241,0.13); color: var(--accent-light); border: 1px solid rgba(99,102,241,0.28); }
+.sb-d3  { background: rgba(6,182,212,0.09);  color: var(--cyan);          border: 1px solid rgba(6,182,212,0.22); }
+.sb-d7  { background: rgba(139,92,246,0.1);  color: #c4b5fd;              border: 1px solid rgba(139,92,246,0.22); }
+.sb-d14 { background: rgba(245,158,11,0.09); color: #fbbf24;              border: 1px solid rgba(245,158,11,0.22); }
+.sb-d28 { background: rgba(239,68,68,0.07);  color: #f87171;              border: 1px solid rgba(239,68,68,0.18); }
+
+/* subject / preview */
+.sp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.sp-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 14px; }
+.sp-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 5px; }
+.sp-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+.sp-value.subject { font-weight: 600; color: #f1f5f9; }
+
+/* body card */
+.body-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 26px 28px; margin-bottom: 16px; position: relative; }
+.email-body { font-size: 14px; color: var(--text); line-height: 1.85; white-space: pre-wrap; }
+.copy-btn {
+  position: absolute; top: 14px; right: 14px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--muted); font-size: 11px; font-weight: 600;
+  padding: 5px 11px; border-radius: 6px; cursor: pointer; transition: all .15s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent-light); }
+.copy-btn.wa-copy:hover { border-color: var(--wa); color: #6ee7b7; }
+.copy-btn.copied { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: #6ee7b7; }
+
+/* cta row */
+.cta-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: rgba(99,102,241,0.05); border: 1px solid rgba(99,102,241,0.13); border-radius: 8px; margin-bottom: 20px; }
+.cta-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); flex-shrink: 0; }
+.cta-text  { font-size: 13px; color: var(--text); }
+
+/* tip */
+.tip { padding: 12px 15px; border-radius: 8px; font-size: 12px; line-height: 1.65; margin-bottom: 20px; }
+.tip-indigo { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); color: #c7d2fe; }
+.tip-indigo strong { color: var(--accent-light); }
+.tip-yellow { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15); color: #fcd34d; }
+.tip-yellow strong { color: #fbbf24; }
+.tip-green  { background: rgba(37,211,102,0.05); border: 1px solid rgba(37,211,102,0.15); color: #a7f3d0; }
+.tip-green strong { color: #6ee7b7; }
+.tip-red    { background: rgba(239,68,68,0.05);  border: 1px solid rgba(239,68,68,0.15);  color: #fca5a5; }
+.tip-red strong { color: #f87171; }
+
+/* nav buttons */
+.nav-row { display: flex; gap: 8px; padding-top: 4px; }
+.nav-btn { padding: 8px 16px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); background: var(--surface); color: var(--subtle); transition: all .15s; }
+.nav-btn:hover { border-color: var(--accent); color: var(--accent-light); }
+.nav-btn.primary-e { background: rgba(99,102,241,0.12); border-color: rgba(99,102,241,0.28); color: var(--accent-light); }
+.nav-btn.primary-wa { background: rgba(37,211,102,0.09); border-color: rgba(37,211,102,0.22); color: #6ee7b7; }
+
+/* section divider */
+.sec-hd { font-size: 16px; font-weight: 700; color: #f8fafc; margin-top: 32px; margin-bottom: 5px; padding-top: 28px; border-top: 1px solid var(--border); }
+.sec-sub { font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+
+/* ─── PERSO TABLE ─── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { background: #0c1018; border-bottom: 1px solid var(--border2); padding: 9px 13px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); text-align: left; }
+.data-table td { padding: 11px 13px; font-size: 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+.ag-name { font-weight: 600; color: #f1f5f9; font-size: 13px; }
+.ag-name small { display: block; color: var(--muted); font-weight: 400; font-size: 11px; }
+.hook-text { color: var(--subtle); font-style: italic; font-size: 12px; }
+.tier-dot-a { color: var(--green); }
+.tier-dot-b { color: var(--yellow); }
+
+/* channel pills */
+.cpill { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.cp-email { background: rgba(99,102,241,0.1); color: var(--accent-light); }
+.cp-li    { background: rgba(6,182,212,0.09);  color: var(--cyan); }
+.cp-wa    { background: rgba(37,211,102,0.09); color: #6ee7b7; }
+
+/* ─── BENCHMARKS ─── */
+.bench-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 12px; margin-top: 14px; }
+.bench-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 16px; }
+.bench-metric { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 5px; }
+.bench-target { font-size: 26px; font-weight: 800; line-height: 1; }
+.bench-bench  { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* ─── STRATEGY CARDS ─── */
+.strat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); gap: 14px; margin-bottom: 28px; }
+.strat-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 16px 18px; }
+.strat-icon { font-size: 20px; margin-bottom: 8px; }
+.strat-title { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 5px; }
+.strat-body  { font-size: 12px; color: var(--subtle); line-height: 1.65; }
+.strat-body strong { color: var(--text); }
+
+/* dos/donts */
+.dd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.dd-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 16px 18px; }
+.dd-box.dos  { border-top: 3px solid var(--wa); }
+.dd-box.dont { border-top: 3px solid var(--red); }
+.dd-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+.dd-box.dos  .dd-title { color: var(--wa); }
+.dd-box.dont .dd-title { color: var(--red); }
+.dd-list { list-style: none; }
+.dd-list li { font-size: 12px; color: var(--subtle); line-height: 1.7; display: flex; gap: 7px; }
+.dd-list li::before { flex-shrink: 0; margin-top: 1px; }
+.dd-box.dos  .dd-list li::before { content: '✓'; color: var(--wa); font-weight: 700; }
+.dd-box.dont .dd-list li::before { content: '✗'; color: var(--red); font-weight: 700; }
+
+/* WA chat */
+.wa-wrap { background: #0d1418; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+.wa-bar  { background: #1f2c34; padding: 11px 16px; display: flex; align-items: center; gap: 11px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.wa-av   { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.wa-av-std { background: linear-gradient(135deg,#6366f1,#8b5cf6); }
+.wa-av-lux { background: linear-gradient(135deg,#d97706,#f59e0b); }
+.wa-av-crm { background: linear-gradient(135deg,#ef4444,#f87171); }
+.wa-cname  { font-size: 13px; font-weight: 600; color: #e9edef; }
+.wa-csub   { font-size: 11px; color: #8696a0; }
+.wa-msgs   { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.wa-datesep { text-align: center; margin: 6px 0; }
+.wa-datesep span { background: rgba(255,255,255,0.06); border-radius: 5px; padding: 2px 9px; font-size: 10px; color: #8696a0; }
+.wa-daylabel { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin: 10px 0 3px; }
+.wa-bubble { max-width: 80%; background: #005c4b; color: #e9edef; padding: 8px 11px 5px; border-radius: 8px 0 8px 8px; align-self: flex-end; font-size: 13px; line-height: 1.55; white-space: pre-wrap; }
+.wa-time { font-size: 10px; color: rgba(255,255,255,0.4); text-align: right; margin-top: 3px; display: flex; align-items: center; justify-content: flex-end; gap: 3px; }
+.wa-ticks { color: #53bdeb; }
+
+/* WA msg cards */
+.msg-seq { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+.msg-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; }
+.msg-hd { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.msg-step { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 2px 8px; border-radius: 5px; border: 1px solid; flex-shrink: 0; }
+.ms-1 { background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.25); color: #6ee7b7; }
+.ms-2 { background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.25); color: var(--accent-light); }
+.ms-3 { background: rgba(239,68,68,0.07); border-color: rgba(239,68,68,0.2);   color: #f87171; }
+.msg-hd-title { font-size: 13px; font-weight: 600; color: #f1f5f9; flex: 1; }
+.msg-timing { font-size: 11px; color: var(--muted); }
+.msg-body { padding: 14px 16px; font-size: 13px; color: var(--text); line-height: 1.75; white-space: pre-wrap; }
+.msg-note { padding: 9px 16px 13px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); line-height: 1.6; }
+.msg-note strong { color: var(--subtle); }
+
+/* contact table */
+.phone-num         { font-family: monospace; font-size: 12px; font-weight: 600; color: var(--wa); }
+.phone-num.office  { color: var(--subtle); font-weight: 400; }
+.ptype { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.pt-mob { background: rgba(37,211,102,0.1);  color: #6ee7b7;    border: 1px solid rgba(37,211,102,0.2); }
+.pt-off { background: rgba(148,163,184,0.07); color: var(--muted); border: 1px solid var(--border2); }
+.crm-warn { font-size: 10px; color: #fca5a5; background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.15); padding: 2px 5px; border-radius: 4px; }
+
+/* reply cards */
+.reply-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 12px; }
+.reply-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 14px 16px; }
+.reply-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.reply-card:nth-child(1) .reply-label { color: var(--wa); }
+.reply-card:nth-child(2) .reply-label { color: var(--yellow); }
+.reply-card:nth-child(3) .reply-label { color: var(--red); }
+.reply-card:nth-child(4) .reply-label { color: var(--accent-light); }
+.reply-card:nth-child(5) .reply-label { color: #fbbf24; }
+.reply-card:nth-child(6) .reply-label { color: var(--subtle); }
+.reply-resp { font-size: 12px; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 9px 11px; margin-bottom: 7px; line-height: 1.6; white-space: pre-wrap; font-style: italic; }
+.reply-action { font-size: 11px; color: var(--muted); line-height: 1.55; }
+
+/* notes grid */
+.notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.note-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 14px 16px; }
+.note-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); margin-bottom: 7px; }
+.note-card ul { padding-left: 13px; }
+.note-card li { font-size: 12px; color: var(--subtle); line-height: 1.7; }
+.note-card li strong { color: var(--text); }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 3px; }
+
+@media (max-width: 860px) {
+  .sidebar { display: none; }
+  .main-panel { padding: 20px; }
+  .sp-row, .dd-grid, .notes-grid { grid-template-columns: 1fr; }
+  .topbar { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div>
+      <h1>ListingAI — Outreach</h1>
+      <p>UAE Real Estate · March 2026</p>
+    </div>
+  </div>
+  <div class="channel-tabs">
+    <div class="ch-tab tab-email active-email" onclick="switchChannel('email')">
+      <span class="tab-dot"></span> Email Sequence
+    </div>
+    <div class="ch-tab tab-wa" onclick="switchChannel('wa')">
+      <span class="tab-dot"></span> WhatsApp
+    </div>
+  </div>
+  <div class="topbar-kpis" id="kpi-email" class="email-kpis">
+    <div class="kpi"><div class="kpi-val kv1">5</div><div class="kpi-label">Emails</div></div>
+    <div class="kpi"><div class="kpi-val kv2">4</div><div class="kpi-label">Variants</div></div>
+    <div class="kpi"><div class="kpi-val kv3">28d</div><div class="kpi-label">Sequence</div></div>
+    <div class="kpi"><div class="kpi-val kv4">Demo</div><div class="kpi-label">Goal</div></div>
+  </div>
+  <div class="topbar-kpis" id="kpi-wa" style="display:none">
+    <div class="kpi"><div class="kpi-val kv1">13</div><div class="kpi-label">Contacts</div></div>
+    <div class="kpi"><div class="kpi-val kv2">6</div><div class="kpi-label">Mobiles</div></div>
+    <div class="kpi"><div class="kpi-val kv3">3 msg</div><div class="kpi-label">Sequence</div></div>
+    <div class="kpi"><div class="kpi-val kv4">Call</div><div class="kpi-label">Goal</div></div>
+  </div>
+</div>
+
+<!-- ════════════════════ EMAIL CHANNEL ════════════════════ -->
+<div id="ch-email" class="channel-panel visible" style="display:flex">
+
+  <!-- EMAIL SIDEBAR -->
+  <div class="sidebar" id="esb">
+    <div class="sb-section">
+      <div class="sb-section-title">Main Sequence</div>
+
+      <div class="sb-item active-e" onclick="showE('e1')">
+        <span class="day-badge db-d0">Day 0</span>
+        <div class="sb-meta">
+          <div class="sb-name">Cold Intro</div>
+          <div class="sb-sub">"listing uploads"</div>
+          <div class="sb-angle">Observation → Problem → Ask</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('e2')">
+        <span class="day-badge db-d3">Day 3</span>
+        <div class="sb-meta">
+          <div class="sb-name">Time Cost</div>
+          <div class="sb-sub">"how much listing time costs you"</div>
+          <div class="sb-angle">Hours/week calculation</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('e3')">
+        <span class="day-badge db-d7">Day 7</span>
+        <div class="sb-meta">
+          <div class="sb-name">Peer Story</div>
+          <div class="sb-sub">"how a boutique Dubai agency…"</div>
+          <div class="sb-angle">Social proof / case study</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('e4')">
+        <span class="day-badge db-d14">Day 14</span>
+        <div class="sb-meta">
+          <div class="sb-name">Portal Competition</div>
+          <div class="sb-sub">"listing quality on PF"</div>
+          <div class="sb-angle">PF algorithm insight</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('e5')">
+        <span class="day-badge db-d28">Day 28</span>
+        <div class="sb-meta">
+          <div class="sb-name">Breakup</div>
+          <div class="sb-sub">"closing the loop"</div>
+          <div class="sb-angle">1-2-3 reply format</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Variants</div>
+      <div class="sb-item" onclick="showE('lux1')">
+        <span class="day-badge db-d0">Day 0</span>
+        <div class="sb-meta">
+          <span class="vpill vp-lux">💎 Luxury</span>
+          <div class="sb-name">Luxury Cold Intro</div>
+          <div class="sb-sub">"listing copy for AED 3M+"</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('lux3')">
+        <span class="day-badge db-d7">Day 7</span>
+        <div class="sb-meta">
+          <span class="vpill vp-lux">💎 Luxury</span>
+          <div class="sb-name">Luxury Peer Story</div>
+          <div class="sb-sub">"how a luxury boutique…"</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('crm1')">
+        <span class="day-badge db-d0">Day 0</span>
+        <div class="sb-meta">
+          <span class="vpill vp-crm">⚠️ CRM Risk</span>
+          <div class="sb-name">CRM Risk Intro</div>
+          <div class="sb-sub">"PF listing workflow"</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('li1')">
+        <span class="day-badge db-d0">Day 0</span>
+        <div class="sb-meta">
+          <span class="vpill vp-li">in LinkedIn</span>
+          <div class="sb-name">LinkedIn DM</div>
+          <div class="sb-sub">Connection note + follow-up</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Reference</div>
+      <div class="sb-item" onclick="showE('perso')">
+        <div class="sb-meta">
+          <div class="sb-name">Personalisation Guide</div>
+          <div class="sb-sub">Per-agency hooks</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showE('bench')">
+        <div class="sb-meta">
+          <div class="sb-name">Benchmarks & Sending Notes</div>
+          <div class="sb-sub">Targets, timing, tone</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL MAIN -->
+  <div class="main-panel" id="emp">
+
+    <!-- E1 -->
+    <div id="ev-e1" class="view show">
+      <div class="e-meta"><span class="e-num">Email 1 of 5</span><span class="send-badge sb-d0">Day 0</span><span class="vpill vp-std">Standard</span></div>
+      <div class="email-title-lg">Cold Intro</div>
+      <div class="email-angle">Observation → Problem → Ask</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">listing uploads</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">Every new property shouldn't cost you 20 minutes of your day.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-e1',this)">Copy</button>
+        <div class="email-body" id="eb-e1">Hi [First Name],
+
+Noticed [Agency Name] is active on Property Finder — congrats on the listings volume.
+
+Running a [X]-agent team, you're probably uploading each property manually: draft the description, format the details, fill in the portal fields, repeat across every platform. That's somewhere between 15–25 minutes per listing, multiplied by everything you're adding each week.
+
+We built ListingAI specifically for agencies your size. It drafts the full listing description in under 90 seconds and pushes it to Property Finder and Bayut automatically — no copy-pasting, no reformatting.
+
+Worth a quick look?
+
+[Your name]
+ListingAI</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">Reply, or book a 15-min demo: [Calendly link]</span></div>
+      <div class="tip tip-indigo"><strong>Personalisation:</strong> Replace the opening with a specific observation — e.g. "With a 2022 launch and luxury focus…" or "As an off-plan specialist…". See the Personalisation Guide for per-agency hooks.</div>
+      <div class="nav-row"><button class="nav-btn primary-e" onclick="showE('e2')">Next: Time Cost →</button></div>
+    </div>
+
+    <!-- E2 -->
+    <div id="ev-e2" class="view">
+      <div class="e-meta"><span class="e-num">Email 2 of 5</span><span class="send-badge sb-d3">Day 3</span><span class="vpill vp-std">Standard</span></div>
+      <div class="email-title-lg">Time Cost</div>
+      <div class="email-angle">New angle — specific hours/week calculation</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">how much listing time costs you</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">A quick calculation you might find useful.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-e2',this)">Copy</button>
+        <div class="email-body" id="eb-e2">Hi [First Name],
+
+One thing I didn't mention in my last note:
+
+If your team is spending 20 minutes per listing, and you're adding ~[X listings/week] — that's [X hours] a week going to portal admin. Across a year, that's [X weeks of agent time] spent on data entry instead of deals.
+
+ListingAI brings that to under 2 minutes per listing. Most teams get their first listing live within the same day they sign up.
+
+Open to seeing it for yourself?
+
+[Your name]</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">Reply or book: [Calendly link]</span></div>
+      <div class="tip tip-yellow"><strong>Fill in the numbers:</strong> Use listing count from the research. e.g. OnPlan has 280 listings — if adding 20/week, that's 400 min = ~7 hours/week.</div>
+      <div class="nav-row"><button class="nav-btn" onclick="showE('e1')">← Prev</button><button class="nav-btn primary-e" onclick="showE('e3')">Next: Peer Story →</button></div>
+    </div>
+
+    <!-- E3 -->
+    <div id="ev-e3" class="view">
+      <div class="e-meta"><span class="e-num">Email 3 of 5</span><span class="send-badge sb-d7">Day 7–8</span><span class="vpill vp-std">Standard</span></div>
+      <div class="email-title-lg">Peer Story</div>
+      <div class="email-angle">Story → Bridge → Ask — social proof from a mirror agency</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">how a boutique Dubai agency cut listing time by 90%</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">They were doing everything manually. Now they're not.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-e3',this)">Copy</button>
+        <div class="email-body" id="eb-e3">Hi [First Name],
+
+A Dubai boutique similar to [Agency Name] — launched 2022, 8 agents, high-value residential focus — was manually uploading every listing to Property Finder and Bayut.
+
+Their team lead told us: "Each listing took 20 minutes minimum. We were spending half our Mondays just getting the weekend's properties live."
+
+They started using ListingAI. First listing drafted in 90 seconds. Now they batch their whole week's uploads in under an hour.
+
+I'd like to show you the same workflow. Do you have 15 minutes this week?
+
+[Your name]</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">Reply with a time, or pick one: [Calendly link]</span></div>
+      <div class="nav-row"><button class="nav-btn" onclick="showE('e2')">← Prev</button><button class="nav-btn primary-e" onclick="showE('e4')">Next: Portal Competition →</button></div>
+    </div>
+
+    <!-- E4 -->
+    <div id="ev-e4" class="view">
+      <div class="e-meta"><span class="e-num">Email 4 of 5</span><span class="send-badge sb-d14">Day 14</span><span class="vpill vp-std">Standard</span></div>
+      <div class="email-title-lg">Portal Competition</div>
+      <div class="email-angle">PF algorithm rewards speed + quality — new insight, last pitch</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">listing quality on PF</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">The agencies ranking highest aren't working harder — they're posting faster.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-e4',this)">Copy</button>
+        <div class="email-body" id="eb-e4">Hi [First Name],
+
+One thing most agents don't realise: Property Finder's algorithm rewards fresh, complete listings. Agencies that post quickly and consistently rank above those with better properties but slower uploads.
+
+ListingAI helps with both sides of that — speed and quality. The descriptions it generates are optimised for portal search, not just copy from a template.
+
+For a team like yours, it typically means more views on existing inventory without adding any extra work.
+
+Last email I'll send unless you're interested — worth 15 minutes?
+
+[Your name]</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">Reply or book: [Calendly link]</span></div>
+      <div class="tip tip-indigo"><strong>Note:</strong> "Last email I'll send unless you're interested" signals respect and often drives replies from people who meant to respond.</div>
+      <div class="nav-row"><button class="nav-btn" onclick="showE('e3')">← Prev</button><button class="nav-btn primary-e" onclick="showE('e5')">Next: Breakup →</button></div>
+    </div>
+
+    <!-- E5 -->
+    <div id="ev-e5" class="view">
+      <div class="e-meta"><span class="e-num">Email 5 of 5</span><span class="send-badge sb-d28">Day 28</span><span class="vpill vp-std">Standard</span></div>
+      <div class="email-title-lg">Breakup</div>
+      <div class="email-angle">1-2-3 reply format — 10–15% response rate</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">closing the loop</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">No hard feelings either way.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-e5',this)">Copy</button>
+        <div class="email-body" id="eb-e5">Hi [First Name],
+
+I'll leave you alone after this — I know you're busy.
+
+Before I do: if listing admin is genuinely not a pain point for your team right now, happy to check back another time. But if it is, ListingAI is probably the fastest fix available for an agency your size.
+
+Reply with a number:
+
+1 — Interested, let's talk
+2 — Not now, check back in a few months
+3 — Not for us
+
+Either way, wishing [Agency Name] a strong quarter.
+
+[Your name]</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">1-2-3 reply — lowest possible friction</span></div>
+      <div class="tip tip-yellow"><strong>Critical:</strong> Honour this. "3" = do not contact again. "2" = 90-day re-queue. "1" = book demo immediately.</div>
+      <div class="nav-row"><button class="nav-btn" onclick="showE('e4')">← Prev</button></div>
+    </div>
+
+    <!-- LUX1 -->
+    <div id="ev-lux1" class="view">
+      <div class="e-meta"><span class="e-num">Variant</span><span class="send-badge sb-d0">Day 0</span><span class="vpill vp-lux">💎 Luxury</span></div>
+      <div class="email-title-lg">Luxury Cold Intro</div>
+      <div class="email-angle">Quality over speed — AED 3M+ avg listing value agencies</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">listing copy for AED 3M+ properties</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">Generic descriptions undersell premium properties.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-lux1',this)">Copy</button>
+        <div class="email-body" id="eb-lux1">Hi [First Name],
+
+When you're marketing properties at AED [3–6M]+, the listing copy matters more than most agents admit. A generic bullet-point description doesn't justify the price. Buyers at that level expect the narrative to match the property.
+
+ListingAI was built to handle this. It generates property descriptions tuned to the specific audience — luxury buyers, international investors, off-plan — in under 90 seconds per listing, and posts directly to Property Finder and Bayut.
+
+For a boutique handling high-value inventory, it also means you're never posting a placeholder description because someone ran out of time.
+
+Would that be useful for [Agency Name]?
+
+[Your name]
+ListingAI</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">Reply or book a 15-min walkthrough: [Calendly link]</span></div>
+      <div class="tip tip-yellow"><strong>Use for:</strong> NAS Luxury (AED 4.2M avg), Estate500 (AED 6.5M), Gaia Living (AED 3.5M), MH Real Estate (luxury focus). Lead with copy quality, not speed.</div>
+      <div class="nav-row"><button class="nav-btn primary-e" onclick="showE('lux3')">Next: Luxury Peer Story →</button></div>
+    </div>
+
+    <!-- LUX3 -->
+    <div id="ev-lux3" class="view">
+      <div class="e-meta"><span class="e-num">Variant</span><span class="send-badge sb-d7">Day 7–8</span><span class="vpill vp-lux">💎 Luxury</span></div>
+      <div class="email-title-lg">Luxury Peer Story</div>
+      <div class="email-angle">Bayut Award-winner case study — credibility for boutique luxury firms</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">how a luxury Dubai boutique improved listing quality</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">Placeholder copy was costing them time and credibility.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-lux3',this)">Copy</button>
+        <div class="email-body" id="eb-lux3">Hi [First Name],
+
+A small Abu Dhabi luxury agency — Bayut Award winner, ~8 agents — was writing all their descriptions manually. Good copy, but slow. High-value listings sometimes sat with placeholder text for days.
+
+They started using ListingAI. The quality went up (descriptions tailored to international HNW buyers), and the turnaround went from a day to under 2 minutes.
+
+If the quality angle is relevant for [Agency Name], I'd like to show you what that looks like for your inventory. 15 minutes?
+
+[Your name]</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">Reply with a time, or pick one: [Calendly link]</span></div>
+      <div class="nav-row"><button class="nav-btn" onclick="showE('lux1')">← Prev</button></div>
+    </div>
+
+    <!-- CRM1 -->
+    <div id="ev-crm1" class="view">
+      <div class="e-meta"><span class="e-num">Variant</span><span class="send-badge sb-d0">Day 0</span><span class="vpill vp-crm">⚠️ CRM Risk</span></div>
+      <div class="email-title-lg">CRM Risk Intro</div>
+      <div class="email-angle">Complement not replacement — don't assume manual workflow</div>
+      <div class="sp-row">
+        <div class="sp-card"><div class="sp-label">Subject</div><div class="sp-value subject">PF listing workflow</div></div>
+        <div class="sp-card"><div class="sp-label">Preview</div><div class="sp-value">Even with a CRM, most teams still spend too long per listing.</div></div>
+      </div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-crm1',this)">Copy</button>
+        <div class="email-body" id="eb-crm1">Hi [First Name],
+
+Quick question about how [Agency Name] is handling Property Finder uploads.
+
+Most agencies your size — even those with CRM systems — still have agents manually reformatting descriptions and filling portal fields by hand. The CRM tracks the deal; the portal upload is still a copy-paste job.
+
+ListingAI sits on top of your existing workflow. It drafts the listing copy and pushes it live to Property Finder and Bayut automatically — no change to your CRM, no migration, just less manual work per listing.
+
+Worth 15 minutes to see if it's a fit?
+
+[Your name]
+ListingAI</div>
+      </div>
+      <div class="cta-row"><span class="cta-label">CTA</span><span class="cta-text">Reply or book: [Calendly link]</span></div>
+      <div class="tip tip-yellow"><strong>Use for:</strong> Xsite, Capstone, Treo Homes, Henry Wiltshire. <strong>Verify manually first</strong> — a wrong assumption about their stack kills the pitch.</div>
+    </div>
+
+    <!-- LINKEDIN -->
+    <div id="ev-li1" class="view">
+      <div class="e-meta"><span class="e-num">Variant</span><span class="send-badge" style="background:rgba(6,182,212,0.09);color:var(--cyan);border:1px solid rgba(6,182,212,0.22)">LinkedIn</span></div>
+      <div class="email-title-lg">LinkedIn Connection + DM</div>
+      <div class="email-angle">For contacts with no email — connection request → DM → follow-up DM</div>
+      <div style="margin-bottom:12px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em">Step 1 — Connection Request (300 char limit)</div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-li-req',this)">Copy</button>
+        <div class="email-body" id="eb-li-req">Hi [Name] — I work with boutique UAE agencies on automating their Property Finder and Bayut listing uploads. Came across [Agency Name] and thought it might be relevant. Happy to connect.</div>
+      </div>
+      <div style="margin-bottom:12px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em">Step 2 — First DM (Day 1–2 after connection)</div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-li-dm1',this)">Copy</button>
+        <div class="email-body" id="eb-li-dm1">Hi [Name], thanks for connecting.
+
+[Agency Name] looks like it's doing interesting work — [specific observation: "the focus on luxury residential in Abu Dhabi" / "the 2024 launch in a tough market" / "17 years in the industry before going independent"].
+
+I'll keep it short: we built ListingAI for boutique agencies like yours. It drafts listing descriptions and posts them to Property Finder and Bayut in under 90 seconds — no manual uploads.
+
+Worth a look?</div>
+      </div>
+      <div style="margin-bottom:12px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em">Follow-up DM (Day 5 — no reply)</div>
+      <div class="body-card">
+        <button class="copy-btn" onclick="copyEl('eb-li-dm2',this)">Copy</button>
+        <div class="email-body" id="eb-li-dm2">Hi [Name], one more thought:
+
+If your agents are spending 15–20 mins per listing right now, ListingAI typically cuts that to under 2 minutes. First listing live within hours of signing up.
+
+Open to a 15-minute call?</div>
+      </div>
+      <div class="tip tip-indigo"><strong>Use for:</strong> Fajar Realty (Kiran Khawaja), NAS Luxury (Ayman Sadieh), Estate500 (Mohammed Abu Mosameh), Ahmad Alshamsi Real Estate.</div>
+    </div>
+
+    <!-- PERSO -->
+    <div id="ev-perso" class="view">
+      <div class="page-title-lg">Personalisation Guide</div>
+      <div class="page-subtitle">Agency-specific hooks — add one to Email 1 after the opener. The observation should connect naturally to the listing pain.</div>
+      <table class="data-table">
+        <thead><tr><th style="width:185px">Agency</th><th>Hook (add to Email 1)</th><th style="width:55px">Score</th><th style="width:80px">Channel</th><th style="width:80px">Variant</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ag-name">MH Real Estate<small>Dubai · 8 agents</small></span></td><td><span class="hook-text">"With a UK-background founding story and a luxury residential focus, every listing description is doing heavy lifting for international buyers."</span></td><td><span class="tier-dot-a">92 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-lux" style="font-size:9px">Luxury</span></td></tr>
+          <tr><td><span class="ag-name">THEBROKS<small>Dubai · 5 agents</small></span></td><td><span class="hook-text">"As a 2024 launch with modern branding, you're building your stack from scratch — ListingAI is typically the first tool boutiques like yours add."</span></td><td><span class="tier-dot-a">89 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-std" style="font-size:9px">Standard</span></td></tr>
+          <tr><td><span class="ag-name">Almira Real Estate<small>Abu Dhabi · 28 agents</small></span></td><td><span class="hook-text">"With offices across Abu Dhabi and an international arm, portal syndication complexity only grows — this removes it entirely."</span></td><td><span class="tier-dot-a">89 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-std" style="font-size:9px">Standard</span></td></tr>
+          <tr><td><span class="ag-name">The Capital Avenue<small>Abu Dhabi · 14 agents</small></span></td><td><span class="hook-text">"As a full-service Abu Dhabi agency covering off-plan, ready, and commercial — maintaining listings across portals for all three is a real volume problem."</span></td><td><span class="tier-dot-a">84 ●</span></td><td><span class="cpill cp-wa">WhatsApp</span></td><td><span class="vpill vp-wa" style="font-size:9px">WA only</span></td></tr>
+          <tr><td><span class="ag-name">OnPlan Real Estate<small>Dubai · 20 agents</small></span></td><td><span class="hook-text">"As an off-plan specialist adding new developments regularly, the listing volume makes manual uploads especially painful — the ROI on automation is immediate."</span></td><td><span class="tier-dot-a">83 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-std" style="font-size:9px">Standard</span></td></tr>
+          <tr><td><span class="ag-name">Paragon Properties<small>Dubai · 34 agents</small></span></td><td><span class="hook-text">"Active in both Dubai and Ras Al Khaimah means maintaining listings on multiple portals for two markets — that's exactly the pain ListingAI removes."</span></td><td><span class="tier-dot-a">83 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-std" style="font-size:9px">Standard</span></td></tr>
+          <tr><td><span class="ag-name">Xsite Real Estate<small>Dubai · 48 agents</small></span></td><td><span class="hook-text">"With 450+ active listings and a 20-language team, the per-listing admin overhead adds up fast — even with basic CRM in place."</span></td><td><span class="tier-dot-a">83 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-crm" style="font-size:9px">CRM Risk</span></td></tr>
+          <tr><td><span class="ag-name">Fajar Realty<small>Dubai · 6 agents</small></span></td><td><span class="hook-text">"17 years in the industry before launching your own agency — you know manual listing pain better than most founders."</span></td><td><span class="tier-dot-b">77 ●</span></td><td><span class="cpill cp-li">LinkedIn</span></td><td><span class="vpill vp-li" style="font-size:9px">LinkedIn</span></td></tr>
+          <tr><td><span class="ag-name">NAS Luxury Real Estate<small>Abu Dhabi · 8 agents</small></span></td><td><span class="hook-text">"For AED 4.2M average listings, the copy quality is part of the product — generic portal descriptions don't match the property or the buyer."</span></td><td><span class="tier-dot-b">79 ●</span></td><td><span class="cpill cp-li">LinkedIn</span></td><td><span class="vpill vp-lux" style="font-size:9px">Luxury</span></td></tr>
+          <tr><td><span class="ag-name">Estate500<small>Dubai · 8 agents</small></span></td><td><span class="hook-text">"For AED 6.5M+ average listings and international HNW buyers, the listing narrative has to justify the price — a generic description leaves money on the table."</span></td><td><span class="tier-dot-b">75 ●</span></td><td><span class="cpill cp-li">LinkedIn</span></td><td><span class="vpill vp-lux" style="font-size:9px">Luxury</span></td></tr>
+          <tr><td><span class="ag-name">Capstone Real Estate<small>Abu Dhabi · 14 agents</small></span></td><td><span class="hook-text">"Multi-emirate coverage (Abu Dhabi, Al Ain, Dubai) means portal overhead at every level — ListingAI sits on top of what you already have."</span></td><td><span class="tier-dot-b">77 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-crm" style="font-size:9px">CRM Risk</span></td></tr>
+          <tr><td><span class="ag-name">Gaia Living Real Estate<small>Dubai · ~10 agents</small></span></td><td><span class="hook-text">"As a Downtown Dubai off-plan specialist at AED 3.5M average, every listing competes for international buyer attention — copy quality is a differentiator."</span></td><td><span class="tier-dot-a">80 ●</span></td><td><span class="cpill cp-email">Email</span></td><td><span class="vpill vp-lux" style="font-size:9px">Luxury</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BENCH -->
+    <div id="ev-bench" class="view">
+      <div class="page-title-lg">Benchmarks & Sending Notes</div>
+      <div class="page-subtitle">Performance targets and operational guidance for the email sequence.</div>
+      <div class="bench-grid">
+        <div class="bench-card"><div class="bench-metric">Open Rate</div><div class="bench-target" style="color:var(--accent-light)">40%+</div><div class="bench-bench">Benchmark: 35–50% personalised cold</div></div>
+        <div class="bench-card"><div class="bench-metric">Full Sequence Reply</div><div class="bench-target" style="color:var(--green)">20%+</div><div class="bench-bench">Benchmark: 15–27% (4–7 email campaigns)</div></div>
+        <div class="bench-card"><div class="bench-metric">Positive Reply</div><div class="bench-target" style="color:var(--cyan)">8%</div><div class="bench-bench">Benchmark: 5–10% of sends</div></div>
+        <div class="bench-card"><div class="bench-metric">Demo Booked</div><div class="bench-target" style="color:var(--yellow)">5%</div><div class="bench-bench">Benchmark: 3–6% from full sequence</div></div>
+        <div class="bench-card"><div class="bench-metric">Breakup Reply</div><div class="bench-target" style="color:#f87171">12%</div><div class="bench-bench">Benchmark: 10–15% from breakup emails</div></div>
+      </div>
+      <div class="sec-hd">Sending Notes</div>
+      <div class="notes-grid">
+        <div class="note-card"><div class="note-card-title">Timing</div><ul><li><strong>Send window:</strong> Tue–Thu, 9–11 AM GST</li><li><strong>Avoid:</strong> Monday mornings, Friday afternoons, public holidays</li><li><strong>Best day:</strong> Thursday (6.87% reply rate peak)</li><li>Wait the full 3 days before follow-up 1</li></ul></div>
+        <div class="note-card"><div class="note-card-title">Sender Setup</div><ul><li><strong>From name:</strong> "Nazir from ListingAI" — not "ListingAI Team"</li><li><strong>Signature:</strong> Name, company, one link only</li><li><strong>No HTML:</strong> Plain text — images kill deliverability</li><li>One link max per email</li></ul></div>
+        <div class="note-card"><div class="note-card-title">Volume</div><ul><li><strong>Start with Tier A</strong> (score 80+) first</li><li><strong>Max 10–15 sends/day</strong> while warming domain</li><li>Verify CRM risk accounts manually before sending</li></ul></div>
+        <div class="note-card"><div class="note-card-title">Tone Check</div><ul><li>Read every email aloud before sending</li><li>If it sounds like a pitch, rewrite it</li><li>Avoid: "synergy," "leverage," "best-in-class"</li><li>You/your ratio must dominate over I/we</li></ul></div>
+      </div>
+    </div>
+
+  </div><!-- /emp -->
+</div><!-- /ch-email -->
+
+
+<!-- ════════════════════ WHATSAPP CHANNEL ════════════════════ -->
+<div id="ch-wa" class="channel-panel">
+
+  <!-- WA SIDEBAR -->
+  <div class="sidebar" id="wsb">
+    <div class="sb-section">
+      <div class="sb-section-title">Strategy</div>
+      <div class="sb-item active-wa" onclick="showW('overview')">
+        <div class="sb-meta">
+          <div class="sb-name">Overview & Rules</div>
+          <div class="sb-sub">When and how to use WhatsApp</div>
+          <div class="sb-angle wa-color">UAE B2B context</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showW('contacts')">
+        <div class="sb-meta">
+          <div class="sb-name">Contact List</div>
+          <div class="sb-sub">13 agencies with phone numbers</div>
+          <div class="sb-angle wa-color">6 direct mobile</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Sequences</div>
+      <div class="sb-item" onclick="showW('standard')">
+        <span class="day-badge db-wa1">3 msgs</span>
+        <div class="sb-meta">
+          <span class="vpill vp-std">Standard</span>
+          <div class="sb-name">New Boutique</div>
+          <div class="sb-sub">Cold intro · Video offer · Breakup</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showW('luxury')">
+        <span class="day-badge db-wa1">3 msgs</span>
+        <div class="sb-meta">
+          <span class="vpill vp-lux">💎 Luxury</span>
+          <div class="sb-name">Luxury Variant</div>
+          <div class="sb-sub">AED 3M+ avg listings</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showW('crm')">
+        <span class="day-badge db-wa1">3 msgs</span>
+        <div class="sb-meta">
+          <span class="vpill vp-crm">⚠️ CRM Risk</span>
+          <div class="sb-name">CRM Risk Variant</div>
+          <div class="sb-sub">Open with a question</div>
+        </div>
+      </div>
+      <div class="sb-item" onclick="showW('office')">
+        <span class="day-badge db-wa2">2 msgs</span>
+        <div class="sb-meta">
+          <span class="vpill vp-off">Office Line</span>
+          <div class="sb-name">Office Number Variant</div>
+          <div class="sb-sub">Route past reception</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Reference</div>
+      <div class="sb-item" onclick="showW('replies')">
+        <div class="sb-meta">
+          <div class="sb-name">Reply Handling</div>
+          <div class="sb-sub">Scripts for every reply type</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WA MAIN -->
+  <div class="main-panel" id="wmp">
+
+    <!-- OVERVIEW -->
+    <div id="wv-overview" class="view show">
+      <div class="page-title-lg">WhatsApp Outreach Strategy</div>
+      <div class="page-subtitle">UAE is a WhatsApp-first B2B culture. For direct mobile contacts these rules make or break the outreach.</div>
+      <div class="strat-grid">
+        <div class="strat-card"><div class="strat-icon">📱</div><div class="strat-title">When WA beats email</div><div class="strat-body">UAE founders and CEOs regularly handle deals over WhatsApp. For direct mobiles — especially where no email exists — it's often the faster and more natural channel.</div></div>
+        <div class="strat-card"><div class="strat-icon">⏱️</div><div class="strat-title">Send window</div><div class="strat-body"><strong>Tue–Thu, 10 AM–12 PM GST.</strong> Avoid Monday mornings, Friday afternoons, UAE public holidays, and weekends unless contact is already established.</div></div>
+        <div class="strat-card"><div class="strat-icon">📏</div><div class="strat-title">Message length</div><div class="strat-body"><strong>3–5 lines max</strong> on mobile. If it requires scrolling, it's too long. No bullet points. No headers. Write like a peer, not a pitch deck.</div></div>
+        <div class="strat-card"><div class="strat-icon">🔢</div><div class="strat-title">3 messages max</div><div class="strat-body"><strong>Stop after message 3</strong> if no reply. More than that crosses into harassment. Move to email or LinkedIn and do not WhatsApp again.</div></div>
+        <div class="strat-card"><div class="strat-icon">🎙️</div><div class="strat-title">No cold voice notes</div><div class="strat-body">Voice notes are for established relationships only. Text only for initial outreach — voice is fine once they've replied.</div></div>
+        <div class="strat-card"><div class="strat-icon">💼</div><div class="strat-title">Use WhatsApp Business</div><div class="strat-body">Set up a <strong>WhatsApp Business account</strong> for ListingAI with your company name, logo, and website. Lets contacts verify who they're talking to before replying.</div></div>
+      </div>
+      <div class="sec-hd" style="margin-top:0;padding-top:0;border-top:none">Do's and Don'ts</div>
+      <div class="dd-grid">
+        <div class="dd-box dos"><div class="dd-title">Do</div><ul class="dd-list"><li>Use a real name — "Nazir from ListingAI"</li><li>Lead with their business, not your product</li><li>Keep the ask ultra-low-friction ("worth a quick call?")</li><li>Send at 10 AM–12 PM GST, Tue–Thu</li><li>Wait at least 4 days before follow-up</li><li>Use WhatsApp Business with a complete profile</li><li>Stop after 3 messages if no reply</li><li>Honour any "not interested" response permanently</li><li>Reference something specific to their agency</li></ul></div>
+        <div class="dd-box dont"><div class="dd-title">Don't</div><ul class="dd-list"><li>Send cold voice notes</li><li>Open with "Hi, my name is X and I work at Y"</li><li>Use bullet points or headers</li><li>Send the same message as your email</li><li>Follow up more than twice after initial contact</li><li>Send on Friday afternoons or weekends</li><li>Add them to a WhatsApp group without consent</li><li>Send media files (PDFs, images) cold</li><li>Use "I hope this message finds you well"</li></ul></div>
+      </div>
+    </div>
+
+    <!-- CONTACTS -->
+    <div id="wv-contacts" class="view">
+      <div class="page-title-lg">WhatsApp Contact List</div>
+      <div class="page-subtitle">All 13 agencies with confirmed phone numbers. Prioritise direct mobiles — office lines are secondary.</div>
+      <div class="tip tip-green" style="margin-bottom:18px"><strong>6 direct mobile contacts</strong> are the WhatsApp priority. Office lines may go to reception — better for calling than cold WhatsApp.</div>
+      <table class="data-table">
+        <thead><tr><th style="width:180px">Agency</th><th>Decision Maker</th><th>Number</th><th style="width:75px">Type</th><th style="width:55px">Score</th><th style="width:75px">Variant</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ag-name">The Capital Avenue<small>Abu Dhabi · 14 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Rachad Fouad — CEO & MD</td><td><span class="phone-num">+971 50 502 6788</span></td><td><span class="ptype pt-mob">📱 Mobile</span></td><td><span class="tier-dot-a">84 ●</span></td><td><span class="vpill vp-std" style="font-size:9px">Standard</span></td><td style="font-size:11px;color:var(--muted)">No email — WA is primary channel.</td></tr>
+          <tr><td><span class="ag-name">Xsite Real Estate<small>Dubai · 48 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Muhammad Alam — CEO & Founder</td><td><span class="phone-num">+971 54 402 0625</span></td><td><span class="ptype pt-mob">📱 Mobile</span></td><td><span class="tier-dot-a">83 ●</span> <span class="crm-warn">CRM</span></td><td><span class="vpill vp-crm" style="font-size:9px">CRM Risk</span></td><td style="font-size:11px;color:var(--muted)">Also has email. Verify CRM status first.</td></tr>
+          <tr><td><span class="ag-name">Paragon Properties<small>Dubai · 34 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Angelo & Dean — Co-Founders</td><td><span class="phone-num">+971 58 900 4611</span></td><td><span class="ptype pt-mob">📱 Mobile</span></td><td><span class="tier-dot-a">83 ●</span></td><td><span class="vpill vp-std" style="font-size:9px">Standard</span></td><td style="font-size:11px;color:var(--muted)">Direct founder mobile. Multi-emirate angle.</td></tr>
+          <tr><td><span class="ag-name">Henry Wiltshire AD<small>Abu Dhabi · 10 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Andrew Covill — MD</td><td><span class="phone-num">+971 56 484 3380</span></td><td><span class="ptype pt-mob">📱 Mobile</span></td><td><span class="tier-dot-b">73 ●</span> <span class="crm-warn">CRM</span></td><td><span class="vpill vp-crm" style="font-size:9px">CRM Risk</span></td><td style="font-size:11px;color:var(--muted)">International boutique. UAE-local complement angle.</td></tr>
+          <tr><td><span class="ag-name">Treo Homes<small>Dubai · 58 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Sami Al-Khafaji — Founder</td><td><span class="phone-num">+971 54 774 2111</span></td><td><span class="ptype pt-mob">📱 Mobile</span></td><td><span class="tier-dot-b">65 ●</span> <span class="crm-warn">High CRM</span></td><td><span class="vpill vp-crm" style="font-size:9px">CRM Risk</span></td><td style="font-size:11px;color:var(--muted)">Outside sweet spot. Only pursue if confirmed manual.</td></tr>
+          <tr><td><span class="ag-name">Homes 4 Life<small>Dubai · 51 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Nitin Giyanani — Ops & BD</td><td><span class="phone-num">+971 56 818 8610</span></td><td><span class="ptype pt-mob">📱 Mobile</span></td><td><span class="tier-dot-b">58 ●</span></td><td><span class="vpill vp-std" style="font-size:9px">Standard</span></td><td style="font-size:11px;color:var(--muted)">Ops contact, not founder. WA explicitly noted in research.</td></tr>
+          <tr style="opacity:.65"><td><span class="ag-name">MH Real Estate<small>Dubai · 8 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Murtaza Hashmi — CEO</td><td><span class="phone-num office">+971 4 570 3981</span></td><td><span class="ptype pt-off">🏢 Office</span></td><td><span class="tier-dot-a">92 ●</span></td><td><span class="vpill vp-lux" style="font-size:9px">Email first</span></td><td style="font-size:11px;color:var(--muted)">Use marketing@ email — office line is backup only.</td></tr>
+          <tr style="opacity:.65"><td><span class="ag-name">Gaia Living<small>Dubai · ~10 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Aslan Patov — CEO</td><td><span class="phone-num office">+971 4 325 1047</span></td><td><span class="ptype pt-off">🏢 Office</span></td><td><span class="tier-dot-a">80 ●</span></td><td><span class="vpill vp-lux" style="font-size:9px">Email first</span></td><td style="font-size:11px;color:var(--muted)">hello@ confirmed. Office line is backup.</td></tr>
+          <tr style="opacity:.65"><td><span class="ag-name">Almira Real Estate<small>Abu Dhabi · 28 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Ahmad Abuisnaineh — MD</td><td><span class="phone-num office">+971 2 546 2666</span></td><td><span class="ptype pt-off">🏢 Office</span></td><td><span class="tier-dot-a">89 ●</span></td><td><span class="vpill vp-std" style="font-size:9px">Email first</span></td><td style="font-size:11px;color:var(--muted)">info@ confirmed. Use email first.</td></tr>
+          <tr style="opacity:.65"><td><span class="ag-name">OnPlan Real Estate<small>Dubai · 20 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Ahmed Aldoulah — CEO</td><td><span class="phone-num office">+971 4 718 1000</span></td><td><span class="ptype pt-off">🏢 Office</span></td><td><span class="tier-dot-a">83 ●</span></td><td><span class="vpill vp-std" style="font-size:9px">Email first</span></td><td style="font-size:11px;color:var(--muted)">info@ confirmed. Use email first.</td></tr>
+          <tr style="opacity:.65"><td><span class="ag-name">Capstone Real Estate<small>Abu Dhabi · 14 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Amer Al Ahbabi — Group CEO</td><td><span class="phone-num office">+971 2 445 2122</span></td><td><span class="ptype pt-off">🏢 Office</span></td><td><span class="tier-dot-b">77 ●</span> <span class="crm-warn">CRM</span></td><td><span class="vpill vp-crm" style="font-size:9px">Email first</span></td><td style="font-size:11px;color:var(--muted)">leads@ confirmed. Verify CRM status.</td></tr>
+          <tr style="opacity:.65"><td><span class="ag-name">Next Level RE<small>Dubai · 30 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Abdul Ahad Siddiq — MD</td><td><span class="phone-num office">+971 4 454 2828</span></td><td><span class="ptype pt-off">🏢 Office</span></td><td><span class="tier-dot-b">73 ●</span></td><td><span class="vpill vp-std" style="font-size:9px">Email first</span></td><td style="font-size:11px;color:var(--muted)">media@ confirmed. Office WA on Day 7 if no reply.</td></tr>
+          <tr style="opacity:.65"><td><span class="ag-name">Daytona Properties<small>Dubai · 14 agents</small></span></td><td style="font-size:12px;color:var(--subtle)">Group-owned — use info@</td><td><span class="phone-num office">+971 4 396 7474</span></td><td><span class="ptype pt-off">🏢 Office</span></td><td><span class="tier-dot-b">70 ●</span></td><td><span class="vpill vp-std" style="font-size:9px">Email first</span></td><td style="font-size:11px;color:var(--muted)">Group subsidiary — office WA helps route to right person.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- STANDARD -->
+    <div id="wv-standard" class="view">
+      <div class="page-title-lg">Standard WhatsApp Sequence</div>
+      <div class="page-subtitle">For new boutiques with no detected CRM — The Capital Avenue, Paragon, Homes 4 Life.</div>
+      <div class="wa-wrap">
+        <div class="wa-bar">
+          <div class="wa-av wa-av-std">R</div>
+          <div><div class="wa-cname">Rachad Fouad</div><div class="wa-csub">CEO & MD · The Capital Avenue</div></div>
+        </div>
+        <div class="wa-msgs">
+          <div class="wa-datesep"><span>Tuesday, 10:12 AM</span></div>
+          <div class="wa-daylabel">Message 1 — Day 0</div>
+          <div class="wa-bubble">Hi Rachad, this is Nazir from ListingAI. Noticed The Capital Avenue is active on Property Finder across off-plan, ready market, and commercial — that's a lot of listings to keep live manually. We built a tool that drafts descriptions and posts to PF + Bayut in under 90 seconds. Worth a quick call?<div class="wa-time">10:12 <span class="wa-ticks">✓✓</span></div></div>
+          <div class="wa-datesep" style="margin-top:14px"><span>Saturday, 10:08 AM</span></div>
+          <div class="wa-daylabel">Message 2 — Day 4</div>
+          <div class="wa-bubble">Hi Rachad, just a quick follow-up. If the manual uploads are eating into your week, I can send a short video showing exactly how it works — 2 minutes, no call needed. Happy either way.<div class="wa-time">10:08 <span class="wa-ticks">✓✓</span></div></div>
+          <div class="wa-datesep" style="margin-top:14px"><span>Thursday, 10:31 AM</span></div>
+          <div class="wa-daylabel">Message 3 — Day 12 (Breakup)</div>
+          <div class="wa-bubble">Rachad, last message from my end. If the timing's off, no problem at all. If it ever becomes relevant — when listing volume picks up and the uploads start stacking — feel free to reach out. Good luck with Q2.<div class="wa-time">10:31 <span class="wa-ticks">✓✓</span></div></div>
+        </div>
+      </div>
+      <div class="msg-seq">
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-1">Msg 1</span><span class="msg-hd-title">Cold Intro</span><span class="msg-timing">Day 0 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-std-1',this)">Copy</button></div>
+          <div class="msg-body" id="wm-std-1">Hi [Name], this is [Your name] from ListingAI. Noticed [Agency Name] is active on Property Finder — [specific hook: "across off-plan and ready market, that's a heavy listing load to keep live manually" / "with 34 agents posting across Dubai and Ras Al Khaimah, the portal admin stacks up fast"]. We built a tool that drafts descriptions and posts to PF + Bayut in under 90 seconds. Worth a quick call?</div>
+          <div class="msg-note"><strong>Hook options:</strong> Use the personalisation guide hooks. One specific observation is enough — don't stack multiple facts.</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-2">Msg 2</span><span class="msg-hd-title">Video Offer</span><span class="msg-timing">Day 4 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-std-2',this)">Copy</button></div>
+          <div class="msg-body" id="wm-std-2">Hi [Name], just a quick follow-up. If the manual uploads are eating into your week, I can send a short video showing exactly how it works — 2 minutes, no call needed. Happy either way.</div>
+          <div class="msg-note"><strong>Why offer a video:</strong> Lower friction than a call. If they say yes, send a 90-sec Loom of a listing going live. Often converts better than a demo call for busy founders.</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-3">Msg 3</span><span class="msg-hd-title">Breakup</span><span class="msg-timing">Day 12 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-std-3',this)">Copy</button></div>
+          <div class="msg-body" id="wm-std-3">[Name], last message from my end. If the timing's off, no problem at all. If it ever becomes relevant — when listing volume picks up and the uploads start stacking — feel free to reach out. Good luck with Q2.</div>
+          <div class="msg-note"><strong>Honour this:</strong> No 4th message. If they respond positively to the breakup, book the call. If not, move to the email sequence.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LUXURY -->
+    <div id="wv-luxury" class="view">
+      <div class="page-title-lg">Luxury WhatsApp Variant</div>
+      <div class="page-subtitle">For AED 3M+ avg listings — lead with copy quality, not speed. Henry Wiltshire, MH Real Estate.</div>
+      <div class="tip tip-yellow"><strong>Key shift:</strong> Don't open with "saves you time." For luxury agencies, copy quality is a product differentiator. They care that descriptions match the property and the buyer.</div>
+      <div class="wa-wrap" style="margin-top:18px">
+        <div class="wa-bar">
+          <div class="wa-av wa-av-lux">A</div>
+          <div><div class="wa-cname">Andrew Covill</div><div class="wa-csub">Manager / MD · Henry Wiltshire Abu Dhabi</div></div>
+        </div>
+        <div class="wa-msgs">
+          <div class="wa-datesep"><span>Wednesday, 10:44 AM</span></div>
+          <div class="wa-daylabel">Message 1 — Day 0</div>
+          <div class="wa-bubble">Hi Andrew, this is Nazir from ListingAI. For a luxury Abu Dhabi boutique like Henry Wiltshire, the listing copy is doing real work — international buyers at AED 3M+ expect the description to match the property. We built an AI tool that writes descriptions tailored to HNW buyers and posts directly to PF + Bayut. No generic templates. Worth a quick look?<div class="wa-time">10:44 <span class="wa-ticks">✓✓</span></div></div>
+        </div>
+      </div>
+      <div class="msg-seq">
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-1">Msg 1</span><span class="msg-hd-title">Luxury Cold Intro</span><span class="msg-timing">Day 0 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-lux-1',this)">Copy</button></div>
+          <div class="msg-body" id="wm-lux-1">Hi [Name], this is [Your name] from ListingAI. For a luxury boutique like [Agency Name], the listing copy is doing real work — [international buyers / HNW clients] at AED [X]M+ expect the description to match the property. We built an AI tool that writes descriptions tailored to that audience and posts directly to PF + Bayut. No generic templates. Worth a quick look?</div>
+          <div class="msg-note"><strong>Fill in:</strong> Use actual avg value from research. "AED 3.1M+" for Henry Wiltshire, "AED 4.2M+" for NAS Luxury, "AED 6.5M+" for Estate500.</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-2">Msg 2</span><span class="msg-hd-title">Sample Offer</span><span class="msg-timing">Day 4 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-lux-2',this)">Copy</button></div>
+          <div class="msg-body" id="wm-lux-2">Hi [Name], following up briefly. Happy to generate a sample description for one of your current listings — takes 30 seconds and you can see the quality before committing to anything. Interested?</div>
+          <div class="msg-note"><strong>Why this works:</strong> Offering a live sample for their actual property is the lowest friction ask possible. If they send a listing, you have an opening.</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-3">Msg 3</span><span class="msg-hd-title">Breakup</span><span class="msg-timing">Day 12 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-lux-3',this)">Copy</button></div>
+          <div class="msg-body" id="wm-lux-3">[Name], I'll leave it here. If listing copy quality ever becomes a priority — especially as you take on more international inventory — feel free to reach out. Good luck with [Agency Name].</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRM -->
+    <div id="wv-crm" class="view">
+      <div class="page-title-lg">CRM Risk WhatsApp Variant</div>
+      <div class="page-subtitle">For agencies that may already have tools — Xsite, Treo Homes, Henry Wiltshire. Open with a question, not an assumption.</div>
+      <div class="tip tip-red"><strong>Verify first:</strong> A misplaced "you're probably uploading manually" to a company with XML feeds already running kills the pitch instantly.</div>
+      <div class="msg-seq" style="margin-top:18px">
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-1">Msg 1</span><span class="msg-hd-title">CRM Risk Intro</span><span class="msg-timing">Day 0 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-crm-1',this)">Copy</button></div>
+          <div class="msg-body" id="wm-crm-1">Hi [Name], this is [Your name] from ListingAI. Quick question — how is [Agency Name] handling Property Finder listing copy right now? Even teams with CRM in place often still reformat descriptions by hand before portal upload. We automate that last mile. Worth a quick call to see if it fits?</div>
+          <div class="msg-note"><strong>Why the question:</strong> Opens a dialogue rather than an assumption. If they say "we have automation," you can probe the gap. If they say "manually," you've confirmed fit.</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-2">Msg 2</span><span class="msg-hd-title">Complement</span><span class="msg-timing">Day 4 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-crm-2',this)">Copy</button></div>
+          <div class="msg-body" id="wm-crm-2">Hi [Name], just following up. ListingAI doesn't replace CRM — it sits on top of whatever you're already using and handles the description writing + portal push. No migration, no disruption. Happy to show you in 10 minutes.</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-3">Msg 3</span><span class="msg-hd-title">Breakup</span><span class="msg-timing">Day 12 · 10–12 AM GST</span><button class="copy-btn wa-copy" onclick="copyEl('wm-crm-3',this)">Copy</button></div>
+          <div class="msg-body" id="wm-crm-3">[Name], last one from me. If the listing workflow ever becomes a bottleneck — especially as [Agency Name] scales — feel free to reach back out. Good luck.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OFFICE -->
+    <div id="wv-office" class="view">
+      <div class="page-title-lg">Office Number Variant</div>
+      <div class="page-subtitle">Use email first. If no reply after 7 days, WhatsApp the office to route to the right person — don't pitch on an office line.</div>
+      <div class="tip tip-yellow"><strong>Goal:</strong> Get a direct contact or have the message forwarded. Don't pitch here — just get to the right person.</div>
+      <div class="msg-seq" style="margin-top:18px">
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-1">Msg 1</span><span class="msg-hd-title">Route Request</span><span class="msg-timing">Day 7 (after email sent Day 0)</span><button class="copy-btn wa-copy" onclick="copyEl('wm-off-1',this)">Copy</button></div>
+          <div class="msg-body" id="wm-off-1">Hi, this is [Your name] from ListingAI. I sent an email to [Agency Name] last week about automating your Property Finder listing uploads — could you pass this message to [Founder name / the person handling your portal listings]? Happy to follow up directly with them. Thank you.</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-hd"><span class="msg-step ms-2">Msg 2</span><span class="msg-hd-title">Follow-up</span><span class="msg-timing">Day 14 if no reply</span><button class="copy-btn wa-copy" onclick="copyEl('wm-off-2',this)">Copy</button></div>
+          <div class="msg-body" id="wm-off-2">Hi, just following up briefly. I'm trying to reach [Founder name] at [Agency Name] about a tool that automates your Property Finder and Bayut listing uploads. If there's a better way to reach them directly, I'd appreciate it.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPLIES -->
+    <div id="wv-replies" class="view">
+      <div class="page-title-lg">Reply Handling</div>
+      <div class="page-subtitle">Scripted responses for every reply type. Respond within 2 hours for any positive signal.</div>
+      <div class="tip tip-green" style="margin-bottom:20px"><strong>Speed matters:</strong> A founder who replies to a cold WhatsApp is a hot signal. If you're not available to follow up quickly, don't send the message yet.</div>
+      <div class="reply-grid">
+        <div class="reply-card"><div class="reply-label">✓ Positive — Interested</div><div class="reply-resp">Great, are you free for a 15-min call this week? Here's a link: [Calendly]
+
+Or if easier, I can send a 2-min video showing it in action first.</div><div class="reply-action">→ Respond within 2 hours. Move to demo-booked sequence.</div></div>
+        <div class="reply-card"><div class="reply-label">⏳ Not now</div><div class="reply-resp">Of course, no problem. I'll check back in a few months. Good luck with the listings in the meantime.</div><div class="reply-action">→ Add to 90-day re-queue. Remove from active sequence.</div></div>
+        <div class="reply-card"><div class="reply-label">✗ Not interested</div><div class="reply-resp">Understood, thanks for letting me know. Good luck with [Agency Name].</div><div class="reply-action">→ Do not contact again. Mark as do-not-contact.</div></div>
+        <div class="reply-card"><div class="reply-label">❓ "How does it work?"</div><div class="reply-resp">Happy to show you. It generates the full description — tailored copy, portal-ready format — in about 90 seconds. I can walk you through it in 10 minutes or send a quick video. Which is easier?</div><div class="reply-action">→ Offer both options. Get on a call if possible.</div></div>
+        <div class="reply-card"><div class="reply-label">💰 Pricing question</div><div class="reply-resp">Happy to share that. Pricing is based on listing volume — designed to be affordable for boutique agencies. Worth a quick call to go through the numbers?</div><div class="reply-action">→ Don't quote over WhatsApp. Get them on a call.</div></div>
+        <div class="reply-card"><div class="reply-label">🤔 "We have a tool"</div><div class="reply-resp">Good to know — what are you using? Most tools handle the CRM side but leave portal copy writing to agents. That's typically where the time goes.</div><div class="reply-action">→ Probe the gap. If they have full automation, disengage gracefully.</div></div>
+      </div>
+      <div class="sec-hd">Booking Nudge</div>
+      <div class="sec-sub">If they said yes but haven't booked yet — send 24 hours after positive reply.</div>
+      <div class="msg-card">
+        <div class="msg-hd"><span class="msg-step ms-1">Post-interest</span><span class="msg-hd-title">Booking nudge</span><span class="msg-timing">24h after positive reply</span><button class="copy-btn wa-copy" onclick="copyEl('wm-book',this)">Copy</button></div>
+        <div class="msg-body" id="wm-book">Hi [Name], here's the link to book a 15-min call whenever it suits you: [Calendly link]. Or if it's easier, just suggest a day and time and I'll send a calendar invite directly.</div>
+      </div>
+    </div>
+
+  </div><!-- /wmp -->
+</div><!-- /ch-wa -->
+
+<script>
+const emailActiveClass = 'active-e';
+const waActiveClass    = 'active-wa';
+
+function switchChannel(ch) {
+  const isEmail = ch === 'email';
+
+  document.getElementById('ch-email').style.display = isEmail ? 'flex' : 'none';
+  document.getElementById('ch-wa').style.display    = isEmail ? 'none' : 'flex';
+
+  document.getElementById('kpi-email').style.display = isEmail ? 'flex' : 'none';
+  document.getElementById('kpi-wa').style.display    = isEmail ? 'none' : 'flex';
+
+  document.querySelectorAll('.ch-tab').forEach(t => {
+    t.classList.remove('active-email','active-wa');
+  });
+  document.querySelector('.tab-' + ch).classList.add(isEmail ? 'active-email' : 'active-wa');
+}
+
+function showE(id) {
+  document.querySelectorAll('#emp .view').forEach(v => v.classList.remove('show'));
+  const el = document.getElementById('ev-' + id);
+  if (el) el.classList.add('show');
+
+  document.querySelectorAll('#esb .sb-item').forEach(i => i.classList.remove(emailActiveClass));
+  const trigger = document.querySelector(`#esb [onclick="showE('${id}')"]`);
+  if (trigger) trigger.classList.add(emailActiveClass);
+
+  document.getElementById('emp').scrollTop = 0;
+}
+
+function showW(id) {
+  document.querySelectorAll('#wmp .view').forEach(v => v.classList.remove('show'));
+  const el = document.getElementById('wv-' + id);
+  if (el) el.classList.add('show');
+
+  document.querySelectorAll('#wsb .sb-item').forEach(i => i.classList.remove(waActiveClass));
+  const trigger = document.querySelector(`#wsb [onclick="showW('${id}')"]`);
+  if (trigger) trigger.classList.add(waActiveClass);
+
+  document.getElementById('wmp').scrollTop = 0;
+}
+
+function copyEl(id, btn) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

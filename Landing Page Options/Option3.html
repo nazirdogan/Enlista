@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ListingsLaunch — Swiss Grid</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#FFFFFF;--surface:#F7F7F7;--red:#E31414;--dark:#141414;--mid:#555;--light:#E0E0E0;--text:#1A1A1A;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'EB Garamond',serif;font-size:17px;line-height:1.75;letter-spacing:0.01em;}
+  .cond{font-family:'Barlow Condensed',sans-serif;}
+
+  /* Swiss grid: all based on a strict 8px grid, ruled lines everywhere */
+  .rule{border-top:1px solid var(--dark);}
+  .rule-light{border-top:1px solid var(--light);}
+  .rule-red{border-top:2px solid var(--red);}
+  .rule-thick{border-top:3px solid var(--dark);}
+
+  nav{border-bottom:3px solid var(--dark);background:white;position:sticky;top:0;z-index:50;}
+
+  .btn-red{display:inline-block;background:var(--red);color:white;padding:12px 32px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.15s;border:2px solid var(--red);}
+  .btn-red:hover{background:transparent;color:var(--red);}
+  .btn-dark{display:inline-block;background:var(--dark);color:white;padding:12px 32px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border:2px solid var(--dark);transition:all 0.15s;}
+  .btn-dark:hover{background:transparent;color:var(--dark);}
+  .btn-outline{display:inline-block;border:2px solid var(--dark);color:var(--dark);padding:12px 32px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.15s;}
+  .btn-outline:hover{background:var(--dark);color:white;}
+
+  /* Section label style */
+  .section-no{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:8px;}
+  .section-title-cond{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:-0.01em;line-height:0.9;}
+
+  /* Feature rows: table-like */
+  .feat-row{display:grid;grid-template-columns:80px 1fr 2fr;gap:0;border-bottom:1px solid var(--light);padding:32px 0;align-items:start;transition:background 0.15s;}
+  .feat-row:hover{background:var(--surface);}
+  @media(max-width:640px){.feat-row{grid-template-columns:40px 1fr;}.feat-col-3{display:none;}}
+  .feat-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:40px;color:var(--red);line-height:1;}
+
+  /* Testimonial grid */
+  .testi-row{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--light);}
+  @media(max-width:640px){.testi-row{grid-template-columns:1fr;}}
+  .testi-cell{padding:40px;border-right:1px solid var(--light);}
+  .testi-cell:last-child{border-right:none;}
+
+  /* Pricing horizontal */
+  .price-row{display:grid;grid-template-columns:repeat(3,1fr);border:3px solid var(--dark);}
+  @media(max-width:640px){.price-row{grid-template-columns:1fr;}}
+  .price-col{padding:48px 40px;border-right:3px solid var(--dark);transition:background 0.2s;}
+  .price-col:last-child{border-right:none;}
+  .price-col.active{background:var(--dark);color:white;}
+  .price-col.active .price-num{color:var(--red);}
+  .price-col.active .p-item{border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);}
+  .price-col.active .p-item.on{color:white;}
+  .price-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:72px;line-height:1;color:var(--dark);letter-spacing:-0.02em;}
+  .p-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:24px;}
+  .active .p-label{color:rgba(255,255,255,0.4);}
+  .p-item{font-size:15px;padding:10px 0;border-bottom:1px solid var(--light);color:var(--mid);font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:0.02em;}
+  .p-item.on{color:var(--text);}
+  .p-item.on::before{content:'— ';color:var(--red);}
+
+  input{background:var(--surface);border:none;border-bottom:2px solid var(--light);color:var(--text);padding:14px 0;font-family:'EB Garamond',serif;font-size:17px;outline:none;width:100%;transition:border-color 0.2s;}
+  input:focus{border-bottom-color:var(--dark);}
+  input::placeholder{color:var(--light);}
+
+  @keyframes slideIn{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:none;}}
+  .si{animation:slideIn 0.8s ease both;}
+  .si-1{animation-delay:0.05s;}.si-2{animation-delay:0.2s;}.si-3{animation-delay:0.35s;}
+</style>
+</head>
+<body>
+
+<nav style="padding:0 48px;">
+  <div style="display:flex;justify-content:space-between;align-items:stretch;height:64px;">
+    <div style="display:flex;align-items:center;border-right:1px solid var(--light);padding-right:32px;">
+      <span class="cond font-black" style="font-size:22px;letter-spacing:0.04em;text-transform:uppercase;">Listings<span style="color:var(--red);">Launch</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0;flex:1;padding:0 32px;">
+      <div style="display:flex;gap:32px;align-items:center;flex:1;">
+        <a href="#features" class="cond" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='var(--dark)'" onmouseout="this.style.color='var(--mid)'">Platform</a>
+        <a href="#testimonials" class="cond" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='var(--dark)'" onmouseout="this.style.color='var(--mid)'">Clients</a>
+        <a href="#pricing" class="cond" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='var(--dark)'" onmouseout="this.style.color='var(--mid)'">Pricing</a>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;border-left:1px solid var(--light);padding-left:32px;">
+      <a href="#cta" class="btn-red" style="font-size:14px;padding:10px 24px;">Get Access</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero: Swiss grid layout -->
+<section style="padding:0;border-bottom:1px solid var(--light);">
+  <div style="display:grid;grid-template-columns:1fr;min-height:calc(100vh - 65px);">
+    <div style="display:grid;grid-template-columns:1fr;gap:0;">
+      <!-- Top: big headline -->
+      <div style="padding:64px 48px;border-bottom:1px solid var(--light);display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:end;">
+        <div class="si si-1">
+          <span class="section-no">UAE Real Estate Platform — 2026</span>
+          <h1 class="section-title-cond si si-2" style="font-size:clamp(64px,11vw,160px);color:var(--dark);">
+            The<br/>
+            Listing<br/>
+            <span style="color:var(--red);">OS.</span>
+          </h1>
+        </div>
+        <div style="padding-bottom:8px;" class="si si-3">
+          <p style="font-size:18px;line-height:1.8;color:var(--mid);margin-bottom:40px;">AI-powered listing management for Dubai, Abu Dhabi, and Sharjah agencies. Publish to every portal. Qualify every lead. Stay RERA compliant. One platform.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="#cta" class="btn-red">Start 14-day trial</a>
+            <a href="#features" class="btn-outline">See platform</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats strip -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--light);">
+        <div style="padding:24px 40px;border-right:1px solid var(--light);">
+          <div class="section-no">Agencies</div>
+          <p class="cond font-black" style="font-size:56px;color:var(--dark);line-height:1;">840</p>
+        </div>
+        <div style="padding:24px 40px;border-right:1px solid var(--light);">
+          <div class="section-no">Listings</div>
+          <p class="cond font-black" style="font-size:56px;color:var(--dark);line-height:1;">124K</p>
+        </div>
+        <div style="padding:24px 40px;border-right:1px solid var(--light);">
+          <div class="section-no">Avg. Publish</div>
+          <p class="cond font-black" style="font-size:56px;color:var(--dark);line-height:1;">&lt;4m</p>
+        </div>
+        <div style="padding:24px 40px;">
+          <div class="section-no">Uptime SLA</div>
+          <p class="cond font-black" style="font-size:56px;color:var(--red);line-height:1;">99%</p>
+        </div>
+      </div>
+
+      <!-- Portals strip -->
+      <div style="padding:20px 48px;display:flex;gap:32px;align-items:center;flex-wrap:wrap;background:var(--dark);">
+        <span class="cond" style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);">Connected to:</span>
+        <span class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:white;">Bayut</span>
+        <span style="color:var(--red);">·</span>
+        <span class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:white;">Property Finder</span>
+        <span style="color:var(--red);">·</span>
+        <span class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:white;">Dubizzle</span>
+        <span style="color:var(--red);">·</span>
+        <span class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:white;">Houza</span>
+        <span style="color:var(--red);">·</span>
+        <span class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:white;">DLD Portals</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features: numbered table rows -->
+<section id="features" style="padding:0 48px 80px;">
+  <div style="padding:48px 0 24px;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--dark);">
+    <h2 class="section-title-cond" style="font-size:clamp(32px,5vw,64px);color:var(--dark);">PLATFORM<br/>CAPABILITIES</h2>
+    <p style="max-width:280px;font-size:15px;color:var(--mid);text-align:right;">Six modules. One subscription. Total control over your listings, leads, and compliance.</p>
+  </div>
+  <div>
+    <div class="feat-row">
+      <div class="feat-num">01</div>
+      <div style="padding-right:32px;"><h3 class="cond font-bold" style="font-size:24px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">AI Listing Copy</h3><p style="font-size:16px;color:var(--mid);">Bilingual EN/AR</p></div>
+      <div class="feat-col-3"><p style="color:var(--mid);">Generates compelling property descriptions in English and Arabic, tailored to each portal's algorithm — Bayut, Property Finder, Dubizzle — in under 10 seconds.</p></div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-num">02</div>
+      <div style="padding-right:32px;"><h3 class="cond font-bold" style="font-size:24px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Multi-Portal Sync</h3><p style="font-size:16px;color:var(--mid);">Under 4 minutes</p></div>
+      <div class="feat-col-3"><p style="color:var(--mid);">One-click broadcast to every UAE portal simultaneously. Changes propagate in under four minutes. No manual re-entry, ever.</p></div>
+    </div>
+    <div class="feat-row" style="background:var(--red);" onmouseover="this.style.background='var(--red)'" onmouseout="">
+      <div class="feat-num" style="color:white;">03</div>
+      <div style="padding-right:32px;"><h3 class="cond font-bold" style="font-size:24px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;color:white;">Lead Intelligence</h3><p style="font-size:16px;color:rgba(255,255,255,0.7);">ML-ranked intent</p></div>
+      <div class="feat-col-3"><p style="color:rgba(255,255,255,0.75);">Buyer intent ranked across all enquiry sources. WhatsApp qualification in Arabic and English, 24/7. Your agents always call the right buyer first.</p></div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-num">04</div>
+      <div style="padding-right:32px;"><h3 class="cond font-bold" style="font-size:24px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">RERA Compliance</h3><p style="font-size:16px;color:var(--mid);">DLD validation</p></div>
+      <div class="feat-col-3"><p style="color:var(--mid);">Real-time permit validation before every publish. Full audit trail. Zero suspensions. Automatic DLD checks — you never need to think about it.</p></div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-num">05</div>
+      <div style="padding-right:32px;"><h3 class="cond font-bold" style="font-size:24px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Market Analytics</h3><p style="font-size:16px;color:var(--mid);">Live DLD data</p></div>
+      <div class="feat-col-3"><p style="color:var(--mid);">Live transaction data from the Dubai Land Department. AED/sqft benchmarks, area demand maps, and trend reports across the UAE.</p></div>
+    </div>
+    <div class="feat-row" style="border-bottom:none;">
+      <div class="feat-num">06</div>
+      <div style="padding-right:32px;"><h3 class="cond font-bold" style="font-size:24px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Photo Suite</h3><p style="font-size:16px;color:var(--mid);">AI-enhanced</p></div>
+      <div class="feat-col-3"><p style="color:var(--mid);">Automated image enhancement, smart ordering, portal-specific sizing and watermarking. Your properties look immaculate on every platform.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" style="border-top:2px solid var(--dark);background:var(--surface);">
+  <div style="padding:48px 48px 0;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--light);">
+    <h2 class="section-title-cond" style="font-size:clamp(32px,5vw,64px);color:var(--dark);padding-bottom:32px;">CLIENT<br/>REPORTS</h2>
+    <div style="text-align:right;padding-bottom:32px;">
+      <p class="cond font-bold" style="font-size:56px;color:var(--red);line-height:1;">840</p>
+      <p class="cond" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);">UAE Agencies Enrolled</p>
+    </div>
+  </div>
+  <div class="testi-row">
+    <div class="testi-cell">
+      <p style="font-style:italic;font-size:19px;line-height:1.7;margin-bottom:24px;">"Two days reduced to four minutes. This was not an improvement — it was a complete replacement of how we work."</p>
+      <div style="border-top:1px solid var(--light);padding-top:16px;"><p class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;">Sarah Al Mansoori</p><p style="font-size:14px;color:var(--mid);">Head of Operations · Espace Real Estate, Dubai</p></div>
+    </div>
+    <div class="testi-cell" style="border-right:none;">
+      <p style="font-style:italic;font-size:19px;line-height:1.7;margin-bottom:24px;">"The AI copy for our Palm Jumeirah and Emirates Hills listings reads exactly as it should. Conversion rate tripled."</p>
+      <div style="border-top:1px solid var(--light);padding-top:16px;"><p class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;">James Whitfield</p><p style="font-size:14px;color:var(--mid);">Managing Director · Allsopp & Allsopp</p></div>
+    </div>
+  </div>
+  <div class="testi-row" style="border-bottom:none;">
+    <div class="testi-cell" style="background:var(--dark);">
+      <p style="font-style:italic;font-size:19px;line-height:1.7;margin-bottom:24px;color:white;">"Zero RERA suspensions since we moved to ListingsLaunch. Not one. The compliance engine is meticulous."</p>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;"><p class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);">Fatima Al Hashimi</p><p style="font-size:14px;color:rgba(255,255,255,0.4);">Compliance Director · DLD Certified</p></div>
+    </div>
+    <div class="testi-cell" style="border-right:none;">
+      <p style="font-style:italic;font-size:19px;line-height:1.7;margin-bottom:24px;">"600+ listings, four portals, zero coordinators added. We scaled 40% in six months on the same headcount."</p>
+      <div style="border-top:1px solid var(--light);padding-top:16px;"><p class="cond font-bold" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;">Ravi Menon</p><p style="font-size:14px;color:var(--mid);">CEO · Metropolitan Premium Properties</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing: 3-column bordered -->
+<section id="pricing" style="padding:80px 48px;border-top:2px solid var(--dark);">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:16px;">
+    <h2 class="section-title-cond" style="font-size:clamp(32px,5vw,64px);">CHOOSE<br/>YOUR PLAN</h2>
+    <p style="color:var(--mid);max-width:280px;font-size:15px;">All plans in AED. Cancel any time. 14-day free trial included.</p>
+  </div>
+  <div class="price-row">
+    <div class="price-col">
+      <p class="p-label">Starter</p>
+      <div class="price-num">299</div>
+      <p class="cond" style="font-size:13px;color:var(--mid);margin-bottom:32px;">AED / month</p>
+      <div style="margin-bottom:32px;">
+        <div class="p-item on">50 active listings</div>
+        <div class="p-item on">3 portal integrations</div>
+        <div class="p-item on">AI copy — English</div>
+        <div class="p-item on">Basic analytics</div>
+        <div class="p-item">Lead scoring</div>
+        <div class="p-item">WhatsApp bot</div>
+        <div class="p-item">RERA compliance</div>
+      </div>
+      <a href="#cta" class="btn-outline" style="display:block;text-align:center;font-size:15px;">Start</a>
+    </div>
+    <div class="price-col active">
+      <p class="p-label">Professional</p>
+      <div class="price-num">799</div>
+      <p class="cond" style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:32px;">AED / month · Most popular</p>
+      <div style="margin-bottom:32px;">
+        <div class="p-item on">200 active listings</div>
+        <div class="p-item on">All portal integrations</div>
+        <div class="p-item on">AI copy — EN + AR</div>
+        <div class="p-item on">Advanced analytics</div>
+        <div class="p-item on">Lead scoring + WhatsApp</div>
+        <div class="p-item on">RERA compliance</div>
+        <div class="p-item on">Priority support</div>
+      </div>
+      <a href="#cta" class="btn-red" style="display:block;text-align:center;font-size:15px;">Start</a>
+    </div>
+    <div class="price-col">
+      <p class="p-label">Enterprise</p>
+      <div class="price-num">1,999</div>
+      <p class="cond" style="font-size:13px;color:var(--mid);margin-bottom:32px;">AED / month</p>
+      <div style="margin-bottom:32px;">
+        <div class="p-item on">Unlimited listings</div>
+        <div class="p-item on">Custom integrations</div>
+        <div class="p-item on">Full AI suite</div>
+        <div class="p-item on">Market analytics</div>
+        <div class="p-item on">Dedicated manager</div>
+        <div class="p-item on">API access + SLA</div>
+        <div class="p-item on">Custom reporting</div>
+      </div>
+      <a href="#cta" class="btn-dark" style="display:block;text-align:center;font-size:15px;">Contact Sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" style="background:var(--dark);padding:80px 48px;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:64px;max-width:1000px;margin:0 auto;align-items:center;">
+    <div>
+      <h2 class="section-title-cond" style="font-size:clamp(48px,7vw,100px);color:white;line-height:0.9;margin-bottom:24px;">START<br/>NOW.<span style="color:var(--red);">_</span></h2>
+      <p style="color:rgba(255,255,255,0.4);font-size:16px;line-height:1.8;">14-day free trial. No credit card required. UAE support team available daily.</p>
+    </div>
+    <div>
+      <form style="display:flex;flex-direction:column;gap:24px;" onsubmit="return false;">
+        <div><input type="email" placeholder="Agency email" style="background:rgba(255,255,255,0.05);border-bottom-color:rgba(255,255,255,0.15);color:white;font-family:'EB Garamond',serif;" /><div style="height:2px;background:var(--red);width:0%;transition:width 0.3s;" id="line1"></div></div>
+        <div><input type="text" placeholder="Agency name" style="background:rgba(255,255,255,0.05);border-bottom-color:rgba(255,255,255,0.15);color:white;font-family:'EB Garamond',serif;"/></div>
+        <button type="submit" class="btn-red" style="font-size:16px;padding:14px;cursor:pointer;border:none;display:block;width:100%;text-align:center;">Begin Free Trial →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer style="border-top:1px solid rgba(255,255,255,0.1);background:var(--dark);padding:24px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+  <span class="cond font-black" style="font-size:18px;text-transform:uppercase;letter-spacing:0.04em;color:white;">Listings<span style="color:var(--red);">Launch</span></span>
+  <span class="cond" style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25);">© 2026 · Dubai, UAE</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ListingAI — Pricing Strategy Analysis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --parchment: #F7F4EF;
+      --navy: #1B3A6B;
+      --navy-light: #2a5099;
+      --copper: #B87333;
+      --copper-light: #d4884a;
+      --ink: #1C1917;
+      --muted: #8C7E72;
+      --white: #FFFFFF;
+      --border: #E8E2D9;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --red: #dc2626;
+      --amber: #d97706;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: -0.01em;
+    }
+    .logo span { color: var(--copper); }
+    nav p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ─── HERO ─── */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em { color: var(--copper); font-style: italic; }
+    .hero p {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 2rem;
+    }
+
+    /* ─── TOGGLE ─── */
+    .billing-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.35rem 0.35rem 0.35rem 1rem;
+      font-size: 0.85rem;
+      color: var(--ink);
+    }
+    .billing-toggle .pill {
+      background: var(--navy);
+      color: white;
+      border-radius: 100px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .billing-toggle .save-badge {
+      font-size: 0.7rem;
+      color: var(--green);
+      font-weight: 600;
+      background: var(--green-bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 100px;
+    }
+
+    /* ─── TABS ─── */
+    .tabs-wrapper {
+      max-width: 880px;
+      margin: 3rem auto 0;
+      padding: 0 1.5rem;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.4rem;
+      margin-bottom: 2.5rem;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .tab-btn.active {
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 600;
+    }
+    .tab-btn .tab-num {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 0.15rem;
+    }
+    .tab-btn.active .tab-num { opacity: 0.7; }
+
+    /* ─── SECTION ─── */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .structure-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .structure-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .structure-header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ─── CARDS GRID ─── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .cards-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+      .cards-grid-4 { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+    }
+
+    .card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 8px 32px rgba(27,58,107,0.1);
+      transform: translateY(-2px);
+    }
+    .card.featured {
+      border-color: var(--navy);
+      background: var(--navy);
+      color: var(--white);
+    }
+    .card.featured .tier-name { color: rgba(255,255,255,0.7); }
+    .card.featured .price-amount { color: var(--white); }
+    .card.featured .price-period { color: rgba(255,255,255,0.6); }
+    .card.featured .price-note { color: rgba(255,255,255,0.5); }
+    .card.featured .feature-list li { color: rgba(255,255,255,0.85); }
+    .card.featured .feature-list li::before { color: #6ee7b7; }
+    .card.featured .divider { border-color: rgba(255,255,255,0.15); }
+    .card.featured .highlight-bar { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--copper);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .tier-name {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .tier-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    .card.featured .tier-title { color: var(--white); }
+
+    .tier-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .card.featured .tier-desc { color: rgba(255,255,255,0.6); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+    .price-row { display: flex; align-items: baseline; gap: 0.3rem; margin-bottom: 0.3rem; }
+    .price-currency { font-size: 1.1rem; font-weight: 600; color: var(--navy); margin-top: 0.2rem; }
+    .card.featured .price-currency { color: rgba(255,255,255,0.7); }
+    .price-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .price-period { font-size: 0.8rem; color: var(--muted); align-self: flex-end; margin-bottom: 0.3rem; }
+    .price-note { font-size: 0.75rem; color: var(--muted); margin-bottom: 1.25rem; }
+
+    .cta-btn {
+      display: block;
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn-primary {
+      background: var(--copper);
+      color: white;
+      border-color: var(--copper);
+    }
+    .cta-btn-primary:hover { background: var(--copper-light); border-color: var(--copper-light); }
+    .cta-btn-outline {
+      background: transparent;
+      color: var(--navy);
+      border-color: var(--border);
+    }
+    .cta-btn-outline:hover { border-color: var(--navy); }
+    .card.featured .cta-btn-outline {
+      color: white;
+      border-color: rgba(255,255,255,0.3);
+    }
+    .card.featured .cta-btn-outline:hover {
+      border-color: rgba(255,255,255,0.7);
+    }
+
+    .feature-list { list-style: none; }
+    .feature-list li {
+      font-size: 0.83rem;
+      color: var(--ink);
+      padding: 0.35rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .feature-list li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      font-size: 0.75rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+    .feature-list li.dim::before { content: '—'; color: var(--border); }
+    .feature-list li.dim { color: var(--muted); }
+
+    .highlight-bar {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .highlight-bar strong { color: var(--ink); }
+    .card.featured .highlight-bar strong { color: white; }
+
+    /* ─── ANALYSIS BOX ─── */
+    .analysis-box {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .analysis-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 700px) { .analysis-grid { grid-template-columns: 1fr; } }
+    .analysis-item {
+      border-left: 3px solid var(--border);
+      padding-left: 1rem;
+    }
+    .analysis-item.pro { border-color: var(--green); }
+    .analysis-item.con { border-color: var(--red); }
+    .analysis-item.neutral { border-color: var(--amber); }
+    .analysis-item .label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .analysis-item.pro .label { color: var(--green); }
+    .analysis-item.con .label { color: var(--red); }
+    .analysis-item.neutral .label { color: var(--amber); }
+    .analysis-item ul { list-style: none; }
+    .analysis-item ul li { font-size: 0.82rem; color: var(--muted); padding: 0.2rem 0; }
+
+    /* ─── RECOMMENDATION ─── */
+    .recommendation {
+      max-width: 880px;
+      margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+    .rec-box {
+      background: linear-gradient(135deg, var(--navy) 0%, #2a4f8a 100%);
+      border-radius: 20px;
+      padding: 3rem;
+      color: white;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+    }
+    @media (max-width: 700px) { .rec-box { grid-template-columns: 1fr; } }
+    .rec-box .rec-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--copper-light);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rec-box .rec-label::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--copper);
+    }
+    .rec-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .rec-box p {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+    .rec-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 200px;
+    }
+    .rec-stat {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      text-align: center;
+    }
+    .rec-stat .val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--copper-light);
+      line-height: 1;
+      display: block;
+    }
+    .rec-stat .rec-stat-label {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 0.25rem;
+    }
+
+    .why-list {
+      margin-top: 1.5rem;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .why-list li {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .why-list li::before { content: '→'; color: var(--copper-light); font-weight: 700; }
+
+    /* ─── COMPARISON TABLE ─── */
+    .compare-section {
+      max-width: 880px;
+      margin: 0 auto 5rem;
+      padding: 0 1.5rem;
+    }
+    .compare-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .compare-section > p {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.87rem;
+      margin-bottom: 2rem;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      font-size: 0.84rem;
+    }
+    .compare-table th {
+      background: var(--navy);
+      color: white;
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+    .compare-table th:first-child { border-radius: 0; }
+    .compare-table td {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink);
+      vertical-align: middle;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:nth-child(even) td { background: var(--parchment); }
+    .compare-table td:first-child { font-weight: 500; color: var(--muted); font-size: 0.8rem; }
+    .badge-yes { color: var(--green); font-weight: 700; }
+    .badge-no { color: #ccc; }
+    .badge-partial { color: var(--amber); font-weight: 600; }
+    .badge-rec {
+      background: var(--copper);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+      background: var(--white);
+    }
+    footer strong { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Listing<span>AI</span></div>
+  <p>Pricing Strategy Analysis — Internal Document</p>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Pricing Strategy</div>
+  <h1>Three models.<br/><em>One recommendation.</em></h1>
+  <p>A structured analysis of three pricing architectures for ListingAI — each designed for a different growth hypothesis. Choose the one that fits your go-to-market motion.</p>
+  <div class="billing-toggle">
+    Monthly
+    <div class="pill">Annual</div>
+    <span class="save-badge">Save 20%</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrapper">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('s1', this)">
+      <span class="tab-num">Structure 01</span>
+      Flat-Rate Tiers
+    </button>
+    <button class="tab-btn" onclick="showTab('s2', this)">
+      <span class="tab-num">Structure 02</span>
+      Usage-Based Credits
+    </button>
+    <button class="tab-btn" onclick="showTab('s3', this)">
+      <span class="tab-num">Structure 03</span>
+      Firm-Size Tiers
+    </button>
+  </div>
+
+  <!-- ══════════════════ STRUCTURE 1: FLAT-RATE ══════════════════ -->
+  <div class="section active" id="s1">
+    <div class="structure-header">
+      <h2>Flat-Rate Tiers</h2>
+      <p>Simple monthly plans with a clear value ladder — ideal for individual agents and growing agencies.</p>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- SOLO -->
+      <div class="card">
+        <div class="tier-name">Tier 01</div>
+        <div class="tier-title">Solo Agent</div>
+        <div class="tier-desc">Everything a single broker needs to list faster and win more mandates.</div>
+        <div class="highlight-bar">⚡ Saves ~<strong>33 hrs/month</strong> vs manual</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">49</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">or $39/mo billed annually</div>
+        <a href="#" class="cta-btn cta-btn-outline">Start Free Trial</a>
+        <ul class="feature-list">
+          <li>50 AI listings per month</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input</li>
+          <li>All 3 portal badges (Bayut, PF, Dubizzle)</li>
+          <li>Listing management dashboard</li>
+          <li class="dim">Team members</li>
+          <li class="dim">White-label exports</li>
+          <li class="dim">Priority AI generation</li>
+          <li class="dim">Agency analytics</li>
+        </ul>
+      </div>
+
+      <!-- PRO -->
+      <div class="card featured">
+        <div class="popular-badge">Most Popular</div>
+        <div class="tier-name">Tier 02</div>
+        <div class="tier-title">Pro Agent</div>
+        <div class="tier-desc">Unlimited listings, priority AI, and advanced analytics for serious producers.</div>
+        <div class="highlight-bar">🏆 Best value for <strong>active agents</strong></div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">99</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">or $79/mo billed annually</div>
+        <a href="#" class="cta-btn cta-btn-primary">Get Started</a>
+        <ul class="feature-list">
+          <li>Unlimited AI listings</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input</li>
+          <li>All 3 portal badges + publishing</li>
+          <li>Listing management dashboard</li>
+          <li>Priority AI generation</li>
+          <li>Advanced analytics & insights</li>
+          <li class="dim">Team members</li>
+          <li class="dim">White-label exports</li>
+        </ul>
+      </div>
+
+      <!-- AGENCY -->
+      <div class="card">
+        <div class="tier-name">Tier 03</div>
+        <div class="tier-title">Agency</div>
+        <div class="tier-desc">One account for your entire brokerage. Team management and branded exports.</div>
+        <div class="highlight-bar">🏢 Up to <strong>10 agents</strong> per workspace</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">249</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">or $199/mo billed annually</div>
+        <a href="#" class="cta-btn cta-btn-outline">Contact Sales</a>
+        <ul class="feature-list">
+          <li>Unlimited AI listings</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input for all agents</li>
+          <li>All 3 portal badges + publishing</li>
+          <li>Shared team dashboard</li>
+          <li>Priority AI generation</li>
+          <li>Advanced analytics per agent</li>
+          <li>White-label PDF exports</li>
+          <li>Dedicated account manager</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="analysis-box">
+      <h3>Structure Analysis</h3>
+      <div class="analysis-grid">
+        <div class="analysis-item pro">
+          <div class="label">Strengths</div>
+          <ul>
+            <li>Simplest to understand</li>
+            <li>Predictable MRR for business</li>
+            <li>Matches existing quota logic in code</li>
+            <li>Easy A/B test on price points</li>
+            <li>Low cognitive load for buyers</li>
+          </ul>
+        </div>
+        <div class="analysis-item con">
+          <div class="label">Weaknesses</div>
+          <ul>
+            <li>Hard limit at 50 listings can frustrate power users</li>
+            <li>Doesn't capture value from high-volume agents</li>
+            <li>Large jump from $49 → $249 (no mid-tier)</li>
+          </ul>
+        </div>
+        <div class="analysis-item neutral">
+          <div class="label">Best For</div>
+          <ul>
+            <li>MVP / early growth stage</li>
+            <li>Agents who prefer simplicity</li>
+            <li>Markets with clear solo vs. agency split</li>
+            <li>Stripe implementation is straightforward</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STRUCTURE 2: USAGE-BASED ══════════════════ -->
+  <div class="section" id="s2">
+    <div class="structure-header">
+      <h2>Usage-Based Credits</h2>
+      <p>Pay for what you use. Credit bundles align pricing directly with value delivered — every listing generated is a listing sold.</p>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- STARTER -->
+      <div class="card">
+        <div class="tier-name">Bundle 01</div>
+        <div class="tier-title">Starter</div>
+        <div class="tier-desc">Get started with no commitment. Perfect for agents testing the platform.</div>
+        <div class="highlight-bar">🎁 <strong>10 free credits</strong> on signup, no card needed</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">0</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">Then $2.00 per listing after 10</div>
+        <a href="#" class="cta-btn cta-btn-outline">Start Free</a>
+        <ul class="feature-list">
+          <li>10 listing credits included</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input</li>
+          <li>Basic dashboard</li>
+          <li class="dim">Portal publishing</li>
+          <li class="dim">Analytics</li>
+          <li class="dim">Team access</li>
+          <li class="dim">Priority AI</li>
+          <li class="dim">Credits roll over</li>
+        </ul>
+      </div>
+
+      <!-- GROWTH -->
+      <div class="card featured">
+        <div class="popular-badge">Best Value</div>
+        <div class="tier-name">Bundle 02</div>
+        <div class="tier-title">Growth</div>
+        <div class="tier-desc">150 credits monthly with rollover. The sweet spot for active individual agents.</div>
+        <div class="highlight-bar">📊 Only <strong>$0.53/listing</strong> — less than a coffee</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">79</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">150 credits · unused credits roll over (90 days)</div>
+        <a href="#" class="cta-btn cta-btn-primary">Get Started</a>
+        <ul class="feature-list">
+          <li>150 listing credits/month</li>
+          <li>Credits roll over (90 days)</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input</li>
+          <li>Portal publishing (all 3)</li>
+          <li>Advanced analytics</li>
+          <li class="dim">Team access</li>
+          <li class="dim">White-label exports</li>
+          <li class="dim">Priority AI</li>
+        </ul>
+      </div>
+
+      <!-- SCALE -->
+      <div class="card">
+        <div class="tier-name">Bundle 03</div>
+        <div class="tier-title">Scale</div>
+        <div class="tier-desc">High-volume bundle for busy agents and small teams. Priority AI keeps you fast.</div>
+        <div class="highlight-bar">🚀 <strong>500 credits</strong> + priority AI processing</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">179</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">500 credits · $0.36/listing · add team seats $29/ea</div>
+        <a href="#" class="cta-btn cta-btn-outline">Get Started</a>
+        <ul class="feature-list">
+          <li>500 listing credits/month</li>
+          <li>Credits roll over (90 days)</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input</li>
+          <li>Portal publishing (all 3)</li>
+          <li>Advanced analytics</li>
+          <li>Priority AI generation</li>
+          <li>Add team seats ($29/ea)</li>
+          <li class="dim">White-label exports</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="analysis-box">
+      <h3>Structure Analysis</h3>
+      <div class="analysis-grid">
+        <div class="analysis-item pro">
+          <div class="label">Strengths</div>
+          <ul>
+            <li>Lowest barrier to entry (free tier)</li>
+            <li>Revenue scales with usage</li>
+            <li>Credit rollover increases perceived value</li>
+            <li>Appeals to cost-conscious agents</li>
+            <li>Power users pay more naturally</li>
+          </ul>
+        </div>
+        <div class="analysis-item con">
+          <div class="label">Weaknesses</div>
+          <ul>
+            <li>Unpredictable revenue (bad for forecasting)</li>
+            <li>Users pause when credits run low</li>
+            <li>More complex billing infrastructure</li>
+            <li>Customers may game free tier</li>
+          </ul>
+        </div>
+        <div class="analysis-item neutral">
+          <div class="label">Best For</div>
+          <ul>
+            <li>High-volume agents (20+ listings/mo)</li>
+            <li>Markets where ROI is very clear per listing</li>
+            <li>If you want a true free tier for viral growth</li>
+            <li>Second stage after flat-rate proven</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STRUCTURE 3: FIRM-SIZE TIERS ══════════════════ -->
+  <div class="section" id="s3">
+    <div class="structure-header">
+      <h2>Firm-Size Tiers</h2>
+      <p>Built on live 2026 data from Property Finder broker profiles and DLD active-office records — not the misleading registered-firm totals.</p>
+    </div>
+
+    <!-- DATA CALLOUT -->
+    <div class="analysis-box" style="margin-bottom:2rem; background: linear-gradient(135deg, #f0f4ff 0%, #f7f4ef 100%); border-color: #c7d4f0;">
+      <h3 style="margin-bottom:0.75rem; font-size:1rem;">Why the "3.3 agents/firm" stat was wrong — Live 2026 Correction</h3>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; text-align:center; margin-bottom:1rem;">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; color:var(--navy); line-height:1;">1,223</div>
+          <div style="font-size:0.72rem; color:var(--muted); margin-top:0.2rem;">DLD transaction-active offices (H1 2025)</div>
+        </div>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; color:var(--navy); line-height:1;">8–12</div>
+          <div style="font-size:0.72rem; color:var(--muted); margin-top:0.2rem;">median agents in an active brokerage</div>
+        </div>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; color:var(--navy); line-height:1;">~24</div>
+          <div style="font-size:0.72rem; color:var(--muted); margin-top:0.2rem;">mean agents per active office (DLD H1 2025)</div>
+        </div>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; color:var(--navy); line-height:1;">5–15</div>
+          <div style="font-size:0.72rem; color:var(--muted); margin-top:0.2rem;">new listings per agent/month</div>
+        </div>
+      </div>
+      <div style="font-size:0.76rem; color:var(--muted); padding-top:0.75rem; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        <div>
+          <strong style="color:var(--red);">The misleading stat:</strong> "3.3 agents/firm" divides 32,294 licensed brokers by 7,900+ registered firms — but most registered firms are dormant shells, single-person licensees, or branch registrations of large groups (fäm Properties alone registers 35 separate portal entities).
+        </div>
+        <div>
+          <strong style="color:var(--green);">The real picture:</strong> Among 1,223 DLD-active offices that actually closed transactions, the median is <strong>8–12 agents</strong>. Sampled live from Property Finder in March 2026: White & Co (376), Driven (379), Haus & Haus (231), MPP (171), Dacha (120), Espace (92), Strada (68), D&B (41) — and hundreds of boutiques with 5–20 agents.
+        </div>
+      </div>
+    </div>
+
+    <!-- NAMED AGENCY SAMPLE BAR CHART -->
+    <div class="analysis-box" style="margin-bottom:2rem;">
+      <h3 style="margin-bottom:1.25rem; font-size:1rem;">Live Sample — Active Dubai Agencies on Property Finder (March 2026)</h3>
+      <div style="display:flex; flex-direction:column; gap:0.5rem;">
+        <!-- bars -->
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Driven Properties</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:76%; background:var(--navy); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--navy);">379</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">White & Co</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:75%; background:var(--navy); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--navy);">376</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Haus & Haus</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:46%; background:var(--navy); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--navy);">231</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Metropolitan PP</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:34%; background:var(--navy); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--navy);">171</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Provident RE</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:32%; background:var(--navy); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--navy);">162</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Dacha Real Estate</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:24%; background:var(--copper); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--copper);">120</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Alarfeen RE</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:27%; background:var(--copper); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--copper);">133</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Huspy Dubai</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:19%; background:var(--copper); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--copper);">95</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Espace RE</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:18%; background:var(--copper); height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:var(--copper);">92</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Strada</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:14%; background:#16a34a; height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:#16a34a;">68</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">House & Hedges</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:14%; background:#16a34a; height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:#16a34a;">69</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">D&B Properties</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:8%; background:#16a34a; height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:#16a34a;">41</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem;">
+          <span style="color:var(--muted); text-align:right;">Homes 4 Life</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:10%; background:#16a34a; height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:#16a34a;">51</span>
+        </div>
+        <div style="display:grid; grid-template-columns:160px 1fr 48px; align-items:center; gap:0.75rem; font-size:0.75rem; padding-top:0.25rem; border-top:1px dashed var(--border);">
+          <span style="color:var(--muted); text-align:right; font-style:italic;">Typical boutique</span>
+          <div style="background:var(--border); border-radius:4px; height:10px; overflow:hidden;"><div style="width:3%; background:#9ca3af; height:100%; border-radius:4px;"></div></div>
+          <span style="font-weight:600; color:#9ca3af;">5–20</span>
+        </div>
+      </div>
+      <p style="font-size:0.72rem; color:var(--muted); margin-top:0.75rem;">Source: Property Finder broker profiles, sampled March 2026. Navy = Enterprise tier · Copper = Agency tier · Green = Boutique tier · Grey = Solo/Boutique entry.</p>
+    </div>
+
+    <div class="cards-grid-4">
+
+      <!-- SOLO -->
+      <div class="card">
+        <div class="tier-name">Tier 01 · Solo</div>
+        <div class="tier-title">Solo Agent</div>
+        <div class="tier-desc">Individual broker. Fast bilingual listings without a team workspace.</div>
+        <div class="highlight-bar">👤 <strong>1 agent</strong> · sole practitioners</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">49</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">or $39/mo billed annually · 15 listings/mo</div>
+        <a href="#" class="cta-btn cta-btn-outline">Start Free Trial</a>
+        <ul class="feature-list">
+          <li>15 listings/month</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input</li>
+          <li>All 3 portal badges</li>
+          <li>Personal dashboard</li>
+          <li class="dim">Team workspace</li>
+          <li class="dim">Shared listing pool</li>
+          <li class="dim">Per-agent analytics</li>
+          <li class="dim">White-label exports</li>
+        </ul>
+      </div>
+
+      <!-- BOUTIQUE — MOST POPULAR -->
+      <div class="card featured">
+        <div class="popular-badge">Most Popular</div>
+        <div class="tier-name">Tier 02 · Boutique</div>
+        <div class="tier-title">Boutique</div>
+        <div class="tier-desc">Covers the active market median of 8–12 agents. The true sweet spot for Dubai brokerages.</div>
+        <div class="highlight-bar">👥 Up to <strong>10 agents</strong> · shared listing pool</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">149</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">or $119/mo billed annually · 75 listings/mo pool</div>
+        <a href="#" class="cta-btn cta-btn-primary">Get Started</a>
+        <ul class="feature-list">
+          <li>75 listings/month (shared pool)</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input for all agents</li>
+          <li>All 3 portal badges + publishing</li>
+          <li>Shared team workspace</li>
+          <li>Per-agent analytics</li>
+          <li>Priority AI generation</li>
+          <li class="dim">White-label exports</li>
+          <li class="dim">Dedicated support</li>
+        </ul>
+      </div>
+
+      <!-- AGENCY -->
+      <div class="card">
+        <div class="tier-name">Tier 03 · Agency</div>
+        <div class="tier-title">Agency</div>
+        <div class="tier-desc">For firms in the 11–50 agent range — D&B, Strada, Homes 4 Life, Espace-level operations.</div>
+        <div class="highlight-bar">🏢 Up to <strong>30 agents</strong> · 200 listing pool</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-currency">$</span>
+          <span class="price-amount">299</span>
+          <span class="price-period">/mo</span>
+        </div>
+        <div class="price-note">or $239/mo billed annually · 200 listings/mo pool</div>
+        <a href="#" class="cta-btn cta-btn-outline">Get Started</a>
+        <ul class="feature-list">
+          <li>200 listings/month (shared pool)</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input for all agents</li>
+          <li>All 3 portal badges + publishing</li>
+          <li>Agency command centre</li>
+          <li>Per-agent performance analytics</li>
+          <li>Priority AI generation</li>
+          <li>White-label PDF exports</li>
+          <li>Dedicated account manager</li>
+        </ul>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="card">
+        <div class="tier-name">Tier 04 · Enterprise</div>
+        <div class="tier-title">Enterprise</div>
+        <div class="tier-desc">For 30+ agent firms — Dacha, Espace, Haus & Haus, MPP, Driven, White & Co level.</div>
+        <div class="highlight-bar">🏛 <strong>30+ agents</strong> · custom listing SLA</div>
+        <hr class="divider">
+        <div class="price-row">
+          <span class="price-amount" style="font-size:2.2rem">Custom</span>
+        </div>
+        <div class="price-note">Annual contract · negotiated listing pool + SLA</div>
+        <a href="#" class="cta-btn cta-btn-outline">Book a Demo</a>
+        <ul class="feature-list">
+          <li>Custom listing pool (negotiated)</li>
+          <li>English + Arabic copy</li>
+          <li>WhatsApp & Instagram variants</li>
+          <li>Voice input for all agents</li>
+          <li>Portal API sync (live publishing)</li>
+          <li>Full agency command centre</li>
+          <li>Per-agent performance analytics</li>
+          <li>Priority AI + dedicated compute</li>
+          <li>White-label branded exports</li>
+          <li>Dedicated account manager + SLA</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="analysis-box">
+      <h3>Structure Analysis — Built on Live 2026 Samples</h3>
+      <div class="analysis-grid">
+        <div class="analysis-item pro">
+          <div class="label">Strengths</div>
+          <ul>
+            <li>Boutique (10 agents) now covers the real active median of 8–12</li>
+            <li>75 listing pool ÷ 10 agents = 7.5/agent — safely within 5–15 range</li>
+            <li>Named real agencies anchor each tier (no guesswork)</li>
+            <li>Agency tier (30 agents) serves the Strada/D&B/Espace tier exactly</li>
+            <li>Enterprise clearly maps to the Driven/White & Co/Haus & Haus tier</li>
+          </ul>
+        </div>
+        <div class="analysis-item con">
+          <div class="label">Weaknesses</div>
+          <ul>
+            <li>Team features still need to be built before Boutique/Agency can ship</li>
+            <li>Shared pool can be dominated by one high-volume agent on the team</li>
+            <li>Enterprise (30+ agents, firms like Haus & Haus) is a long sales cycle</li>
+            <li>Branch fragmentation means some "Enterprise" firms may try to split billing across Boutique plans</li>
+          </ul>
+        </div>
+        <div class="analysis-item neutral">
+          <div class="label">Revenue Model</div>
+          <ul>
+            <li>Solo: $49 × est. 2,000 users = $98k MRR</li>
+            <li>Boutique: $149 × est. 600 firms = $89.4k MRR</li>
+            <li>Agency: $299 × est. 150 firms = $44.9k MRR</li>
+            <li>Boutique + Agency together = ~$134k MRR at modest penetration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════ RECOMMENDATION ══════════════════ -->
+<div class="recommendation">
+  <div class="rec-box">
+    <div>
+      <div class="rec-label">My Recommendation</div>
+      <h2>Start with Structure 1.<br/>Build toward Structure 3.</h2>
+      <p>
+        ListingAI is at MVP stage with a solid quota system already in place. <strong>Flat-Rate Tiers (Structure 1)</strong> is the fastest path to paid revenue — it matches the existing codebase, requires minimal billing complexity, and gives you clean conversion data to inform future pricing.
+        <br/><br/>
+        Once team features are shipped (6–9 months), migrate the Agency tier into a per-seat model (Structure 3). This is how Notion, Linear, and Loom all scaled — simple personal plans that convert to high-ACV team contracts.
+        <br/><br/>
+        Avoid Usage-Based (Structure 2) as a starting point — unpredictable revenue and a free tier creates support overhead before you have the team to handle it.
+      </p>
+      <ul class="why-list">
+        <li>Matches existing code quota logic</li>
+        <li>Predictable MRR from day one</li>
+        <li>No free tier abuse risk</li>
+        <li>Simple Stripe integration (3 products)</li>
+        <li>Clear upsell path: Solo → Pro → Agency</li>
+        <li>Migrate to per-seat later without breaking changes</li>
+      </ul>
+    </div>
+    <div class="rec-stats">
+      <div class="rec-stat">
+        <span class="val">$49</span>
+        <div class="rec-stat-label">Entry point (Solo/mo)</div>
+      </div>
+      <div class="rec-stat">
+        <span class="val">$99</span>
+        <div class="rec-stat-label">Target ARPU (Pro/mo)</div>
+      </div>
+      <div class="rec-stat">
+        <span class="val">$249</span>
+        <div class="rec-stat-label">Agency plan (10 seats)</div>
+      </div>
+      <div class="rec-stat">
+        <span class="val">5×</span>
+        <div class="rec-stat-label">Revenue vs. agent commission</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ COMPETITOR BENCHMARKS ══════════════════ -->
+<div class="compare-section" style="margin-bottom:2rem;">
+  <h2>Competitor Pricing Benchmarks</h2>
+  <p>How the market prices real estate SaaS — and where ListingAI sits relative to direct competitors</p>
+
+  <!-- Key finding callout -->
+  <div style="background:var(--navy); color:white; border-radius:16px; padding:1.75rem 2rem; margin-bottom:2rem; display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem;">
+    <div style="border-right:1px solid rgba(255,255,255,0.15); padding-right:1.5rem;">
+      <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.5rem;">Dominant Model</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; margin-bottom:0.4rem;">Tiered flat-rate<br/>with bundled seats</div>
+      <div style="font-size:0.78rem; color:rgba(255,255,255,0.6);">Follow Up Boss, Lofty, Sierra Interactive, Real Geeks, Wise Agent — all use flat tiers, not pure per-seat billing.</div>
+    </div>
+    <div style="border-right:1px solid rgba(255,255,255,0.15); padding-right:1.5rem;">
+      <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.5rem;">Closest Competitor</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; margin-bottom:0.4rem;">Listingcopy.ai<br/>$19–$199/mo</div>
+      <div style="font-size:0.78rem; color:rgba(255,255,255,0.6);">Seat + credits model. No Arabic. No UAE portals. No voice. ListingAI justifies a 2–3× premium on every tier.</div>
+    </div>
+    <div>
+      <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.5rem;">UAE Market Standard</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; margin-bottom:0.4rem;">PropSpace CRM<br/>AED 220/user/mo</div>
+      <div style="font-size:0.78rem; color:rgba(255,255,255,0.6);">~$60/user, min 3 users = $180/mo minimum. 12-month contract. UAE agents already accept this pricing.</div>
+    </div>
+  </div>
+
+  <!-- Competitor table -->
+  <table class="compare-table" style="margin-bottom:2rem;">
+    <thead>
+      <tr>
+        <th style="width:20%">Tool</th>
+        <th style="width:20%">Pricing Model</th>
+        <th style="width:20%">Solo / Entry</th>
+        <th style="width:20%">Small Team</th>
+        <th style="width:20%">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#fffbf5;">
+        <td><strong style="color:var(--copper);">ListingAI (ours)</strong></td>
+        <td>Tiered flat + listing pool</td>
+        <td><strong>$49/mo</strong> · 1 agent · 15 listings</td>
+        <td><strong>$149/mo</strong> · 10 agents · 75 listings</td>
+        <td style="font-size:0.75rem;">English + Arabic · UAE portals · voice · 2–3× premium justified by bilingual + portal features</td>
+      </tr>
+      <tr>
+        <td><strong>Listingcopy.ai</strong></td>
+        <td>Seat + credits (flat tiers)</td>
+        <td>$19/mo · 1 seat · 15 credits</td>
+        <td>$89/mo · 5 seats · 100 credits</td>
+        <td style="font-size:0.75rem;">English only · no UAE portals · no voice · direct AI listing competitor</td>
+      </tr>
+      <tr>
+        <td><strong>Follow Up Boss</strong></td>
+        <td>Per-seat (entry) + flat tiers</td>
+        <td>$69/user/mo</td>
+        <td>$499/mo · 10 users</td>
+        <td style="font-size:0.75rem;">Full CRM · not listing generation · acquired by Zillow</td>
+      </tr>
+      <tr>
+        <td><strong>Wise Agent</strong></td>
+        <td>Flat rate (up to 5 users)</td>
+        <td>$49/mo · up to 5 users</td>
+        <td>+$20/mo per 5 extra users</td>
+        <td style="font-size:0.75rem;">CRM only · very affordable · no AI generation</td>
+      </tr>
+      <tr>
+        <td><strong>Lofty (Chime)</strong></td>
+        <td>Tiered flat + included seats</td>
+        <td>$299/mo · 2 users</td>
+        <td>$649/mo · 5 users</td>
+        <td style="font-size:0.75rem;">Full platform · website + CRM + AI · not UAE-specific</td>
+      </tr>
+      <tr>
+        <td><strong>Sierra Interactive</strong></td>
+        <td>Tiered flat + included seats</td>
+        <td>$299/mo · 1 user</td>
+        <td>$599/mo · 5 users</td>
+        <td style="font-size:0.75rem;">US-focused · IDX website + CRM · $500 setup fee</td>
+      </tr>
+      <tr>
+        <td><strong>Real Geeks</strong></td>
+        <td>Flat base + per-seat add-on</td>
+        <td>$299/mo · 1–2 users</td>
+        <td>+$25/user/mo above 2</td>
+        <td style="font-size:0.75rem;">1-year contract required · US market</td>
+      </tr>
+      <tr>
+        <td><strong>PropSpace CRM</strong></td>
+        <td>Per-user (min 3)</td>
+        <td>AED 220/user (~$60) · min 3</td>
+        <td>AED 660+/mo · 12-mo contract</td>
+        <td style="font-size:0.75rem;"><strong>UAE market leader CRM</strong> · no AI generation · agents already pay this</td>
+      </tr>
+      <tr>
+        <td><strong>BoomTown / kvCORE</strong></td>
+        <td>Custom / demo required</td>
+        <td>~$500–800/mo est.</td>
+        <td>$1,000–2,300/mo est.</td>
+        <td style="font-size:0.75rem;">No public pricing · sales-led · enterprise only</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Positioning chart -->
+  <div style="background:var(--white); border:1.5px solid var(--border); border-radius:16px; padding:2rem; margin-bottom:2rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:600; color:var(--navy); margin-bottom:1.25rem;">ListingAI Positioning vs. Market</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+      <div>
+        <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">Price Axis (Solo/Entry Tier)</div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          <div style="display:grid; grid-template-columns:140px 1fr 52px; align-items:center; gap:0.5rem; font-size:0.75rem;">
+            <span style="color:var(--muted);">Listingcopy.ai</span>
+            <div style="background:var(--border); border-radius:4px; height:8px;"><div style="width:10%; background:#9ca3af; height:100%; border-radius:4px;"></div></div>
+            <span style="color:var(--muted);">$19</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr 52px; align-items:center; gap:0.5rem; font-size:0.75rem;">
+            <span style="color:var(--muted);">Wise Agent</span>
+            <div style="background:var(--border); border-radius:4px; height:8px;"><div style="width:27%; background:#9ca3af; height:100%; border-radius:4px;"></div></div>
+            <span style="color:var(--muted);">$49</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr 52px; align-items:center; gap:0.5rem; font-size:0.75rem;">
+            <span style="color:var(--copper); font-weight:600;">ListingAI Solo ★</span>
+            <div style="background:var(--border); border-radius:4px; height:8px;"><div style="width:27%; background:var(--copper); height:100%; border-radius:4px;"></div></div>
+            <span style="color:var(--copper); font-weight:600;">$49</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr 52px; align-items:center; gap:0.5rem; font-size:0.75rem;">
+            <span style="color:var(--muted);">Follow Up Boss</span>
+            <div style="background:var(--border); border-radius:4px; height:8px;"><div style="width:37%; background:#9ca3af; height:100%; border-radius:4px;"></div></div>
+            <span style="color:var(--muted);">$69</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr 52px; align-items:center; gap:0.5rem; font-size:0.75rem;">
+            <span style="color:var(--muted);">PropSpace (min)</span>
+            <div style="background:var(--border); border-radius:4px; height:8px;"><div style="width:96%; background:#9ca3af; height:100%; border-radius:4px;"></div></div>
+            <span style="color:var(--muted);">$180</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr 52px; align-items:center; gap:0.5rem; font-size:0.75rem;">
+            <span style="color:var(--navy); font-weight:600;">ListingAI Boutique ★</span>
+            <div style="background:var(--border); border-radius:4px; height:8px;"><div style="width:82%; background:var(--navy); height:100%; border-radius:4px;"></div></div>
+            <span style="color:var(--navy); font-weight:600;">$149</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.75rem;">What you get vs. competitors at $49</div>
+        <table style="width:100%; font-size:0.76rem; border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:0.4rem 0; color:var(--muted); font-weight:600; border-bottom:1px solid var(--border);">Feature</th>
+              <th style="text-align:center; padding:0.4rem 0; color:var(--copper); font-weight:600; border-bottom:1px solid var(--border);">ListingAI</th>
+              <th style="text-align:center; padding:0.4rem 0; color:var(--muted); font-weight:600; border-bottom:1px solid var(--border);">Listingcopy</th>
+              <th style="text-align:center; padding:0.4rem 0; color:var(--muted); font-weight:600; border-bottom:1px solid var(--border);">Wise Agent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:0.3rem 0; color:var(--muted);">AI listing copy</td><td style="text-align:center;" class="badge-yes">✓</td><td style="text-align:center;" class="badge-yes">✓</td><td style="text-align:center;" class="badge-no">—</td></tr>
+            <tr><td style="padding:0.3rem 0; color:var(--muted);">Arabic copy</td><td style="text-align:center;" class="badge-yes">✓</td><td style="text-align:center;" class="badge-no">—</td><td style="text-align:center;" class="badge-no">—</td></tr>
+            <tr><td style="padding:0.3rem 0; color:var(--muted);">UAE portal badges</td><td style="text-align:center;" class="badge-yes">✓</td><td style="text-align:center;" class="badge-no">—</td><td style="text-align:center;" class="badge-no">—</td></tr>
+            <tr><td style="padding:0.3rem 0; color:var(--muted);">Voice input</td><td style="text-align:center;" class="badge-yes">✓</td><td style="text-align:center;" class="badge-no">—</td><td style="text-align:center;" class="badge-no">—</td></tr>
+            <tr><td style="padding:0.3rem 0; color:var(--muted);">WhatsApp variant</td><td style="text-align:center;" class="badge-yes">✓</td><td style="text-align:center;" class="badge-no">—</td><td style="text-align:center;" class="badge-no">—</td></tr>
+            <tr><td style="padding:0.3rem 0; color:var(--muted);">Instagram caption</td><td style="text-align:center;" class="badge-yes">✓</td><td style="text-align:center;" class="badge-no">—</td><td style="text-align:center;" class="badge-no">—</td></tr>
+            <tr><td style="padding:0.3rem 0; color:var(--muted);">CRM features</td><td style="text-align:center;" class="badge-no">—</td><td style="text-align:center;" class="badge-no">—</td><td style="text-align:center;" class="badge-yes">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conclusion -->
+  <div style="background:var(--parchment); border:1.5px solid var(--border); border-radius:12px; padding:1.5rem 2rem; font-size:0.84rem; line-height:1.7; color:var(--ink);">
+    <strong style="color:var(--navy);">Verdict:</strong> The market has converged on <strong>tiered flat-rate with bundled seats</strong> — validating Structure 1 and Structure 3. Structure 2 (credits) is used by smaller, lower-value AI tools but is not the model for CRM-adjacent products. ListingAI's $49 Solo and $149 Boutique tiers sit in a defensible position: above the generic AI writing tools ($19–$89) and well below the full CRM platforms ($299–$650+), with Arabic + UAE portals as the clear justification for the premium. PropSpace's $180 minimum already conditions UAE agents to pay in this range for a single-function tool — our Boutique tier at $149 is actually cheaper than the market incumbent for a team of 3.
+  </div>
+</div>
+
+<!-- ══════════════════ COMPARISON TABLE ══════════════════ -->
+<div class="compare-section">
+  <h2>Side-by-Side Comparison</h2>
+  <p>How the three structures compare across key business metrics</p>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:26%">Metric</th>
+        <th>Structure 1 — Flat Tiers <span class="badge-rec">Recommended</span></th>
+        <th>Structure 2 — Credits</th>
+        <th>Structure 3 — Per Seat</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Entry Price</td>
+        <td><strong>$49/mo</strong></td>
+        <td><strong>Free</strong> (10 credits)</td>
+        <td><strong>$39/seat/mo</strong></td>
+      </tr>
+      <tr>
+        <td>Revenue Predictability</td>
+        <td class="badge-yes">High ✓</td>
+        <td class="badge-partial">Medium ~</td>
+        <td class="badge-yes">High ✓</td>
+      </tr>
+      <tr>
+        <td>Billing Complexity</td>
+        <td class="badge-yes">Low ✓</td>
+        <td class="badge-partial">Medium ~</td>
+        <td class="badge-partial">Medium ~</td>
+      </tr>
+      <tr>
+        <td>CAC Efficiency</td>
+        <td class="badge-yes">High ✓</td>
+        <td class="badge-partial">Medium ~ (free tier cost)</td>
+        <td class="badge-partial">Medium ~ (longer cycle)</td>
+      </tr>
+      <tr>
+        <td>Max ACV (annual)</td>
+        <td><strong>$2,988</strong> (Agency/yr)</td>
+        <td><strong>$2,148</strong> (Scale/yr)</td>
+        <td><strong>$2,988</strong> (Agency/yr) + Enterprise custom</td>
+      </tr>
+      <tr>
+        <td>Viral / Free Growth</td>
+        <td class="badge-no">None —</td>
+        <td class="badge-yes">Strong ✓</td>
+        <td class="badge-no">None —</td>
+      </tr>
+      <tr>
+        <td>Matches Current Code</td>
+        <td class="badge-yes">Yes ✓</td>
+        <td class="badge-partial">Partial ~ (needs credit ledger)</td>
+        <td class="badge-no">No — (needs team features)</td>
+      </tr>
+      <tr>
+        <td>NRR Expansion Potential</td>
+        <td class="badge-partial">Medium ~ (3 tiers)</td>
+        <td class="badge-yes">High ✓ (usage grows)</td>
+        <td class="badge-yes">High ✓ (seat additions)</td>
+      </tr>
+      <tr>
+        <td>Time to First Revenue</td>
+        <td class="badge-yes">Days ✓</td>
+        <td class="badge-partial">Weeks ~ (credit infra)</td>
+        <td class="badge-partial">Months ~ (team features)</td>
+      </tr>
+      <tr>
+        <td>UAE Market Fit</td>
+        <td class="badge-yes">Strong ✓</td>
+        <td class="badge-partial">Moderate ~</td>
+        <td class="badge-yes">Strong ✓ (agencies buy in bulk)</td>
+      </tr>
+      <tr>
+        <td>Recommended Phase</td>
+        <td><strong>Phase 1 — Now</strong></td>
+        <td>Phase 2 — add alongside</td>
+        <td>Phase 2/3 — post team launch</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════ S1 vs S3 FULL COMPARISON ══════════════════ -->
+<div style="max-width:880px; margin:0 auto 5rem; padding:0 1.5rem;" id="final-comparison">
+
+  <!-- Section header -->
+  <div style="text-align:center; margin-bottom:3rem;">
+    <div style="display:inline-block; background:var(--navy); color:white; font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 1rem; border-radius:100px; margin-bottom:1.25rem;">Final Decision</div>
+    <h2 style="font-family:'Cormorant Garamond',serif; font-size:clamp(1.9rem,4vw,2.8rem); font-weight:600; color:var(--navy); line-height:1.15; margin-bottom:0.75rem;">Structure 1 vs. Structure 3</h2>
+    <p style="color:var(--muted); font-size:0.9rem; max-width:520px; margin:0 auto;">A direct comparison of both models across pricing, revenue, complexity, and launch readiness — including the phased path from one to the other.</p>
+  </div>
+
+  <!-- ── SIDE-BY-SIDE TIER CARDS ── -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2.5rem;">
+
+    <!-- STRUCTURE 1 -->
+    <div style="background:var(--white); border:1.5px solid var(--border); border-radius:20px; overflow:hidden;">
+      <div style="background:var(--parchment); border-bottom:1px solid var(--border); padding:1.25rem 1.75rem;">
+        <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem;">Structure 1</div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:var(--navy);">Flat-Rate Tiers</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-top:0.3rem;">Fixed monthly price per plan · listing pool shared across team</div>
+      </div>
+      <div style="padding:1.5rem 1.75rem; display:flex; flex-direction:column; gap:1rem;">
+        <div style="border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:var(--ink);">Solo</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:var(--navy);">$49<span style="font-size:0.85rem; color:var(--muted);">/mo</span></span>
+          </div>
+          <div style="font-size:0.76rem; color:var(--muted);">1 agent · 15 listings/mo · all core features</div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:var(--ink);">Boutique</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:var(--navy);">$149<span style="font-size:0.85rem; color:var(--muted);">/mo</span></span>
+          </div>
+          <div style="font-size:0.76rem; color:var(--muted);">Up to 10 agents · 75 listings/mo shared · team workspace</div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:var(--ink);">Agency</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:var(--navy);">$299<span style="font-size:0.85rem; color:var(--muted);">/mo</span></span>
+          </div>
+          <div style="font-size:0.76rem; color:var(--muted);">Up to 30 agents · 200 listings/mo shared · white-label</div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; background:var(--parchment);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:var(--ink);">Enterprise</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--muted);">Custom</span>
+          </div>
+          <div style="font-size:0.76rem; color:var(--muted);">30+ agents · SLA · dedicated support</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRUCTURE 3 -->
+    <div style="background:var(--navy); border:1.5px solid var(--navy); border-radius:20px; overflow:hidden;">
+      <div style="background:rgba(255,255,255,0.07); border-bottom:1px solid rgba(255,255,255,0.12); padding:1.25rem 1.75rem;">
+        <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.3rem;">Structure 3</div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:white;">Per-Agent + Umbrella</div>
+        <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); margin-top:0.3rem;">Priced per active agent · brokerage is billing owner · individual accounts</div>
+      </div>
+      <div style="padding:1.5rem 1.75rem; display:flex; flex-direction:column; gap:1rem;">
+        <div style="border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:white;">Solo</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:white;">$49<span style="font-size:0.85rem; color:rgba(255,255,255,0.5);">/mo</span></span>
+          </div>
+          <div style="font-size:0.76rem; color:rgba(255,255,255,0.5);">1 agent · 15 listings/mo · no umbrella needed</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:1rem 1.25rem; background:rgba(255,255,255,0.06);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:white;">Brokerage</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:var(--copper-light);">$35<span style="font-size:0.85rem; color:rgba(255,255,255,0.5);">/agent/mo</span></span>
+          </div>
+          <div style="font-size:0.76rem; color:rgba(255,255,255,0.5);">Min 3 agents · own accounts · umbrella admin · 15 listings/agent/mo</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:white;">Agency</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:var(--copper-light);">$25<span style="font-size:0.85rem; color:rgba(255,255,255,0.5);">/agent/mo</span></span>
+          </div>
+          <div style="font-size:0.76rem; color:rgba(255,255,255,0.5);">Min 15 agents · volume discount · white-label · priority AI</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:1rem 1.25rem; background:rgba(255,255,255,0.04);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.3rem;">
+            <span style="font-weight:600; color:white;">Enterprise</span>
+            <span style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:rgba(255,255,255,0.45);">Custom</span>
+          </div>
+          <div style="font-size:0.76rem; color:rgba(255,255,255,0.5);">30+ agents · negotiated rate · SLA · dedicated support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REVENUE AT SCALE ── -->
+  <div style="background:var(--white); border:1.5px solid var(--border); border-radius:20px; padding:2rem; margin-bottom:2rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--navy); margin-bottom:0.4rem;">Revenue at Scale — Where Structure 3 Wins</h3>
+    <p style="font-size:0.8rem; color:var(--muted); margin-bottom:1.5rem;">Monthly revenue ListingAI earns per customer account as the agency grows. Structure 1 plateaus. Structure 3 scales continuously.</p>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:separate; border-spacing:0; font-size:0.83rem;">
+        <thead>
+          <tr>
+            <th style="background:var(--parchment); padding:0.75rem 1rem; text-align:left; font-size:0.72rem; font-weight:700; color:var(--muted); border-bottom:2px solid var(--border); border-radius:8px 0 0 0;">Agency size</th>
+            <th style="background:var(--parchment); padding:0.75rem 1rem; text-align:center; font-size:0.72rem; font-weight:700; color:var(--muted); border-bottom:2px solid var(--border);">Structure 1<br/><span style="font-weight:400; font-size:0.68rem;">(flat tier)</span></th>
+            <th style="background:var(--navy); padding:0.75rem 1rem; text-align:center; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); border-bottom:2px solid rgba(255,255,255,0.2);">Structure 3<br/><span style="font-weight:400; font-size:0.68rem; color:var(--copper-light);">(per-agent)</span></th>
+            <th style="background:var(--parchment); padding:0.75rem 1rem; text-align:center; font-size:0.72rem; font-weight:700; color:var(--muted); border-bottom:2px solid var(--border); border-radius:0 8px 0 0;">S3 premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">1 agent (solo)</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$49</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:600; background:rgba(27,58,107,0.04);">$49</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--muted);">same</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">3 agents</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$149 <span style="font-size:0.72rem; color:var(--muted);">(Boutique)</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:600; color:var(--green); background:rgba(27,58,107,0.04);">$105</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--green); font-weight:600;">S3 cheaper ↓</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">5 agents</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$149 <span style="font-size:0.72rem; color:var(--muted);">(Boutique)</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:600; background:rgba(27,58,107,0.04);">$175</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--copper); font-weight:600;">+$26</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">8 agents <span style="font-size:0.7rem;">(active median)</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$149 <span style="font-size:0.72rem; color:var(--red);">plateau</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.04);">$280</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--copper); font-weight:600;">+$131 (87% more)</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">10 agents</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$149 <span style="font-size:0.72rem; color:var(--red);">plateau</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.04);">$350</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--copper); font-weight:600;">+$201 (135% more)</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">15 agents</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$299 <span style="font-size:0.72rem; color:var(--muted);">(Agency)</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.04);">$375</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--copper); font-weight:600;">+$76 (25% more)</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">20 agents</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$299 <span style="font-size:0.72rem; color:var(--red);">plateau</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.04);">$500</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--copper); font-weight:600;">+$201 (67% more)</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); color:var(--muted);">30 agents</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$299 <span style="font-size:0.72rem; color:var(--red);">plateau</span></td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.08); text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.04);">$750</td>
+            <td style="padding:0.7rem 1rem; border-bottom:1px solid var(--border); text-align:center; color:var(--copper); font-weight:600;">+$451 (151% more)</td>
+          </tr>
+          <tr>
+            <td style="padding:0.7rem 1rem; color:var(--muted);">50 agents</td>
+            <td style="padding:0.7rem 1rem; text-align:center; font-weight:600; color:var(--muted);">Custom <span style="font-size:0.72rem;">(unknown)</span></td>
+            <td style="padding:0.7rem 1rem; text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.04);">$1,250</td>
+            <td style="padding:0.7rem 1rem; text-align:center; color:var(--navy); font-weight:700;">Clear winner ✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.75rem; color:var(--muted); margin-top:1rem; padding-top:0.75rem; border-top:1px solid var(--border);">Structure 3 "Agency" rate ($25/agent) kicks in at 15+ agents. "Brokerage" rate is $35/agent. Plateau = no additional revenue earned when agency adds more agents on a flat tier.</p>
+  </div>
+
+  <!-- ── HEAD TO HEAD TABLE ── -->
+  <div style="background:var(--white); border:1.5px solid var(--border); border-radius:20px; padding:2rem; margin-bottom:2rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--navy); margin-bottom:1.5rem;">Head-to-Head: Every Dimension That Matters</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:0.6rem 0.75rem; border-bottom:2px solid var(--border); color:var(--muted); font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; width:26%;">Dimension</th>
+          <th style="text-align:center; padding:0.6rem 1rem; border-bottom:2px solid var(--border); color:var(--navy); font-weight:700; width:37%;">Structure 1 — Flat Tiers</th>
+          <th style="text-align:center; padding:0.6rem 1rem; border-bottom:2px solid var(--navy); color:var(--navy); font-weight:700; background:rgba(27,58,107,0.04); width:37%;">Structure 3 — Per-Agent ★</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Customer understands it</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-yes">Immediately ✓</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-yes">Yes — PropSpace trained them ✓</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Revenue when agency hires</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-no">None — flat tier doesn't move —</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-yes">Automatic +$35/agent ✓</td>
+        </tr>
+        <tr>
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Revenue when agency fires</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-yes">Stable (flat fee unchanged) ✓</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-partial">Drops per removed agent ~</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Matches agent workflow</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-partial">Shared login pool ~</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-yes">Own account per agent ✓</td>
+        </tr>
+        <tr>
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Brokerage oversight</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-partial">Not until team features ship ~</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-yes">Built into the model ✓</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Launch with current code</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-yes">Yes — today ✓</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-partial">Solo only until team ships ~</td>
+        </tr>
+        <tr>
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Billing complexity</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-yes">3 Stripe products ✓</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-partial">Metered billing + proration ~</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Cheaper for small teams</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-partial">At exactly 3 agents ~</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-yes">Yes — 3 agents = $105 vs $149 ✓</td>
+        </tr>
+        <tr>
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Cheaper than PropSpace</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-yes">Yes ($149 vs $180 min) ✓</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-yes">Yes ($35 vs $60/agent) ✓</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">NRR expansion</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center;" class="badge-partial">Only by tier upgrade ~</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; background:rgba(27,58,107,0.03);" class="badge-yes">Organic — every new hire ✓</td>
+        </tr>
+        <tr>
+          <td style="padding:0.65rem 0.75rem; border-bottom:1px solid var(--border); color:var(--muted); font-weight:500;">Max annual value (10 agents)</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:600;">$1,788/yr</td>
+          <td style="padding:0.65rem 1rem; border-bottom:1px solid var(--border); text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.03);">$4,200/yr</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td style="padding:0.65rem 0.75rem; color:var(--muted); font-weight:500;">Max annual value (30 agents)</td>
+          <td style="padding:0.65rem 1rem; text-align:center; font-weight:600;">$3,588/yr</td>
+          <td style="padding:0.65rem 1rem; text-align:center; font-weight:700; color:var(--copper); background:rgba(27,58,107,0.03);">$9,000/yr</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── PHASED LAUNCH ROADMAP ── -->
+  <div style="background:var(--white); border:1.5px solid var(--border); border-radius:20px; padding:2rem; margin-bottom:2rem;">
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--navy); margin-bottom:0.4rem;">The Phased Launch Roadmap</h3>
+    <p style="font-size:0.8rem; color:var(--muted); margin-bottom:2rem;">Start with Structure 1 to get to revenue. Build toward Structure 3 as the permanent model. Never sell annual flat-tier contracts you'll have to undo.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; position:relative;">
+
+      <!-- connecting line -->
+      <div style="position:absolute; top:2.2rem; left:10%; right:10%; height:2px; background:linear-gradient(90deg, var(--copper), var(--navy)); z-index:0; border-radius:2px;"></div>
+
+      <!-- Phase 1 -->
+      <div style="background:var(--parchment); border:1.5px solid var(--border); border-radius:14px; padding:1.5rem; position:relative; z-index:1;">
+        <div style="width:2.5rem; height:2.5rem; border-radius:50%; background:var(--copper); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; margin-bottom:1rem;">1</div>
+        <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--copper); margin-bottom:0.4rem;">Now · 0–3 months</div>
+        <div style="font-weight:700; color:var(--ink); margin-bottom:0.75rem;">Launch Solo Plan</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:0.4rem;">
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> $49/mo Solo · 15 listings</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> Stripe integration (1 product)</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> Works with current codebase</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--copper);">→</span> Brokerage "coming soon" waitlist</li>
+        </ul>
+        <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid var(--border); font-size:0.72rem; color:var(--muted);">Revenue day: <strong style="color:var(--ink);">this sprint</strong></div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div style="background:var(--parchment); border:1.5px solid var(--border); border-radius:14px; padding:1.5rem; position:relative; z-index:1;">
+        <div style="width:2.5rem; height:2.5rem; border-radius:50%; background:var(--navy); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; margin-bottom:1rem;">2</div>
+        <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--navy); margin-bottom:0.4rem;">3–9 months</div>
+        <div style="font-weight:700; color:var(--ink); margin-bottom:0.75rem;">Launch Brokerage Plan</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:0.4rem;">
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> Build agent-level accounts</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> Admin umbrella dashboard</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> $35/agent/mo · Stripe metered billing</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--copper);">→</span> Convert waitlist to paying</li>
+        </ul>
+        <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid var(--border); font-size:0.72rem; color:var(--muted);">Structure 3 fully live for <strong style="color:var(--ink);">2–10 agent firms</strong></div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div style="background:var(--parchment); border:1.5px solid var(--border); border-radius:14px; padding:1.5rem; position:relative; z-index:1;">
+        <div style="width:2.5rem; height:2.5rem; border-radius:50%; background:var(--ink); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; margin-bottom:1rem;">3</div>
+        <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.4rem;">9–18 months</div>
+        <div style="font-weight:700; color:var(--ink); margin-bottom:0.75rem;">Full Structure 3 + Enterprise</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:0.4rem;">
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> Agency tier at $25/agent (15+ agents)</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> White-label + portal API sync</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--green);">✓</span> Enterprise custom contracts</li>
+          <li style="font-size:0.78rem; color:var(--muted); display:flex; gap:0.4rem;"><span style="color:var(--copper);">→</span> Target Haus & Haus, MPP, Dacha</li>
+        </ul>
+        <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid var(--border); font-size:0.72rem; color:var(--muted);">Retire Structure 1 Boutique/Agency flat tiers</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FINAL VERDICT ── -->
+  <div style="background:linear-gradient(135deg, var(--navy) 0%, #1e4a8a 100%); border-radius:20px; padding:2.5rem 3rem; color:white;">
+    <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
+      <span style="display:block; width:20px; height:2px; background:var(--copper);"></span>
+      Final Verdict
+    </div>
+    <h2 style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; margin-bottom:1.25rem; line-height:1.2;">Structure 3 is the right model.<br/>Structure 1 is the right launch.</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+      <div>
+        <p style="font-size:0.87rem; color:rgba(255,255,255,0.78); line-height:1.75; margin-bottom:1rem;">
+          Structure 3 — per-agent pricing with individual accounts under a brokerage umbrella — is the correct long-term architecture. It mirrors how the UAE market already thinks (PropSpace), it captures revenue growth automatically as agencies hire, and it gives agents the individual ownership they want while giving brokerages the oversight they need.
+        </p>
+        <p style="font-size:0.87rem; color:rgba(255,255,255,0.78); line-height:1.75;">
+          But team features aren't built yet. Structure 1's Solo plan ($49/mo) gets you to revenue immediately with zero code changes. Launch it, collect real customers, and use that MRR to fund building the umbrella dashboard. The Solo plan is identical in both structures — so early customers never need to be re-priced.
+        </p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.3rem;">The one number</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; color:white; line-height:1;">2.5×</div>
+          <div style="font-size:0.75rem; color:rgba(255,255,255,0.55);">more revenue per 30-agent agency under Structure 3 vs. Structure 1 ($750/mo vs. $299/mo)</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.3rem;">The one rule</div>
+          <div style="font-size:0.85rem; color:white; line-height:1.5;">Never sell annual contracts on flat tiers. Monthly only on Structure 1, so migration to Structure 3 is frictionless.</div>
+        </div>
+        <div style="background:rgba(184,115,51,0.2); border:1px solid rgba(184,115,51,0.3); border-radius:12px; padding:1rem 1.25rem;">
+          <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--copper-light); margin-bottom:0.3rem;">Launch checklist</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:0.3rem;">
+            <li style="font-size:0.78rem; color:rgba(255,255,255,0.8); display:flex; gap:0.4rem;"><span style="color:var(--copper-light);">→</span> Ship $49 Solo plan on Stripe</li>
+            <li style="font-size:0.78rem; color:rgba(255,255,255,0.8); display:flex; gap:0.4rem;"><span style="color:var(--copper-light);">→</span> Add "Brokerage plan — coming soon" CTA</li>
+            <li style="font-size:0.78rem; color:rgba(255,255,255,0.8); display:flex; gap:0.4rem;"><span style="color:var(--copper-light);">→</span> Collect brokerage waitlist emails</li>
+            <li style="font-size:0.78rem; color:rgba(255,255,255,0.8); display:flex; gap:0.4rem;"><span style="color:var(--copper-light);">→</span> Monthly billing only (no annual)</li>
+            <li style="font-size:0.78rem; color:rgba(255,255,255,0.8); display:flex; gap:0.4rem;"><span style="color:var(--copper-light);">→</span> Start building umbrella dashboard</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>ListingAI</strong> — Pricing Strategy Analysis · Prepared March 2026 · Internal use only
+</footer>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>

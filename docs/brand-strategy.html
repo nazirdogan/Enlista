@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Strategy — Enlista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.woff2') format('woff2'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.woff') format('woff'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.ttf') format('truetype');
+      font-weight: 300 900;
+      font-display: swap;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-VariableItalic.woff2') format('woff2'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-VariableItalic.woff') format('woff'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-VariableItalic.ttf') format('truetype');
+      font-weight: 300 900;
+      font-display: swap;
+      font-style: italic;
+    }
+    :root {
+      --ink: #0E1F38;
+      --ink-90: rgba(14,31,56,0.9);
+      --gold: #C9A452;
+      --gold-light: #E8C97A;
+      --gold-muted: rgba(201,164,82,0.15);
+      --warm: #F8F5F0;
+      --warm-2: #F0EBE3;
+      --white: #FFFFFF;
+      --muted: #64748B;
+      --border: #E2E4E9;
+      --success: #2D8A6E;
+      --font-h: 'Satoshi', sans-serif;
+      --font-b: 'Satoshi', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--warm);
+      color: var(--ink);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* NAV */
+    .sidenav {
+      position: fixed;
+      left: 0; top: 0;
+      width: 220px;
+      height: 100vh;
+      background: var(--ink);
+      padding: 32px 24px;
+      z-index: 100;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sidenav-logo {
+      font-family: var(--font-h);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 32px;
+      letter-spacing: -0.02em;
+    }
+    .sidenav-logo span { color: var(--gold); }
+    .sidenav a {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      padding: 8px 0;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: color 0.2s;
+    }
+    .sidenav a:hover { color: var(--gold); }
+    .sidenav-section {
+      margin-top: 20px;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 4px;
+    }
+    .nav-link-social {
+      background: var(--gold-muted);
+      border-radius: 4px;
+      padding: 8px 12px !important;
+      border: none !important;
+      color: var(--gold) !important;
+    }
+    .nav-link-social:hover { background: var(--gold); color: var(--ink) !important; }
+
+    /* LAYOUT */
+    .main {
+      margin-left: 220px;
+      min-height: 100vh;
+    }
+
+    /* COVER */
+    .cover {
+      height: 100vh;
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 72px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,164,82,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,164,82,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .cover-circle {
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,164,82,0.08);
+    }
+    .cover-circle-2 {
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,164,82,0.12);
+    }
+    .cover-eyebrow {
+      font-family: var(--font-b);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .cover-title {
+      font-family: var(--font-h);
+      font-size: clamp(48px, 6vw, 80px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .cover-title span { color: var(--gold); }
+    .cover-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 300;
+      max-width: 540px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 40px;
+    }
+    .cover-meta-item {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .cover-meta-label { color: rgba(255,255,255,0.35); }
+    .cover-meta-value { color: var(--white); }
+
+    /* SECTION COMMON */
+    section {
+      padding: 100px 80px;
+    }
+    section:nth-child(even) {
+      background: var(--white);
+    }
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-h);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 400;
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 60px;
+    }
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: var(--gold);
+      margin: 24px 0 48px;
+      border-radius: 2px;
+    }
+
+    /* BRAND AUDIT */
+    .audit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .audit-card {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+    .audit-card.problems { border-top: 3px solid #DC2626; }
+    .audit-card.strengths { border-top: 3px solid var(--success); }
+    .audit-card h3 {
+      font-family: var(--font-h);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .audit-list { list-style: none; }
+    .audit-list li {
+      padding: 10px 0;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .audit-list li:last-child { border-bottom: none; }
+    .audit-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* NAME OPTIONS */
+    .names-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .name-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .name-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px rgba(14,31,56,0.08);
+    }
+    .name-card.recommended {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #fff 0%, #fffef8 100%);
+    }
+    .name-rec-badge {
+      position: absolute;
+      top: -12px;
+      left: 32px;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .name-rank {
+      font-family: var(--font-h);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .name-display {
+      font-family: var(--font-h);
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .name-card.recommended .name-display { color: var(--ink); }
+    .name-pronunciation {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .name-meaning {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gold);
+      background: var(--gold-muted);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .name-tagline {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      border-left: 3px solid var(--gold);
+      padding-left: 12px;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .name-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .name-scores {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .name-score {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .score-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .score-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .score-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+    .name-url {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .name-url code {
+      background: var(--warm);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* TAGLINES */
+    .taglines-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .tagline-card {
+      background: var(--warm);
+      border-radius: 12px;
+      padding: 28px 32px;
+      border: 1px solid var(--border);
+    }
+    .tagline-card.top-pick {
+      background: var(--ink);
+      border-color: transparent;
+    }
+    .tagline-tier {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .tagline-text {
+      font-family: var(--font-h);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .tagline-card.top-pick .tagline-text { color: var(--white); }
+    .tagline-why {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .tagline-card.top-pick .tagline-why { color: rgba(255,255,255,0.55); }
+    .tagline-pairing {
+      margin-top: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+    .tagline-avoid {
+      background: #FEF2F2;
+      border: 1px solid #FCA5A5;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-top: 16px;
+    }
+    .tagline-avoid h4 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #DC2626;
+      margin-bottom: 16px;
+    }
+    .avoid-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .avoid-tag {
+      background: white;
+      border: 1px solid #FCA5A5;
+      color: #DC2626;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-decoration: line-through;
+    }
+
+    /* IDENTITY */
+    .identity-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+    }
+    .swatch {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .swatch-color {
+      height: 80px;
+    }
+    .swatch-info {
+      padding: 12px;
+      background: white;
+    }
+    .swatch-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink);
+      display: block;
+    }
+    .swatch-hex {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'SF Mono', monospace;
+    }
+    .swatch-role {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* TYPOGRAPHY */
+    .type-specimen {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 40px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .type-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .specimen-display {
+      font-family: var(--font-h);
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .specimen-display span { color: var(--gold); }
+    .specimen-h2 {
+      font-family: var(--font-h);
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .specimen-body {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 16px;
+    }
+    .specimen-small {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .type-pairing {
+      background: var(--ink);
+      border-radius: 16px;
+      padding: 40px;
+      color: white;
+    }
+    .type-pairing .specimen-h2 { color: white; margin-bottom: 12px; }
+    .type-pairing .specimen-body { color: rgba(255,255,255,0.55); }
+    .arabic-specimen {
+      font-family: 'Cairo', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      direction: rtl;
+      text-align: right;
+      color: var(--gold);
+      margin-top: 16px;
+    }
+
+    /* MESSAGING */
+    .messaging-hierarchy {
+      background: var(--ink);
+      border-radius: 20px;
+      padding: 48px;
+      margin-bottom: 40px;
+    }
+    .tier-row {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .tier-row:last-child { border-bottom: none; }
+    .tier-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .tier-copy {
+      font-family: var(--font-h);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+    }
+    .tier-1 .tier-copy { font-size: 28px; }
+    .tier-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .proof-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .proof-number {
+      font-family: var(--font-h);
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .proof-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+    /* OBJECTIONS */
+    .objection-list { list-style: none; }
+    .objection-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .objection-item:last-child { border-bottom: none; }
+    .objection-q {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      padding: 16px;
+      background: #FEF2F2;
+      border-radius: 8px;
+      border-left: 3px solid #DC2626;
+    }
+    .objection-a {
+      font-size: 14px;
+      color: var(--ink);
+      padding: 16px;
+      background: #F0FDF4;
+      border-radius: 8px;
+      border-left: 3px solid var(--success);
+      line-height: 1.6;
+    }
+
+    /* PERSONAS */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .persona-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .persona-header {
+      background: var(--ink);
+      padding: 28px 28px 24px;
+      position: relative;
+    }
+    .persona-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-h);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .persona-name {
+      font-family: var(--font-h);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .persona-role {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+    .persona-body { padding: 28px; }
+    .persona-stat-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .persona-stat {
+      flex: 1;
+      background: var(--warm);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .persona-stat-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .persona-stat-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .persona-pain {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .persona-pain strong { color: var(--ink); }
+    .persona-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .persona-tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--gold-muted);
+      color: var(--gold);
+      letter-spacing: 0.03em;
+    }
+    .persona-primary .persona-header { background: var(--ink); }
+    .persona-secondary .persona-header { background: #1a3550; }
+    .persona-tertiary .persona-header { background: #0f2840; }
+
+    /* FOOTER */
+    .doc-footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.35);
+      padding: 40px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    .doc-footer-logo {
+      font-family: var(--font-h);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--white);
+    }
+    .doc-footer-logo span { color: var(--gold); }
+
+    /* VIEW POSTS BTN */
+    .view-posts-cta {
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--font-h);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 32px;
+      letter-spacing: -0.01em;
+    }
+    .view-posts-cta:hover { background: var(--gold-light); }
+
+    @media (max-width: 1100px) {
+      .sidenav { display: none; }
+      .main { margin-left: 0; }
+      section { padding: 60px 32px; }
+      .cover { padding: 60px 32px; }
+      .doc-footer { padding: 32px; }
+      .audit-grid, .taglines-grid, .identity-row, .proof-grid, .persona-grid { grid-template-columns: 1fr; }
+      .objection-item { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sidenav">
+    <div class="sidenav-logo">Enlist<span>a</span></div>
+    <div class="sidenav-section">Document</div>
+    <a href="#cover">Overview</a>
+    <a href="#audit">Brand Audit</a>
+    <div class="sidenav-section">Identity</div>
+    <a href="#names">Name Options</a>
+    <a href="#taglines">Taglines</a>
+    <a href="#identity">Color & Type</a>
+    <div class="sidenav-section">Strategy</div>
+    <a href="#messaging">Messaging</a>
+    <a href="#personas">Audiences</a>
+    <a href="#objections">Objections</a>
+    <div class="sidenav-section" style="margin-top: auto;"></div>
+    <a href="instagram-content.html" class="nav-link-social">→ Instagram Posts</a>
+  </nav>
+
+  <main class="main">
+
+    <!-- COVER -->
+    <div class="cover" id="cover">
+      <div class="cover-grid"></div>
+      <div class="cover-circle"></div>
+      <div class="cover-circle-2"></div>
+      <div class="cover-eyebrow">Go-To-Market Brand Strategy</div>
+      <div class="cover-title">Brand Identity<br><span>&amp; GTM Playbook</span></div>
+      <div class="cover-sub">A complete brand strategy for the UAE's leading AI-powered property listing platform — from naming and visual identity to messaging architecture and market positioning.</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Prepared</div>
+          <div class="cover-meta-value">March 2025</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Market</div>
+          <div class="cover-meta-value">UAE PropTech</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Category</div>
+          <div class="cover-meta-value">AI SaaS · B2B</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIT -->
+    <section id="audit">
+      <div class="section-label">Brand Audit</div>
+      <h2 class="section-title">What's working. What isn't.</h2>
+      <div class="divider"></div>
+      <p class="section-sub">The product is genuinely strong — the brand hasn't caught up. Here's an honest assessment of where the current identity stands.</p>
+
+      <div class="audit-grid">
+        <div class="audit-card strengths">
+          <h3>✓ Strengths to Build On</h3>
+          <ul class="audit-list">
+            <li><span class="audit-icon">💪</span>Exceptional proof points — 840 agencies, 124K listings, &lt;4 min publish time are credible and compelling</li>
+            <li><span class="audit-icon">📊</span>Satoshi at weight 800 reads with authority — applied across all headings and body text</li>
+            <li><span class="audit-icon">🏗</span>Bento card grid UI is on-trend and correctly positions this as a modern platform</li>
+            <li><span class="audit-icon">🤝</span>Real testimonials with measurable outcomes ("720× improvement") — rare and valuable</li>
+            <li><span class="audit-icon">📋</span>RERA compliance as a core feature is a genuine market differentiator</li>
+            <li><span class="audit-icon">🌐</span>Bilingual EN/AR is a structural advantage no Western tool can easily replicate</li>
+          </ul>
+        </div>
+        <div class="audit-card problems">
+          <h3>✗ Problems to Fix</h3>
+          <ul class="audit-list">
+            <li><span class="audit-icon">🏷</span><strong>Name confusion:</strong> "ListingAI" and "ListingsLaunch" both appear — descriptive, generic, untrademark-able</li>
+            <li><span class="audit-icon">🎨</span>Primary blue (#1D4ED8) is identical to thousands of SaaS products — zero visual differentiation</li>
+            <li><span class="audit-icon">✍️</span>Hero copy "moves the needle" is generic B2B language — could describe any software product</li>
+            <li><span class="audit-icon">🇦🇪</span>No Arabic cultural resonance in the brand despite a majority-Arabic speaking customer base</li>
+            <li><span class="audit-icon">💎</span>No prestige element — the product serves luxury real estate; the brand doesn't reflect that</li>
+            <li><span class="audit-icon">📄</span>Near-empty footer misses credibility and trust-building opportunity</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAMES -->
+    <section id="names">
+      <div class="section-label">New Name Options</div>
+      <h2 class="section-title">Five names.<br>One clear winner.</h2>
+      <div class="divider"></div>
+      <p class="section-sub">Each name was evaluated on Arabic resonance, global scalability, memorability, trademark risk, category signal, and premium feel. Our recommendation is clear — but all five are viable.</p>
+
+      <div class="names-grid">
+
+        <div class="name-card recommended">
+          <div class="name-rec-badge">★ Recommended</div>
+          <div class="name-rank">Option 01 / Primary Pick</div>
+          <div class="name-display">Enlista</div>
+          <div class="name-pronunciation">lis·TAR·ah</div>
+          <div class="name-meaning">Listing + "-ara" (elegant Arabic/Mediterranean suffix)</div>
+          <div class="name-tagline">"From details to live. In minutes."</div>
+          <p class="name-desc">The best balance of cultural resonance, category clarity, and premium feel. Arabic speakers feel the "-ara" ending as natural and elegant. English speakers immediately connect "list" to the product category. Fully coined — strong trademark position.</p>
+          <div class="name-scores">
+            <div class="name-score">
+              <span class="score-label">Arabic resonance</span>
+              <div class="score-bar"><div class="score-fill" style="width:90%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Memorability</span>
+              <div class="score-bar"><div class="score-fill" style="width:85%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Premium feel</span>
+              <div class="score-bar"><div class="score-fill" style="width:80%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Trademark safety</span>
+              <div class="score-bar"><div class="score-fill" style="width:95%"></div></div>
+            </div>
+          </div>
+          <div class="name-url">Preferred URL: <code>enlista.ai</code> · <code>enlista.com</code></div>
+        </div>
+
+        <div class="name-card">
+          <div class="name-rank">Option 02 / Arabic-First</div>
+          <div class="name-display">Arkan</div>
+          <div class="name-pronunciation">ar·KAN — أركان</div>
+          <div class="name-meaning">Arabic: "Pillars" or "Foundations"</div>
+          <div class="name-tagline">"The foundation your listings deserve."</div>
+          <p class="name-desc">Deeply authentic to the UAE market. The word carries weight, dignity, and a real estate connotation (building foundations). Stands out completely against English-only SaaS competitors. Best choice if strategy is UAE-first, Arabic-first.</p>
+          <div class="name-scores">
+            <div class="name-score">
+              <span class="score-label">Arabic resonance</span>
+              <div class="score-bar"><div class="score-fill" style="width:98%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Premium feel</span>
+              <div class="score-bar"><div class="score-fill" style="width:92%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Global scalability</span>
+              <div class="score-bar"><div class="score-fill" style="width:55%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Category signal</span>
+              <div class="score-bar"><div class="score-fill" style="width:60%"></div></div>
+            </div>
+          </div>
+          <div class="name-url">Preferred URL: <code>arkan.ai</code></div>
+        </div>
+
+        <div class="name-card">
+          <div class="name-rank">Option 03 / Feature-Led</div>
+          <div class="name-display">PortIQ</div>
+          <div class="name-pronunciation">PORT·iq</div>
+          <div class="name-meaning">Portal + IQ (intelligence)</div>
+          <div class="name-tagline">"Every portal. One intelligence."</div>
+          <p class="name-desc">Directly encodes the core mechanic (multi-portal sync) and the AI layer. Every broker who manages multiple portals will immediately understand it. Short, crisp, two syllables — natural to say in conversation: "We're on PortIQ."</p>
+          <div class="name-scores">
+            <div class="name-score">
+              <span class="score-label">Category signal</span>
+              <div class="score-bar"><div class="score-fill" style="width:95%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Memorability</span>
+              <div class="score-bar"><div class="score-fill" style="width:90%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Premium feel</span>
+              <div class="score-bar"><div class="score-fill" style="width:62%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Global scalability</span>
+              <div class="score-bar"><div class="score-fill" style="width:85%"></div></div>
+            </div>
+          </div>
+          <div class="name-url">Preferred URL: <code>portiq.ai</code></div>
+        </div>
+
+        <div class="name-card">
+          <div class="name-rank">Option 04 / International</div>
+          <div class="name-display">Relio</div>
+          <div class="name-pronunciation">REE·lee·oh</div>
+          <div class="name-meaning">Real estate + "-io" (action, flow)</div>
+          <div class="name-tagline">"Property intelligence. Published."</div>
+          <p class="name-desc">Unique enough to be fully ownable. Flows naturally in both English and Arabic conversation. Clean visual identity potential — a simple wordmark would look exceptional. Most scalable option for markets beyond UAE.</p>
+          <div class="name-scores">
+            <div class="name-score">
+              <span class="score-label">Trademark safety</span>
+              <div class="score-bar"><div class="score-fill" style="width:98%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Global scalability</span>
+              <div class="score-bar"><div class="score-fill" style="width:95%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Category signal</span>
+              <div class="score-bar"><div class="score-fill" style="width:55%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Arabic resonance</span>
+              <div class="score-bar"><div class="score-fill" style="width:72%"></div></div>
+            </div>
+          </div>
+          <div class="name-url">Preferred URL: <code>relio.ai</code> · <code>useRelio.com</code></div>
+        </div>
+
+        <div class="name-card">
+          <div class="name-rank">Option 05 / Functional</div>
+          <div class="name-display">PropLab</div>
+          <div class="name-pronunciation">PROP·lab</div>
+          <div class="name-meaning">Property + Lab (innovation, experimentation)</div>
+          <div class="name-tagline">"Where listings get built."</div>
+          <p class="name-desc">Immediately communicates real estate + technology. Very easy to build a visual identity around. Lowest naming risk. However, "Lab" feels experimental/startup rather than enterprise, and doesn't scale well if the product expands beyond listings.</p>
+          <div class="name-scores">
+            <div class="name-score">
+              <span class="score-label">Category clarity</span>
+              <div class="score-bar"><div class="score-fill" style="width:92%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Simplicity</span>
+              <div class="score-bar"><div class="score-fill" style="width:88%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Premium feel</span>
+              <div class="score-bar"><div class="score-fill" style="width:52%"></div></div>
+            </div>
+            <div class="name-score">
+              <span class="score-label">Brand ceiling</span>
+              <div class="score-bar"><div class="score-fill" style="width:48%"></div></div>
+            </div>
+          </div>
+          <div class="name-url">Preferred URL: <code>proplab.ai</code></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAGLINES -->
+    <section id="taglines">
+      <div class="section-label">Tagline Options</div>
+      <h2 class="section-title">The lines that do<br>the heavy lifting.</h2>
+      <div class="divider"></div>
+      <p class="section-sub">A tagline must communicate the transformation, not the feature. The best options below turn the product's core mechanic into a memorable promise.</p>
+
+      <div class="taglines-grid">
+        <div class="tagline-card top-pick" style="grid-column: span 2;">
+          <div class="tagline-tier">★ Top Recommendation</div>
+          <div class="tagline-text">"From details to live. In minutes."</div>
+          <div class="tagline-why">Communicates the full workflow transformation in 6 words. "Details" = filling the form. "Live" = published across portals. "Minutes" = the differentiating speed claim. Pairs perfectly with <strong style="color:var(--gold)">Enlista</strong>. Translates cleanly to Arabic: "من التفاصيل إلى النشر. في دقائق."</div>
+          <div class="tagline-pairing">Best paired with: Enlista · Arkan · Relio</div>
+        </div>
+
+        <div class="tagline-card">
+          <div class="tagline-tier">Strong Alternative</div>
+          <div class="tagline-text">"List once. Land everywhere."</div>
+          <div class="tagline-why">Multi-portal sync in 5 words. "Land" has a real estate double meaning — land the deal, land on every portal. Rhythmic and memorable. Best for feature-led messaging.</div>
+          <div class="tagline-pairing">Best paired with: PortIQ · PropLab</div>
+        </div>
+
+        <div class="tagline-card">
+          <div class="tagline-tier">Strong Alternative</div>
+          <div class="tagline-text">"The listing OS for UAE real estate."</div>
+          <div class="tagline-why">"OS" (operating system) positions the product as infrastructure — everything runs through it. Ambitious brand positioning that appeals to agency owners who think in systems, not tools.</div>
+          <div class="tagline-pairing">Best paired with: Arkan · Relio</div>
+        </div>
+
+        <div class="tagline-card">
+          <div class="tagline-tier">Bilingual-Led Option</div>
+          <div class="tagline-text">"Bilingual. Beautiful. Live in 4 minutes."</div>
+          <div class="tagline-why">Hits all three USPs in one line. "Bilingual" immediately signals UAE market knowledge. The "4 minutes" claim is specific, credible, and differentiated. Best for a market where bilingual copy is still a pain point.</div>
+          <div class="tagline-pairing">Best paired with: Enlista</div>
+        </div>
+
+        <div class="tagline-card">
+          <div class="tagline-tier">Emotional Option</div>
+          <div class="tagline-text">"Stop writing listings. Start closing deals."</div>
+          <div class="tagline-why">Pain-to-outcome format. Speaks directly to the broker's actual goal — deals, not listings. High emotional resonance but less differentiated technically. Better as an ad headline than a permanent tagline.</div>
+          <div class="tagline-pairing">Best for: Ad copy, landing pages</div>
+        </div>
+      </div>
+
+      <div class="tagline-avoid">
+        <h4>⚠ Taglines to Avoid</h4>
+        <div class="avoid-list">
+          <span class="avoid-tag">Powered by AI</span>
+          <span class="avoid-tag">Revolutionizing real estate</span>
+          <span class="avoid-tag">The smarter way to list</span>
+          <span class="avoid-tag">Seamless. Effortless. Powerful.</span>
+          <span class="avoid-tag">Next-generation listings</span>
+          <span class="avoid-tag">Cutting-edge PropTech</span>
+          <span class="avoid-tag">Streamline your workflow</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- IDENTITY -->
+    <section id="identity">
+      <div class="section-label">Visual Identity</div>
+      <h2 class="section-title">Color, type, and feel.</h2>
+      <div class="divider"></div>
+
+      <div class="identity-row">
+        <div>
+          <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:32px;">The recommended palette moves away from generic SaaS blue toward a richer identity built for the Gulf luxury real estate market. Deep Ink Navy anchors authority; Desert Gold signals prestige and differentiates immediately from every competitor.</p>
+
+          <div class="palette-grid">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#0E1F38;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Deep Ink</span>
+                <span class="swatch-hex">#0E1F38</span>
+                <span class="swatch-role">Primary · Text · Headings</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#C9A452;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Desert Gold</span>
+                <span class="swatch-hex">#C9A452</span>
+                <span class="swatch-role">Accent · CTAs · Highlights</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#F8F5F0;border:1px solid #e0dbd3;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Warm White</span>
+                <span class="swatch-hex">#F8F5F0</span>
+                <span class="swatch-role">Page Background</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#FFFFFF;border:1px solid #e5e7eb;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Cloud</span>
+                <span class="swatch-hex">#FFFFFF</span>
+                <span class="swatch-role">Card Surfaces</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#2D8A6E;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Sage</span>
+                <span class="swatch-hex">#2D8A6E</span>
+                <span class="swatch-role">Published · Live · Success</span>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#64748B;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Slate</span>
+                <span class="swatch-hex">#64748B</span>
+                <span class="swatch-role">Secondary Text</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p style="font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Why Desert Gold?</p>
+          <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:24px;">Gold is culturally significant across the UAE and MENA — it carries connotations of prestige, achievement, and luxury that are deeply embedded in the market. Every competitor uses blue or teal. Desert Gold creates instant visual differentiation while being perfectly appropriate for a product serving agencies that sell AED 5M+ properties.</p>
+
+          <div style="background:var(--ink);border-radius:12px;padding:28px;margin-bottom:20px;">
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px;">Brand in context</div>
+            <div style="font-family:var(--font-h);font-size:28px;font-weight:800;color:white;letter-spacing:-0.02em;margin-bottom:8px;">Enlist<span style="color:var(--gold)">a</span></div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.5);">AI Listing Platform · UAE Real Estate</div>
+          </div>
+
+          <div style="background:var(--gold-muted);border:1px solid rgba(201,164,82,0.3);border-radius:12px;padding:20px;">
+            <p style="font-size:13px;color:var(--ink);line-height:1.6;"><strong>Note on current blue (#1D4ED8):</strong> Can be retained as a secondary/functional color for links and status indicators — but should be removed as the primary brand color. It reads as generic SaaS, not premium PropTech.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typography -->
+      <div>
+        <p style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:32px;">Typography System</p>
+
+        <div class="type-specimen">
+          <div class="type-label">Display Heading — Satoshi 800 · -0.04em tracking · Use for: Hero headlines, section titles</div>
+          <div class="specimen-display">Listing<span> AI.</span><br>Fluent in both.</div>
+        </div>
+
+        <div class="type-specimen" style="background:var(--warm);">
+          <div class="type-label">Body — Satoshi 400/300 · 1.75 line height · Use for: Paragraphs, descriptions, UI text</div>
+          <div class="specimen-h2">AI-powered listing copy for UAE real estate</div>
+          <p class="specimen-body">Generate professional bilingual copy across all your property types in under four minutes. One submission creates your full listing, WhatsApp message, Instagram caption, and short teaser — simultaneously, in English and Arabic.</p>
+          <div class="specimen-small">Section Label Treatment — 11px / 700 / 0.18em tracking</div>
+        </div>
+
+        <div class="type-pairing">
+          <div class="type-label" style="color:rgba(255,255,255,0.4);">Arabic — Cairo 600 · Direction RTL · For: All Arabic-language UI and marketing materials</div>
+          <div class="specimen-h2">من التفاصيل إلى النشر. في دقائق.</div>
+          <p class="specimen-body">يقدم منصتنا نسخًا احترافية ثنائية اللغة لقوائم العقارات في الإمارات العربية المتحدة — الإنجليزية والعربية في وقت واحد.</p>
+          <div class="arabic-specimen">منصة إدارة القوائم العقارية</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MESSAGING -->
+    <section id="messaging">
+      <div class="section-label">Messaging Architecture</div>
+      <h2 class="section-title">What to say.<br>How to say it.</h2>
+      <div class="divider"></div>
+
+      <div class="proof-grid">
+        <div class="proof-card">
+          <div class="proof-number">840</div>
+          <div class="proof-label">Active agencies</div>
+        </div>
+        <div class="proof-card">
+          <div class="proof-number">124K+</div>
+          <div class="proof-label">Listings managed</div>
+        </div>
+        <div class="proof-card">
+          <div class="proof-number">&lt;4 min</div>
+          <div class="proof-label">Avg. publish time</div>
+        </div>
+        <div class="proof-card">
+          <div class="proof-number">99.9%</div>
+          <div class="proof-label">Portal uptime</div>
+        </div>
+      </div>
+
+      <div class="messaging-hierarchy">
+        <div class="tier-row tier-1">
+          <div class="tier-label">Tier 1 — Primary Claim · Hero, Ads Headline</div>
+          <div class="tier-copy">"From details to live. In minutes."</div>
+          <div class="tier-note">The single most important message. Use this everywhere a prospect sees the brand for the first time.</div>
+        </div>
+        <div class="tier-row">
+          <div class="tier-label">Tier 2 — Supporting Claims · Subheads, Feature Sections</div>
+          <div class="tier-copy">Bilingual EN/AR copy that sounds written by a human expert · One-click sync to all UAE portals · Compliance built in — no suspensions, no reruns · Lead scoring that tells you who to call first</div>
+        </div>
+        <div class="tier-row">
+          <div class="tier-label">Tier 3 — Proof Points · Testimonials, Case Studies</div>
+          <div class="tier-copy">"2 days to 4 minutes — that's 720×." · "3× conversion rate on Palm Jumeirah listings." · "Zero RERA suspensions. The most reliable system in our operation."</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBJECTIONS -->
+    <section id="objections">
+      <div class="section-label">Objection Handling</div>
+      <h2 class="section-title">Every pushback.<br>Pre-answered.</h2>
+      <div class="divider"></div>
+      <p class="section-sub">Train every sales conversation and ad copy around these objection-response pairs. These cover 90% of buyer hesitations in the UAE real estate market.</p>
+
+      <ul class="objection-list">
+        <li class="objection-item">
+          <div class="objection-q">"We already have a copywriter for listings."</div>
+          <div class="objection-a">Your copywriter can't publish to 3 portals simultaneously in 4 minutes or generate fluent Arabic. Enlista doesn't replace talent — it removes drudgery. Your copywriter should be focused on crafting compelling narrative; not filling in bedroom counts across three portal backends.</div>
+        </li>
+        <li class="objection-item">
+          <div class="objection-q">"The Arabic output won't sound right."</div>
+          <div class="objection-a">Our Arabic generation uses Classical Arabic with UAE property context — reviewed by native-speaking real estate professionals. The output is editable in the same dashboard. Most agencies edit less than 10% of the Arabic copy generated.</div>
+        </li>
+        <li class="objection-item">
+          <div class="objection-q">"We already sync portals manually — it's fine."</div>
+          <div class="objection-a">Manual sync means one portal goes live 2 hours after the other. In a competitive enquiry window, you're losing leads to whoever listed first. Speed to live is a genuine commercial advantage.</div>
+        </li>
+        <li class="objection-item">
+          <div class="objection-q">"RERA compliance is our admin team's job."</div>
+          <div class="objection-a">Your admin team misses a DLD permit check at 11pm. Enlista never does. One suspension costs more in time and fees than a full year of the Professional subscription.</div>
+        </li>
+        <li class="objection-item">
+          <div class="objection-q">"799 AED is too expensive for our agency."</div>
+          <div class="objection-a">799 AED is 15 minutes of one agent's commission on a single deal. If the platform saves 4 hours per listing and you list 20 properties a month, you've recovered 80 hours. The ROI calculation isn't close.</div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- PERSONAS -->
+    <section id="personas">
+      <div class="section-label">Target Audiences</div>
+      <h2 class="section-title">Three buyers.<br>One platform.</h2>
+      <div class="divider"></div>
+      <p class="section-sub">Each persona has a distinct pain, communication style, and decision-making trigger. Marketing should address all three — with primary budget directed at the Agency Operations Manager.</p>
+
+      <div class="persona-grid">
+        <div class="persona-card persona-primary">
+          <div class="persona-header">
+            <div class="persona-avatar">OM</div>
+            <div class="persona-name">The Operations Manager</div>
+            <div class="persona-role">Primary Buyer — 60% of budget</div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-stat-row">
+              <div class="persona-stat">
+                <div class="persona-stat-label">Age</div>
+                <div class="persona-stat-value">30–45</div>
+              </div>
+              <div class="persona-stat">
+                <div class="persona-stat-label">Agency size</div>
+                <div class="persona-stat-value">5–50 agents</div>
+              </div>
+            </div>
+            <p class="persona-pain"><strong>Core pain:</strong> Managing 50–300+ listings across portals. Constant re-keying. RERA suspension anxiety. Spends 2+ days per listing on admin that shouldn't take 4 minutes.</p>
+            <p class="persona-pain"><strong>Goals:</strong> Reduce time-to-live, keep portals current, look professional to landlords, not get suspended.</p>
+            <div class="persona-tags">
+              <span class="persona-tag">LinkedIn</span>
+              <span class="persona-tag">Instagram</span>
+              <span class="persona-tag">WhatsApp</span>
+              <span class="persona-tag">Professional tier</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="persona-card persona-secondary">
+          <div class="persona-header">
+            <div class="persona-avatar" style="background:#4299e1;">IB</div>
+            <div class="persona-name">The Independent Broker</div>
+            <div class="persona-role">Secondary Buyer — 30% of budget</div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-stat-row">
+              <div class="persona-stat">
+                <div class="persona-stat-label">Age</div>
+                <div class="persona-stat-value">25–38</div>
+              </div>
+              <div class="persona-stat">
+                <div class="persona-stat-label">Team size</div>
+                <div class="persona-stat-value">1–5 agents</div>
+              </div>
+            </div>
+            <p class="persona-pain"><strong>Core pain:</strong> Can't afford a dedicated listing coordinator. Loses deals to faster competitors. Wants to look as professional as large agencies without the overhead.</p>
+            <p class="persona-pain"><strong>Goals:</strong> Level the playing field. Close more deals without more admin. Look polished to every landlord and vendor.</p>
+            <div class="persona-tags">
+              <span class="persona-tag">Instagram</span>
+              <span class="persona-tag">TikTok</span>
+              <span class="persona-tag">LinkedIn</span>
+              <span class="persona-tag">Starter tier</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="persona-card persona-tertiary">
+          <div class="persona-header">
+            <div class="persona-avatar" style="background:#e8c97a;">MD</div>
+            <div class="persona-name">The Agency Principal</div>
+            <div class="persona-role">Tertiary Buyer — 10% of budget · Enterprise</div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-stat-row">
+              <div class="persona-stat">
+                <div class="persona-stat-label">Age</div>
+                <div class="persona-stat-value">38–58</div>
+              </div>
+              <div class="persona-stat">
+                <div class="persona-stat-label">Agency size</div>
+                <div class="persona-stat-value">50–500 agents</div>
+              </div>
+            </div>
+            <p class="persona-pain"><strong>Core pain:</strong> Scaling the agency without proportionally growing back-office headcount. Compliance risk at scale. Revenue per agent declining.</p>
+            <p class="persona-pain"><strong>Goals:</strong> Revenue per agent up. Cost per listing down. Zero compliance risk. Scalable systems that don't depend on one person.</p>
+            <div class="persona-tags">
+              <span class="persona-tag">LinkedIn</span>
+              <span class="persona-tag">In-person demo</span>
+              <span class="persona-tag">Enterprise tier</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="instagram-content.html" class="view-posts-cta">View Instagram Content Strategy →</a>
+    </section>
+
+    <!-- FOOTER -->
+    <div class="doc-footer">
+      <div class="doc-footer-logo">Enlist<span>a</span></div>
+      <div>Go-To-Market Brand Strategy · March 2025</div>
+      <div>Confidential — Internal Use</div>
+    </div>
+
+  </main>
+
+</body>
+</html>

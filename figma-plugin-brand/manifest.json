@@ -1,0 +1,7 @@
+{
+  "name": "Enlista Brand Documents",
+  "id": "enlista-brand-docs",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"]
+}

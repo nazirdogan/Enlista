@@ -27,35 +27,41 @@ Replace the existing separate `/login` and `/signup` pages with a single combine
 
 ### Tab State
 
+- The page must be a Client Component (`'use client'`) and wrapped in `<Suspense fallback={null}>` at the parent level (or via a thin server component wrapper) because `useSearchParams()` requires a Suspense boundary in Next.js 14 App Router to avoid static rendering errors.
 - Read `?tab=` query param on mount using `useSearchParams()`
 - Default to `signup` if param is absent or invalid
 - Toggling tabs calls `router.replace('/auth?tab=signin')` or `router.replace('/auth?tab=signup')` — no full navigation, just URL sync
+
+### Already-Authenticated Users
+
+- On mount, check for an existing Supabase session via `supabase.auth.getSession()`
+- If a session exists, immediately `router.replace('/dashboard')` — do not render the auth form
 
 ### Sign Up Tab
 
 **Fields (in order):**
 
-| Field | Type | Notes |
-|---|---|---|
-| First Name | text | Required |
-| Last Name | text | Required, displayed beside First Name on desktop |
-| Agency Name | text | Required |
-| City | text | Required, displayed beside Country on desktop |
-| Country | text | Required |
-| Agency Email | email | Required |
-| Work Email | email | Required — this is the Supabase auth identity |
-| Phone Number | tel | Required |
-| Password | password | Required, exactly 12 chars, complexity rules |
-| Confirm Password | password | Required, must match Password |
+| Field | Variable name | Type | `autoComplete` | Notes |
+|---|---|---|---|---|
+| First Name | `firstName` | text | `given-name` | Required |
+| Last Name | `lastName` | text | `family-name` | Required, beside First Name on desktop |
+| Agency Name | `agencyName` | text | `organization` | Required |
+| City | `city` | text | `address-level2` | Required, beside Country on desktop |
+| Country | `country` | text | `country-name` | Required |
+| Agency Email | `agencyEmail` | email | `email` | Required |
+| Work Email | `workEmail` | email | `email` | Required — Supabase auth identity |
+| Phone Number | `phoneNumber` | tel | `tel` | Required |
+| Password | `password` | password | `new-password` | Required, exactly 12 chars, complexity rules |
+| Confirm Password | `confirmPassword` | password | `new-password` | Required, must match Password |
 
 **Password rules (validated client-side before submit):**
-- Length must be exactly 12 characters
-- Must contain at least one uppercase letter
-- Must contain at least one lowercase letter
-- Must contain at least one digit
+- Length must be **exactly 12 characters** — no more, no less (explicit business requirement for fixed-length security policy)
+- Must contain at least one uppercase letter (`A–Z`)
+- Must contain at least one lowercase letter (`a–z`)
+- Must contain at least one digit (`0–9`)
 - Must contain at least one special character (`!@#$%^&*()_+-=[]{}|;':",.<>?/`)
 - Password and Confirm Password must be identical
-- Inline error messages shown below each field on violation
+- Inline error messages shown below the password field on violation (e.g. "Password must be exactly 12 characters", "Must include an uppercase letter", etc.)
 
 **Submit disabled until:**
 - All fields are non-empty
@@ -63,12 +69,14 @@ Replace the existing separate `/login` and `/signup` pages with a single combine
 - Passwords match
 
 **On valid submit:**
-1. Call `supabase.auth.signUp({ email: workEmail, password, options: { data: { first_name, last_name, agency_name, city, country, agency_email, phone } } })`
+1. Call `supabase.auth.signUp({ email: workEmail, password, options: { data: { first_name: firstName, last_name: lastName, agency_name: agencyName, city, country, agency_email: agencyEmail, phone: phoneNumber } } })`
 2. Pass no `emailRedirectTo` — Supabase project must have email confirmation disabled (confirm users immediately)
-3. If `data.user` returned without error, insert into `agencies` table: `{ user_id: data.user.id, name: agencyName, email: agencyEmail, phone }`
-4. Ignore `23505` (duplicate) error on agency insert
-5. Show success toast: "Welcome to ListingsLaunch!"
-6. `router.push('/dashboard')`
+3. If `error` is returned → toast `error.message`, return
+4. If `data.user` is `null` and `error` is also `null` → toast "Signup could not be completed. Please try again." and return (handles Supabase's silent no-op edge case)
+5. If `data.user` is returned, insert into `agencies` table: `{ user_id: data.user.id, name: agencyName, email: agencyEmail, phone: phoneNumber }`
+6. Ignore `23505` (duplicate key) error on agency insert
+7. Show success toast: "Account created! Welcome to ListingsLaunch."
+8. `router.push('/dashboard')`
 
 **Error handling:**
 - Supabase auth error → toast with `error.message`
@@ -78,8 +86,11 @@ Replace the existing separate `/login` and `/signup` pages with a single combine
 ### Sign In Tab
 
 **Fields:**
-- Work Email (email, required)
-- Password (password, required)
+
+| Field | Variable name | Type | `autoComplete` | Notes |
+|---|---|---|---|---|
+| Work Email | `email` | email | `email` | Required |
+| Password | `password` | password | `current-password` | Required |
 
 **On valid submit:**
 1. Call `supabase.auth.signInWithPassword({ email, password })`
@@ -132,16 +143,15 @@ Replace the existing separate `/login` and `/signup` pages with a single combine
 
 ## Landing Page Updates (`app/page.tsx`)
 
-Four `<a>` tags change:
+The following `<a>` tags change (pricing "Get Started" buttons are **not** changed — they remain as Stripe checkout calls):
 
-| Current `href` | Button text | New `href` |
-|---|---|---|
-| `#cta` | Sign in (desktop nav) | `/auth?tab=signin` |
-| `#cta` | Get Started Free (desktop nav) | `/auth?tab=signup` |
-| `#cta` | Sign in (mobile nav) | `/auth?tab=signin` |
-| `#cta` | Get Started Free (mobile nav) | `/auth?tab=signup` |
-
-Hero CTA button and pricing "Get Started" buttons also update to `/auth?tab=signup`.
+| Context | Button text | Current `href` | New `href` |
+|---|---|---|---|
+| Desktop nav | "Sign in" | `#cta` | `/auth?tab=signin` |
+| Desktop nav | "Get Started Free" | `#cta` | `/auth?tab=signup` |
+| Mobile nav | "Sign in" | `#cta` | `/auth?tab=signin` |
+| Mobile nav | "Get Started Free" | `#cta` | `/auth?tab=signup` |
+| Hero section | "Start Free — 14 days" | `#cta` | `/auth?tab=signup` |
 
 ---
 

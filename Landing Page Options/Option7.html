@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ListingsLaunch — Paper Deconstructed</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#F7F4EE;--paper:#EDE9E0;--dark:#1A1714;--orange:#FF3B00;--charcoal:#2A2724;--warm:#8C7E6A;--border:#D4CEC4;--ink:#3A3530;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Crimson Pro',serif;font-size:18px;line-height:1.7;cursor:none;}
+  .syne{font-family:'Syne',sans-serif;}
+
+  /* Custom cursor */
+  .cursor{width:12px;height:12px;background:var(--orange);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.2s,height 0.2s;}
+  .cursor-ring{width:40px;height:40px;border:1.5px solid var(--orange);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s,width 0.2s,height 0.2s;opacity:0.4;}
+
+  nav{background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+
+  .btn-orange{display:inline-block;background:var(--orange);color:white;padding:13px 32px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.05em;text-decoration:none;transition:all 0.2s;}
+  .btn-orange:hover{background:var(--dark);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--orange);}
+  .btn-text{display:inline-block;color:var(--dark);padding:13px 0;font-family:'Syne',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.08em;text-decoration:none;border-bottom:2px solid transparent;transition:all 0.2s;}
+  .btn-text:hover{border-bottom-color:var(--orange);}
+
+  /* Overlapping hero elements */
+  .hero-section{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;padding:100px 64px 80px;}
+
+  /* Giant background numerals */
+  .bg-numeral{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(200px,40vw,500px);line-height:0.8;color:var(--border);position:absolute;pointer-events:none;user-select:none;letter-spacing:-0.05em;}
+
+  /* Rotated tag */
+  .rotated-tag{display:inline-block;transform:rotate(-2deg);transform-origin:left center;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;background:var(--orange);color:white;padding:4px 12px;}
+
+  /* Underline scribble */
+  .scribble-line{display:inline;position:relative;}
+  .scribble-line::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;background:var(--orange);border-radius:1px;transform:rotate(-0.5deg);}
+
+  /* Feature: large offset numbers -->  */
+  .feat-grid{display:grid;grid-template-columns:1fr;gap:0;}
+  .feat-row{display:grid;grid-template-columns:1fr;gap:0;border-bottom:1px solid var(--border);padding:56px 0;position:relative;transition:background 0.3s;}
+  .feat-row:hover{background:var(--paper);}
+  @media(min-width:768px){.feat-row{grid-template-columns:120px 1fr 1fr;gap:40px;padding:56px 64px;}}
+  .feat-big-num{font-family:'Syne',sans-serif;font-weight:800;font-size:80px;color:var(--border);line-height:1;transition:color 0.3s;}
+  .feat-row:hover .feat-big-num{color:var(--orange);}
+  @media(max-width:767px){.feat-row{padding:40px 24px;}.feat-big-num{font-size:48px;}}
+
+  /* Testimonials: masonry with rotation -->  */
+  .testi-masonry{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+  .testi-card{background:var(--paper);border:1.5px solid var(--border);padding:40px;position:relative;transition:all 0.3s;}
+  .testi-card.rotated-card{transform:rotate(-0.8deg);}
+  .testi-card.rotated-card-r{transform:rotate(0.6deg);}
+  .testi-card:hover{transform:rotate(0) translateY(-4px);box-shadow:6px 6px 0 var(--border);}
+  .testi-card.orange-card{background:var(--orange);border-color:var(--orange);color:white;}
+
+  /* Sticky tape marks */
+  .tape{position:absolute;width:60px;height:20px;background:rgba(255,59,0,0.15);top:-10px;left:50%;transform:translateX(-50%) rotate(-2deg);}
+
+  /* Pricing: staggered layout */
+  .price-stack{display:grid;grid-template-columns:1fr;gap:0;}
+  @media(min-width:640px){.price-stack{grid-template-columns:repeat(3,1fr);}}
+  .price-col{padding:48px 40px;border-right:1px solid var(--border);transition:background 0.3s;position:relative;}
+  .price-col:hover{background:var(--paper);}
+  .price-col.highlight{background:var(--dark);color:var(--bg);}
+  .price-col.highlight .p-entry{border-color:rgba(255,255,255,0.08);color:rgba(247,244,238,0.5);}
+  .price-col.highlight .p-entry.on{color:var(--bg);}
+  .price-col:last-child{border-right:none;}
+  .price-num-big{font-family:'Syne',sans-serif;font-weight:800;font-size:72px;line-height:1;color:var(--dark);}
+  .price-col.highlight .price-num-big{color:var(--orange);}
+  .p-entry{font-size:15px;padding:10px 0;border-bottom:1px solid var(--border);color:var(--warm);}
+  .p-entry.on{color:var(--ink);}
+  .p-entry.on::before{content:'→ ';color:var(--orange);}
+  .p-entry:last-child{border-bottom:none;}
+
+  input{background:var(--paper);border:none;border-bottom:2px solid var(--border);color:var(--ink);padding:14px 0;font-family:'Crimson Pro',serif;font-size:18px;outline:none;width:100%;transition:border-color 0.3s;}
+  input:focus{border-bottom-color:var(--orange);}
+  input::placeholder{color:var(--border);}
+
+  @keyframes enter{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+  .enter{animation:enter 0.7s ease both;}
+  .e1{animation-delay:0.05s;}.e2{animation-delay:0.2s;}.e3{animation-delay:0.35s;}.e4{animation-delay:0.5s;}
+
+  .section-label{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--orange);display:block;margin-bottom:12px;}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav style="padding:0 64px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;height:64px;">
+    <div class="syne" style="font-size:18px;font-weight:800;color:var(--dark);">Listings<span style="color:var(--orange);">Launch</span></div>
+    <div class="hidden md:flex gap-8">
+      <a href="#features" class="btn-text">Platform</a>
+      <a href="#testimonials" class="btn-text">Clients</a>
+      <a href="#pricing" class="btn-text">Pricing</a>
+    </div>
+    <a href="#cta" class="btn-orange">Free Trial</a>
+  </div>
+</nav>
+
+<!-- Hero: collage / deconstructed -->
+<section class="hero-section">
+  <!-- Giant background number -->
+  <div class="bg-numeral" style="right:-80px;bottom:-80px;z-index:0;">∞</div>
+
+  <div style="position:relative;z-index:1;max-width:900px;width:100%;">
+    <!-- Rotated tag floating above -->
+    <div style="margin-bottom:24px;" class="enter e1">
+      <span class="rotated-tag">UAE Real Estate Platform</span>
+    </div>
+
+    <!-- Main headline with overlapping elements -->
+    <h1 class="enter e2" style="font-size:clamp(52px,8vw,120px);line-height:0.92;color:var(--dark);font-weight:300;margin-bottom:40px;position:relative;">
+      Listings<br/>
+      that <span style="color:var(--orange);font-style:italic;">speak</span><br/>
+      for themselves.
+    </h1>
+
+    <!-- Overlapping stat card — floated right on desktop -->
+    <div style="float:right;clear:right;background:var(--dark);color:var(--bg);padding:24px 32px;margin:0 0 24px 32px;width:220px;" class="enter e3">
+      <p class="syne" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(247,244,238,0.4);margin-bottom:8px;">Live · UAE Agencies</p>
+      <p class="syne" style="font-size:48px;font-weight:800;color:var(--orange);line-height:1;">840</p>
+      <p style="font-size:13px;color:rgba(247,244,238,0.5);margin-top:4px;font-style:italic;">and growing daily</p>
+    </div>
+
+    <p class="enter e3" style="font-size:19px;line-height:1.8;color:var(--warm);max-width:480px;margin-bottom:40px;">
+      AI-powered listing management for Dubai, Abu Dhabi, and Sharjah agencies. Publish to every portal. Qualify every lead. Stay RERA compliant — from one honest platform.
+    </p>
+    <div style="clear:both;"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;" class="enter e4">
+      <a href="#cta" class="btn-orange">Start Free — 14 days</a>
+      <a href="#features" class="btn-text">See how it works ↓</a>
+    </div>
+
+    <!-- Bottom metric strip -->
+    <div style="display:flex;gap:0;margin-top:64px;border:1.5px solid var(--border);background:var(--paper);" class="enter e4">
+      <div style="flex:1;padding:20px 24px;border-right:1px solid var(--border);">
+        <p class="syne" style="font-size:28px;font-weight:800;color:var(--dark);">124K</p>
+        <p style="font-size:12px;color:var(--warm);">listings</p>
+      </div>
+      <div style="flex:1;padding:20px 24px;border-right:1px solid var(--border);">
+        <p class="syne" style="font-size:28px;font-weight:800;color:var(--orange);">&lt;4m</p>
+        <p style="font-size:12px;color:var(--warm);">to publish</p>
+      </div>
+      <div style="flex:1;padding:20px 24px;border-right:1px solid var(--border);">
+        <p class="syne" style="font-size:28px;font-weight:800;color:var(--dark);">99%</p>
+        <p style="font-size:12px;color:var(--warm);">uptime</p>
+      </div>
+      <div style="flex:1;padding:20px 24px;">
+        <p class="syne" style="font-size:28px;font-weight:800;color:var(--dark);">0</p>
+        <p style="font-size:12px;color:var(--warm);">suspensions*</p>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--warm);margin-top:8px;font-style:italic;">*for agencies on Pro and Enterprise plans</p>
+  </div>
+</section>
+
+<!-- Features: numbered rows with offset big numbers -->
+<section id="features" style="padding:0 64px;background:var(--bg);border-top:1px solid var(--border);">
+  <div style="padding:64px 0 0;">
+    <span class="section-label">The Platform</span>
+    <h2 style="font-size:clamp(32px,5vw,64px);font-weight:300;color:var(--dark);line-height:1.1;margin-bottom:0;">Six <em style="color:var(--orange);">good reasons</em><br/>to switch.</h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-row">
+      <div class="feat-big-num">01</div>
+      <div><h3 class="syne" style="font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;">AI Listing Copy</h3><p style="color:var(--warm);font-size:16px;line-height:1.8;">Bilingual descriptions in English and Arabic — generated in seconds. Portal-tuned for Bayut, Property Finder, Dubizzle.</p></div>
+      <div style="display:flex;align-items:center;"><div style="background:var(--paper);border:1px solid var(--border);padding:16px 20px;font-style:italic;font-size:15px;color:var(--warm);">"An exceptional 4BR villa with panoramic Burj views…"</div></div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-big-num">02</div>
+      <div><h3 class="syne" style="font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;">Multi-Portal Sync</h3><p style="color:var(--warm);font-size:16px;line-height:1.8;">One click. Every UAE portal updated in under four minutes. Bayut, Property Finder, Dubizzle and more.</p></div>
+      <div style="display:flex;align-items:center;"><div style="display:flex;flex-direction:column;gap:6px;"><div style="background:var(--paper);border:1px solid var(--border);padding:10px 16px;font-size:13px;display:flex;justify-content:space-between;"><span>Bayut</span><span style="color:var(--orange);">Synced ✓</span></div><div style="background:var(--paper);border:1px solid var(--border);padding:10px 16px;font-size:13px;display:flex;justify-content:space-between;"><span>Property Finder</span><span style="color:var(--orange);">Synced ✓</span></div><div style="background:var(--paper);border:1px solid var(--border);padding:10px 16px;font-size:13px;display:flex;justify-content:space-between;"><span>Dubizzle</span><span style="color:var(--orange);">Synced ✓</span></div></div></div>
+    </div>
+    <div class="feat-row" style="background:var(--dark);" onmouseover="" onmouseout="">
+      <div class="feat-big-num" style="color:rgba(255,59,0,0.2);">03</div>
+      <div><h3 class="syne" style="font-size:22px;font-weight:700;color:var(--bg);margin-bottom:8px;">Lead Intelligence</h3><p style="color:rgba(247,244,238,0.5);font-size:16px;line-height:1.8;">ML-ranked buyer intent. WhatsApp qualification in Arabic and English, 24/7. Your agents always know who matters.</p></div>
+      <div style="display:flex;align-items:center;"><div style="color:var(--bg);font-size:48px;font-weight:800;font-family:'Syne',sans-serif;"><span style="color:var(--orange);">34</span><br/><span style="font-size:14px;color:rgba(247,244,238,0.4);">hot leads today</span></div></div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-big-num">04</div>
+      <div><h3 class="syne" style="font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;">RERA Compliance</h3><p style="color:var(--warm);font-size:16px;line-height:1.8;">Real-time DLD permit validation before every publish. Full audit trail. Zero suspensions on Pro plans.</p></div>
+      <div></div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-big-num">05</div>
+      <div><h3 class="syne" style="font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;">Market Analytics</h3><p style="color:var(--warm);font-size:16px;line-height:1.8;">Live DLD transaction data, AED/sqft benchmarks, area demand maps across Dubai, Abu Dhabi, and Sharjah.</p></div>
+      <div></div>
+    </div>
+    <div class="feat-row" style="border-bottom:none;">
+      <div class="feat-big-num">06</div>
+      <div><h3 class="syne" style="font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;">Photo Suite</h3><p style="color:var(--warm);font-size:16px;line-height:1.8;">AI-enhanced images, smart ordering, portal-specific sizing, automated watermarking. Listings at their best, always.</p></div>
+      <div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials: masonry with tilt -->
+<section id="testimonials" style="padding:80px 64px;border-top:1px solid var(--border);background:var(--paper);">
+  <span class="section-label">What Agencies Say</span>
+  <h2 style="font-size:clamp(28px,4vw,52px);font-weight:300;color:var(--dark);margin-bottom:56px;line-height:1.1;">Real words from<br/>real <em style="color:var(--orange);">UAE agencies.</em></h2>
+  <div class="testi-masonry">
+    <div class="testi-card rotated-card">
+      <div class="tape"></div>
+      <p style="font-size:18px;line-height:1.7;margin-bottom:24px;font-style:italic;">"Two days to four minutes. That number tells our entire story with ListingsLaunch."</p>
+      <div style="border-top:1px solid var(--border);padding-top:16px;">
+        <p class="syne" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--dark);">Sarah Al Mansoori</p>
+        <p style="font-size:13px;color:var(--warm);">Head of Operations · Espace Real Estate</p>
+      </div>
+    </div>
+    <div class="testi-card orange-card">
+      <div class="tape" style="background:rgba(255,255,255,0.2);"></div>
+      <p style="font-size:18px;line-height:1.7;margin-bottom:24px;font-style:italic;">"Palm Jumeirah listings converting at triple the old rate. The AI gets luxury real estate."</p>
+      <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:16px;">
+        <p class="syne" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">James Whitfield</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.7);">MD · Allsopp & Allsopp</p>
+      </div>
+    </div>
+    <div class="testi-card rotated-card-r">
+      <div class="tape"></div>
+      <p style="font-size:18px;line-height:1.7;margin-bottom:24px;font-style:italic;">"Not a single RERA suspension since onboarding. Not one. The compliance engine is ironclad."</p>
+      <div style="border-top:1px solid var(--border);padding-top:16px;">
+        <p class="syne" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--dark);">Fatima Al Hashimi</p>
+        <p style="font-size:13px;color:var(--warm);">Compliance Director · DLD Certified</p>
+      </div>
+    </div>
+    <div class="testi-card" style="background:var(--dark);">
+      <div class="tape" style="background:rgba(255,59,0,0.3);"></div>
+      <p style="font-size:18px;line-height:1.7;margin-bottom:24px;font-style:italic;color:var(--bg);">"600+ listings. 4 portals. 40% growth. Zero new coordinators. The maths speaks for itself."</p>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
+        <p class="syne" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--orange);">Ravi Menon</p>
+        <p style="font-size:13px;color:rgba(247,244,238,0.4);">CEO · Metropolitan Premium Properties</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing: columns -->
+<section id="pricing" style="padding:0;border-top:1px solid var(--border);">
+  <div style="padding:64px 64px 0;">
+    <span class="section-label">Pricing</span>
+    <h2 style="font-size:clamp(28px,4vw,52px);font-weight:300;color:var(--dark);margin-bottom:8px;">Pick your plan.</h2>
+    <p style="font-size:16px;color:var(--warm);margin-bottom:48px;font-style:italic;">All prices in AED. Cancel anytime. 14-day trial on every plan.</p>
+  </div>
+  <div class="price-stack" style="border-top:1px solid var(--border);">
+    <div class="price-col">
+      <p class="syne" style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm);margin-bottom:24px;">Starter</p>
+      <div class="price-num-big">299</div>
+      <p style="font-size:14px;color:var(--warm);margin-bottom:32px;font-style:italic;">AED per month</p>
+      <div style="margin-bottom:32px;">
+        <div class="p-entry on">50 active listings</div>
+        <div class="p-entry on">3 portal integrations</div>
+        <div class="p-entry on">AI copy — English</div>
+        <div class="p-entry on">Basic analytics</div>
+        <div class="p-entry">Lead scoring</div>
+        <div class="p-entry">WhatsApp bot</div>
+      </div>
+      <a href="#cta" class="btn-text" style="font-size:14px;">Start →</a>
+    </div>
+    <div class="price-col highlight">
+      <p class="syne" style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(247,244,238,0.4);margin-bottom:24px;">Professional</p>
+      <div class="price-num-big">799</div>
+      <p style="font-size:14px;color:rgba(247,244,238,0.4);margin-bottom:32px;font-style:italic;">AED per month · Recommended</p>
+      <div style="margin-bottom:32px;">
+        <div class="p-entry on">200 active listings</div>
+        <div class="p-entry on">All portals</div>
+        <div class="p-entry on">AI copy — EN + AR</div>
+        <div class="p-entry on">Lead intelligence</div>
+        <div class="p-entry on">WhatsApp bot</div>
+        <div class="p-entry on">RERA compliance</div>
+        <div class="p-entry on">Priority support</div>
+      </div>
+      <a href="#cta" class="btn-orange" style="font-size:13px;display:inline-block;">Start →</a>
+    </div>
+    <div class="price-col" style="border-right:none;">
+      <p class="syne" style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm);margin-bottom:24px;">Enterprise</p>
+      <div class="price-num-big">1,999</div>
+      <p style="font-size:14px;color:var(--warm);margin-bottom:32px;font-style:italic;">AED per month</p>
+      <div style="margin-bottom:32px;">
+        <div class="p-entry on">Unlimited listings</div>
+        <div class="p-entry on">Custom integrations</div>
+        <div class="p-entry on">Full AI suite</div>
+        <div class="p-entry on">Market analytics</div>
+        <div class="p-entry on">Dedicated manager</div>
+        <div class="p-entry on">API + SLA</div>
+      </div>
+      <a href="#cta" class="btn-text" style="font-size:14px;">Contact →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA: simple honest -->
+<section id="cta" style="padding:80px 64px;border-top:1px solid var(--border);background:var(--bg);">
+  <div style="max-width:640px;margin:0 auto;">
+    <span class="section-label">Begin</span>
+    <h2 style="font-size:clamp(36px,6vw,80px);font-weight:300;color:var(--dark);line-height:1.0;margin-bottom:24px;">Your first listing<br/><em style="color:var(--orange);">goes live today.</em></h2>
+    <p style="color:var(--warm);font-size:17px;margin-bottom:48px;">Fourteen days free. No credit card. Your UAE support team is ready.</p>
+    <form style="display:flex;flex-direction:column;gap:24px;max-width:480px;" onsubmit="return false;">
+      <div><label style="display:block;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm);margin-bottom:8px;">Agency Email</label><input type="email" placeholder="you@youragency.ae"/></div>
+      <div><label style="display:block;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--warm);margin-bottom:8px;">Agency Name</label><input type="text" placeholder="e.g. Espace Real Estate"/></div>
+      <button type="submit" class="btn-orange" style="font-size:14px;padding:16px;cursor:pointer;border:none;display:block;text-align:center;width:100%;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:0.06em;">Start Free Trial →</button>
+    </form>
+  </div>
+</section>
+
+<footer style="border-top:1px solid var(--border);padding:32px 64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+  <span class="syne" style="font-size:16px;font-weight:800;color:var(--dark);">Listings<span style="color:var(--orange);">Launch</span></span>
+  <span style="font-size:13px;color:var(--warm);font-style:italic;">© 2026 · Dubai, UAE</span>
+</footer>
+
+<script>
+  const c = document.getElementById('cursor');
+  const r = document.getElementById('ring');
+  document.addEventListener('mousemove', e => {
+    c.style.left = e.clientX + 'px';
+    c.style.top = e.clientY + 'px';
+    setTimeout(() => { r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px'; }, 80);
+  });
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => { c.style.width='6px';c.style.height='6px';r.style.width='56px';r.style.height='56px'; });
+    el.addEventListener('mouseleave', () => { c.style.width='12px';c.style.height='12px';r.style.width='40px';r.style.height='40px'; });
+  });
+</script>
+</body>
+</html>

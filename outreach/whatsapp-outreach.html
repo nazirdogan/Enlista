@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ListingAI — WhatsApp Outreach</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080b12;
+  --surface: #0e1420;
+  --surface2: #141c2e;
+  --surface3: #1a2236;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --subtle: #94a3b8;
+  --accent: #6366f1;
+  --accent-light: #a5b4fc;
+  --green: #10b981;
+  --green-dim: rgba(16,185,129,0.15);
+  --yellow: #f59e0b;
+  --yellow-dim: rgba(245,158,11,0.15);
+  --wa-green: #25D366;
+  --wa-dark: #075E54;
+  --wa-light: #DCF8C6;
+  --wa-bubble: #1f2c34;
+  --wa-chat-bg: #0d1418;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ─── HEADER ─── */
+.header { padding: 28px 40px 22px; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+.header-inner { max-width: 1600px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+.header-left { display: flex; align-items: center; gap: 14px; }
+.wa-icon { width: 40px; height: 40px; background: var(--wa-green); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.header-left h1 { font-size: 20px; font-weight: 700; color: #f8fafc; letter-spacing: -0.02em; }
+.header-left p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.kpi-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.kpi { text-align: center; padding: 8px 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+.kpi-val { font-size: 20px; font-weight: 800; }
+.kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.kpi-contacts .kpi-val { color: var(--wa-green); }
+.kpi-mobile .kpi-val { color: #6ee7b7; }
+.kpi-seq .kpi-val { color: var(--accent-light); }
+.kpi-goal .kpi-val { color: var(--yellow); }
+
+/* ─── LAYOUT ─── */
+.app { display: flex; flex: 1; max-width: 1600px; margin: 0 auto; width: 100%; }
+
+/* ─── SIDEBAR ─── */
+.sidebar { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: calc(100vh - 89px); overflow-y: auto; }
+.sidebar-section { padding: 16px 14px 8px; }
+.sidebar-section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: pointer; transition: background .12s; margin-bottom: 2px; border: 1px solid transparent; }
+.nav-item:hover { background: rgba(37,211,102,0.06); }
+.nav-item.active { background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.2); }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-item-text { flex: 1; }
+.nav-item-name { font-size: 12px; font-weight: 600; color: #f1f5f9; }
+.nav-item-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* ─── MAIN ─── */
+.main { flex: 1; overflow-y: auto; padding: 32px 40px 60px; }
+.view { display: none; max-width: 900px; }
+.view.active { display: block; }
+
+/* ─── PAGE HEADER ─── */
+.page-title { font-size: 22px; font-weight: 800; color: #f8fafc; letter-spacing: -0.02em; margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+/* ─── STRATEGY CARDS ─── */
+.strategy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-bottom: 32px; }
+.strategy-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 18px 20px; }
+.sc-icon { font-size: 22px; margin-bottom: 10px; }
+.sc-title { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+.sc-body { font-size: 12px; color: var(--subtle); line-height: 1.65; }
+.sc-body strong { color: var(--text); }
+
+/* ─── SECTION DIVIDER ─── */
+.sec-title { font-size: 15px; font-weight: 700; color: #f8fafc; margin-bottom: 6px; margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--border); }
+.sec-sub { font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+
+/* ─── PHONE CONTACT TABLE ─── */
+.contact-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.contact-table th { background: #0c1018; border-bottom: 1px solid var(--border2); padding: 9px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); text-align: left; }
+.contact-table td { padding: 11px 14px; font-size: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.contact-table tr:hover td { background: rgba(37,211,102,0.03); }
+.agency-name-cell { font-weight: 600; color: #f1f5f9; font-size: 13px; }
+.agency-name-cell small { display: block; color: var(--muted); font-weight: 400; font-size: 11px; }
+.dm-name { color: var(--subtle); font-size: 12px; }
+.phone-num { font-family: monospace; font-size: 12px; color: var(--wa-green); font-weight: 600; }
+.phone-num.office { color: var(--subtle); font-weight: 400; }
+.phone-type { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.pt-mobile { background: rgba(37,211,102,0.12); color: #6ee7b7; border: 1px solid rgba(37,211,102,0.2); }
+.pt-office { background: rgba(148,163,184,0.08); color: var(--muted); border: 1px solid rgba(148,163,184,0.12); }
+.tier-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+.tb-A { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+.tb-B { background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+.crm-warn { font-size: 10px; color: #fca5a5; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15); padding: 2px 6px; border-radius: 4px; }
+.variant-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+.vt-standard { background: rgba(99,102,241,0.1); color: var(--accent-light); }
+.vt-luxury { background: rgba(245,158,11,0.1); color: #fbbf24; }
+.vt-crm { background: rgba(239,68,68,0.08); color: #fca5a5; }
+
+/* ─── WA CHAT PREVIEW ─── */
+.wa-preview-wrap { background: var(--wa-chat-bg); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 28px; }
+.wa-topbar { background: #1f2c34; padding: 12px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.wa-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; flex-shrink: 0; }
+.wa-contact-info { flex: 1; }
+.wa-contact-name { font-size: 13px; font-weight: 600; color: #e9edef; }
+.wa-contact-status { font-size: 11px; color: #8696a0; }
+.wa-topbar-icons { display: flex; gap: 16px; color: #8696a0; font-size: 18px; }
+
+.wa-messages { padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; min-height: 200px; }
+.wa-msg { max-width: 75%; padding: 8px 12px 6px; border-radius: 8px; font-size: 13px; line-height: 1.55; position: relative; word-break: break-word; white-space: pre-wrap; }
+.wa-msg.sent { background: #005c4b; color: #e9edef; align-self: flex-end; border-radius: 8px 0 8px 8px; }
+.wa-msg.sent::after { content: ''; position: absolute; top: 0; right: -8px; width: 0; height: 0; border-style: solid; border-width: 8px 0 0 8px; border-color: transparent transparent transparent #005c4b; }
+.wa-msg-time { font-size: 10px; color: rgba(255,255,255,0.45); text-align: right; margin-top: 3px; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.wa-ticks { color: #53bdeb; }
+
+.wa-date-sep { text-align: center; margin: 8px 0; }
+.wa-date-sep span { background: rgba(255,255,255,0.06); border-radius: 6px; padding: 3px 10px; font-size: 11px; color: #8696a0; }
+
+.wa-day-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 12px 0 4px; }
+
+/* ─── MESSAGE TEMPLATE CARDS ─── */
+.msg-sequence { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+.msg-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; }
+.msg-card-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.msg-step { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px; padding: 3px 8px; color: var(--subtle); white-space: nowrap; }
+.msg-step.s1 { background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.25); color: #6ee7b7; }
+.msg-step.s2 { background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.25); color: var(--accent-light); }
+.msg-step.s3 { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); color: #f87171; }
+.msg-card-title { font-size: 13px; font-weight: 600; color: #f1f5f9; flex: 1; }
+.msg-timing { font-size: 11px; color: var(--muted); }
+.copy-msg-btn { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 6px; cursor: pointer; transition: all .15s; flex-shrink: 0; }
+.copy-msg-btn:hover { border-color: var(--wa-green); color: #6ee7b7; }
+.copy-msg-btn.copied { background: rgba(37,211,102,0.1); border-color: rgba(37,211,102,0.25); color: #6ee7b7; }
+
+.msg-body { padding: 16px 18px; font-size: 13px; color: var(--text); line-height: 1.75; white-space: pre-wrap; font-family: 'Inter', sans-serif; }
+.msg-note { padding: 10px 18px 14px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); line-height: 1.6; }
+.msg-note strong { color: var(--subtle); }
+
+/* ─── TIP BOX ─── */
+.tip-box { padding: 13px 16px; border-radius: 8px; font-size: 12px; line-height: 1.65; margin-bottom: 20px; }
+.tip-green { background: rgba(37,211,102,0.06); border: 1px solid rgba(37,211,102,0.15); color: #a7f3d0; }
+.tip-green strong { color: #6ee7b7; }
+.tip-yellow { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15); color: #fcd34d; }
+.tip-yellow strong { color: #fbbf24; }
+.tip-red { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); color: #fca5a5; }
+.tip-red strong { color: #f87171; }
+
+/* ─── DO / DON'T ─── */
+.dos-donts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+.dos, .donts { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 18px 20px; }
+.dos { border-top: 3px solid var(--wa-green); }
+.donts { border-top: 3px solid #ef4444; }
+.dd-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
+.dos .dd-title { color: var(--wa-green); }
+.donts .dd-title { color: #ef4444; }
+.dd-list { list-style: none; }
+.dd-list li { font-size: 12px; color: var(--subtle); line-height: 1.7; display: flex; gap: 8px; }
+.dd-list li::before { flex-shrink: 0; margin-top: 1px; }
+.dos .dd-list li::before { content: '✓'; color: var(--wa-green); font-weight: 700; }
+.donts .dd-list li::before { content: '✗'; color: #ef4444; font-weight: 700; }
+
+/* ─── REPLY HANDLING ─── */
+.reply-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.reply-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 16px; }
+.reply-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.reply-card:nth-child(1) .reply-label { color: var(--wa-green); }
+.reply-card:nth-child(2) .reply-label { color: var(--yellow); }
+.reply-card:nth-child(3) .reply-label { color: #ef4444; }
+.reply-card:nth-child(4) .reply-label { color: var(--muted); }
+.reply-response { font-size: 12px; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; line-height: 1.6; white-space: pre-wrap; font-style: italic; }
+.reply-action { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(37,211,102,0.2); border-radius: 3px; }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { padding: 20px; }
+  .dos-donts { grid-template-columns: 1fr; }
+  .header { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="wa-icon">💬</div>
+      <div>
+        <h1>ListingAI — WhatsApp Outreach</h1>
+        <p>Message sequences for UAE real estate agency founders & CEOs · March 2026</p>
+      </div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi kpi-contacts"><div class="kpi-val">13</div><div class="kpi-label">Contacts</div></div>
+      <div class="kpi kpi-mobile"><div class="kpi-val">6</div><div class="kpi-label">Direct Mobile</div></div>
+      <div class="kpi kpi-seq"><div class="kpi-val">3</div><div class="kpi-label">Msg Sequence</div></div>
+      <div class="kpi kpi-goal"><div class="kpi-val">Call</div><div class="kpi-label">Goal</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Strategy</div>
+      <div class="nav-item active" onclick="show('overview')">
+        <div class="nav-dot" style="background:var(--wa-green)"></div>
+        <div class="nav-item-text">
+          <div class="nav-item-name">Overview & Rules</div>
+          <div class="nav-item-sub">When and how to use WhatsApp</div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="show('contacts')">
+        <div class="nav-dot" style="background:#6ee7b7"></div>
+        <div class="nav-item-text">
+          <div class="nav-item-name">Contact List</div>
+          <div class="nav-item-sub">13 agencies with phone numbers</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Message Sequences</div>
+      <div class="nav-item" onclick="show('standard')">
+        <div class="nav-dot" style="background:var(--accent-light)"></div>
+        <div class="nav-item-text">
+          <div class="nav-item-name">Standard Sequence</div>
+          <div class="nav-item-sub">New boutique, no tech</div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="show('luxury')">
+        <div class="nav-dot" style="background:#fbbf24"></div>
+        <div class="nav-item-text">
+          <div class="nav-item-name">Luxury Variant</div>
+          <div class="nav-item-sub">AED 3M+ avg listings</div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="show('crm')">
+        <div class="nav-dot" style="background:#f87171"></div>
+        <div class="nav-item-text">
+          <div class="nav-item-name">CRM Risk Variant</div>
+          <div class="nav-item-sub">May have existing tools</div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="show('office')">
+        <div class="nav-dot" style="background:var(--subtle)"></div>
+        <div class="nav-item-text">
+          <div class="nav-item-name">Office Number Variant</div>
+          <div class="nav-item-sub">Landlines & reception numbers</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Reference</div>
+      <div class="nav-item" onclick="show('replies')">
+        <div class="nav-dot" style="background:var(--cyan, #06b6d4)"></div>
+        <div class="nav-item-text">
+          <div class="nav-item-name">Reply Handling</div>
+          <div class="nav-item-sub">Suggested responses by reply type</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="main">
+
+    <!-- ── OVERVIEW ── -->
+    <div id="view-overview" class="view active">
+      <div class="page-title">WhatsApp Outreach Strategy</div>
+      <div class="page-sub">When to use WhatsApp, what makes it different from email, and the rules that keep it effective.</div>
+
+      <div class="strategy-grid">
+        <div class="strategy-card">
+          <div class="sc-icon">📱</div>
+          <div class="sc-title">When WhatsApp beats email</div>
+          <div class="sc-body">UAE is a <strong>WhatsApp-first business culture</strong>. Founders and CEOs regularly handle deals on WhatsApp. For direct mobile numbers — especially where no email exists — it's often the faster and more natural channel.</div>
+        </div>
+        <div class="strategy-card">
+          <div class="sc-icon">⏱️</div>
+          <div class="sc-title">Send window</div>
+          <div class="sc-body"><strong>Tuesday–Thursday, 10 AM–12 PM</strong> Gulf Standard Time. Avoid Monday mornings (inbox overload), Friday afternoons (prayer/wind-down), and weekends unless you've already established contact.</div>
+        </div>
+        <div class="strategy-card">
+          <div class="sc-icon">📏</div>
+          <div class="sc-title">Message length</div>
+          <div class="sc-body">Keep it to <strong>3–5 lines max</strong> on mobile. If it requires scrolling, it's too long. WhatsApp is a conversation medium — write like a peer, not a pitch deck. No bullet points. No headers.</div>
+        </div>
+        <div class="strategy-card">
+          <div class="sc-icon">🔢</div>
+          <div class="sc-title">Sequence limit</div>
+          <div class="sc-body"><strong>3 messages maximum</strong> to a cold contact. More than that crosses into harassment. Respect the channel. If they haven't replied after message 3, move to email or LinkedIn and do not WhatsApp again.</div>
+        </div>
+        <div class="strategy-card">
+          <div class="sc-icon">🎙️</div>
+          <div class="sc-title">No voice notes cold</div>
+          <div class="sc-body">Voice notes are for established relationships only. Cold voice notes feel intrusive and have near-zero engagement. Text only for initial outreach — voice is fine once they've replied.</div>
+        </div>
+        <div class="strategy-card">
+          <div class="sc-icon">💼</div>
+          <div class="sc-title">Use Business WhatsApp</div>
+          <div class="sc-body">Set up a <strong>WhatsApp Business account</strong> for ListingAI with your company name, description, and website. This builds credibility and lets contacts verify who they're talking to before replying.</div>
+        </div>
+      </div>
+
+      <div class="sec-title">Do's and Don'ts</div>
+      <div class="sec-sub">WhatsApp outreach fails differently from email. These are the rules that matter most.</div>
+
+      <div class="dos-donts">
+        <div class="dos">
+          <div class="dd-title">Do</div>
+          <ul class="dd-list">
+            <li>Use a real name — "Nazir from ListingAI"</li>
+            <li>Lead with their business, not your product</li>
+            <li>Keep the ask ultra-low-friction ("worth a quick call?")</li>
+            <li>Send at 10 AM–12 PM GST, Tue–Thu</li>
+            <li>Wait at least 4 days before follow-up</li>
+            <li>Use Business WhatsApp with a complete profile</li>
+            <li>Stop after 3 messages if no reply</li>
+            <li>Honour any "not interested" response permanently</li>
+            <li>Reference something specific to their agency</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <div class="dd-title">Don't</div>
+          <ul class="dd-list">
+            <li>Send voice notes cold</li>
+            <li>Open with "Hi, my name is X and I work at Y"</li>
+            <li>Use bullet points or headers in messages</li>
+            <li>Send the same message as your email (they'll notice)</li>
+            <li>Follow up more than twice after initial contact</li>
+            <li>Send on Friday afternoon or weekends</li>
+            <li>Add them to a WhatsApp group without consent</li>
+            <li>Send media files (images, PDFs) in cold outreach</li>
+            <li>Use "I hope this message finds you well"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-box tip-green">
+        <strong>Priority order:</strong> Direct mobile numbers (CEO/Founder) → Office numbers where reception will pass messages → WhatsApp as fallback for email-confirmed contacts. The 6 direct mobile numbers in this list are your primary WhatsApp targets.
+      </div>
+    </div>
+
+    <!-- ── CONTACTS ── -->
+    <div id="view-contacts" class="view">
+      <div class="page-title">WhatsApp Contact List</div>
+      <div class="page-sub">All agencies from the UAE research with confirmed phone numbers. Prioritise direct mobile numbers for WhatsApp — office landlines are secondary.</div>
+
+      <div class="tip-box tip-green" style="margin-bottom:20px">
+        <strong>6 direct mobile contacts</strong> — these are the WhatsApp priority targets. Office numbers may go to reception; use those for calling or request to be transferred.
+      </div>
+
+      <table class="contact-table">
+        <thead>
+          <tr>
+            <th style="width:200px">Agency</th>
+            <th>Decision Maker</th>
+            <th>Number</th>
+            <th style="width:80px">Type</th>
+            <th style="width:60px">Score</th>
+            <th style="width:90px">Variant</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="agency-name-cell">The Capital Avenue<small>Abu Dhabi · 14 agents</small></span></td>
+            <td><span class="dm-name">Rachad Fouad — CEO & MD</span></td>
+            <td><span class="phone-num">+971 50 502 6788</span></td>
+            <td><span class="phone-type pt-mobile">📱 Mobile</span></td>
+            <td><span class="tier-badge tb-A">84</span></td>
+            <td><span class="variant-tag vt-standard">Standard</span></td>
+            <td style="font-size:11px;color:var(--muted)">No email found — WhatsApp is the primary channel. Direct CEO mobile.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Xsite Real Estate<small>Dubai · 48 agents</small></span></td>
+            <td><span class="dm-name">Muhammad Alam — CEO & Founder</span></td>
+            <td><span class="phone-num">+971 54 402 0625</span></td>
+            <td><span class="phone-type pt-mobile">📱 Mobile</span></td>
+            <td><span class="tier-badge tb-A">83</span> <span class="crm-warn">CRM risk</span></td>
+            <td><span class="variant-tag vt-crm">CRM Risk</span></td>
+            <td style="font-size:11px;color:var(--muted)">Also has email (info@xsite.ae). Verify CRM status first.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Paragon Properties<small>Dubai · 34 agents</small></span></td>
+            <td><span class="dm-name">Angelo Kazantzas & Dean Charter — Co-Founders</span></td>
+            <td><span class="phone-num">+971 58 900 4611</span></td>
+            <td><span class="phone-type pt-mobile">📱 Mobile</span></td>
+            <td><span class="tier-badge tb-A">83</span></td>
+            <td><span class="variant-tag vt-standard">Standard</span></td>
+            <td style="font-size:11px;color:var(--muted)">Direct founder mobile. Also has email. Multi-emirate angle works well.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Henry Wiltshire Abu Dhabi<small>Abu Dhabi · 10 agents</small></span></td>
+            <td><span class="dm-name">Andrew Covill — Manager / MD</span></td>
+            <td><span class="phone-num">+971 56 484 3380</span></td>
+            <td><span class="phone-type pt-mobile">📱 Mobile</span></td>
+            <td><span class="tier-badge tb-B">73</span> <span class="crm-warn">CRM risk</span></td>
+            <td><span class="variant-tag vt-crm">CRM Risk</span></td>
+            <td style="font-size:11px;color:var(--muted)">International boutique. Also has email. Position as UAE-local complement to HQ tools.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Treo Homes<small>Dubai · 58 agents</small></span></td>
+            <td><span class="dm-name">Sami Al-Khafaji — Founder & Managing Partner</span></td>
+            <td><span class="phone-num">+971 54 774 2111</span></td>
+            <td><span class="phone-type pt-mobile">📱 Mobile</span></td>
+            <td><span class="tier-badge tb-B">65</span> <span class="crm-warn">High CRM risk</span></td>
+            <td><span class="variant-tag vt-crm">CRM Risk</span></td>
+            <td style="font-size:11px;color:var(--muted)">Outside sweet spot (58 agents) + tech-forward. Only pursue if confirmed on manual tools.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Homes 4 Life Real Estate<small>Dubai · 51 agents</small></span></td>
+            <td><span class="dm-name">Nitin Giyanani — Ops & Business Dev</span></td>
+            <td><span class="phone-num">+971 56 818 8610</span></td>
+            <td><span class="phone-type pt-mobile">📱 Mobile</span></td>
+            <td><span class="tier-badge tb-B">58</span></td>
+            <td><span class="variant-tag vt-standard">Standard</span></td>
+            <td style="font-size:11px;color:var(--muted)">Ops contact — not founder. Research notes mention WhatsApp explicitly. Confirm CRM status.</td>
+          </tr>
+          <tr style="opacity:0.7">
+            <td><span class="agency-name-cell">MH Real Estate<small>Dubai · 8 agents</small></span></td>
+            <td><span class="dm-name">Murtaza Hashmi — CEO & Founder</span></td>
+            <td><span class="phone-num office">+971 4 570 3981</span></td>
+            <td><span class="phone-type pt-office">🏢 Office</span></td>
+            <td><span class="tier-badge tb-A">92</span></td>
+            <td><span class="variant-tag vt-luxury">Luxury</span></td>
+            <td style="font-size:11px;color:var(--muted)">Office line. Email (marketing@mhrealestate.ae) is primary — use email first.</td>
+          </tr>
+          <tr style="opacity:0.7">
+            <td><span class="agency-name-cell">Gaia Living Real Estate<small>Dubai · ~10 agents</small></span></td>
+            <td><span class="dm-name">Aslan Patov — Founder & CEO</span></td>
+            <td><span class="phone-num office">+971 4 325 1047</span></td>
+            <td><span class="phone-type pt-office">🏢 Office</span></td>
+            <td><span class="tier-badge tb-A">80</span></td>
+            <td><span class="variant-tag vt-luxury">Luxury</span></td>
+            <td style="font-size:11px;color:var(--muted)">Office line. Also has email (hello@gaiarealty.ae). Use email first.</td>
+          </tr>
+          <tr style="opacity:0.7">
+            <td><span class="agency-name-cell">Almira Real Estate<small>Abu Dhabi · 28 agents</small></span></td>
+            <td><span class="dm-name">Ahmad Abuisnaineh — Managing Director</span></td>
+            <td><span class="phone-num office">+971 2 546 2666</span></td>
+            <td><span class="phone-type pt-office">🏢 Office</span></td>
+            <td><span class="tier-badge tb-A">89</span></td>
+            <td><span class="variant-tag vt-standard">Standard</span></td>
+            <td style="font-size:11px;color:var(--muted)">Office line. Also has email (info@almira.ae). Use email first.</td>
+          </tr>
+          <tr style="opacity:0.7">
+            <td><span class="agency-name-cell">OnPlan Real Estate<small>Dubai · 20 agents</small></span></td>
+            <td><span class="dm-name">Ahmed Aldoulah — CEO</span></td>
+            <td><span class="phone-num office">+971 4 718 1000</span></td>
+            <td><span class="phone-type pt-office">🏢 Office</span></td>
+            <td><span class="tier-badge tb-A">83</span></td>
+            <td><span class="variant-tag vt-standard">Standard</span></td>
+            <td style="font-size:11px;color:var(--muted)">Office line. Also has email (info@onplan.ae). Use email first.</td>
+          </tr>
+          <tr style="opacity:0.7">
+            <td><span class="agency-name-cell">Capstone Real Estate<small>Abu Dhabi · 14 agents</small></span></td>
+            <td><span class="dm-name">Amer Al Ahbabi — Group CEO</span></td>
+            <td><span class="phone-num office">+971 2 445 2122</span></td>
+            <td><span class="phone-type pt-office">🏢 Office</span></td>
+            <td><span class="tier-badge tb-B">77</span> <span class="crm-warn">CRM risk</span></td>
+            <td><span class="variant-tag vt-crm">CRM Risk</span></td>
+            <td style="font-size:11px;color:var(--muted)">Office line. Also has email (leads@capstoneuae.com). Use email first.</td>
+          </tr>
+          <tr style="opacity:0.7">
+            <td><span class="agency-name-cell">Next Level Real Estate<small>Dubai · 30 agents</small></span></td>
+            <td><span class="dm-name">Abdul Ahad Siddiq — Founder & MD</span></td>
+            <td><span class="phone-num office">+971 4 454 2828</span></td>
+            <td><span class="phone-type pt-office">🏢 Office</span></td>
+            <td><span class="tier-badge tb-B">73</span></td>
+            <td><span class="variant-tag vt-standard">Standard</span></td>
+            <td style="font-size:11px;color:var(--muted)">Office line. Also has email (media@nextlevelrealestate.ae). Use email first.</td>
+          </tr>
+          <tr style="opacity:0.7">
+            <td><span class="agency-name-cell">Daytona Properties<small>Dubai · 14 agents</small></span></td>
+            <td><span class="dm-name">Group-owned — use info@ entry</span></td>
+            <td><span class="phone-num office">+971 4 396 7474</span></td>
+            <td><span class="phone-type pt-office">🏢 Office</span></td>
+            <td><span class="tier-badge tb-B">70</span></td>
+            <td><span class="variant-tag vt-standard">Standard</span></td>
+            <td style="font-size:11px;color:var(--muted)">Office line. DM hard to reach — use email (info@daytonaproperties.ae) first, then escalate.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box tip-yellow" style="margin-top:16px">
+        <strong>Office numbers:</strong> These are better for a phone call than WhatsApp cold outreach. If you use them for WhatsApp, the message may go to a shared business device — add enough context in message 1 for whoever reads it to pass it along to the right person.
+      </div>
+    </div>
+
+    <!-- ── STANDARD SEQUENCE ── -->
+    <div id="view-standard" class="view">
+      <div class="page-title">Standard WhatsApp Sequence</div>
+      <div class="page-sub">For new boutique agencies with no detected CRM — The Capital Avenue, Paragon Properties, Homes 4 Life, and office-number contacts.</div>
+
+      <!-- Chat Preview -->
+      <div class="sec-title" style="margin-top:0;padding-top:0;border-top:none">How it looks on mobile</div>
+      <div class="sec-sub">Preview of all 3 messages in a real WhatsApp thread.</div>
+
+      <div class="wa-preview-wrap">
+        <div class="wa-topbar">
+          <div class="wa-avatar">R</div>
+          <div class="wa-contact-info">
+            <div class="wa-contact-name">Rachad Fouad</div>
+            <div class="wa-contact-status">CEO & MD · The Capital Avenue</div>
+          </div>
+          <div class="wa-topbar-icons">📞 ⋮</div>
+        </div>
+        <div class="wa-messages">
+          <div class="wa-date-sep"><span>Tuesday, 10:12 AM</span></div>
+
+          <div class="wa-day-label">Message 1 — Day 0</div>
+          <div class="wa-msg sent">Hi Rachad, this is Nazir from ListingAI. Noticed The Capital Avenue is active on Property Finder across off-plan, ready market, and commercial — that's a lot of listings to keep live manually. We built a tool that drafts descriptions and posts to PF + Bayut in under 90 seconds. Worth a quick call?
+<div class="wa-msg-time">10:12 <span class="wa-ticks">✓✓</span></div></div>
+
+          <div class="wa-date-sep" style="margin-top:16px"><span>Saturday, 10:08 AM</span></div>
+
+          <div class="wa-day-label">Message 2 — Day 4</div>
+          <div class="wa-msg sent">Hi Rachad, just a quick follow-up. If the manual uploads are eating into your week, I can send a short video showing exactly how it works — 2 minutes, no call needed. Happy either way.
+<div class="wa-msg-time">10:08 <span class="wa-ticks">✓✓</span></div></div>
+
+          <div class="wa-date-sep" style="margin-top:16px"><span>Thursday, 10:31 AM</span></div>
+
+          <div class="wa-day-label">Message 3 — Day 12 (Breakup)</div>
+          <div class="wa-msg sent">Rachad, last message from my end. If the timing's off, no problem at all. If it ever becomes relevant — when listing volume picks up and the uploads start stacking — feel free to reach out. Good luck with Q2.
+<div class="wa-msg-time">10:31 <span class="wa-ticks">✓✓</span></div></div>
+        </div>
+      </div>
+
+      <!-- Message Templates -->
+      <div class="sec-title">Message Templates</div>
+      <div class="sec-sub">Copy and personalise. Replace [Name], [Agency Name], and the specific hook in brackets.</div>
+
+      <div class="msg-sequence">
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s1">Message 1</span>
+            <span class="msg-card-title">Cold Intro</span>
+            <span class="msg-timing">Day 0 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-std-1', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-std-1">Hi [Name], this is [Your name] from ListingAI. Noticed [Agency Name] is active on Property Finder — [specific hook: "across off-plan and ready market, that's a heavy listing load to keep live manually" / "with 34 agents posting across Dubai and Ras Al Khaimah, the portal admin stacks up fast"]. We built a tool that drafts descriptions and posts to PF + Bayut in under 90 seconds. Worth a quick call?</div>
+          <div class="msg-note"><strong>Hook options:</strong> Pull from the personalisation guide in the email sequence. One specific observation is enough — don't stack multiple facts.</div>
+        </div>
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s2">Message 2</span>
+            <span class="msg-card-title">Video Offer Follow-up</span>
+            <span class="msg-timing">Day 4 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-std-2', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-std-2">Hi [Name], just a quick follow-up. If the manual uploads are eating into your week, I can send a short video showing exactly how it works — 2 minutes, no call needed. Happy either way.</div>
+          <div class="msg-note"><strong>Why offer a video:</strong> Lower friction than a call. If they say yes, send a 90-second Loom showing a listing going live. This often converts better than a demo call for busy founders.</div>
+        </div>
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s3">Message 3</span>
+            <span class="msg-card-title">Breakup</span>
+            <span class="msg-timing">Day 12 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-std-3', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-std-3">[Name], last message from my end. If the timing's off, no problem at all. If it ever becomes relevant — when listing volume picks up and the uploads start stacking — feel free to reach out. Good luck with Q2.</div>
+          <div class="msg-note"><strong>Honour this:</strong> Do not send a 4th message. If they respond positively to the breakup, great — book the call. If not, move to the email sequence.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── LUXURY VARIANT ── -->
+    <div id="view-luxury" class="view">
+      <div class="page-title">Luxury WhatsApp Variant</div>
+      <div class="page-sub">For agencies with AED 3M+ average listing values — lead with copy quality, not speed. Use for MH Real Estate, Gaia Living, Henry Wiltshire Abu Dhabi.</div>
+
+      <div class="tip-box tip-yellow">
+        <strong>Key shift:</strong> Don't open with "saves you time." For luxury agencies, the quality of listing copy is a core product differentiator. They care that descriptions match the property and the buyer — speed is secondary.
+      </div>
+
+      <!-- Chat Preview -->
+      <div class="wa-preview-wrap" style="margin-top:20px">
+        <div class="wa-topbar">
+          <div class="wa-avatar" style="background:linear-gradient(135deg,#d97706,#f59e0b)">A</div>
+          <div class="wa-contact-info">
+            <div class="wa-contact-name">Andrew Covill</div>
+            <div class="wa-contact-status">Manager / MD · Henry Wiltshire Abu Dhabi</div>
+          </div>
+          <div class="wa-topbar-icons">📞 ⋮</div>
+        </div>
+        <div class="wa-messages">
+          <div class="wa-date-sep"><span>Wednesday, 10:44 AM</span></div>
+          <div class="wa-day-label">Message 1 — Day 0</div>
+          <div class="wa-msg sent">Hi Andrew, this is Nazir from ListingAI. For a luxury Abu Dhabi boutique like Henry Wiltshire, the listing copy is doing real work — international buyers at that price point expect the description to match the property. We built an AI tool that writes property descriptions tailored to HNW buyers and posts directly to PF + Bayut. No generic templates. Worth a quick look?
+<div class="wa-msg-time">10:44 <span class="wa-ticks">✓✓</span></div></div>
+        </div>
+      </div>
+
+      <div class="sec-title">Message Templates</div>
+
+      <div class="msg-sequence">
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s1">Message 1</span>
+            <span class="msg-card-title">Luxury Cold Intro</span>
+            <span class="msg-timing">Day 0 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-lux-1', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-lux-1">Hi [Name], this is [Your name] from ListingAI. For a luxury boutique like [Agency Name], the listing copy is doing real work — [international buyers / HNW clients] at AED [X]M+ expect the description to match the property. We built an AI tool that writes descriptions tailored to that audience and posts directly to PF + Bayut. No generic templates. Worth a quick look?</div>
+          <div class="msg-note"><strong>Fill in:</strong> Use their actual avg value from the research. "AED 3.1M+" for Henry Wiltshire, "AED 4.2M+" for NAS Luxury, "AED 6.5M+" for Estate500.</div>
+        </div>
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s2">Message 2</span>
+            <span class="msg-card-title">Quality Example Follow-up</span>
+            <span class="msg-timing">Day 4 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-lux-2', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-lux-2">Hi [Name], following up briefly. Happy to generate a sample description for one of your current listings — takes 30 seconds and you can see the quality before committing to anything. Interested?</div>
+          <div class="msg-note"><strong>Why this works:</strong> Offering a live sample for their actual property is the lowest possible friction ask. If they send a listing, you have an opening.</div>
+        </div>
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s3">Message 3</span>
+            <span class="msg-card-title">Breakup</span>
+            <span class="msg-timing">Day 12 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-lux-3', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-lux-3">[Name], I'll leave it here. If listing copy quality ever becomes a priority — especially as you take on more international inventory — feel free to reach out. Good luck with [Agency Name].</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── CRM RISK VARIANT ── -->
+    <div id="view-crm" class="view">
+      <div class="page-title">CRM Risk WhatsApp Variant</div>
+      <div class="page-sub">For agencies that may already have CRM or portal integration — Xsite, Treo Homes, Henry Wiltshire, Capstone. Position as a complement, not replacement.</div>
+
+      <div class="tip-box tip-red">
+        <strong>Verify first:</strong> Before sending to any CRM-risk contact, try to confirm their current tech stack. A misplaced "you're probably uploading manually" to a company with XML feeds already configured will kill the pitch instantly.
+      </div>
+
+      <div class="msg-sequence" style="margin-top:20px">
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s1">Message 1</span>
+            <span class="msg-card-title">CRM Risk Cold Intro</span>
+            <span class="msg-timing">Day 0 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-crm-1', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-crm-1">Hi [Name], this is [Your name] from ListingAI. Quick question — how is [Agency Name] handling Property Finder listing copy right now? Even teams with CRM in place often still reformat descriptions by hand before portal upload. We automate that last mile. Worth a quick call to see if it fits?</div>
+          <div class="msg-note"><strong>Why the question:</strong> Opens with a genuine question rather than an assumption. If they say "we already have automation," you can explore the gap. If they say "manually," you've confirmed the fit.</div>
+        </div>
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s2">Message 2</span>
+            <span class="msg-card-title">Complement Follow-up</span>
+            <span class="msg-timing">Day 4 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-crm-2', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-crm-2">Hi [Name], just following up. ListingAI doesn't replace CRM — it sits on top of whatever you're already using and handles the description writing + portal push. No migration, no disruption. Happy to show you in 10 minutes.</div>
+        </div>
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s3">Message 3</span>
+            <span class="msg-card-title">Breakup</span>
+            <span class="msg-timing">Day 12 · 10–12 AM GST</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-crm-3', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-crm-3">[Name], last one from me. If the listing workflow ever becomes a bottleneck — especially as [Agency Name] scales — feel free to reach back out. Good luck.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── OFFICE VARIANT ── -->
+    <div id="view-office" class="view">
+      <div class="page-title">Office Number Guidance</div>
+      <div class="page-sub">For agencies where only an office landline is available and email exists — these are lower priority for WhatsApp. Use email first, WhatsApp only as a backup channel.</div>
+
+      <div class="tip-box tip-yellow">
+        <strong>Recommended order for office-number contacts:</strong> Send email first → If no reply after 7 days, WhatsApp the office number → If the office WA is active, keep it brief and ask who to speak to. Don't pitch via office WhatsApp — just get a direct contact.
+      </div>
+
+      <div class="sec-title">Office WhatsApp — Getting Past Reception</div>
+      <div class="sec-sub">When WhatsApp goes to a shared office device, this message gets you to the right person.</div>
+
+      <div class="msg-sequence">
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s1">Office Message 1</span>
+            <span class="msg-card-title">Introduction to pass on</span>
+            <span class="msg-timing">Day 7 (after email sent on Day 0)</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-off-1', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-off-1">Hi, this is [Your name] from ListingAI. I sent an email to [Agency Name] last week about automating your Property Finder listing uploads — could you pass this message to [Founder name / MD name / the person handling your portal listings]? Happy to follow up directly with them. Thank you.</div>
+          <div class="msg-note"><strong>Goal:</strong> Get a direct contact or have the message forwarded. Don't pitch here — just get to the right person.</div>
+        </div>
+
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s2">Office Message 2</span>
+            <span class="msg-card-title">Follow-up if no reply after Day 14</span>
+            <span class="msg-timing">Day 14</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-off-2', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-off-2">Hi, just following up briefly. I'm trying to reach [Founder name] at [Agency Name] about a tool that automates your Property Finder and Bayut listing uploads. If there's a better way to reach them directly, I'd appreciate it.</div>
+        </div>
+
+      </div>
+
+      <div class="sec-title">Priority Order for Office-Number Contacts</div>
+      <div class="sec-sub">Which contacts to attempt WhatsApp with and which to stick to email only.</div>
+
+      <table class="contact-table">
+        <thead>
+          <tr>
+            <th>Agency</th>
+            <th>Recommended Channel</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="agency-name-cell">MH Real Estate</span></td>
+            <td style="color:var(--wa-green);font-weight:600;font-size:12px">Email first (marketing@mhrealestate.ae)</td>
+            <td style="font-size:11px;color:var(--muted)">Top Tier A target — confirmed email is marketing team direct. Use email.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Almira Real Estate</span></td>
+            <td style="color:var(--wa-green);font-weight:600;font-size:12px">Email first (info@almira.ae)</td>
+            <td style="font-size:11px;color:var(--muted)">Confirmed MD contact + email. Office number backup only.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">OnPlan Real Estate</span></td>
+            <td style="color:var(--wa-green);font-weight:600;font-size:12px">Email first (info@onplan.ae)</td>
+            <td style="font-size:11px;color:var(--muted)">Office line — email is better entry point for this agency.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Next Level Real Estate</span></td>
+            <td style="color:var(--accent-light);font-weight:600;font-size:12px">Email + office WA together</td>
+            <td style="font-size:11px;color:var(--muted)">Email to media@ on Day 0. WA to office on Day 7 if no reply.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Capstone Real Estate</span></td>
+            <td style="color:var(--wa-green);font-weight:600;font-size:12px">Email first (leads@capstoneuae.com)</td>
+            <td style="font-size:11px;color:var(--muted)">CRM risk — leads@ is the best entry. Confirm tech stack before any pitch.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Daytona Properties</span></td>
+            <td style="color:var(--accent-light);font-weight:600;font-size:12px">Email then office WA</td>
+            <td style="font-size:11px;color:var(--muted)">Group subsidiary — harder DM access. Office WA helps route to the right person.</td>
+          </tr>
+          <tr>
+            <td><span class="agency-name-cell">Gaia Living Real Estate</span></td>
+            <td style="color:var(--wa-green);font-weight:600;font-size:12px">Email first (hello@gaiarealty.ae)</td>
+            <td style="font-size:11px;color:var(--muted)">Founder email confirmed — use email. WA is office line, lower value.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── REPLY HANDLING ── -->
+    <div id="view-replies" class="view">
+      <div class="page-title">Reply Handling</div>
+      <div class="page-sub">Suggested responses for every reply scenario — reply within 2 hours for any positive response.</div>
+
+      <div class="tip-box tip-green" style="margin-bottom:24px">
+        <strong>Speed matters:</strong> A founder who replies to a cold WhatsApp is a hot signal. Respond within 2 hours. If you're not available to follow up quickly, don't send the message yet.
+      </div>
+
+      <div class="sec-title" style="margin-top:0;padding-top:0;border-top:none">Reply Scenarios</div>
+
+      <div class="reply-grid">
+        <div class="reply-card">
+          <div class="reply-label">✓ Positive — "Interested"</div>
+          <div class="reply-response">Great, are you free for a 15-min call this week? Here's a link: [Calendly]
+
+Or if it's easier, I can send a 2-min video showing it in action first.</div>
+          <div class="reply-action">→ Book demo immediately. Respond within 2 hours. Move to demo-booked sequence.</div>
+        </div>
+        <div class="reply-card">
+          <div class="reply-label">⏳ Not now — "Follow up later"</div>
+          <div class="reply-response">Of course, no problem. I'll check back in a few months. Good luck with the listings in the meantime.</div>
+          <div class="reply-action">→ Add to 90-day re-queue. Mark date. Remove from active sequence.</div>
+        </div>
+        <div class="reply-card">
+          <div class="reply-label">✗ Not interested</div>
+          <div class="reply-response">Understood, thanks for letting me know. Good luck with [Agency Name].</div>
+          <div class="reply-action">→ Do not contact again. Mark as do-not-contact in your list. Honour it.</div>
+        </div>
+        <div class="reply-card">
+          <div class="reply-label">❓ Question — "How does it work?"</div>
+          <div class="reply-response">Happy to show you. It connects to your existing listings and generates the full description — tailored copy, portal-ready format — in about 90 seconds. I can walk you through it live in 10 minutes or send a quick video. Which is easier?</div>
+          <div class="reply-action">→ Offer both options. Let them choose the format. Get on a call if possible.</div>
+        </div>
+        <div class="reply-card">
+          <div class="reply-label">💰 Pricing question</div>
+          <div class="reply-response">Happy to share that. Pricing is based on listing volume — it's designed to be affordable for boutique agencies. Worth a quick call to go through the numbers?</div>
+          <div class="reply-action">→ Don't quote pricing over WhatsApp if avoidable. Get them on a call where you can address objections.</div>
+        </div>
+        <div class="reply-card">
+          <div class="reply-label">🤔 "We already have a tool"</div>
+          <div class="reply-response">Good to know — what are you using? Most tools handle the CRM side but leave the portal copy writing to agents. That's typically where the time goes.</div>
+          <div class="reply-action">→ Ask a genuine question. If they have full XML automation with AI copy, disengage gracefully. If there's a gap, keep going.</div>
+        </div>
+      </div>
+
+      <div class="sec-title">After the Call — WhatsApp Follow-up</div>
+      <div class="sec-sub">If they agreed to a demo but haven't booked yet.</div>
+
+      <div class="msg-sequence">
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <span class="msg-step s1">Post-interest</span>
+            <span class="msg-card-title">Booking nudge (if they said yes but haven't booked)</span>
+            <span class="msg-timing">24 hours after positive reply</span>
+            <button class="copy-msg-btn" onclick="copyMsg('msg-book', this)">Copy</button>
+          </div>
+          <div class="msg-body" id="msg-book">Hi [Name], here's the link to book a 15-min call whenever it suits you: [Calendly link]. Or if it's easier, just suggest a day and time and I'll send a calendar invite directly.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const trigger = document.querySelector(`[onclick="show('${id}')"]`);
+  if (trigger) trigger.classList.add('active');
+
+  document.getElementById('main').scrollTop = 0;
+}
+
+function copyMsg(id, btn) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

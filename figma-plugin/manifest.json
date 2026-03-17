@@ -1,0 +1,7 @@
+{
+  "name": "Enlista Voice Feature Posts",
+  "id": "enlista-voice-posts",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"]
+}

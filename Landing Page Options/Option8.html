@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ListingsLaunch — Editorial Magazine</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#0E0E0E;--surface:#141414;--mid:#1C1C1C;--mustard:#E8C547;--cream:#F0EAD6;--muted:#555;--border:#242424;--text:#C8C0AE;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Spectral',serif;font-size:16px;line-height:1.8;overflow-x:hidden;}
+  .anton{font-family:'Anton',sans-serif;}
+  .caps{letter-spacing:0.04em;}
+
+  /* Running top bar */
+  .topbar{background:var(--mustard);color:var(--bg);font-family:'Anton',sans-serif;font-size:12px;letter-spacing:0.15em;padding:6px 24px;display:flex;justify-content:space-between;overflow:hidden;}
+
+  nav{background:var(--surface);border-bottom:3px solid var(--cream);position:sticky;top:0;z-index:50;}
+
+  .btn-mustard{display:inline-block;background:var(--mustard);color:var(--bg);padding:11px 28px;font-family:'Anton',sans-serif;font-size:14px;letter-spacing:0.08em;text-decoration:none;transition:all 0.2s;border:2px solid var(--mustard);}
+  .btn-mustard:hover{background:transparent;color:var(--mustard);}
+  .btn-cream{display:inline-block;border:2px solid var(--cream);color:var(--cream);padding:11px 28px;font-family:'Anton',sans-serif;font-size:14px;letter-spacing:0.08em;text-decoration:none;transition:all 0.2s;}
+  .btn-cream:hover{background:var(--cream);color:var(--bg);}
+
+  /* Rule lines */
+  .thick-rule{height:3px;background:var(--cream);}
+  .thin-rule{height:1px;background:var(--border);}
+  .mustard-rule{height:3px;background:var(--mustard);}
+
+  /* Magazine hero: 3-column layout */
+  .mag-hero{display:grid;grid-template-columns:1fr;gap:0;border-bottom:3px solid var(--cream);}
+  @media(min-width:900px){.mag-hero{grid-template-columns:2fr 1fr;}}
+
+  /* Full-bleed headline */
+  .mega-hed{font-family:'Anton',sans-serif;font-size:clamp(60px,12vw,180px);line-height:0.88;letter-spacing:0.01em;text-transform:uppercase;color:var(--cream);}
+
+  /* Column rule for multi-col text */
+  .col-text{column-count:2;column-gap:32px;column-rule:1px solid var(--border);}
+  @media(max-width:600px){.col-text{column-count:1;}}
+
+  /* Running column header */
+  .col-header{font-family:'Anton',sans-serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--border);border-top:1px solid var(--border);margin-bottom:24px;}
+
+  /* Feature grid: irregular magazine columns */
+  .feat-magazine{display:grid;grid-template-columns:1fr;gap:0;}
+  @media(min-width:768px){.feat-magazine{grid-template-columns:1fr 1fr;}}
+  .feat-cell{padding:48px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .feat-cell:nth-child(even){border-right:none;}
+  @media(max-width:767px){.feat-cell{border-right:none;}}
+  .feat-cell.hero-cell{grid-column:1/-1;border-right:none;background:var(--surface);padding:64px;}
+  .feat-cell.hero-cell:hover{background:var(--mid);}
+  .feat-num-editorial{font-family:'Anton',sans-serif;font-size:100px;line-height:0.9;color:var(--border);display:block;margin-bottom:16px;transition:color 0.3s;}
+  .feat-cell:hover .feat-num-editorial{color:var(--mustard);}
+
+  /* Testimonials: full-width magazine format */
+  .quote-editorial{padding:56px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr;gap:32px;transition:background 0.3s;}
+  @media(min-width:768px){.quote-editorial{grid-template-columns:3fr 2fr;}}
+  .quote-editorial:hover{background:var(--surface);}
+  .quote-text{font-size:clamp(18px,2.5vw,26px);line-height:1.5;font-style:italic;color:var(--cream);}
+
+  /* Pricing: stacked full-width rows -->  */
+  .price-strip{display:grid;grid-template-columns:1fr;gap:0;border-bottom:1px solid var(--border);}
+  @media(min-width:640px){.price-strip{grid-template-columns:200px 1fr auto;}}
+  .price-cell{padding:32px 48px;border-right:1px solid var(--border);display:flex;align-items:center;transition:background 0.2s;}
+  .price-cell:last-child{border-right:none;}
+  .price-strip:hover .price-cell{background:var(--surface);}
+  .price-strip.featured-strip .price-cell{background:var(--mustard);color:var(--bg);}
+  .price-strip.featured-strip:hover .price-cell{background:#D4B03A;}
+  .price-big{font-family:'Anton',sans-serif;font-size:52px;line-height:1;color:var(--cream);}
+  .featured-strip .price-big{color:var(--bg);}
+  .price-tag-label{font-family:'Anton',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
+  .featured-strip .price-tag-label{color:rgba(14,14,14,0.5);}
+
+  /* Feature list in pricing -->  */
+  .features-inline{display:flex;flex-wrap:wrap;gap:8px;}
+  .feat-pill{background:rgba(240,234,214,0.07);color:var(--text);font-size:12px;padding:4px 12px;border:1px solid var(--border);}
+  .feat-pill.on{background:rgba(232,197,71,0.12);color:var(--mustard);border-color:rgba(232,197,71,0.2);}
+  .featured-strip .feat-pill{background:rgba(14,14,14,0.15);color:var(--bg);border-color:rgba(14,14,14,0.2);}
+  .featured-strip .feat-pill.on{background:rgba(14,14,14,0.25);}
+
+  input{background:var(--surface);border:none;border-bottom:2px solid var(--border);color:var(--cream);padding:14px 0;font-family:'Spectral',serif;font-size:16px;outline:none;width:100%;transition:border-color 0.3s;}
+  input:focus{border-bottom-color:var(--mustard);}
+  input::placeholder{color:var(--muted);}
+
+  @keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+  .su{animation:slideUp 0.7s ease both;}
+  .su-1{animation-delay:0.05s;}.su-2{animation-delay:0.18s;}.su-3{animation-delay:0.32s;}.su-4{animation-delay:0.46s;}
+
+  /* Decorative drop cap -->  */
+  .drop-cap::first-letter{float:left;font-family:'Anton',sans-serif;font-size:64px;line-height:0.8;padding:8px 8px 0 0;color:var(--mustard);}
+
+  /* Running issue info -->  */
+  .issue-meta{font-family:'Anton',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- Top bar: scrolling banner -->
+<div class="topbar">
+  <span>LISTINGS LAUNCH — UAE REAL ESTATE PLATFORM — ISSUE 001 — 2026</span>
+  <span class="hidden md:block">DUBAI · ABU DHABI · SHARJAH · 840 AGENCIES · 124,000 LISTINGS</span>
+</div>
+
+<!-- Nav: magazine masthead style -->
+<nav style="padding:0;">
+  <div style="padding:0 48px;display:flex;justify-content:space-between;align-items:stretch;">
+    <div style="display:flex;align-items:center;padding:12px 0;border-right:1px solid var(--border);padding-right:32px;margin-right:32px;">
+      <span class="anton" style="font-size:28px;letter-spacing:0.02em;color:var(--cream);">LISTINGS<span style="color:var(--mustard);">LAUNCH</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:28px;flex:1;" class="hidden md:flex">
+      <a href="#features" style="color:var(--muted);font-family:'Anton',sans-serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">Platform</a>
+      <a href="#testimonials" style="color:var(--muted);font-family:'Anton',sans-serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">Clients</a>
+      <a href="#pricing" style="color:var(--muted);font-family:'Anton',sans-serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--cream)'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+      <a href="#cta" class="btn-mustard" style="font-size:12px;padding:8px 20px;">Free Trial</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero: magazine cover layout -->
+<section class="mag-hero">
+  <!-- Left: giant headline -->
+  <div style="padding:64px 56px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:flex-end;">
+    <div class="su su-1" style="margin-bottom:24px;">
+      <span class="issue-meta">Volume I — Dubai, UAE — Real Estate Technology</span>
+    </div>
+    <h1 class="mega-hed su su-2" style="margin-bottom:32px;">
+      PUBLISH<br/>SMARTER<br/><span style="color:var(--mustard);">CLOSE</span><br/>BIGGER.
+    </h1>
+    <div class="thin-rule su su-3" style="margin-bottom:24px;"></div>
+    <div class="su su-3" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px;">
+      <div><p class="anton" style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">AI listing copy, portal sync, lead scoring, RERA compliance — one platform for UAE agencies.</p></div>
+      <div><div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px;"><span style="font-size:13px;color:var(--muted);">Agencies</span><span class="anton" style="font-size:18px;color:var(--mustard);">840</span></div><div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px;"><span style="font-size:13px;color:var(--muted);">Listings</span><span class="anton" style="font-size:18px;color:var(--cream);">124K</span></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13px;color:var(--muted);">Publish time</span><span class="anton" style="font-size:18px;color:var(--cream);">&lt;4m</span></div></div></div>
+    </div>
+    <div class="su su-4" style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="#cta" class="btn-mustard">Begin Free Trial</a>
+      <a href="#features" class="btn-cream">Read More</a>
+    </div>
+  </div>
+
+  <!-- Right: editorial sidebar -->
+  <div style="display:flex;flex-direction:column;background:var(--surface);" class="su su-4">
+    <div style="padding:32px;border-bottom:1px solid var(--border);">
+      <div class="col-header">Live Feed — Portal Status</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);"><span>Bayut</span><span style="color:var(--mustard);font-size:12px;">● LIVE</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);"><span>Property Finder</span><span style="color:var(--mustard);font-size:12px;">● LIVE</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);"><span>Dubizzle</span><span style="color:var(--mustard);font-size:12px;">● LIVE</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;"><span>Houza</span><span style="color:var(--mustard);font-size:12px;">● LIVE</span></div>
+      </div>
+    </div>
+    <div style="padding:32px;border-bottom:1px solid var(--border);">
+      <div class="col-header">Breaking — AI Copy</div>
+      <p style="font-style:italic;font-size:14px;line-height:1.7;color:var(--text);">"An exceptional 3-bedroom in Downtown Dubai with panoramic Burj Khalifa views, private terrace, and premium kitchen…" <span style="color:var(--mustard);">Generated in 3.2s</span></p>
+    </div>
+    <div style="padding:32px;flex:1;">
+      <div class="col-header">RERA Compliance</div>
+      <p class="anton" style="font-size:48px;color:var(--mustard);line-height:1;">100%</p>
+      <p style="font-size:13px;color:var(--muted);margin-top:8px;">All permits validated. Zero suspensions this quarter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features: magazine grid -->
+<section id="features" style="border-bottom:3px solid var(--cream);">
+  <div style="padding:48px 56px 24px;border-bottom:1px solid var(--border);">
+    <div class="col-header">Platform — Six Core Modules</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;align-items:end;">
+      <h2 class="anton" style="font-size:clamp(36px,6vw,80px);letter-spacing:0.02em;color:var(--cream);line-height:0.9;">THE<br/>PLATFORM.</h2>
+      <p style="color:var(--muted);font-size:15px;line-height:1.8;">Six modules. One subscription. Every tool a UAE agency needs to publish faster, close more, and stay compliant.</p>
+    </div>
+  </div>
+  <div class="feat-magazine">
+    <div class="feat-cell hero-cell">
+      <div class="feat-num-editorial">01</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;">
+        <div>
+          <h3 class="anton caps" style="font-size:32px;color:var(--cream);margin-bottom:12px;">AI LISTING COPY ENGINE</h3>
+          <p style="color:var(--muted);">Bilingual EN/AR descriptions generated in seconds. Portal-tuned for Bayut, Property Finder, and Dubizzle's SEO. From a one-bedroom in JVC to a waterfront villa on the Palm — copy that reflects the property and converts.</p>
+        </div>
+        <div style="background:var(--bg);padding:24px;font-size:14px;">
+          <p class="anton" style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mustard);margin-bottom:12px;">Sample Output</p>
+          <p style="font-style:italic;line-height:1.8;color:var(--text);">"An exceptional 4-bedroom villa on the Palm Jumeirah, offering panoramic sea views, a private beach, and a heated infinity pool. Meticulously designed to the highest standard, with marble finishes throughout…"</p>
+        </div>
+      </div>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-num-editorial">02</div>
+      <h3 class="anton caps" style="font-size:26px;color:var(--cream);margin-bottom:12px;">MULTI-PORTAL SYNC</h3>
+      <p style="color:var(--muted);">One click. Every UAE portal updated in under four minutes. No manual re-entry. No missed platforms.</p>
+    </div>
+    <div class="feat-cell" style="background:var(--mustard);">
+      <div class="feat-num-editorial" style="color:rgba(14,14,14,0.15);">03</div>
+      <h3 class="anton caps" style="font-size:26px;color:var(--bg);margin-bottom:12px;">LEAD INTELLIGENCE</h3>
+      <p style="color:rgba(14,14,14,0.65);">ML-ranked buyer intent. WhatsApp qualification in Arabic and English, around the clock. Your best leads, first.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-num-editorial">04</div>
+      <h3 class="anton caps" style="font-size:26px;color:var(--cream);margin-bottom:12px;">RERA COMPLIANCE</h3>
+      <p style="color:var(--muted);">Automatic DLD permit validation before every publish. Full audit trail. Zero suspension risk. Built in — not bolted on.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-num-editorial">05</div>
+      <h3 class="anton caps" style="font-size:26px;color:var(--cream);margin-bottom:12px;">MARKET ANALYTICS</h3>
+      <p style="color:var(--muted);">Live DLD transactions. AED/sqft benchmarks. Area demand maps. The knowledge your team needs to advise with authority.</p>
+    </div>
+    <div class="feat-cell">
+      <div class="feat-num-editorial">06</div>
+      <h3 class="anton caps" style="font-size:26px;color:var(--cream);margin-bottom:12px;">PHOTO SUITE</h3>
+      <p style="color:var(--muted);">AI-enhanced images, smart ordering, portal-specific sizing and watermarking. Every listing at its absolute best.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" style="border-bottom:3px solid var(--cream);">
+  <div style="padding:48px 56px 24px;border-bottom:1px solid var(--border);">
+    <div class="col-header">Agency Reports — Field Testimonials</div>
+    <h2 class="anton" style="font-size:clamp(32px,5vw,72px);color:var(--cream);line-height:0.9;">WHAT DUBAI<br/>AGENCIES SAY.</h2>
+  </div>
+  <div class="quote-editorial">
+    <p class="quote-text drop-cap">"We went from two days to four minutes per listing. That number captures everything ListingsLaunch has done for our operation. It made our old workflow look like archaeology."</p>
+    <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+      <div class="mustard-rule" style="width:40px;margin-bottom:16px;"></div>
+      <p class="anton" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Sarah Al Mansoori</p>
+      <p style="font-size:13px;color:var(--muted);">Head of Operations · Espace Real Estate, Dubai</p>
+    </div>
+  </div>
+  <div class="quote-editorial">
+    <p class="quote-text">"The AI copy for our Palm Jumeirah and Emirates Hills listings reads exactly as it should. Not like software — like a senior agent who understands luxury. Conversion rate has tripled."</p>
+    <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+      <div class="mustard-rule" style="width:40px;margin-bottom:16px;"></div>
+      <p class="anton" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">James Whitfield</p>
+      <p style="font-size:13px;color:var(--muted);">Managing Director · Allsopp & Allsopp</p>
+    </div>
+  </div>
+  <div class="quote-editorial" style="background:var(--surface);">
+    <p class="quote-text">"Zero RERA suspensions since we signed up. Not a single one. The compliance engine has become the most critical system in our Dubai operation. I would not run without it."</p>
+    <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+      <div class="mustard-rule" style="width:40px;margin-bottom:16px;"></div>
+      <p class="anton" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Fatima Al Hashimi</p>
+      <p style="font-size:13px;color:var(--muted);">Compliance Director · DLD Certified Agency</p>
+    </div>
+  </div>
+  <div class="quote-editorial" style="border-bottom:none;">
+    <p class="quote-text">"600+ listings across four portals — managed with a platform that actually scales. We grew inventory 40% in six months without adding a single operations hire."</p>
+    <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+      <div class="mustard-rule" style="width:40px;margin-bottom:16px;"></div>
+      <p class="anton" style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Ravi Menon</p>
+      <p style="font-size:13px;color:var(--muted);">CEO · Metropolitan Premium Properties</p>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing: full-width strips -->
+<section id="pricing" style="border-bottom:3px solid var(--cream);">
+  <div style="padding:48px 56px 24px;border-bottom:1px solid var(--border);">
+    <div class="col-header">Subscription Rates — All Prices in AED</div>
+    <h2 class="anton" style="font-size:clamp(32px,5vw,72px);color:var(--cream);line-height:0.9;">THREE TIERS.<br/>NO SURPRISES.</h2>
+  </div>
+  <!-- Header row -->
+  <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);background:var(--surface);" class="hidden md:grid">
+    <div style="padding:20px 48px;border-right:1px solid var(--border);"><p class="anton" style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);">Plan</p></div>
+    <div style="padding:20px 48px;border-right:1px solid var(--border);"><p class="anton" style="font-size:20px;color:var(--cream);">STARTER</p><p style="font-size:12px;color:var(--muted);">AED 299/month</p></div>
+    <div style="padding:20px 48px;border-right:1px solid var(--border);background:var(--mustard);"><p class="anton" style="font-size:20px;color:var(--bg);">PROFESSIONAL</p><p style="font-size:12px;color:rgba(14,14,14,0.6);">AED 799/month</p></div>
+    <div style="padding:20px 48px;"><p class="anton" style="font-size:20px;color:var(--cream);">ENTERPRISE</p><p style="font-size:12px;color:var(--muted);">AED 1,999/month</p></div>
+  </div>
+  <!-- Feature rows -->
+  <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);" class="hidden md:grid"><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:13px;color:var(--muted);">Active listings</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;">50</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;background:rgba(232,197,71,0.06);">200</div><div style="padding:16px 48px;font-size:14px;">Unlimited</div></div>
+  <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);" class="hidden md:grid"><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:13px;color:var(--muted);">Portal integrations</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;">3 portals</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;background:rgba(232,197,71,0.06);">All portals</div><div style="padding:16px 48px;font-size:14px;">Custom builds</div></div>
+  <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);" class="hidden md:grid"><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:13px;color:var(--muted);">AI copy</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;">EN only</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;background:rgba(232,197,71,0.06);">EN + AR</div><div style="padding:16px 48px;font-size:14px;">EN + AR + custom</div></div>
+  <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);" class="hidden md:grid"><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:13px;color:var(--muted);">RERA compliance</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;color:var(--muted);">—</div><div style="padding:16px 48px;border-right:1px solid var(--border);font-size:14px;background:rgba(232,197,71,0.06);color:var(--mustard);">✓</div><div style="padding:16px 48px;font-size:14px;color:var(--mustard);">✓</div></div>
+  <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;" class="hidden md:grid"><div style="padding:20px 48px;border-right:1px solid var(--border);"></div><div style="padding:20px 48px;border-right:1px solid var(--border);"><a href="#cta" class="btn-cream" style="font-size:13px;padding:10px 20px;">Start</a></div><div style="padding:20px 48px;border-right:1px solid var(--border);background:rgba(232,197,71,0.06);"><a href="#cta" class="btn-mustard" style="font-size:13px;padding:10px 20px;">Start</a></div><div style="padding:20px 48px;"><a href="#cta" class="btn-cream" style="font-size:13px;padding:10px 20px;">Contact</a></div></div>
+
+  <!-- Mobile pricing -->
+  <div class="md:hidden" style="padding:32px;display:flex;flex-direction:column;gap:24px;">
+    <div style="border:1px solid var(--border);padding:28px;"><p class="anton" style="font-size:22px;margin-bottom:4px;color:var(--cream);">STARTER — 299 AED</p><p style="color:var(--muted);font-size:14px;">50 listings · 3 portals · AI copy EN</p><a href="#cta" class="btn-cream" style="margin-top:16px;display:inline-block;font-size:13px;">Start</a></div>
+    <div style="background:var(--mustard);padding:28px;"><p class="anton" style="font-size:22px;margin-bottom:4px;color:var(--bg);">PROFESSIONAL — 799 AED</p><p style="color:rgba(14,14,14,0.6);font-size:14px;">200 listings · All portals · EN+AR · RERA</p><a href="#cta" style="background:var(--bg);color:var(--mustard);padding:10px 24px;font-family:'Anton',sans-serif;font-size:13px;letter-spacing:0.08em;display:inline-block;margin-top:16px;text-decoration:none;">Start</a></div>
+    <div style="border:1px solid var(--border);padding:28px;"><p class="anton" style="font-size:22px;margin-bottom:4px;color:var(--cream);">ENTERPRISE — 1,999 AED</p><p style="color:var(--muted);font-size:14px;">Unlimited · Custom · Full AI · SLA</p><a href="#cta" class="btn-cream" style="margin-top:16px;display:inline-block;font-size:13px;">Contact</a></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" style="padding:0;">
+  <div style="display:grid;grid-template-columns:1fr;min-height:480px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0;">
+      <div style="background:var(--mustard);padding:80px 56px;display:flex;flex-direction:column;justify-content:center;">
+        <h2 class="anton" style="font-size:clamp(48px,8vw,100px);line-height:0.88;color:var(--bg);margin-bottom:24px;">GO<br/>LIVE<br/>NOW.</h2>
+        <p style="color:rgba(14,14,14,0.65);font-size:16px;max-width:360px;line-height:1.8;">14-day free trial. No credit card. Your UAE support team is ready to help you publish your first listing today.</p>
+      </div>
+      <div style="background:var(--surface);padding:80px 56px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--border);">
+        <div class="col-header" style="margin-bottom:32px;">Register — Begin Free Trial</div>
+        <form style="display:flex;flex-direction:column;gap:24px;" onsubmit="return false;">
+          <div>
+            <label style="display:block;font-family:'Anton',sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Agency Email</label>
+            <input type="email" placeholder="you@youragency.ae"/>
+          </div>
+          <div>
+            <label style="display:block;font-family:'Anton',sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Agency Name</label>
+            <input type="text" placeholder="e.g. Espace Real Estate"/>
+          </div>
+          <button type="submit" class="btn-mustard" style="width:100%;display:block;text-align:center;cursor:pointer;border:none;font-size:14px;padding:14px;">START FREE TRIAL →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:var(--bg);border-top:3px solid var(--cream);padding:24px 56px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+  <span class="anton" style="font-size:18px;letter-spacing:0.02em;color:var(--cream);">LISTINGS<span style="color:var(--mustard);">LAUNCH</span></span>
+  <span class="issue-meta">© 2026 · DUBAI, UAE · ALL RIGHTS RESERVED</span>
+</footer>
+</body>
+</html>

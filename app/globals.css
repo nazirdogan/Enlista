@@ -3,25 +3,78 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F2F4F7;
+  --dark: #0F1829;
+  --primary: #1D4ED8;
+  --primary-light: #3B82F6;
+  --primary-pale: #EFF6FF;
+  --ink: #1E293B;
+  --muted: #64748B;
+  --border: #DDE3EC;
+  --success: #059669;
+  --warning: #D97706;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F2F4F7;
+  color: #1E293B;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+/* Arabic text direction */
+[dir="rtl"] {
+  font-family: "Plus Jakarta Sans", "Noto Naskh Arabic", sans-serif;
+}
+
+/* Listing detail sticky bar: on desktop, sidebar handles offset so top:0 */
+@media (min-width: 768px) {
+  .sticky-summary-bar {
+    top: 0 !important;
+  }
+}
+
+/* Mobile: features bento collapses to single column */
+@media (max-width: 767px) {
+  .features-bento {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+  }
+  .features-bento-wide {
+    grid-column: span 1 !important;
+    padding: 24px !important;
+  }
+  .features-bento-tall {
+    grid-row: span 1 !important;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #F2F4F7;
+}
+::-webkit-scrollbar-thumb {
+  background: #1D4ED8;
 }

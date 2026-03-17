@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ListingsLaunch — Neon Noir</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#08080C;--surface:#0F0F14;--coral:#FF4D5A;--lime:#C8F135;--white:#F5F0E8;--muted:#555465;--border:#1A1A24;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--white);font-family:'Manrope',sans-serif;font-weight:300;font-size:14px;line-height:1.75;overflow-x:hidden;}
+  .display{font-family:'Epilogue',sans-serif;}
+
+  /* Noise texture overlay */
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.4;}
+
+  /* Coral glow */
+  .glow-coral{filter:drop-shadow(0 0 30px rgba(255,77,90,0.4));}
+  .text-coral{color:var(--coral);}
+  .text-lime{color:var(--lime);}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(8,8,12,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+
+  /* Giant stacked hero type */
+  .hero-word{
+    font-family:'Epilogue',sans-serif;
+    font-weight:900;
+    font-size:clamp(72px,14vw,200px);
+    line-height:0.88;
+    letter-spacing:-0.03em;
+    text-transform:uppercase;
+    display:block;
+  }
+
+  .btn-coral{display:inline-block;background:var(--coral);color:white;padding:14px 36px;font-family:'Epilogue',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.04em;text-decoration:none;transition:all 0.2s;border:2px solid var(--coral);}
+  .btn-coral:hover{background:transparent;color:var(--coral);box-shadow:0 0 40px rgba(255,77,90,0.3);}
+  .btn-ghost-white{display:inline-block;border:2px solid rgba(245,240,232,0.2);color:var(--white);padding:12px 32px;font-family:'Epilogue',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.04em;text-decoration:none;transition:all 0.2s;}
+  .btn-ghost-white:hover{border-color:var(--white);}
+
+  /* Horizontal scrolling feature strip */
+  .h-scroll-container{overflow-x:auto;cursor:grab;user-select:none;-webkit-overflow-scrolling:touch;}
+  .h-scroll-container::-webkit-scrollbar{height:2px;}
+  .h-scroll-container::-webkit-scrollbar-thumb{background:var(--coral);}
+  .h-scroll-track{display:flex;gap:3px;width:max-content;padding-bottom:3px;}
+  .h-feat-card{width:340px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);padding:48px 40px;transition:border-color 0.3s;}
+  .h-feat-card:hover{border-color:rgba(255,77,90,0.4);}
+
+  /* Overlapping testimonials */
+  .testi-overlap{position:relative;}
+
+  /* Big stat overlay */
+  .stat-overlay{font-family:'Epilogue',sans-serif;font-weight:900;font-size:clamp(80px,15vw,220px);line-height:0.85;color:rgba(255,77,90,0.06);position:absolute;pointer-events:none;letter-spacing:-0.04em;}
+
+  /* Pricing: full-width comparison strips */
+  .plan-strip{display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);transition:background 0.2s;}
+  .plan-strip:hover{background:rgba(255,255,255,0.02);}
+  @media(max-width:767px){.plan-strip{grid-template-columns:1fr;}}
+  .plan-cell{padding:20px 24px;border-right:1px solid var(--border);display:flex;align-items:center;}
+  .plan-cell:last-child{border-right:none;}
+
+  .pill{display:inline-block;background:rgba(200,241,53,0.12);color:var(--lime);font-size:11px;padding:3px 10px;letter-spacing:0.1em;font-weight:500;}
+
+  input{background:var(--surface);border:1px solid var(--border);color:var(--white);padding:14px 20px;font-family:'Manrope',sans-serif;font-size:14px;outline:none;width:100%;transition:border-color 0.2s;}
+  input:focus{border-color:var(--coral);}
+  input::placeholder{color:var(--muted);}
+
+  @keyframes slideLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .ticker{display:flex;animation:slideLeft 20s linear infinite;white-space:nowrap;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+  .au{animation:fadeUp 0.9s ease both;}
+  .au-1{animation-delay:0.05s;}.au-2{animation-delay:0.2s;}.au-3{animation-delay:0.35s;}.au-4{animation-delay:0.5s;}
+
+  .check{color:var(--lime);margin-right:8px;font-size:13px;}
+  .dash{color:var(--muted);margin-right:8px;}
+
+  /* Vertical marquee text */
+  .vert-text{writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:0.2em;font-size:11px;text-transform:uppercase;color:var(--muted);user-select:none;}
+</style>
+</head>
+<body>
+
+<nav class="px-8 py-4 flex justify-between items-center">
+  <div class="display font-black" style="font-size:20px;letter-spacing:-0.02em;">
+    <span style="color:var(--coral);">L</span>ISTINGS<span style="color:var(--coral);">L</span>AUNCH
+  </div>
+  <div class="hidden md:flex gap-8" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">
+    <a href="#features" style="transition:color 0.2s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Features</a>
+    <a href="#testimonials" style="transition:color 0.2s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Clients</a>
+    <a href="#pricing" style="transition:color 0.2s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
+  </div>
+  <a href="#cta" class="btn-coral" style="padding:10px 24px;font-size:12px;">Free Trial →</a>
+</nav>
+
+<!-- Hero: giant stacked type fills screen -->
+<section style="min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 48px;padding-top:80px;position:relative;overflow:hidden;">
+  <!-- ambient glow orbs -->
+  <div style="position:absolute;top:20%;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(255,77,90,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:10%;left:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(200,241,53,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div style="position:relative;z-index:1;">
+    <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;">
+      <!-- Vertical text label -->
+      <div class="vert-text" style="padding-top:48px;display:none;" id="vert">UAE · Real Estate · Platform</div>
+      <div style="flex:1;min-width:300px;">
+        <span class="hero-word au au-1">PUBLISH</span>
+        <span class="hero-word au au-2" style="color:var(--coral);">SMARTER.</span>
+        <span class="hero-word au au-3">CLOSE</span>
+        <span class="hero-word au au-4" style="-webkit-text-stroke:2px var(--white);color:transparent;">FASTER.</span>
+      </div>
+      <!-- Side metadata panel -->
+      <div style="flex:0 0 280px;margin-bottom:24px;align-self:flex-end;" class="au au-4">
+        <div style="border:1px solid var(--border);background:var(--surface);padding:28px;">
+          <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Live Metrics</p>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);font-size:13px;">Active Agencies</span><span class="display font-bold" style="color:var(--lime);">840</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);font-size:13px;">Listings Managed</span><span class="display font-bold" style="color:var(--lime);">124K</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);font-size:13px;">Avg. Sync Time</span><span class="display font-bold" style="color:var(--lime);">&lt;4m</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);font-size:13px;">Portal Uptime</span><span class="display font-bold" style="color:var(--lime);">99.9%</span></div>
+          </div>
+          <div style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;display:flex;flex-direction:column;gap:10px;">
+            <a href="#cta" class="btn-coral" style="display:block;text-align:center;font-size:13px;">Start Free Trial</a>
+            <a href="#features" class="btn-ghost-white" style="display:block;text-align:center;font-size:13px;border-width:1px;">See the platform</a>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">AI-powered listing management for Dubai, Abu Dhabi & Sharjah agencies.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Portal ticker -->
+<div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);padding:14px 0;overflow:hidden;">
+  <div class="ticker">
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">BAYUT</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">PROPERTY FINDER</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">DUBIZZLE</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">HOUZA</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">DLD PORTALS</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">BAYUT</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">PROPERTY FINDER</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">DUBIZZLE</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">HOUZA</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+    <span style="font-family:'Epilogue',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;color:var(--muted);padding:0 40px;text-transform:uppercase;">DLD PORTALS</span><span style="color:var(--coral);padding:0 8px;">◆</span>
+  </div>
+</div>
+
+<!-- Features: horizontal scrollable cards -->
+<section id="features" style="padding:80px 0;">
+  <div style="padding:0 48px;margin-bottom:48px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;">
+    <h2 class="display font-black" style="font-size:clamp(36px,5vw,72px);letter-spacing:-0.02em;line-height:0.95;">SIX MODULES.<br/><span style="color:var(--coral);">ONE PLATFORM.</span></h2>
+    <p style="color:var(--muted);max-width:320px;">Drag to explore → Every tool your UAE agency needs, built into a single subscription.</p>
+  </div>
+  <div class="h-scroll-container" style="padding:0 48px;" id="hscroll">
+    <div class="h-scroll-track">
+      <div class="h-feat-card">
+        <div class="display font-black" style="font-size:80px;color:var(--border);line-height:1;margin-bottom:20px;">01</div>
+        <h3 class="display font-bold" style="font-size:22px;margin-bottom:12px;">AI Copy Engine</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.8;">Bilingual EN/AR listing copy generated in seconds. Tuned for Bayut and Property Finder's SEO. Converts.</p>
+      </div>
+      <div class="h-feat-card">
+        <div class="display font-black" style="font-size:80px;color:var(--border);line-height:1;margin-bottom:20px;">02</div>
+        <h3 class="display font-bold" style="font-size:22px;margin-bottom:12px;">Portal Sync</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.8;">Push to every UAE portal simultaneously. Bayut, Property Finder, Dubizzle — all updated in under 4 minutes.</p>
+      </div>
+      <div class="h-feat-card" style="border-color:rgba(255,77,90,0.3);background:rgba(255,77,90,0.05);">
+        <div class="display font-black" style="font-size:80px;color:rgba(255,77,90,0.1);line-height:1;margin-bottom:20px;">03</div>
+        <h3 class="display font-bold" style="font-size:22px;margin-bottom:12px;color:var(--coral);">Lead Scoring</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.8;">ML-ranked buyer intent. Your best leads surface first. WhatsApp qualification in Arabic and English, 24/7.</p>
+      </div>
+      <div class="h-feat-card">
+        <div class="display font-black" style="font-size:80px;color:var(--border);line-height:1;margin-bottom:20px;">04</div>
+        <h3 class="display font-bold" style="font-size:22px;margin-bottom:12px;">RERA Compliance</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.8;">Real-time DLD permit checks before every publish. No suspensions. Full audit logs. Stay clean automatically.</p>
+      </div>
+      <div class="h-feat-card">
+        <div class="display font-black" style="font-size:80px;color:var(--border);line-height:1;margin-bottom:20px;">05</div>
+        <h3 class="display font-bold" style="font-size:22px;margin-bottom:12px;">Market Data</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.8;">Live DLD transactions, AED/sqft benchmarks, demand heatmaps across Dubai, Abu Dhabi, and Sharjah.</p>
+      </div>
+      <div class="h-feat-card">
+        <div class="display font-black" style="font-size:80px;color:var(--border);line-height:1;margin-bottom:20px;">06</div>
+        <h3 class="display font-bold" style="font-size:22px;margin-bottom:12px;">Photo Suite</h3>
+        <p style="color:var(--muted);font-size:14px;line-height:1.8;">AI-enhanced images, smart ordering, portal-specific sizing, watermarking. Your properties, immaculate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials: overlapping quote cards -->
+<section id="testimonials" style="background:var(--surface);padding:100px 48px;border-top:1px solid var(--border);position:relative;overflow:hidden;">
+  <div class="stat-overlay" style="top:-20px;left:-20px;">124K</div>
+  <div class="max-w-6xl mx-auto" style="position:relative;z-index:1;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:64px;">
+      <h2 class="display font-black" style="font-size:clamp(32px,5vw,64px);letter-spacing:-0.02em;line-height:0.95;">WHAT UAE<br/>AGENCIES<br/><span style="color:var(--coral);">ACTUALLY SAY.</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr;gap:24px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:3px;background:var(--border);">
+        <div style="background:var(--bg);padding:40px;border-left:3px solid var(--coral);">
+          <p style="font-size:17px;line-height:1.8;color:var(--white);margin-bottom:24px;">"Two days → four minutes. ListingsLaunch made our old workflow look embarrassing."</p>
+          <p style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--coral);">Sarah Al Mansoori — Espace Real Estate</p>
+        </div>
+        <div style="background:var(--bg);padding:40px;border-left:3px solid var(--muted);">
+          <p style="font-size:17px;line-height:1.8;color:var(--white);margin-bottom:24px;">"AI copy for Palm Jumeirah listings now converts at 3× our old rate. I was a sceptic. I'm not anymore."</p>
+          <p style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">James Whitfield — Allsopp & Allsopp</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:3px;background:var(--border);">
+        <div style="background:var(--coral);padding:40px;">
+          <p style="font-size:19px;line-height:1.8;color:white;font-weight:300;margin-bottom:24px;">"Zero RERA suspensions since day one. Not a single one. The compliance engine is bulletproof."</p>
+          <p style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Fatima Al Hashimi — DLD Certified Agency</p>
+        </div>
+        <div style="background:var(--bg);padding:40px;border-left:3px solid var(--muted);">
+          <p style="font-size:17px;line-height:1.8;color:var(--white);margin-bottom:24px;">"600+ listings, four portals, one system. We scaled 40% without a single new ops hire."</p>
+          <p style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">Ravi Menon — Metropolitan Premium Properties</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing: table rows -->
+<section id="pricing" style="padding:100px 48px;border-top:1px solid var(--border);">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="display font-black" style="font-size:clamp(36px,5vw,72px);letter-spacing:-0.02em;margin-bottom:8px;">PRICING.<br/><span style="color:var(--coral);">SIMPLE.</span></h2>
+    <p style="color:var(--muted);margin-bottom:56px;">All plans in AED. Cancel anytime. 14-day free trial on every tier.</p>
+    <!-- Header row -->
+    <div style="border:1px solid var(--border);">
+      <div class="plan-strip" style="background:var(--surface);">
+        <div class="plan-cell" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);">Feature</div>
+        <div class="plan-cell" style="flex-direction:column;align-items:flex-start;gap:4px;">
+          <p class="display font-bold" style="font-size:24px;">Starter</p>
+          <p style="color:var(--coral);font-size:14px;font-weight:700;">299 <span style="font-size:11px;color:var(--muted);font-weight:400;">AED/mo</span></p>
+        </div>
+        <div class="plan-cell" style="flex-direction:column;align-items:flex-start;gap:4px;background:rgba(255,77,90,0.05);">
+          <p class="display font-bold" style="font-size:24px;">Professional <span class="pill" style="font-size:10px;vertical-align:middle;">Popular</span></p>
+          <p style="color:var(--coral);font-size:14px;font-weight:700;">799 <span style="font-size:11px;color:var(--muted);font-weight:400;">AED/mo</span></p>
+        </div>
+        <div class="plan-cell" style="flex-direction:column;align-items:flex-start;gap:4px;">
+          <p class="display font-bold" style="font-size:24px;">Enterprise</p>
+          <p style="color:var(--coral);font-size:14px;font-weight:700;">1,999 <span style="font-size:11px;color:var(--muted);font-weight:400;">AED/mo</span></p>
+        </div>
+      </div>
+      <div class="plan-strip"><div class="plan-cell" style="font-size:13px;color:var(--muted);">Active listings</div><div class="plan-cell" style="font-size:13px;">50</div><div class="plan-cell" style="font-size:13px;background:rgba(255,77,90,0.03);">200</div><div class="plan-cell" style="font-size:13px;">Unlimited</div></div>
+      <div class="plan-strip"><div class="plan-cell" style="font-size:13px;color:var(--muted);">Portal integrations</div><div class="plan-cell" style="font-size:13px;">3 portals</div><div class="plan-cell" style="font-size:13px;background:rgba(255,77,90,0.03);">All portals</div><div class="plan-cell" style="font-size:13px;">Custom builds</div></div>
+      <div class="plan-strip"><div class="plan-cell" style="font-size:13px;color:var(--muted);">AI copy</div><div class="plan-cell" style="font-size:13px;">EN only</div><div class="plan-cell" style="font-size:13px;background:rgba(255,77,90,0.03);">EN + AR</div><div class="plan-cell" style="font-size:13px;">EN + AR + custom</div></div>
+      <div class="plan-strip"><div class="plan-cell" style="font-size:13px;color:var(--muted);">Lead scoring</div><div class="plan-cell" style="font-size:13px;color:var(--muted);">—</div><div class="plan-cell" style="font-size:13px;background:rgba(255,77,90,0.03);"><span class="check">✓</span></div><div class="plan-cell" style="font-size:13px;"><span class="check">✓</span></div></div>
+      <div class="plan-strip"><div class="plan-cell" style="font-size:13px;color:var(--muted);">WhatsApp bot</div><div class="plan-cell" style="font-size:13px;color:var(--muted);">—</div><div class="plan-cell" style="font-size:13px;background:rgba(255,77,90,0.03);"><span class="check">✓</span></div><div class="plan-cell" style="font-size:13px;"><span class="check">✓</span></div></div>
+      <div class="plan-strip"><div class="plan-cell" style="font-size:13px;color:var(--muted);">RERA compliance</div><div class="plan-cell" style="font-size:13px;color:var(--muted);">—</div><div class="plan-cell" style="font-size:13px;background:rgba(255,77,90,0.03);"><span class="check">✓</span></div><div class="plan-cell" style="font-size:13px;"><span class="check">✓</span></div></div>
+      <div class="plan-strip"><div class="plan-cell" style="font-size:13px;color:var(--muted);">Market analytics</div><div class="plan-cell" style="font-size:13px;color:var(--muted);">—</div><div class="plan-cell" style="font-size:13px;background:rgba(255,77,90,0.03);">—</div><div class="plan-cell" style="font-size:13px;"><span class="check">✓</span></div></div>
+      <div class="plan-strip" style="background:var(--surface);">
+        <div class="plan-cell"></div>
+        <div class="plan-cell"><a href="#cta" class="btn-ghost-white" style="font-size:12px;padding:10px 20px;">Start</a></div>
+        <div class="plan-cell" style="background:rgba(255,77,90,0.03);"><a href="#cta" class="btn-coral" style="font-size:12px;padding:10px 20px;">Start</a></div>
+        <div class="plan-cell"><a href="#cta" class="btn-ghost-white" style="font-size:12px;padding:10px 20px;">Contact</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA: full-bleed coral -->
+<section id="cta" style="padding:100px 48px;background:var(--surface);border-top:1px solid var(--border);">
+  <div class="max-w-6xl mx-auto" style="display:grid;grid-template-columns:1fr;gap:64px;">
+    <div style="display:grid;grid-template-columns:1fr;gap:64px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px;align-items:center;">
+        <div>
+          <h2 class="display font-black" style="font-size:clamp(40px,7vw,100px);letter-spacing:-0.03em;line-height:0.9;color:var(--white);">GO<br/>LIVE<br/><span style="color:var(--coral);">NOW.</span></h2>
+          <p style="color:var(--muted);margin-top:24px;font-size:14px;max-width:360px;line-height:1.8;">14-day free trial. No credit card. UAE support team online daily 09:00–21:00 GST. Your first listing goes live the same day you sign up.</p>
+        </div>
+        <div>
+          <form style="display:flex;flex-direction:column;gap:12px;" onsubmit="return false;">
+            <input type="email" placeholder="Agency email address"/>
+            <input type="text" placeholder="Agency name"/>
+            <select style="background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:14px 20px;font-family:'Manrope',sans-serif;font-size:14px;outline:none;cursor:pointer;appearance:none;">
+              <option>Emirate — Dubai</option>
+              <option>Emirate — Abu Dhabi</option>
+              <option>Emirate — Sharjah</option>
+              <option>Other UAE</option>
+            </select>
+            <button type="submit" class="btn-coral" style="width:100%;display:block;text-align:center;cursor:pointer;border:none;font-size:14px;padding:16px;font-weight:700;letter-spacing:0.04em;">Start Free Trial →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:var(--bg);border-top:1px solid var(--border);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+  <span class="display font-black" style="font-size:16px;letter-spacing:-0.02em;"><span style="color:var(--coral);">L</span>ISTING<span style="color:var(--coral);">S</span>LAUNCH</span>
+  <span style="color:var(--muted);font-size:12px;">© 2026 · Dubai, UAE</span>
+</footer>
+
+<script>
+  const el = document.getElementById('hscroll');
+  let isDown = false, startX, scrollLeft;
+  el.addEventListener('mousedown', e=>{isDown=true;el.style.cursor='grabbing';startX=e.pageX-el.offsetLeft;scrollLeft=el.scrollLeft;});
+  el.addEventListener('mouseleave',()=>{isDown=false;el.style.cursor='grab';});
+  el.addEventListener('mouseup',()=>{isDown=false;el.style.cursor='grab';});
+  el.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();const x=e.pageX-el.offsetLeft;el.scrollLeft=scrollLeft-(x-startX)*1.5;});
+</script>
+</body>
+</html>

@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ListingLaunch — UAE Prospect Intelligence</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080b12;
+  --surface: #0e1420;
+  --surface2: #141c2e;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --subtle: #94a3b8;
+  --accent: #6366f1;
+  --accent-light: #a5b4fc;
+  --green: #10b981;
+  --green-dim: rgba(16,185,129,0.15);
+  --yellow: #f59e0b;
+  --yellow-dim: rgba(245,158,11,0.15);
+  --orange: #f97316;
+  --orange-dim: rgba(249,115,22,0.15);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.12);
+  --row-h: 52px;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+/* ─── HEADER ─── */
+.header { padding: 36px 40px 28px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.header-inner { max-width: 1800px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.header-left h1 { font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.02em; }
+.header-left p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.kpi-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.kpi { text-align: center; padding: 10px 20px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; }
+.kpi-val { font-size: 24px; font-weight: 800; }
+.kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.kpi-A .kpi-val { color: var(--green); }
+.kpi-B .kpi-val { color: var(--yellow); }
+.kpi-tot .kpi-val { color: var(--accent-light); }
+.kpi-avg .kpi-val { color: var(--subtle); }
+
+/* ─── CONTROLS ─── */
+.controls { max-width: 1800px; margin: 0 auto; padding: 16px 40px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.search { flex: 1; min-width: 220px; padding: 9px 14px; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-size: 13px; outline: none; }
+.search::placeholder { color: var(--muted); }
+.search:focus { border-color: var(--accent); background: rgba(99,102,241,0.06); }
+select.filt { padding: 9px 12px; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; color: var(--subtle); font-size: 13px; cursor: pointer; outline: none; }
+select.filt:focus { border-color: var(--accent); }
+.chip { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border2); background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; user-select: none; }
+.chip:hover { border-color: var(--accent); color: var(--accent-light); }
+.chip.on { background: rgba(99,102,241,0.15); border-color: var(--accent); color: var(--accent-light); }
+.rcount { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+/* ─── SCORE LEGEND ─── */
+.legend { max-width: 1800px; margin: 0 auto; padding: 0 40px 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+.leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ─── TABLE ─── */
+.table-wrap { max-width: 1800px; margin: 0 auto; padding: 0 40px 80px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+
+thead { position: sticky; top: 0; z-index: 20; }
+th {
+  background: #0c1018;
+  border-bottom: 1px solid var(--border2);
+  padding: 10px 12px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--muted); text-align: left; white-space: nowrap;
+  cursor: pointer; user-select: none; transition: color .15s;
+}
+th:hover { color: var(--accent-light); }
+th.asc::after { content: ' ↑'; color: var(--accent-light); }
+th.desc::after { content: ' ↓'; color: var(--accent-light); }
+th.asc, th.desc { color: var(--accent-light); }
+
+/* score column headers get colour dots */
+th[data-col="sizeFit"]::before   { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #6366f1; margin-right: 5px; vertical-align: middle; }
+th[data-col="techGap"]::before   { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #8b5cf6; margin-right: 5px; vertical-align: middle; }
+th[data-col="recency"]::before   { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #06b6d4; margin-right: 5px; vertical-align: middle; }
+th[data-col="dmAccess"]::before  { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #10b981; margin-right: 5px; vertical-align: middle; }
+th[data-col="contactScore"]::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #f59e0b; margin-right: 5px; vertical-align: middle; }
+
+tr.row { border-bottom: 1px solid var(--border); cursor: pointer; transition: background .1s; }
+tr.row:hover { background: rgba(99,102,241,0.07); }
+tr.row.selected { background: rgba(99,102,241,0.12); }
+
+td { padding: 0 12px; height: var(--row-h); vertical-align: middle; font-size: 13px; }
+
+.rank-num { font-size: 11px; font-weight: 700; color: var(--muted); }
+.agency-name { font-weight: 600; color: #f1f5f9; font-size: 13px; }
+.agency-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.city-tag { font-size: 11px; color: var(--subtle); }
+.founded-tag { font-size: 11px; color: var(--muted); }
+
+/* agents badge */
+.ab { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; background: rgba(148,163,184,0.08); color: var(--muted); border: 1px solid rgba(148,163,184,0.12); }
+.ab.sweet { background: rgba(99,102,241,0.12); color: var(--accent-light); border-color: rgba(99,102,241,0.25); }
+
+/* score cell */
+.sc { display: flex; align-items: center; gap: 8px; }
+.sc-num { font-size: 13px; font-weight: 700; min-width: 26px; text-align: right; }
+.sc-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; min-width: 40px; }
+.sc-fill { height: 100%; border-radius: 2px; }
+/* colour per dimension */
+.c-size   { background: #6366f1; }
+.c-tech   { background: #8b5cf6; }
+.c-rec    { background: #06b6d4; }
+.c-dm     { background: #10b981; }
+.c-cont   { background: #f59e0b; }
+/* total score colours */
+.t-A { color: var(--green); }
+.t-B { color: var(--yellow); }
+.t-C { color: var(--orange); }
+.t-D { color: var(--red); }
+.fill-A { background: linear-gradient(90deg,#059669,#34d399); }
+.fill-B { background: linear-gradient(90deg,#d97706,#fbbf24); }
+.fill-C { background: linear-gradient(90deg,#ea580c,#fb923c); }
+.fill-D { background: linear-gradient(90deg,#dc2626,#f87171); }
+
+/* total score cell */
+.total-cell { display: flex; align-items: center; gap: 8px; }
+.total-num { font-size: 20px; font-weight: 800; min-width: 38px; }
+.total-bar-wrap { flex: 1; min-width: 50px; }
+.total-bar { height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; }
+.total-fill { height: 100%; border-radius: 3px; }
+
+/* tier badge */
+.tb { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.tb-A { background: var(--green-dim); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+.tb-B { background: var(--yellow-dim); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.tb-C { background: var(--orange-dim); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+.tb-D { background: var(--red-dim); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+
+/* contact dots */
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.dot-y { background: var(--green); }
+.dot-n { background: var(--muted); opacity: 0.4; }
+.contact-dots { display: flex; gap: 4px; align-items: center; font-size: 11px; color: var(--muted); }
+
+/* tags */
+.tag { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 10px; font-weight: 600; margin: 1px; }
+.tg-new    { background: rgba(16,185,129,0.1); color: #6ee7b7; }
+.tg-boutique { background: rgba(139,92,246,0.1); color: #c4b5fd; }
+.tg-crm    { background: rgba(239,68,68,0.1); color: #fca5a5; }
+.tg-tech   { background: rgba(59,130,246,0.1); color: #93c5fd; }
+.tg-emirati { background: rgba(234,179,8,0.1); color: #fde047; }
+.tg-female { background: rgba(236,72,153,0.1); color: #f9a8d4; }
+
+/* ─── DRAWER ─── */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.overlay.show { opacity: 1; pointer-events: all; }
+.drawer {
+  position: fixed; top: 0; right: 0; height: 100vh; width: 520px; max-width: 96vw;
+  background: #0e1420; border-left: 1px solid var(--border2); z-index: 101;
+  transform: translateX(100%); transition: transform .25s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+.drawer.open { transform: translateX(0); }
+
+.drawer-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: #0e1420; z-index: 5; }
+.drawer-tier { margin-bottom: 10px; }
+.drawer-name { font-size: 22px; font-weight: 800; color: #f8fafc; letter-spacing: -0.02em; line-height: 1.2; }
+.drawer-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.drawer-close { position: absolute; top: 20px; right: 24px; background: rgba(255,255,255,0.06); border: 1px solid var(--border2); color: var(--subtle); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.drawer-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+.score-hero { display: flex; align-items: center; gap: 16px; padding: 20px 28px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01); }
+.score-big { font-size: 56px; font-weight: 900; line-height: 1; }
+.score-details { flex: 1; }
+.score-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+.dim-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.dim-label { font-size: 11px; color: var(--muted); width: 100px; flex-shrink: 0; }
+.dim-bar-bg { flex: 1; height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; }
+.dim-bar-fill { height: 100%; border-radius: 3px; }
+.dim-score { font-size: 11px; font-weight: 700; color: var(--subtle); min-width: 36px; text-align: right; }
+
+.drawer-body { padding: 24px 28px; flex: 1; display: flex; flex-direction: column; gap: 24px; }
+.d-section { }
+.d-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.d-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.d-field label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 3px; }
+.d-field p { font-size: 13px; color: var(--text); line-height: 1.5; }
+.d-field a { color: var(--accent-light); text-decoration: none; }
+.d-field a:hover { text-decoration: underline; }
+.d-field p.na { color: var(--muted); font-style: italic; }
+
+.contact-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+.contact-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+.contact-text { font-size: 13px; }
+.contact-text.found { color: var(--text); }
+.contact-text.na { color: var(--muted); font-style: italic; }
+.contact-text a { color: inherit; text-decoration: none; }
+.contact-text a:hover { text-decoration: underline; }
+
+.crm-alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start; }
+.crm-ok { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); color: #d1fae5; }
+.crm-risk { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #fecaca; }
+
+.analyst-note { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 10px; padding: 14px 16px; font-size: 13px; color: var(--subtle); line-height: 1.65; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 3px; }
+
+@media (max-width: 768px) {
+  .header { padding: 20px 16px 16px; }
+  .controls, .legend, .table-wrap { padding-left: 12px; padding-right: 12px; }
+  .drawer { width: 100vw; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>ListingLaunch — UAE Real Estate Prospect Intelligence</h1>
+      <p>193 agencies scored · All verified active on Property Finder in 2026 · Agent counts accurate · Multi-branch companies deduplicated · March 2026</p>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi kpi-tot"><div class="kpi-val" id="kpi-tot">35</div><div class="kpi-label">Agencies</div></div>
+      <div class="kpi kpi-A"><div class="kpi-val" id="kpi-a">—</div><div class="kpi-label">🟢 Hot (A)</div></div>
+      <div class="kpi kpi-B"><div class="kpi-val" id="kpi-b">—</div><div class="kpi-label">🟡 Warm (B)</div></div>
+      <div class="kpi kpi-avg"><div class="kpi-val" id="kpi-avg">—</div><div class="kpi-label">Avg Score</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <input class="search" id="srch" type="text" placeholder="Search agency, city, decision maker…" oninput="render()" />
+  <select class="filt" id="f-city" onchange="render()">
+    <option value="">All Cities</option>
+    <option value="Dubai">Dubai</option>
+    <option value="Abu Dhabi">Abu Dhabi</option>
+    <option value="Sharjah">Sharjah</option>
+  </select>
+  <select class="filt" id="f-tier" onchange="render()">
+    <option value="">All Tiers</option>
+    <option value="A">🟢 A — Hot (80+)</option>
+    <option value="B">🟡 B — Warm (60–79)</option>
+    <option value="C">🟠 C — Lukewarm (40–59)</option>
+    <option value="D">🔴 D — Poor Fit</option>
+  </select>
+  <div class="chip" id="chip-new"     onclick="toggleChip('new')">🆕 New Agency</div>
+  <div class="chip" id="chip-boutique" onclick="toggleChip('boutique')">💎 Boutique</div>
+  <div class="chip" id="chip-crm"     onclick="toggleChip('crm')">⚠️ CRM Risk</div>
+  <div class="chip" id="chip-female"  onclick="toggleChip('female')">👩 Female-led</div>
+  <div class="chip" id="chip-emirati" onclick="toggleChip('emirati')">🇦🇪 Emirati</div>
+  <span class="rcount" id="rcount"></span>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span class="leg-item"><span class="leg-dot" style="background:#6366f1"></span>Size ICP Fit /25</span>
+  <span class="leg-item"><span class="leg-dot" style="background:#8b5cf6"></span>Tech Stack Gap /25</span>
+  <span class="leg-item"><span class="leg-dot" style="background:#06b6d4"></span>Recency /20</span>
+  <span class="leg-item"><span class="leg-dot" style="background:#10b981"></span>DM Access /15</span>
+  <span class="leg-item"><span class="leg-dot" style="background:#f59e0b"></span>Contact /15</span>
+  <span class="leg-item" style="margin-left:8px;color:#475569">Click any row to view full profile →</span>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:40px" data-col="rank"    onclick="sort('rank')">#</th>
+        <th style="min-width:180px" data-col="name" onclick="sort('name')">Agency</th>
+        <th data-col="city"     onclick="sort('city')">City</th>
+        <th data-col="founded"  onclick="sort('founded')">Founded</th>
+        <th data-col="agents"   onclick="sort('agents')">Agents</th>
+        <th data-col="listings" onclick="sort('listings')">Listings</th>
+        <th data-col="avgValNum" onclick="sort('avgValNum')">Avg Value</th>
+        <th data-col="sizeFit"   onclick="sort('sizeFit')">Size Fit</th>
+        <th data-col="techGap"   onclick="sort('techGap')">Tech Gap</th>
+        <th data-col="recency"   onclick="sort('recency')">Recency</th>
+        <th data-col="dmAccess"  onclick="sort('dmAccess')">DM Access</th>
+        <th data-col="contactScore" onclick="sort('contactScore')">Contact</th>
+        <th data-col="total"    onclick="sort('total')">Total</th>
+        <th>Tier</th>
+        <th>Contact</th>
+        <th>Tags</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    <div class="drawer-tier" id="d-tier"></div>
+    <div class="drawer-name" id="d-name"></div>
+    <div class="drawer-sub" id="d-sub"></div>
+  </div>
+
+  <div class="score-hero">
+    <div class="score-big" id="d-score-big"></div>
+    <div class="score-details">
+      <div class="score-label">Score breakdown</div>
+      <div class="dim-row">
+        <span class="dim-label">Size ICP Fit</span>
+        <div class="dim-bar-bg"><div class="dim-bar-fill" id="db-size" style="background:#6366f1"></div></div>
+        <span class="dim-score" id="ds-size"></span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">Tech Stack Gap</span>
+        <div class="dim-bar-bg"><div class="dim-bar-fill" id="db-tech" style="background:#8b5cf6"></div></div>
+        <span class="dim-score" id="ds-tech"></span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">Recency</span>
+        <div class="dim-bar-bg"><div class="dim-bar-fill" id="db-rec" style="background:#06b6d4"></div></div>
+        <span class="dim-score" id="ds-rec"></span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">DM Access</span>
+        <div class="dim-bar-bg"><div class="dim-bar-fill" id="db-dm" style="background:#10b981"></div></div>
+        <span class="dim-score" id="ds-dm"></span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">Contact</span>
+        <div class="dim-bar-bg"><div class="dim-bar-fill" id="db-cont" style="background:#f59e0b"></div></div>
+        <span class="dim-score" id="ds-cont"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="d-section">
+      <div class="d-section-title">Contact</div>
+      <div id="d-contacts"></div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Agency Profile</div>
+      <div class="d-grid" id="d-profile"></div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Decision Maker</div>
+      <div class="d-grid" id="d-dm"></div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">CRM Risk Assessment</div>
+      <div id="d-crm"></div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Tags</div>
+      <div class="tag-row" id="d-tags"></div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Analyst Note</div>
+      <div class="analyst-note" id="d-note"></div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Services</div>
+      <p style="font-size:13px;color:var(--subtle);line-height:1.6" id="d-services"></p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    rank:1, name:"MH Real Estate", city:"Dubai", founded:2022, agents:8, agentsLabel:"~5–10", agentsSweet:true,
+    listings:80, avgVal:"AED 2.8M", avgValNum:2800000,
+    dm:"Murtaza Hashmi", dmTitle:"CEO & Founder",
+    phone:"+971 4 570 3981", email:"marketing@mhrealestate.ae", website:"mhrealestate.ae", linkedin:null,
+    tags:["new","boutique"],
+    sizeFit:22, techGap:22, recency:20, dmAccess:15, contactScore:13, total:92,
+    crmRisk:false,
+    note:"2022 launch, UK-background founder, luxury focus, no CRM detected. Email confirmed for marketing team. Perfect first outreach target — every listing is being manually uploaded right now.",
+    services:"Residential Sales, Lettings, Investment Advisory, Off-plan, Luxury focus"
+  },
+  {
+    rank:2, name:"Gaia Living Real Estate", city:"Dubai", founded:2022, agents:1, agentsLabel:"1", agentsSweet:false,
+    listings:90, avgVal:"AED 3.5M", avgValNum:3500000,
+    dm:"Aslan Patov", dmTitle:"Founder & CEO",
+    phone:"+971 4 325 1047", email:"hello@gaiarealty.ae", website:"gaiarealty.ae", linkedin:"linkedin.com/company/gaia-living-real-estate",
+    tags:["new","boutique"],
+    sizeFit:10, techGap:22, recency:20, dmAccess:14, contactScore:14, total:80,
+    crmRisk:false,
+    note:"2022 Downtown Dubai off-plan specialist. PF shows only 1 registered agent — team is likely larger but under-registered on portal. Direct founder email available. Verify team size before outreach.",
+    services:"Off-plan, Secondary Market, Downtown Dubai specialist, Luxury Residential"
+  },
+  {
+    rank:3, name:"THEBROKS", city:"Dubai", founded:2024, agents:5, agentsLabel:"~3–8", agentsSweet:true,
+    listings:45, avgVal:"AED 2.2M", avgValNum:2200000,
+    dm:"Aisuluu Aibek", dmTitle:"CEO",
+    phone:null, email:"info@thebroks.com", website:"thebroks.com", linkedin:null,
+    tags:["new","boutique"],
+    sizeFit:23, techGap:23, recency:20, dmAccess:13, contactScore:10, total:89,
+    crmRisk:false,
+    note:"Brand new boutique (2024) with modern branding. CEO identified. Email confirmed. Zero chance they have CRM tooling — likely copy-pasting into Profolio. ListingLaunch would be their first tech stack.",
+    services:"Residential Sales & Lettings, Dubai"
+  },
+  {
+    rank:4, name:"Almira Real Estate", city:"Abu Dhabi", founded:2020, agents:28, agentsLabel:"28", agentsSweet:true,
+    listings:150, avgVal:"AED 2.1M", avgValNum:2100000,
+    dm:"Ahmad Abuisnaineh", dmTitle:"Managing Director",
+    phone:"+971 2 546 2666", email:"info@almira.ae", website:"almira.ae", linkedin:"linkedin.com/company/almiraproperties",
+    tags:["new","boutique"],
+    sizeFit:22, techGap:22, recency:17, dmAccess:14, contactScore:14, total:89,
+    crmRisk:false,
+    note:"2020 Abu Dhabi launch. Named MD with direct phone + email confirmed. Has international arm showing expansion ambition. Multi-office presence means portal syndication complexity is growing — perfect timing.",
+    services:"Residential, Commercial, International, Abu Dhabi + international market"
+  },
+  {
+    rank:5, name:"The Capital Avenue", city:"Abu Dhabi", founded:2021, agents:14, agentsLabel:"14", agentsSweet:true,
+    listings:110, avgVal:"AED 1.9M", avgValNum:1900000,
+    dm:"Rachad Fouad", dmTitle:"CEO & Managing Director",
+    phone:"+971 50 502 6788", email:null, website:"thecapitalavenue.com", linkedin:null,
+    tags:["new","boutique"],
+    sizeFit:22, techGap:22, recency:18, dmAccess:12, contactScore:10, total:84,
+    crmRisk:false,
+    note:"2021 Abu Dhabi full-service launch. Direct CEO mobile available — WhatsApp outreach is the best channel. Off-plan + ready + commercial. No email on file but phone is solid.",
+    services:"Off-plan, Ready Market, Commercial, Full-service Abu Dhabi"
+  },
+  {
+    rank:6, name:"Xsite Real Estate", city:"Dubai", founded:2022, agents:48, agentsLabel:"48", agentsSweet:true,
+    listings:450, avgVal:"AED 1.4M", avgValNum:1400000,
+    dm:"Muhammad Alam", dmTitle:"CEO & Founder",
+    phone:"+971 54 402 0625", email:"info@xsite.ae", website:"xsite.ae", linkedin:"linkedin.com/in/muhammad-alam-21b54a106",
+    tags:["new"],
+    sizeFit:19, techGap:15, recency:20, dmAccess:15, contactScore:14, total:83,
+    crmRisk:true,
+    note:"2022 launch. PF shows 48 registered agents — upper edge of sweet spot. Direct CEO contact (mobile + info email). High-volume JVC listing base (450+). May have basic CRM — confirm before pitching XML feed as addition vs replacement.",
+    services:"Sales, Lettings, Property Management, JVC specialist, 20+ languages"
+  },
+  {
+    rank:7, name:"Paragon Properties", city:"Dubai", founded:2018, agents:34, agentsLabel:"34", agentsSweet:true,
+    listings:200, avgVal:"AED 1.5M", avgValNum:1500000,
+    dm:"Angelo Kazantzas & Dean Charter", dmTitle:"Co-Founders",
+    phone:"+971 58 900 4611", email:"info@paragonproperties.ae", website:"paragonproperties.ae", linkedin:null,
+    tags:["boutique"],
+    sizeFit:21, techGap:20, recency:14, dmAccess:15, contactScore:13, total:83,
+    crmRisk:false,
+    note:"Classic Dubai Sports City boutique story — started as 2-man operation. Both founders named. Direct phone + email confirmed. Active in Ras Al Khaimah too — multi-emirate portal posting pain.",
+    services:"Residential, Dubai Sports City specialist, Ras Al Khaimah"
+  },
+  {
+    rank:8, name:"OnPlan Real Estate", city:"Dubai", founded:2019, agents:20, agentsLabel:"20", agentsSweet:true,
+    listings:280, avgVal:"AED 2.4M", avgValNum:2400000,
+    dm:"Ahmed Aldoulah", dmTitle:"CEO",
+    phone:"+971 4 718 1000", email:"info@onplan.ae", website:"onplan.ae", linkedin:null,
+    tags:["emirati"],
+    sizeFit:22, techGap:20, recency:15, dmAccess:13, contactScore:13, total:83,
+    crmRisk:false,
+    note:"Emirati-owned, DLD Real Estate Brokers Incubator alumni — high credibility signal. CEO named. Phone + email confirmed. Off-plan specialists with high listing volume — XML feed ROI is immediate.",
+    services:"Off-plan, Ready Market, Mirdif, Sheikh Zayed Road, Emirati-owned"
+  },
+  {
+    rank:9, name:"Ahmad Alshamsi Real Estate", city:"Sharjah", founded:2023, agents:4, agentsLabel:"~3–6", agentsSweet:true,
+    listings:40, avgVal:"AED 850K", avgValNum:850000,
+    dm:"Ahmad Alshamsi", dmTitle:"Owner (presumed)",
+    phone:null, email:null, website:"ahmadalshamsirealestate.com", linkedin:null,
+    tags:["new","boutique"],
+    sizeFit:22, techGap:25, recency:20, dmAccess:5, contactScore:5, total:77,
+    crmRisk:false,
+    note:"2023 Sharjah launch — among the newest on the list. Zero tech infrastructure is near-certain. Contact info not publicly available — find via Instagram (@ahmadalshamsirealestate) or Sharjah RERA directory.",
+    services:"Residential, Sharjah, Al Buhairah Corniche"
+  },
+  {
+    rank:10, name:"NAS Luxury Real Estate", city:"Abu Dhabi", founded:2020, agents:8, agentsLabel:"8", agentsSweet:true,
+    listings:65, avgVal:"AED 4.2M", avgValNum:4200000,
+    dm:"Ayman Sadieh", dmTitle:"Founder & CEO",
+    phone:null, email:null, website:"nasluxury.com", linkedin:"linkedin.com/in/ayman-sadieh",
+    tags:["new","boutique"],
+    sizeFit:21, techGap:23, recency:17, dmAccess:13, contactScore:5, total:79,
+    crmRisk:false,
+    note:"Very small Abu Dhabi luxury boutique, Bayut Award winner. CEO on LinkedIn. No direct contact email — LinkedIn DM is best outreach channel. High-value listings make copy quality especially important for them.",
+    services:"Luxury Residential, Abu Dhabi, High-net-worth international clients"
+  },
+  {
+    rank:11, name:"Fajar Realty", city:"Dubai", founded:2021, agents:6, agentsLabel:"6", agentsSweet:true,
+    listings:130, avgVal:"AED 2.0M", avgValNum:2000000,
+    dm:"Kiran Khawaja", dmTitle:"Founder & CEO",
+    phone:null, email:null, website:"fajarrealty.ae", linkedin:"linkedin.com/company/fajar-realty-official",
+    tags:["new","boutique","female"],
+    sizeFit:21, techGap:20, recency:18, dmAccess:13, contactScore:5, total:77,
+    crmRisk:false,
+    note:"Female-founded 2021. 17 years industry experience before launching — understands manual listing pain first-hand. Award-winning boutique. LinkedIn is best outreach. Great fit story: 'spend 20 mins per listing or 90 seconds.'",
+    services:"Residential Sales, Lettings, Off-plan, Investment Advisory"
+  },
+  {
+    rank:12, name:"Treo Homes", city:"Dubai", founded:2017, agents:58, agentsLabel:"58", agentsSweet:false,
+    listings:350, avgVal:"AED 2.6M", avgValNum:2600000,
+    dm:"Sami Al-Khafaji", dmTitle:"Founder & Managing Partner",
+    phone:"+971 54 774 2111", email:"info@treo-homes.com", website:"treo-homes.com", linkedin:"ae.linkedin.com/company/treohomes",
+    tags:["tech"],
+    sizeFit:13, techGap:12, recency:12, dmAccess:15, contactScore:13, total:65,
+    crmRisk:true,
+    note:"Award-winning boutique (PropertyFinder Agency of the Year SME) — grown to 58 agents on PF, now outside sweet spot. Tech-forward with investment backing. High CRM risk. Only pursue if confirmed still on manual tools.",
+    services:"Residential, Off-plan, Luxury, Barsha Heights / TECOM specialist"
+  },
+  {
+    rank:13, name:"Estate500", city:"Dubai", founded:2022, agents:8, agentsLabel:"~5–12", agentsSweet:true,
+    listings:70, avgVal:"AED 6.5M", avgValNum:6500000,
+    dm:"Mohammed Abu Mosameh", dmTitle:"Founder & CEO",
+    phone:null, email:null, website:"estate500.com", linkedin:"linkedin.com/in/mohammed-abu-mosameh-85020423",
+    tags:["new","boutique","tech"],
+    sizeFit:20, techGap:15, recency:20, dmAccess:12, contactScore:8, total:75,
+    crmRisk:false,
+    note:"Self-branded as Proptech but likely means marketing focus. $1.3B career sales. Ultra-luxury focus — AI copy quality for AED 6.5M+ listings is a premium pitch angle. LinkedIn DM only.",
+    services:"Ultra-luxury, Business Bay, Off-plan investment"
+  },
+  {
+    rank:14, name:"Capstone Real Estate", city:"Abu Dhabi", founded:2016, agents:14, agentsLabel:"14", agentsSweet:true,
+    listings:320, avgVal:"AED 2.3M", avgValNum:2300000,
+    dm:"Amer Al Ahbabi", dmTitle:"Founder & Group CEO",
+    phone:"+971 2 445 2122", email:"leads@capstoneuae.com", website:"capstoneuae.com", linkedin:"linkedin.com/company/capstone-real-estate-uae",
+    tags:["emirati"],
+    sizeFit:22, techGap:15, recency:10, dmAccess:15, contactScore:15, total:77,
+    crmRisk:true,
+    note:"Emirati-owned multi-emirate firm (Abu Dhabi + Al Ain + Dubai). Exceptional contact data — CEO + leads email + mobile all confirmed. AED 300M revenue. Approach as efficiency upgrade, not replacement.",
+    services:"Residential, Commercial, Investment Advisory, Multi-emirate coverage"
+  },
+  {
+    rank:15, name:"Next Level Real Estate", city:"Dubai", founded:2013, agents:30, agentsLabel:"25–35", agentsSweet:true,
+    listings:380, avgVal:"AED 1.8M", avgValNum:1800000,
+    dm:"Abdul Ahad Siddiq", dmTitle:"Founder & Managing Director",
+    phone:"+971 4 454 2828", email:"media@nextlevelrealestate.ae", website:"nextlevelrealestate.ae", linkedin:"ae.linkedin.com/company/nextlevelrealestatedubai",
+    tags:[],
+    sizeFit:22, techGap:18, recency:8, dmAccess:13, contactScore:12, total:73,
+    crmRisk:false,
+    note:"30-agent firm — exactly in the ICP sweet spot. Founder identified. Phone + media email available. 2013 vintage means likely on basic tools with no CRM-portal integration. Good straightforward outreach target.",
+    services:"Residential, Lettings, Business Bay, International client base"
+  },
+  {
+    rank:16, name:"Henry Wiltshire Abu Dhabi", city:"Abu Dhabi", founded:2014, agents:10, agentsLabel:"10", agentsSweet:true,
+    listings:120, avgVal:"AED 3.1M", avgValNum:3100000,
+    dm:"Andrew Covill", dmTitle:"Manager / MD",
+    phone:"+971 56 484 3380", email:"abudhabi@henrywiltshire.com", website:"henrywiltshire.ae", linkedin:"linkedin.com/company/henry-wiltshire-international-abu-dhabi",
+    tags:["boutique"],
+    sizeFit:22, techGap:15, recency:8, dmAccess:14, contactScore:14, total:73,
+    crmRisk:true,
+    note:"International boutique (UK, HK, Singapore). Local MD contact fully confirmed. Could benefit from UAE-local portal automation separate from HQ tools. Award-winning boutique with strong credibility.",
+    services:"Luxury Residential, International Clients, Abu Dhabi specialist"
+  },
+  {
+    rank:17, name:"Primal Alliance Real Estate", city:"Dubai", founded:2022, agents:24, agentsLabel:"24", agentsSweet:true,
+    listings:600, avgVal:"AED 2.1M", avgValNum:2100000,
+    dm:"Vasilii Oxenciuc", dmTitle:"Founder & CEO",
+    phone:null, email:null, website:"primalalliance.com", linkedin:null,
+    tags:["new"],
+    sizeFit:22, techGap:18, recency:20, dmAccess:10, contactScore:5, total:75,
+    crmRisk:false,
+    note:"20+ language team, 24 registered agents on PF (smaller than estimated). 2022 launch in sweet spot — good ICP fit. No direct contact info — website only. Multi-lingual angle is a strong pitch hook.",
+    services:"Off-plan, Developer partnerships, Multi-lingual, Jumeirah"
+  },
+  {
+    rank:18, name:"Exclusive Links Real Estate", city:"Dubai", founded:2005, agents:13, agentsLabel:"13", agentsSweet:true,
+    listings:200, avgVal:"AED 2.1M", avgValNum:2100000,
+    dm:"Louise Heatley & Zarah Evans", dmTitle:"Directors",
+    phone:null, email:"lika@exclusive-links.com", website:"exclusive-links.com", linkedin:null,
+    tags:["boutique","female"],
+    sizeFit:22, techGap:16, recency:6, dmAccess:14, contactScore:14, total:72,
+    crmRisk:false,
+    note:"Women-led boutique, 20 years in Dubai. AED 22.4M revenue. Direct email found. Age of company suggests possible basic tooling — but boutique size means XML feed is likely still manual.",
+    services:"Sales, Lettings, Property Management, Off-plan"
+  },
+  {
+    rank:19, name:"McCone Properties", city:"Dubai", founded:2013, agents:84, agentsLabel:"84", agentsSweet:false,
+    listings:300, avgVal:"AED 2.2M", avgValNum:2200000,
+    dm:"Sam McCone", dmTitle:"Founder & Managing Partner",
+    phone:"800-MCCONE (800-622663)", email:"recruitment@mcconeproperties.com", website:"mcconeproperties.com", linkedin:"linkedin.com/company/mccone-properties",
+    tags:["boutique"],
+    sizeFit:10, techGap:16, recency:8, dmAccess:13, contactScore:10, total:57,
+    crmRisk:true,
+    note:"PF shows 84 agents — significantly larger than previously estimated. Now outside sweet spot and almost certainly using CRM + portal feed. Deprioritise unless confirmed on manual tools.",
+    services:"Residential Sales, Downtown Dubai specialist, Off-plan, RERA registered"
+  },
+  {
+    rank:20, name:"Daytona Properties", city:"Dubai", founded:2017, agents:14, agentsLabel:"14", agentsSweet:true,
+    listings:240, avgVal:"AED 1.7M", avgValNum:1700000,
+    dm:"Group-owned (Abdulla Al Arif Investment)", dmTitle:"Investment Group Subsidiary",
+    phone:"+971 4 396 7474", email:"info@daytonaproperties.ae", website:"daytonaproperties.ae", linkedin:"linkedin.com/company/daytonaproperties",
+    tags:["emirati"],
+    sizeFit:22, techGap:15, recency:12, dmAccess:8, contactScore:13, total:70,
+    crmRisk:false,
+    note:"Backed by 1986-established Emirati investment group. Phone + email confirmed. Group subsidiary structure means DM is harder to reach — use info@ as entry then escalate to ops manager.",
+    services:"Residential Sales & Lettings, Al Quoz, Sheikh Zayed Road"
+  },
+  {
+    rank:21, name:"Homes 4 Life Real Estate", city:"Dubai", founded:2008, agents:51, agentsLabel:"51", agentsSweet:false,
+    listings:270, avgVal:"AED 2.0M", avgValNum:2000000,
+    dm:"Nitin Giyanani", dmTitle:"Operations & Business Development",
+    phone:"+971 56 818 8610", email:null, website:"homes4life.ae", linkedin:"linkedin.com/company/homes4life-llc",
+    tags:["boutique"],
+    sizeFit:13, techGap:18, recency:7, dmAccess:10, contactScore:10, total:58,
+    crmRisk:false,
+    note:"PF shows 51 agents — grown outside sweet spot. Still an independent boutique with ops contact on WhatsApp. Worth confirming CRM status before pitching — 51 agents may have basic automation already.",
+    services:"Luxury Residential, Lettings, Sheikh Zayed Road, RERA registered"
+  },
+  {
+    rank:22, name:"Realty Force Real Estate", city:"Dubai", founded:2008, agents:6, agentsLabel:"6", agentsSweet:true,
+    listings:140, avgVal:"AED 4.8M", avgValNum:4800000,
+    dm:"Riyaz Merchant", dmTitle:"Founder & CEO",
+    phone:null, email:null, website:"realtyforce.ae", linkedin:null,
+    tags:["boutique"],
+    sizeFit:21, techGap:18, recency:7, dmAccess:12, contactScore:5, total:63,
+    crmRisk:false,
+    note:"Premium villa specialist, AED 5.3B career sales. No contact info found — try RERA directory or LinkedIn search. High-value listings (AED 4.8M avg) make XML feed QA especially important.",
+    services:"Premium Villas, Expo City specialist, Luxury Residential"
+  },
+  {
+    rank:23, name:"House Hunters Real Estate", city:"Dubai", founded:2004, agents:32, agentsLabel:"32", agentsSweet:true,
+    listings:280, avgVal:"AED 2.3M", avgValNum:2300000,
+    dm:"Debbie Cope", dmTitle:"Owner & Managing Director",
+    phone:null, email:null, website:"househuntersdubai.com", linkedin:null,
+    tags:["boutique","female"],
+    sizeFit:21, techGap:18, recency:5, dmAccess:13, contactScore:5, total:62,
+    crmRisk:false,
+    note:"22-year Dubai institution. Female founder, Emirates Living community specialist. Named MD but no direct contact found — website contact form or LinkedIn. Long track record makes them a credibility reference if converted.",
+    services:"Residential, Emirates Living specialist, Property Management"
+  },
+  {
+    rank:24, name:"Aston Premium Real Estate", city:"Dubai", founded:2007, agents:20, agentsLabel:"20", agentsSweet:true,
+    listings:190, avgVal:"AED 2.5M", avgValNum:2500000,
+    dm:"Safura Abasniya", dmTitle:"Founder & CEO",
+    phone:null, email:null, website:"astonre.com", linkedin:null,
+    tags:["boutique","female"],
+    sizeFit:22, techGap:18, recency:7, dmAccess:12, contactScore:5, total:64,
+    crmRisk:false,
+    note:"Female-founded, Dubai + Abu Dhabi portfolio. 181+ active PropertyFinder listings. Named CEO but no direct contact — try portal profile for agency email. Good ICP fit overall.",
+    services:"Sales, Lettings, Dubai, Abu Dhabi, Multi-emirate"
+  },
+  {
+    rank:25, name:"TSR Real Estate", city:"Dubai", founded:2004, agents:2, agentsLabel:"2", agentsSweet:false,
+    listings:180, avgVal:"AED 1.2M", avgValNum:1200000,
+    dm:"Unknown", dmTitle:"—",
+    phone:"+971 4 325 6209", email:"info@tsr-realestate.com", website:"tsr-realestate.com", linkedin:null,
+    tags:[],
+    sizeFit:8, techGap:18, recency:5, dmAccess:5, contactScore:13, total:49,
+    crmRisk:false,
+    note:"PF shows only 2 registered agents — very under-registered or possibly a solo/micro operation. Deira specialist with confirmed contact info. Verify actual team size before outreach; may be too small.",
+    services:"Residential, Deira specialist, Sales & Lettings"
+  },
+  {
+    rank:26, name:"Gravity Real Estate", city:"Abu Dhabi", founded:2008, agents:0, agentsLabel:"0 (no PF agents)", agentsSweet:false,
+    listings:200, avgVal:"AED 2.0M", avgValNum:2000000,
+    dm:"Ghaith Al Bakri", dmTitle:"CEO",
+    phone:null, email:null, website:"gravity-re.com", linkedin:"linkedin.com/company/gravityre",
+    tags:["emirati"],
+    sizeFit:5, techGap:16, recency:7, dmAccess:12, contactScore:5, total:45,
+    crmRisk:false,
+    note:"PF profile exists but shows 0 registered agents — possibly operating primarily on Bayut or with lapsed PF registration. Verify activity status before outreach.",
+    services:"Residential, Al Reem Island specialist, Abu Dhabi"
+  },
+  {
+    rank:27, name:"White & Co Real Estate", city:"Dubai", founded:2021, agents:376, agentsLabel:"376", agentsSweet:false,
+    listings:900, avgVal:"AED 2.8M", avgValNum:2800000,
+    dm:"Calum White", dmTitle:"Founder & CEO",
+    phone:null, email:null, website:"whiteandcogroup.com", linkedin:"ae.linkedin.com/company/white-co-real-estate-llc",
+    tags:["crm"],
+    sizeFit:3, techGap:10, recency:18, dmAccess:13, contactScore:5, total:49,
+    crmRisk:true,
+    note:"PF shows 376 agents — one of Dubai's largest brokerages now. Has definitely scaled past manual tooling. Not a ListingLaunch ICP. Monitor as case study only.",
+    services:"Off-plan, Secondary Market, Residential, Rapid growth brokerage"
+  },
+  {
+    rank:28, name:"Texture Properties", city:"Dubai", founded:2003, agents:0, agentsLabel:"0 (no PF agents)", agentsSweet:false,
+    listings:500, avgVal:"AED 1.6M", avgValNum:1600000,
+    dm:"Shahid Rasheed", dmTitle:"CEO",
+    phone:null, email:null, website:"texture.ae", linkedin:null,
+    tags:[],
+    sizeFit:5, techGap:15, recency:5, dmAccess:13, contactScore:5, total:43,
+    crmRisk:false,
+    note:"PF profile shows 0 registered agents — may have shifted to Bayut-only or gone inactive on PF. Verify current activity status before any outreach.",
+    services:"Sales, Lettings, Property Management, Full-service"
+  },
+  {
+    rank:29, name:"Al Hoor Real Estate", city:"Sharjah", founded:2005, agents:10, agentsLabel:"8–15", agentsSweet:true,
+    listings:100, avgVal:"AED 650K", avgValNum:650000,
+    dm:"Unknown", dmTitle:"—",
+    phone:null, email:null, website:"alhoorre.ae", linkedin:null,
+    tags:[],
+    sizeFit:18, techGap:18, recency:6, dmAccess:5, contactScore:5, total:52,
+    crmRisk:false,
+    note:"Small Sharjah independent. Al Nahda area serves Dubai commuter market. No DM or contact found. Needs manual Sharjah RERA registry lookup for contact details before outreach is possible.",
+    services:"Residential, Sharjah, Al Nahda"
+  },
+  {
+    rank:30, name:"My Style Home", city:"Sharjah", founded:2010, agents:8, agentsLabel:"6–12", agentsSweet:true,
+    listings:80, avgVal:"AED 700K", avgValNum:700000,
+    dm:"Unknown", dmTitle:"—",
+    phone:null, email:null, website:"mystylehome.com", linkedin:null,
+    tags:["boutique"],
+    sizeFit:18, techGap:18, recency:6, dmAccess:5, contactScore:5, total:52,
+    crmRisk:false,
+    note:"Small Sharjah boutique. No DM or contact found. Low contact completeness makes outreach difficult — need manual research via Al Batha Tower address or Sharjah RERA registry.",
+    services:"Residential, Sharjah, Al Batha Tower"
+  },
+  {
+    rank:31, name:"Potential Real Estate", city:"Sharjah", founded:2006, agents:6, agentsLabel:"6", agentsSweet:true,
+    listings:90, avgVal:"AED 600K", avgValNum:600000,
+    dm:"Unknown", dmTitle:"—",
+    phone:null, email:null, website:"potential-re.com", linkedin:null,
+    tags:[],
+    sizeFit:21, techGap:18, recency:6, dmAccess:5, contactScore:5, total:55,
+    crmRisk:false,
+    note:"20-year Sharjah Al Majaz independent. No contact info found. Lower avg value (AED 600K) = smaller revenue, so pricing sensitivity is key. Needs Sharjah RERA directory research.",
+    services:"Residential, Al Majaz 2, Sharjah"
+  },
+  {
+    rank:32, name:"Binayah Properties", city:"Dubai", founded:2007, agents:12, agentsLabel:"12", agentsSweet:true,
+    listings:400, avgVal:"AED 1.8M", avgValNum:1800000,
+    dm:"Unknown", dmTitle:"—",
+    phone:null, email:null, website:"binayah.com", linkedin:"linkedin.com/company/binayah-real-estate",
+    tags:[],
+    sizeFit:21, techGap:15, recency:7, dmAccess:5, contactScore:5, total:53,
+    crmRisk:false,
+    note:"AED 84M revenue, 18-year track record, 400+ managed properties. No DM identified. Revenue and property management volume suggests some existing tooling. Lower priority — LinkedIn approach first.",
+    services:"Sales, Lettings, Property Management, Investment Advisory"
+  },
+  {
+    rank:33, name:"Tanami Properties", city:"Dubai", founded:2015, agents:20, agentsLabel:"20", agentsSweet:true,
+    listings:480, avgVal:"AED 2.5M", avgValNum:2500000,
+    dm:"Unknown (Group subsidiary)", dmTitle:"Emirates Business Group",
+    phone:null, email:null, website:"tanamiproperties.com", linkedin:"linkedin.com/company/tanamiproperties",
+    tags:["crm"],
+    sizeFit:22, techGap:12, recency:10, dmAccess:5, contactScore:5, total:54,
+    crmRisk:true,
+    note:"PF shows 20 agents — smaller than estimated, now in sweet spot. Emirates Business Group subsidiary. AED 96.6M revenue. Group-level tooling possible — verify CRM status before pitching.",
+    services:"Residential, Dubai Marina specialist, Property Management"
+  },
+  {
+    rank:34, name:"Al Arfeen Real Estate", city:"Dubai", founded:2022, agents:133, agentsLabel:"133", agentsSweet:false,
+    listings:2534, avgVal:"AED 1.3M", avgValNum:1300000,
+    dm:"Karam Din", dmTitle:"Chairman",
+    phone:null, email:null, website:"alarfeenrealestate.ae", linkedin:"linkedin.com/company/alarfeen-real-estate",
+    tags:["new","crm"],
+    sizeFit:5, techGap:8, recency:20, dmAccess:10, contactScore:5, total:48,
+    crmRisk:true,
+    note:"Launched 2022 and scaled to 232 agents — definitely has CRM and XML feed at this scale. Not a ListingLaunch target — pitching XML would mean replacing core infrastructure, not adding a tool.",
+    services:"High-volume Sales, JVC, Off-plan, Secondary Market"
+  },
+  {
+    rank:35, name:"D&B Properties", city:"Dubai", founded:2015, agents:41, agentsLabel:"41", agentsSweet:true,
+    listings:1200, avgVal:"AED 2.4M", avgValNum:2400000,
+    dm:"Husni Al Bayari", dmTitle:"Chairman & Founder",
+    phone:null, email:null, website:"dandbdubai.com", linkedin:"linkedin.com/company/dandbdubai",
+    tags:["tech","crm"],
+    sizeFit:19, techGap:3, recency:10, dmAccess:12, contactScore:5, total:49,
+    crmRisk:true,
+    note:"PF shows 41 agents — smaller than previously estimated, now in sweet spot. However founder built the Houza portal — deeply tech-embedded. Extremely high CRM risk. Consider only as integration partner.",
+    services:"Sales, Off-plan, Investment, also built and operates Houza portal"
+  },
+
+  /* ─────────────────────────────────────────────
+     RANKS 36–193 — VERIFIED 2026-ACTIVE (Property Finder)
+     All entries confirmed with listings posted in 2026.
+     Multi-branch companies merged into single entries.
+     Scores use same framework: sizeFit(25)+techGap(25)+recency(20)+dmAccess(15)+contactScore(15)
+  ───────────────────────────────────────────── */
+
+  /* ── TIER A / HOT (score ≥80) ── */
+  {rank:36,name:"HONEST REAL ESTATE",city:"Dubai",founded:2024,agents:12,agentsLabel:"12",agentsSweet:true,
+    listings:150,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"honestrealestatedxb.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:23,techGap:18,recency:19,dmAccess:8,contactScore:8,total:76,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 10564 — very new). 12 agents. Small boutique with high recency score. Likely zero CRM tooling.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:37,name:"GTA Properties",city:"Dubai",founded:2023,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:86,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"gtaproperties.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:19,recency:18,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 8681). 6 agents, new boutique. Minimal tech likely.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:38,name:"HYDE REAL ESTATE",city:"Dubai",founded:2023,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:150,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"hydere.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:23,techGap:17,recency:18,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 8732). 15 agents, new boutique with solid listing volume.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:39,name:"Souq Real Estate LLC",city:"Ras Al Khaimah",founded:2023,agents:11,agentsLabel:"11",agentsSweet:true,
+    listings:264,avgVal:"AED 800K",avgValNum:800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"souqrealestate.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:23,techGap:17,recency:18,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 8101). RAK specialist. 11 agents, strong listing count for the market.",
+    services:"Residential Sales & Lettings, Ras Al Khaimah"},
+  {rank:40,name:"Vero",city:"Dubai",founded:2023,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:166,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"verodxb.com",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:19,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 9645). Very new boutique, 10 agents. Near-zero CRM chance.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:41,name:"EQUITY REAL ESTATES",city:"Dubai",founded:2023,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:80,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"equityrealestate.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:18,dmAccess:8,contactScore:8,total:73,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 9338). Small new boutique, 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:42,name:"Mazaya FZE LLC",city:"Dubai",founded:2024,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:100,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"mazayafze.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:19,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 10008). New boutique with FZ registration, 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:43,name:"Luxven Real Estate",city:"Dubai",founded:2022,agents:11,agentsLabel:"11",agentsSweet:true,
+    listings:237,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxven.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:23,techGap:18,recency:17,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7322). 11 agents, solid listing volume for size.",
+    services:"Residential Sales, Lettings, Dubai"},
+  {rank:44,name:"PLAUSIBLE REAL ESTATE",city:"Dubai",founded:2024,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:131,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"plausiblere.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:19,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 10596). Very new boutique, 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:45,name:"For You Real Estate LLC",city:"Dubai",founded:2022,agents:7,agentsLabel:"7",agentsSweet:true,
+    listings:211,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"foryoure.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:19,recency:17,dmAccess:8,contactScore:8,total:73,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7712). 7 agents, good listing volume.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:46,name:"Nine Star Properties",city:"Dubai",founded:2022,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:231,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"ninestarre.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:19,recency:17,dmAccess:8,contactScore:8,total:73,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7771). 6 agents, very high listing-to-agent ratio — strong outreach target.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:47,name:"SISU REAL ESTATE",city:"Dubai",founded:2022,agents:7,agentsLabel:"7",agentsSweet:true,
+    listings:101,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"sisure.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:19,recency:17,dmAccess:8,contactScore:8,total:73,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7627). New boutique, 7 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:48,name:"Tier One Properties LLC",city:"Dubai",founded:2022,agents:7,agentsLabel:"7",agentsSweet:true,
+    listings:53,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"tieroneproperties.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:19,recency:17,dmAccess:8,contactScore:8,total:73,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7143). Small new boutique, 7 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:49,name:"MASDAR AL HAYAH REAL ESTATE",city:"Dubai",founded:2022,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:80,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"masdaralhayah.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:17,dmAccess:8,contactScore:8,total:72,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6718). 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:50,name:"Throne Properties",city:"Dubai",founded:2022,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:85,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"throneproperties.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:17,dmAccess:8,contactScore:8,total:72,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7262). New boutique, 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:51,name:"Tamleek Real Estate LLC",city:"Dubai",founded:2022,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:95,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"tamleek.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:17,dmAccess:8,contactScore:8,total:72,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6914). 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+
+  /* ── TIER B / WARM (score 60–79) ── */
+  {rank:52,name:"LuxLiving Real Estate",city:"Dubai",founded:2020,agents:18,agentsLabel:"18",agentsSweet:true,
+    listings:256,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxliving.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:14,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026. 18 agents, solid listing base. Luxury focus. Research contact via PF profile.",
+    services:"Luxury Residential, Dubai"},
+  {rank:53,name:"BILLIONAIRE HOMES REAL ESTATE",city:"Dubai",founded:2021,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:200,avgVal:"AED 3.5M",avgValNum:3500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"billionairehomes.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:15,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026. 15 agents, luxury focus branding.",
+    services:"Luxury Residential, Dubai"},
+  {rank:54,name:"BlackOak Real Estate",city:"Dubai",founded:2021,agents:20,agentsLabel:"20",agentsSweet:true,
+    listings:111,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"blackoakre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:15,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4996). 20 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:55,name:"TRPE Real Estate",city:"Dubai",founded:2021,agents:20,agentsLabel:"20",agentsSweet:true,
+    listings:250,avgVal:"AED 2.2M",avgValNum:2200000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"trpe.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:16,recency:15,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4944). 20 agents, solid listing volume.",
+    services:"Residential Sales, Off-plan, Dubai"},
+  {rank:56,name:"Eminence Real Estate",city:"Dubai",founded:2020,agents:20,agentsLabel:"20",agentsSweet:true,
+    listings:200,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"eminencere.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:16,recency:14,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4046). 20 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:57,name:"The Network",city:"Dubai",founded:2022,agents:34,agentsLabel:"34",agentsSweet:true,
+    listings:282,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"thenetwork.ae",linkedin:null,tags:["new"],
+    sizeFit:22,techGap:15,recency:16,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6002). 34 agents, new brokerage scaling up.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:58,name:"Xperience Realty Real Estate",city:"Dubai",founded:2022,agents:34,agentsLabel:"34",agentsSweet:true,
+    listings:318,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"xperiencerealty.ae",linkedin:null,tags:["new"],
+    sizeFit:22,techGap:15,recency:16,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6189). 34 agents. Strong listing count — high portal activity.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:59,name:"THRIVESTATE SQUARE REAL ESTATE",city:"Dubai",founded:2022,agents:28,agentsLabel:"28",agentsSweet:true,
+    listings:330,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"thriverealestate.ae",linkedin:null,tags:["new"],
+    sizeFit:22,techGap:15,recency:16,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6409). 28 agents, new boutique.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:60,name:"ETAGI Real Estate",city:"Dubai",founded:2022,agents:29,agentsLabel:"29",agentsSweet:true,
+    listings:215,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"etagi.ae",linkedin:null,tags:["new"],
+    sizeFit:22,techGap:15,recency:16,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6113). 29 agents, newer Dubai launch.",
+    services:"Residential Sales, Off-plan, Dubai"},
+  {rank:61,name:"Rose Island Real Estate",city:"Abu Dhabi",founded:2020,agents:19,agentsLabel:"19",agentsSweet:true,
+    listings:270,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"roseislandre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:16,recency:14,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4172). Abu Dhabi, 19 agents. Good volume.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:62,name:"Hero Real Estate",city:"Abu Dhabi",founded:2020,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:65,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"herore.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:20,recency:14,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4555). Small Abu Dhabi boutique. 5 agents, zero-tech likely.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:63,name:"TIBA.COM REAL ESTATE",city:"Ajman",founded:2024,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:291,avgVal:"AED 500K",avgValNum:500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"tiba.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:16,recency:19,dmAccess:8,contactScore:8,total:72,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 10380). Ajman. 10 agents, very new.",
+    services:"Residential, Ajman"},
+  {rank:64,name:"Smart Real Estate LLC",city:"Ajman",founded:2023,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:750,avgVal:"AED 500K",avgValNum:500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"smartrealestate.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:12,recency:18,dmAccess:8,contactScore:8,total:67,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 9573). Ajman. 10 agents, very high listing volume — 75 listings per agent is unusual, may have basic tooling.",
+    services:"Residential, Ajman"},
+  {rank:65,name:"Terra Property Advisors",city:"Ras Al Khaimah",founded:2021,agents:9,agentsLabel:"9",agentsSweet:true,
+    listings:385,avgVal:"AED 800K",avgValNum:800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"terrapropertyrak.com",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:17,recency:15,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5926). RAK FZ boutique, 9 agents, strong listing base.",
+    services:"Residential Sales, Ras Al Khaimah"},
+  {rank:66,name:"Barnes International Realty",city:"Dubai",founded:2022,agents:29,agentsLabel:"29",agentsSweet:true,
+    listings:207,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"barnesinternational.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:14,recency:17,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7734). International brand, small Dubai team of 29.",
+    services:"Residential Sales, Luxury, Dubai"},
+  {rank:67,name:"Sky Land Real Estate",city:"Ajman",founded:2023,agents:19,agentsLabel:"19",agentsSweet:true,
+    listings:4127,avgVal:"AED 500K",avgValNum:500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"skylanduae.com",linkedin:null,tags:["new"],
+    sizeFit:23,techGap:10,recency:18,dmAccess:8,contactScore:8,total:67,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 12202). Ajman. 19 agents but 4,127 listings — exceptional volume ratio. May have some tooling given volume. Worth verifying.",
+    services:"Residential, Ajman"},
+  {rank:68,name:"Sandcastle Properties LLC",city:"Dubai",founded:2022,agents:13,agentsLabel:"13",agentsSweet:true,
+    listings:615,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"sandcastleproperties.ae",linkedin:null,tags:["new"],
+    sizeFit:23,techGap:16,recency:16,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6950). 13 agents, very high listing count — 47 per agent. Good outreach candidate.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:69,name:"Millenium Real Estate",city:"Sharjah",founded:2022,agents:13,agentsLabel:"13",agentsSweet:true,
+    listings:556,avgVal:"AED 700K",avgValNum:700000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"milleniumre.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:23,techGap:16,recency:16,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7370). Sharjah. 13 agents, high listing volume.",
+    services:"Residential, Sharjah"},
+  {rank:70,name:"Star 5 Realty Real Estate",city:"Dubai",founded:2021,agents:12,agentsLabel:"12",agentsSweet:true,
+    listings:114,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"star5realty.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:18,recency:15,dmAccess:8,contactScore:8,total:72,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5856). 12 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:71,name:"BITS Real Estate Brokers",city:"Dubai",founded:2021,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:300,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"bitsre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:15,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5955). 6 agents, high listing volume — 50 listings per agent.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:72,name:"nu Avenue Real Estate",city:"Dubai",founded:2018,agents:12,agentsLabel:"12",agentsSweet:true,
+    listings:97,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"nuavenue.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:18,recency:11,dmAccess:8,contactScore:8,total:68,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3216). 12 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:73,name:"CASABELLA LUXURY REAL ESTATE",city:"Dubai",founded:2020,agents:11,agentsLabel:"11",agentsSweet:true,
+    listings:235,avgVal:"AED 3.5M",avgValNum:3500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"casabellaproperties.com",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:14,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4494). Luxury boutique, 11 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:74,name:"Black Brick",city:"Dubai",founded:2020,agents:12,agentsLabel:"12",agentsSweet:true,
+    listings:95,avgVal:"AED 3.0M",avgValNum:3000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"blackbrick.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:14,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4535). 12 agents, luxury/premium segment.",
+    services:"Luxury Residential, Dubai"},
+  {rank:75,name:"Think Properties",city:"Dubai",founded:2016,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:116,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"thinkproperties.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:9,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2308). 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:76,name:"KAYE & CO REAL ESTATE",city:"Dubai",founded:2016,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:78,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"kayeandco.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:9,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2148). 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:77,name:"Fidu Properties",city:"Dubai",founded:2018,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:62,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"fidudubai.com",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:11,dmAccess:8,contactScore:8,total:67,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3036). 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:78,name:"Edge Realty Real Estate",city:"Dubai",founded:2013,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:93,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"edgerealty.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:7,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1058). 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:79,name:"Candour Real Estate Broker",city:"Dubai",founded:2005,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:85,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"candourrealestate.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:19,recency:6,dmAccess:8,contactScore:8,total:62,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 296). Established boutique, 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:80,name:"Dream Catcher Homes Real Estate",city:"Dubai",founded:2021,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:43,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"dreamcatcherhomes.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:15,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5844). 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:81,name:"Jade & Co Real Estate",city:"Dubai",founded:2020,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:77,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"jadeandco.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:14,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4320). Small boutique, 5 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:82,name:"DELUXXIS PROPERTIES",city:"Dubai",founded:2020,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:84,avgVal:"AED 3.0M",avgValNum:3000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"deluxxis.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:14,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4932). Luxury boutique, 5 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:83,name:"Luxe Finder Real Estate",city:"Dubai",founded:2022,agents:9,agentsLabel:"9",agentsSweet:true,
+    listings:107,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxefinder.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:17,dmAccess:8,contactScore:8,total:72,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7534). 9 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:84,name:"LUXURY RESIDENCES REAL ESTATE",city:"Dubai",founded:2021,agents:7,agentsLabel:"7",agentsSweet:true,
+    listings:63,avgVal:"AED 3.5M",avgValNum:3500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxuryresidences.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:15,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5492). Luxury segment, 7 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:85,name:"LUXURY ONE REAL ESTATE",city:"Dubai",founded:2020,agents:9,agentsLabel:"9",agentsSweet:true,
+    listings:87,avgVal:"AED 3.0M",avgValNum:3000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxuryonere.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:14,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4689). Luxury boutique, 9 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:86,name:"D R N Real Estate",city:"Dubai",founded:2021,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:136,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"dubairealestate.net",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:15,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5117). 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:87,name:"Achiever Properties",city:"Dubai",founded:2016,agents:9,agentsLabel:"9",agentsSweet:true,
+    listings:71,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"achieverproperties.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:18,recency:9,dmAccess:8,contactScore:8,total:64,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2491). 9 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:88,name:"Prestige Luxury Real Estate",city:"Dubai",founded:2009,agents:9,agentsLabel:"9",agentsSweet:true,
+    listings:174,avgVal:"AED 3.0M",avgValNum:3000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"prestigeluxury.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:7,dmAccess:8,contactScore:8,total:62,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 594). Established luxury boutique, 9 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:89,name:"Cogent Real Estate",city:"Dubai",founded:2018,agents:9,agentsLabel:"9",agentsSweet:true,
+    listings:63,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"cogent.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:11,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3374). 9 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:90,name:"ERE Homes",city:"Dubai",founded:2009,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:70,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"erehomes.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:7,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 625). Small established boutique, 5 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:91,name:"Sherwoods International Property",city:"Dubai",founded:2004,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:95,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"sherwoods.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:18,recency:5,dmAccess:8,contactScore:8,total:60,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 50 — one of the oldest registered). 5 agents, very long-established.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:92,name:"Mountain Gate Real Estate",city:"Dubai",founded:2013,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:149,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"mountaingate.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:20,recency:7,dmAccess:8,contactScore:8,total:64,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1345). 5 agents, good listing count for size.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:93,name:"Five Stars Real Estate",city:"Dubai",founded:2016,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:89,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"5starsrealestate.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:9,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2706). 6 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:94,name:"Gold Coast Real Estate",city:"Dubai",founded:2016,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:82,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"goldcoastuae.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:9,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2746). 8 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:95,name:"BLACKSTONE GULF REAL ESTATE",city:"Dubai",founded:2016,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:71,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"blackstonegulf.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:9,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2624). 6 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:96,name:"Renaissance Real Estate Brokers",city:"Dubai",founded:2018,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:47,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"rrealestate.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:11,dmAccess:8,contactScore:8,total:67,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3163). 6 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:97,name:"Prima Luxury Real Estate",city:"Dubai",founded:2009,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:47,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"primaluxury.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:19,recency:7,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 890). Long-established luxury boutique, 6 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:98,name:"BENCO REAL ESTATE",city:"Dubai",founded:2022,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:110,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"bencorealestate.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:16,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6469). New boutique, 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:99,name:"NOVVI Properties",city:"Dubai",founded:2022,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:120,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"novviproperties.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:21,techGap:18,recency:16,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6481). New boutique, 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:100,name:"Classic Properties Real Estate",city:"Dubai",founded:2016,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:130,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"classicpropertiesdubai.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:18,recency:9,dmAccess:8,contactScore:8,total:64,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2556). 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:101,name:"The Brokerage",city:"Dubai",founded:2013,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:48,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"thebrokerage.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:19,recency:7,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1495). 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:102,name:"ARENCO REAL ESTATE CO. LLC",city:"Dubai",founded:2013,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:28,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"arencore.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:18,recency:7,dmAccess:8,contactScore:8,total:62,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1831). 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:103,name:"Castles Plaza Real Estate",city:"Dubai",founded:2005,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:89,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"castlesplaza.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:19,recency:6,dmAccess:8,contactScore:8,total:62,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 398). Long-established boutique, 10 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:104,name:"Seven Century Real Estate",city:"Dubai",founded:2016,agents:12,agentsLabel:"12",agentsSweet:true,
+    listings:112,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"sevencentury.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:18,recency:9,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2334). 12 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:105,name:"Country Home Real Estate",city:"Dubai",founded:2018,agents:12,agentsLabel:"12",agentsSweet:true,
+    listings:267,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"countryhomere.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:16,recency:11,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2939). 12 agents, strong listing volume.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:106,name:"Tamani Properties",city:"Dubai",founded:2016,agents:12,agentsLabel:"12",agentsSweet:true,
+    listings:229,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"tamaniproperties.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:9,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2260). 12 agents. Note: different company from Tanami Properties (rank 33).",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:107,name:"Zain Middle East Properties",city:"Abu Dhabi",founded:2013,agents:8,agentsLabel:"8",agentsSweet:true,
+    listings:149,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"zainme.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:19,recency:7,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1222). Abu Dhabi, 8 agents.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:108,name:"Re/Max Smart Concept Real Estate",city:"Abu Dhabi",founded:2013,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:127,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"remaxuae.com",linkedin:null,tags:[],
+    sizeFit:21,techGap:15,recency:7,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1242). Re/Max franchise, small Abu Dhabi office, 5 agents.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:109,name:"Lamaison Real Estate LLC",city:"Abu Dhabi",founded:2021,agents:4,agentsLabel:"4",agentsSweet:false,
+    listings:98,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"laimaison.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:20,recency:15,dmAccess:8,contactScore:8,total:61,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5524). Small Abu Dhabi boutique, 4 agents.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:110,name:"Lemas Real Estate",city:"Ajman",founded:2018,agents:6,agentsLabel:"6",agentsSweet:true,
+    listings:186,avgVal:"AED 500K",avgValNum:500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"lemasre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:18,recency:11,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3343). Ajman boutique, 6 agents.",
+    services:"Residential, Ajman"},
+  {rank:111,name:"Al Afdal Real Estate",city:"Ajman",founded:2023,agents:4,agentsLabel:"4",agentsSweet:false,
+    listings:230,avgVal:"AED 500K",avgValNum:500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"alafdal.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:10,techGap:18,recency:18,dmAccess:8,contactScore:8,total:62,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 8763). Ajman, 4 agents but 230 listings — high activity ratio.",
+    services:"Residential, Ajman"},
+  {rank:112,name:"Al Falah Real Estate LLC",city:"Sharjah",founded:2018,agents:3,agentsLabel:"3",agentsSweet:false,
+    listings:179,avgVal:"AED 700K",avgValNum:700000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"alfalahre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:20,recency:11,dmAccess:8,contactScore:8,total:57,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3448). Sharjah micro-boutique, 3 agents.",
+    services:"Residential, Sharjah"},
+  {rank:113,name:"Signature Properties LLC",city:"Sharjah",founded:2022,agents:4,agentsLabel:"4",agentsSweet:false,
+    listings:349,avgVal:"AED 700K",avgValNum:700000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"signatureproperties.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:18,recency:16,dmAccess:8,contactScore:8,total:60,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6474). Sharjah. 4 agents, 349 listings — strong activity.",
+    services:"Residential, Sharjah"},
+  {rank:114,name:"EuroEstates Properties FZ-LLC",city:"Ras Al Khaimah",founded:2020,agents:3,agentsLabel:"3",agentsSweet:false,
+    listings:64,avgVal:"AED 800K",avgValNum:800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"euroestatesrak.com",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:18,recency:14,dmAccess:8,contactScore:8,total:58,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4026). RAK FZ boutique, 3 agents.",
+    services:"Residential, Ras Al Khaimah"},
+  {rank:115,name:"Flash Real Estate LLC",city:"Ras Al Khaimah",founded:2018,agents:10,agentsLabel:"10",agentsSweet:true,
+    listings:267,avgVal:"AED 800K",avgValNum:800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"flashrealestateak.ae",linkedin:null,tags:["boutique"],
+    sizeFit:21,techGap:17,recency:11,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3279). RAK specialist, 10 agents.",
+    services:"Residential, Ras Al Khaimah"},
+  {rank:116,name:"Hunt & Harris Real Estate RAK",city:"Ras Al Khaimah",founded:2005,agents:27,agentsLabel:"27",agentsSweet:true,
+    listings:605,avgVal:"AED 800K",avgValNum:800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"huntandharris.ae",linkedin:null,tags:[],
+    sizeFit:22,techGap:15,recency:6,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 384). Long-established RAK specialist, 27 agents.",
+    services:"Residential, Ras Al Khaimah"},
+  {rank:117,name:"Al Mutamaiz Real Estate",city:"Ajman",founded:2021,agents:25,agentsLabel:"25",agentsSweet:true,
+    listings:1087,avgVal:"AED 500K",avgValNum:500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"almutamaiz.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:12,recency:15,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4966). Ajman. 25 agents, very high listing volume — 43 per agent. May have basic tooling.",
+    services:"Residential, Ajman"},
+  {rank:118,name:"Awtan Real Estate LLC",city:"Ajman",founded:2022,agents:25,agentsLabel:"25",agentsSweet:true,
+    listings:953,avgVal:"AED 500K",avgValNum:500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"awtan.ae",linkedin:null,tags:["new"],
+    sizeFit:22,techGap:16,recency:16,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7329). Ajman. 25 agents, new and active.",
+    services:"Residential, Ajman"},
+
+  /* ── MID SIZE — JUST OUTSIDE SWEET SPOT or BORDERLINE ── */
+  {rank:119,name:"Daark Real Estate LLC",city:"Dubai",founded:2020,agents:49,agentsLabel:"49",agentsSweet:true,
+    listings:5782,avgVal:"AED 1.5M",avgValNum:1500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"daark.ae",linkedin:null,tags:[],
+    sizeFit:19,techGap:8,recency:14,dmAccess:8,contactScore:8,total:57,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 4882). 49 agents — barely in sweet spot. However 5,782 listings is extreme volume — almost certainly using automation tools. High CRM risk despite size.",
+    services:"Residential Sales, Off-plan, Dubai"},
+  {rank:120,name:"METROPOLITAN CAPITAL REAL ESTATE",city:"Abu Dhabi",founded:2018,agents:59,agentsLabel:"59",agentsSweet:false,
+    listings:957,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"metropolitan.ae",linkedin:null,tags:["crm"],
+    sizeFit:13,techGap:8,recency:11,dmAccess:8,contactScore:8,total:48,crmRisk:true,
+    note:"Verified active 2026. Abu Dhabi arm of Metropolitan brand. 59 agents, 957 listings — likely on group CRM.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:121,name:"Patriot Pro Real Estate LLC",city:"Dubai",founded:2023,agents:51,agentsLabel:"51",agentsSweet:false,
+    listings:1271,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"patriotpro.ae",linkedin:null,tags:["new"],
+    sizeFit:13,techGap:12,recency:18,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 9406). 51 agents, just outside sweet spot but very new (2023). High recency offsets size. Confirm tooling before outreach.",
+    services:"Residential Sales, Off-plan, Dubai"},
+  {rank:122,name:"CRC",city:"Dubai",founded:2016,agents:51,agentsLabel:"51",agentsSweet:false,
+    listings:987,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"crcuae.com",linkedin:null,tags:[],
+    sizeFit:13,techGap:10,recency:9,dmAccess:8,contactScore:8,total:48,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2594). 51 agents, outside sweet spot.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:123,name:"Oia Properties",city:"Abu Dhabi",founded:2022,agents:40,agentsLabel:"40",agentsSweet:true,
+    listings:475,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"oiaproperties.ae",linkedin:null,tags:["new"],
+    sizeFit:19,techGap:14,recency:16,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 6443). Abu Dhabi. 40 agents, in sweet spot. New and growing.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:124,name:"Nationwide Middle East Properties",city:"Abu Dhabi",founded:2009,agents:43,agentsLabel:"43",agentsSweet:true,
+    listings:375,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"nationwideme.ae",linkedin:null,tags:[],
+    sizeFit:19,techGap:12,recency:7,dmAccess:8,contactScore:8,total:54,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 772). Abu Dhabi, 43 agents.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:125,name:"Crompton Partners Estate Agents AUH",city:"Abu Dhabi",founded:2013,agents:41,agentsLabel:"41",agentsSweet:true,
+    listings:328,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"cromptonpartners.ae",linkedin:null,tags:["boutique"],
+    sizeFit:19,techGap:12,recency:7,dmAccess:8,contactScore:8,total:54,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1007). Abu Dhabi boutique, 41 agents.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:126,name:"PSI Real Estate",city:"Dubai",founded:2021,agents:88,agentsLabel:"88",agentsSweet:false,
+    listings:698,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"psi.ae",linkedin:null,tags:["crm"],
+    sizeFit:8,techGap:8,recency:15,dmAccess:8,contactScore:8,total:47,crmRisk:true,
+    note:"Verified active 2026. Combined Dubai+Abu Dhabi branches (PF ID 5880+6699). 88 total agents — outside sweet spot, likely on CRM.",
+    services:"Residential Sales & Lettings, Dubai, Abu Dhabi"},
+  {rank:127,name:"VIBGYOR Real Estate",city:"Dubai",founded:2009,agents:45,agentsLabel:"45",agentsSweet:true,
+    listings:245,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"vibgyorre.ae",linkedin:null,tags:[],
+    sizeFit:19,techGap:14,recency:7,dmAccess:8,contactScore:8,total:56,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 752). 45 agents, in sweet spot.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:128,name:"Springfield Real Estate",city:"Dubai",founded:2009,agents:45,agentsLabel:"45",agentsSweet:true,
+    listings:226,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"springfielddubai.com",linkedin:null,tags:[],
+    sizeFit:19,techGap:14,recency:7,dmAccess:8,contactScore:8,total:56,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 939). 45 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:129,name:"A1 Properties LLC",city:"Dubai",founded:2013,agents:35,agentsLabel:"35",agentsSweet:true,
+    listings:335,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"a1propertiesllc.com",linkedin:null,tags:[],
+    sizeFit:22,techGap:14,recency:7,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1119). 35 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:130,name:"Drehomes Real Estate",city:"Dubai",founded:2009,agents:34,agentsLabel:"34",agentsSweet:true,
+    listings:273,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"drehomes.com",linkedin:null,tags:[],
+    sizeFit:22,techGap:14,recency:7,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 877). 34 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:131,name:"OBG Real Estate Broker",city:"Dubai",founded:2016,agents:34,agentsLabel:"34",agentsSweet:true,
+    listings:179,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"obgrealestate.ae",linkedin:null,tags:[],
+    sizeFit:22,techGap:14,recency:9,dmAccess:8,contactScore:8,total:61,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2482). 34 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:132,name:"Elite Property Brokerage",city:"Dubai",founded:2020,agents:32,agentsLabel:"32",agentsSweet:true,
+    listings:622,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"elitepropertybrokerage.ae",linkedin:null,tags:[],
+    sizeFit:22,techGap:14,recency:14,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4428). 32 agents, strong listing volume.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:133,name:"Williams International Real Estate",city:"Dubai",founded:2020,agents:33,agentsLabel:"33",agentsSweet:true,
+    listings:253,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"williamsinternational.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:14,recency:14,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4577). 33 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:134,name:"XO Property",city:"Dubai",founded:2021,agents:29,agentsLabel:"29",agentsSweet:true,
+    listings:384,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"xoproperty.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:15,recency:15,dmAccess:8,contactScore:8,total:68,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5341). 29 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:135,name:"ALH PROPERTIES",city:"Dubai",founded:2018,agents:29,agentsLabel:"29",agentsSweet:true,
+    listings:475,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"alhproperties.ae",linkedin:null,tags:[],
+    sizeFit:22,techGap:15,recency:11,dmAccess:8,contactScore:8,total:64,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3848). 29 agents, good listing volume.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:136,name:"Deja Vu Real Estate Brokerage",city:"Dubai",founded:2009,agents:28,agentsLabel:"28",agentsSweet:true,
+    listings:237,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"dejavurealestate.ae",linkedin:null,tags:[],
+    sizeFit:22,techGap:15,recency:7,dmAccess:8,contactScore:8,total:60,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 796). 28 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:137,name:"DNL Properties LLC",city:"Dubai",founded:2018,agents:20,agentsLabel:"20",agentsSweet:true,
+    listings:359,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"dnlproperties.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:16,recency:11,dmAccess:8,contactScore:8,total:66,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3802). 20 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:138,name:"Gold Mark Real Estate",city:"Dubai",founded:2016,agents:20,agentsLabel:"20",agentsSweet:true,
+    listings:297,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"goldmarkrealestate.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:16,recency:9,dmAccess:8,contactScore:8,total:64,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2035). 20 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:139,name:"SEVEN STONES REAL ESTATE",city:"Dubai",founded:2021,agents:20,agentsLabel:"20",agentsSweet:true,
+    listings:557,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"sevenstonesre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:14,recency:15,dmAccess:8,contactScore:8,total:68,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5908). 20 agents, very active with 557 listings.",
+    services:"Residential Sales, Off-plan, Dubai"},
+  {rank:140,name:"AGCO PROPERTIES",city:"Dubai",founded:2020,agents:19,agentsLabel:"19",agentsSweet:true,
+    listings:617,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"agcoproperties.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:14,recency:14,dmAccess:8,contactScore:8,total:67,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4467). 19 agents, very high listing volume.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:141,name:"Property Network",city:"Dubai",founded:2005,agents:19,agentsLabel:"19",agentsSweet:true,
+    listings:130,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"propertynetwork.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:17,recency:6,dmAccess:8,contactScore:8,total:62,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 441). Long-established, 19 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:142,name:"Nexus Properties",city:"Dubai",founded:2020,agents:18,agentsLabel:"18",agentsSweet:true,
+    listings:421,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"nexuspropertiesdubai.com",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:15,recency:14,dmAccess:8,contactScore:8,total:68,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4324). 18 agents, high listing volume.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:143,name:"Excel Real Estate Brokers",city:"Dubai",founded:2005,agents:18,agentsLabel:"18",agentsSweet:true,
+    listings:47,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"excelre.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:18,recency:6,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 395). Long-established, 18 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:144,name:"MD Real Estate LLC",city:"Abu Dhabi",founded:2009,agents:17,agentsLabel:"17",agentsSweet:true,
+    listings:101,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"mdrealestate.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:17,recency:7,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 560). Abu Dhabi, 17 agents.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:145,name:"Keller Williams UAE",city:"Dubai",founded:2013,agents:26,agentsLabel:"26",agentsSweet:true,
+    listings:164,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"kellerwilliamsuae.com",linkedin:null,tags:[],
+    sizeFit:22,techGap:10,recency:7,dmAccess:8,contactScore:8,total:55,crmRisk:false,
+    note:"Verified active 2026. KW franchise (combined branches). 26 agents. KW franchise tools may not cover UAE portal posting — worth exploring.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:146,name:"Sky View Real Estate",city:"Dubai",founded:2016,agents:46,agentsLabel:"46",agentsSweet:true,
+    listings:1290,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"skyviewrealestate.ae",linkedin:null,tags:[],
+    sizeFit:19,techGap:10,recency:9,dmAccess:8,contactScore:8,total:54,crmRisk:false,
+    note:"Verified active 2026. Combined both branches (ID 2416+7146). 46 agents, 1,290 listings — high volume suggests possible basic feed tooling.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:147,name:"The Urban Nest Real Estate",city:"Dubai",founded:2016,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:158,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"theurbannest.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:9,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2762). 15 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:148,name:"First Choice Properties",city:"Abu Dhabi",founded:2009,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:228,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"firstchoiceproperties.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:17,recency:7,dmAccess:8,contactScore:8,total:63,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 914). Abu Dhabi, 15 agents.",
+    services:"Residential Sales & Lettings, Abu Dhabi"},
+  {rank:149,name:"Range International",city:"Dubai",founded:2016,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:180,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"rangeinternational.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:9,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2461). 15 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:150,name:"Luxbridge International Realty",city:"Dubai",founded:2021,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:160,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxbridge.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:15,dmAccess:8,contactScore:8,total:71,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5273). Luxury segment, 15 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:151,name:"Patriot Real Estate",city:"Dubai",founded:2016,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:150,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"patriotre.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:17,recency:9,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2704). 15 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:152,name:"HYDE REAL ESTATE",city:"Dubai",founded:2023,agents:15,agentsLabel:"15",agentsSweet:true,
+    listings:150,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"hydere.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:23,techGap:17,recency:18,dmAccess:8,contactScore:8,total:74,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 8732). New boutique, 15 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:153,name:"Aaronz & Co Real Estate",city:"Dubai",founded:2020,agents:14,agentsLabel:"14",agentsSweet:true,
+    listings:201,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"aaronz.ae",linkedin:null,tags:["boutique"],
+    sizeFit:23,techGap:17,recency:14,dmAccess:8,contactScore:8,total:70,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4427). 14 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:154,name:"La Capitale Real Estate Broker",city:"Dubai",founded:2009,agents:26,agentsLabel:"26",agentsSweet:true,
+    listings:308,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"lacapitale.ae",linkedin:null,tags:[],
+    sizeFit:22,techGap:15,recency:7,dmAccess:8,contactScore:8,total:60,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 741). 26 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:155,name:"Pangea Properties",city:"Dubai",founded:2020,agents:26,agentsLabel:"26",agentsSweet:true,
+    listings:359,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"pangea.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:15,recency:14,dmAccess:8,contactScore:8,total:67,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4126). 26 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:156,name:"Rocky Real Estate Brokerage LLC",city:"Dubai",founded:2005,agents:25,agentsLabel:"25",agentsSweet:true,
+    listings:319,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"rockyrealestate.ae",linkedin:null,tags:[],
+    sizeFit:22,techGap:14,recency:6,dmAccess:8,contactScore:8,total:58,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 475). Long-established, 25 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:157,name:"Primo Capital",city:"Dubai",founded:2021,agents:24,agentsLabel:"24",agentsSweet:true,
+    listings:145,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"primocapital.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:16,recency:15,dmAccess:8,contactScore:8,total:69,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5024). 24 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:158,name:"Banke International Properties",city:"Dubai",founded:2013,agents:23,agentsLabel:"23",agentsSweet:true,
+    listings:436,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"bankeintl.com",linkedin:null,tags:[],
+    sizeFit:22,techGap:14,recency:7,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 1438). 23 agents.",
+    services:"Residential Sales, Luxury, Dubai"},
+  {rank:159,name:"TurnKey Properties",city:"Dubai",founded:2018,agents:21,agentsLabel:"21",agentsSweet:true,
+    listings:219,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"turnkeyproperties.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:16,recency:11,dmAccess:8,contactScore:8,total:65,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3056). 21 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:160,name:"LuxuryProperty.com",city:"Dubai",founded:2016,agents:22,agentsLabel:"22",agentsSweet:true,
+    listings:189,avgVal:"AED 5.0M",avgValNum:5000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxuryproperty.com",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:12,recency:9,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2732). PropTech branding but small team. 22 agents, ultra-luxury.",
+    services:"Ultra-luxury Residential, Dubai"},
+
+  /* ── LARGE / ENTERPRISE — LIKELY CRM (score <50 or known tech stack) ── */
+  {rank:161,name:"Elysian Real Estate",city:"Dubai",founded:2004,agents:29,agentsLabel:"29",agentsSweet:true,
+    listings:318,avgVal:"AED 4.0M",avgValNum:4000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"elysianre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:22,techGap:14,recency:5,dmAccess:8,contactScore:8,total:57,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 133 — one of oldest registrations). Palm Jumeirah specialist. 29 agents.",
+    services:"Luxury Residential, Palm Jumeirah, Dubai"},
+  {rank:162,name:"Edwards and Towers Real Estate",city:"Dubai",founded:2004,agents:29,agentsLabel:"29",agentsSweet:true,
+    listings:241,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"edwardsandtowers.com",linkedin:null,tags:[],
+    sizeFit:22,techGap:15,recency:5,dmAccess:8,contactScore:8,total:58,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 247). Long-established, 29 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:163,name:"Harbor Real Estate",city:"Dubai",founded:2009,agents:46,agentsLabel:"46",agentsSweet:true,
+    listings:352,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"harbordubai.com",linkedin:null,tags:[],
+    sizeFit:19,techGap:12,recency:7,dmAccess:8,contactScore:8,total:54,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 527). 46 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:164,name:"Chestertons",city:"Dubai",founded:2009,agents:17,agentsLabel:"17",agentsSweet:true,
+    listings:151,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"chestertons.ae",linkedin:null,tags:[],
+    sizeFit:23,techGap:10,recency:7,dmAccess:8,contactScore:8,total:56,crmRisk:false,
+    note:"Verified active 2026. Combined main + commercial branches (ID 957+9408). International brand but small local office, 17 agents.",
+    services:"Residential, Commercial, Dubai"},
+  {rank:165,name:"Hamptons International",city:"Dubai",founded:2023,agents:71,agentsLabel:"71",agentsSweet:false,
+    listings:534,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"hamptons.ae",linkedin:null,tags:["crm"],
+    sizeFit:13,techGap:8,recency:18,dmAccess:8,contactScore:8,total:55,crmRisk:true,
+    note:"Verified active 2026. Combined T1+T2+Leasing branches (ID 8010-8013). International brand. 71 agents across 3 PF profiles — likely on franchise tools.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:166,name:"Dubai Sotheby's International Realty",city:"Dubai",founded:2013,agents:46,agentsLabel:"46",agentsSweet:true,
+    listings:164,avgVal:"AED 8.0M",avgValNum:8000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"sothebysrealty.ae",linkedin:null,tags:["crm"],
+    sizeFit:19,techGap:8,recency:7,dmAccess:8,contactScore:8,total:50,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 1245). Sotheby's franchise — ultra-luxury, likely has global CRM tools.",
+    services:"Ultra-luxury Residential, Dubai"},
+  {rank:167,name:"Christie's International Real Estate Dubai",city:"Dubai",founded:2009,agents:37,agentsLabel:"37",agentsSweet:true,
+    listings:201,avgVal:"AED 6.0M",avgValNum:6000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"christiesrealestate.ae",linkedin:null,tags:["crm"],
+    sizeFit:22,techGap:8,recency:7,dmAccess:8,contactScore:8,total:53,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 854). Christie's franchise — luxury brand with global systems.",
+    services:"Ultra-luxury Residential, Dubai"},
+  {rank:168,name:"Knight Frank",city:"Dubai",founded:2013,agents:13,agentsLabel:"13",agentsSweet:true,
+    listings:94,avgVal:"AED 4.0M",avgValNum:4000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"knightfrank.ae",linkedin:null,tags:["crm"],
+    sizeFit:23,techGap:8,recency:7,dmAccess:8,contactScore:8,total:54,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 1084). Global luxury brand — definitely using global CRM/tools.",
+    services:"Luxury Residential, Commercial, Dubai"},
+  {rank:169,name:"ENGEL & VÖLKERS Dubai",city:"Dubai",founded:2013,agents:5,agentsLabel:"5",agentsSweet:true,
+    listings:131,avgVal:"AED 4.0M",avgValNum:4000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"engelvoelkers.com/ae/dubai",linkedin:null,tags:["crm"],
+    sizeFit:21,techGap:8,recency:7,dmAccess:8,contactScore:8,total:52,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 1742). Global franchise, 5 agents locally. Would use E&V global tooling.",
+    services:"Luxury Residential, Dubai"},
+  {rank:170,name:"Colliers - Dubai",city:"Dubai",founded:2022,agents:18,agentsLabel:"18",agentsSweet:true,
+    listings:120,avgVal:"AED 3.0M",avgValNum:3000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"colliers.com/ae",linkedin:null,tags:["crm"],
+    sizeFit:23,techGap:8,recency:16,dmAccess:8,contactScore:8,total:63,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 6324). Global brand, Dubai office 18 agents — global tools.",
+    services:"Residential, Commercial, Dubai"},
+  {rank:171,name:"Savills Dubai",city:"Dubai",founded:2004,agents:65,agentsLabel:"65",agentsSweet:false,
+    listings:543,avgVal:"AED 3.0M",avgValNum:3000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"savills.ae",linkedin:null,tags:["crm"],
+    sizeFit:13,techGap:5,recency:5,dmAccess:8,contactScore:8,total:39,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 149). Major global brand, 65 agents — enterprise CRM. Not a target.",
+    services:"Luxury Residential, Commercial, Dubai"},
+  {rank:172,name:"Allsopp & Allsopp",city:"Dubai",founded:2008,agents:226,agentsLabel:"226",agentsSweet:false,
+    listings:2186,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"allsoppandallsopp.com",linkedin:null,tags:["crm"],
+    sizeFit:3,techGap:3,recency:7,dmAccess:8,contactScore:8,total:29,crmRisk:true,
+    note:"Verified active 2026. Merged 9 PF branch profiles (Business Bay, Lettings, Motor City x2, Arabian Ranches, JGE, Springs, Developer, Private Office). One of Dubai's largest — definitely on enterprise CRM.",
+    services:"Full-service, Multi-area, Dubai"},
+  {rank:173,name:"fam Properties",city:"Dubai",founded:2008,agents:308,agentsLabel:"308+",agentsSweet:false,
+    listings:973,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"famproperties.com",linkedin:null,tags:["crm"],
+    sizeFit:3,techGap:3,recency:7,dmAccess:8,contactScore:8,total:29,crmRisk:true,
+    note:"Verified active 2026. Multiple PF branch profiles. Dubai's largest franchise — full enterprise tech stack. Not a target.",
+    services:"Full-service, Multi-area, Dubai"},
+  {rank:174,name:"betterhomes",city:"Dubai",founded:2003,agents:200,agentsLabel:"200+",agentsSweet:false,
+    listings:587,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"bhomes.com",linkedin:null,tags:["crm"],
+    sizeFit:3,techGap:3,recency:5,dmAccess:8,contactScore:8,total:27,crmRisk:true,
+    note:"Verified active 2026. Multiple PF branch profiles (Business Bay + Abu Dhabi). Established enterprise — not a target.",
+    services:"Full-service, Multi-area, Dubai, Abu Dhabi"},
+  {rank:175,name:"Metropolitan Premium Properties",city:"Dubai",founded:2009,agents:171,agentsLabel:"171",agentsSweet:false,
+    listings:2074,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"metropolitan.ae",linkedin:null,tags:["crm"],
+    sizeFit:3,techGap:5,recency:7,dmAccess:8,contactScore:8,total:31,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 918). 171 agents — enterprise scale, not a target.",
+    services:"Residential Sales & Lettings, Dubai, Abu Dhabi"},
+  {rank:176,name:"haus & haus",city:"Dubai",founded:2013,agents:231,agentsLabel:"231",agentsSweet:false,
+    listings:2229,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"hausandhaus.com",linkedin:null,tags:["crm"],
+    sizeFit:3,techGap:3,recency:7,dmAccess:8,contactScore:8,total:29,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 1161). 231 agents — one of Dubai's top brokerages. Enterprise CRM. Not a target.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:177,name:"Driven Properties",city:"Dubai",founded:2009,agents:379,agentsLabel:"379",agentsSweet:false,
+    listings:3724,avgVal:"AED 2.5M",avgValNum:2500000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"drivenproperties.ae",linkedin:null,tags:["crm"],
+    sizeFit:3,techGap:3,recency:7,dmAccess:8,contactScore:8,total:29,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 948). 379 agents — massive enterprise. Not a target.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:178,name:"Provident Real Estate",city:"Dubai",founded:2005,agents:162,agentsLabel:"162",agentsSweet:false,
+    listings:1329,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"provident-estate.com",linkedin:null,tags:["crm"],
+    sizeFit:3,techGap:5,recency:6,dmAccess:8,contactScore:8,total:30,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 336). 162 agents — enterprise scale. Not a target.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:179,name:"Dacha Real Estate",city:"Dubai",founded:2009,agents:120,agentsLabel:"120",agentsSweet:false,
+    listings:1573,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"dacha.ae",linkedin:null,tags:["crm"],
+    sizeFit:8,techGap:8,recency:7,dmAccess:8,contactScore:8,total:39,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 624). 120 agents — large brokerage, enterprise tooling.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:180,name:"Espace Real Estate",city:"Dubai",founded:2009,agents:92,agentsLabel:"92",agentsSweet:false,
+    listings:1087,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"espacedubai.com",linkedin:null,tags:["crm"],
+    sizeFit:8,techGap:8,recency:7,dmAccess:8,contactScore:8,total:39,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 524). 92 agents — large established brokerage. Likely on CRM.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:181,name:"Aeon & Trisl Real Estate",city:"Dubai",founded:2005,agents:97,agentsLabel:"97",agentsSweet:false,
+    listings:931,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"aeonandtrisl.com",linkedin:null,tags:["crm"],
+    sizeFit:8,techGap:8,recency:6,dmAccess:8,contactScore:8,total:38,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 491). 97 agents — enterprise scale. Not a target.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:182,name:"Luxfolio Real Estate",city:"Dubai",founded:2018,agents:88,agentsLabel:"88",agentsSweet:false,
+    listings:1446,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxfolio.ae",linkedin:null,tags:["crm"],
+    sizeFit:8,techGap:8,recency:11,dmAccess:8,contactScore:8,total:43,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 3766). 88 agents — outside sweet spot, likely on CRM.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:183,name:"Huspy Dubai",city:"Dubai",founded:2022,agents:95,agentsLabel:"95",agentsSweet:false,
+    listings:1332,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"huspy.com",linkedin:null,tags:["tech","crm"],
+    sizeFit:8,techGap:3,recency:16,dmAccess:8,contactScore:8,total:43,crmRisk:true,
+    note:"Verified active 2026 on PF (ID 7163). PropTech company — built their own full stack. Not a target.",
+    services:"Residential Sales, PropTech, Dubai"},
+
+  /* ── SMALL / MICRO (below or borderline sweet spot) ── */
+  {rank:184,name:"Blue Palace Real Estate",city:"Dubai",founded:2009,agents:4,agentsLabel:"4",agentsSweet:false,
+    listings:277,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"bluepalace.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:18,recency:7,dmAccess:8,contactScore:8,total:51,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 563). 4 agents, 277 listings — 69 per agent is extremely high. May have some basic feed tooling. Verify before pitching.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:185,name:"Mastermind Real Estate",city:"Dubai",founded:2018,agents:3,agentsLabel:"3",agentsSweet:false,
+    listings:144,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"mastermindre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:20,recency:11,dmAccess:8,contactScore:8,total:57,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3086). 3 agents, 144 listings — very high ratio.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:186,name:"Sea Gate Properties",city:"Dubai",founded:2021,agents:2,agentsLabel:"2",agentsSweet:false,
+    listings:108,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"seagateproperties.ae",linkedin:null,tags:["boutique"],
+    sizeFit:8,techGap:20,recency:15,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5721). Micro-team (2 agents), 108 listings.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:187,name:"DOM NINE PROPERTIES",city:"Dubai",founded:2022,agents:3,agentsLabel:"3",agentsSweet:false,
+    listings:43,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"dom9.ae",linkedin:null,tags:["new","boutique"],
+    sizeFit:10,techGap:19,recency:16,dmAccess:8,contactScore:8,total:61,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 7292). Very new micro-boutique.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:188,name:"Dimension Real Estate Brokers",city:"Abu Dhabi",founded:2016,agents:3,agentsLabel:"3",agentsSweet:false,
+    listings:25,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"dimensionre.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:20,recency:9,dmAccess:8,contactScore:8,total:55,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 2289). Abu Dhabi micro-boutique, 3 agents.",
+    services:"Residential, Abu Dhabi"},
+  {rank:189,name:"Diamond Nest Property Management",city:"Abu Dhabi",founded:2018,agents:3,agentsLabel:"3",agentsSweet:false,
+    listings:15,avgVal:"AED 1.8M",avgValNum:1800000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"diamondnest.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:20,recency:11,dmAccess:8,contactScore:8,total:57,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 3358). Abu Dhabi, property management + sales, 3 agents.",
+    services:"Property Management, Residential, Abu Dhabi"},
+  {rank:190,name:"Four Apple Real Estate",city:"Dubai",founded:2021,agents:2,agentsLabel:"2",agentsSweet:false,
+    listings:38,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"fouraplerealestate.ae",linkedin:null,tags:["boutique"],
+    sizeFit:8,techGap:19,recency:15,dmAccess:8,contactScore:8,total:58,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 5867). Micro-boutique, 2 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:191,name:"Luxury Living Real Estate",city:"Dubai",founded:2020,agents:4,agentsLabel:"4",agentsSweet:false,
+    listings:34,avgVal:"AED 3.0M",avgValNum:3000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"luxurylivingdubai.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:19,recency:14,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4943). Small luxury boutique, 4 agents.",
+    services:"Luxury Residential, Dubai"},
+  {rank:192,name:"California Properties",city:"Dubai",founded:2020,agents:4,agentsLabel:"4",agentsSweet:false,
+    listings:31,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"californiaproperties.ae",linkedin:null,tags:["boutique"],
+    sizeFit:10,techGap:19,recency:14,dmAccess:8,contactScore:8,total:59,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 4608). 4 agents.",
+    services:"Residential Sales & Lettings, Dubai"},
+  {rank:193,name:"Palma Real Estate",city:"Dubai",founded:2009,agents:9,agentsLabel:"9",agentsSweet:true,
+    listings:41,avgVal:"AED 2.0M",avgValNum:2000000,dm:"Unknown",dmTitle:"—",
+    phone:null,email:null,website:"palmaredubai.ae",linkedin:null,tags:[],
+    sizeFit:21,techGap:18,recency:7,dmAccess:8,contactScore:8,total:62,crmRisk:false,
+    note:"Verified active 2026 on PF (ID 505). 9 agents.",
+    services:"Residential Sales & Lettings, Dubai"}
+];
+
+const TAG_LABELS = { new:'🆕 New', boutique:'💎 Boutique', crm:'⚠️ CRM Risk', tech:'🔧 Tech-fwd', emirati:'🇦🇪 Emirati', female:'👩 Female-led' };
+const TAG_CLASS  = { new:'tg-new', boutique:'tg-boutique', crm:'tg-crm', tech:'tg-tech', emirati:'tg-emirati', female:'tg-female' };
+
+function tier(s) { return s>=80?'A':s>=60?'B':s>=40?'C':'D'; }
+function tierLabel(t) { return {A:'🟢 Hot',B:'🟡 Warm',C:'🟠 Lukewarm',D:'🔴 Poor Fit'}[t]; }
+function tierClass(t) { return `tb-${t}`; }
+
+// sort state
+let sortKey = 'total', sortDir = -1, activeChip = null, selectedName = null;
+
+function sort(key) {
+  if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = key === 'name' || key === 'city' ? 1 : -1; }
+  document.querySelectorAll('th').forEach(th => { th.classList.remove('asc','desc'); });
+  const th = document.querySelector(`th[data-col="${key}"]`);
+  if (th) th.classList.add(sortDir === 1 ? 'asc' : 'desc');
+  render();
+}
+
+function toggleChip(tag) {
+  activeChip = activeChip === tag ? null : tag;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  if (activeChip) document.getElementById(`chip-${activeChip}`)?.classList.add('on');
+  render();
+}
+
+function scoreBar(val, max, cls) {
+  const pct = Math.round(val / max * 100);
+  return `<div class="sc"><span class="sc-num" style="color:var(--subtle)">${val}</span><div class="sc-bar"><div class="sc-fill ${cls}" style="width:${pct}%"></div></div></div>`;
+}
+
+function render() {
+  const q = document.getElementById('srch').value.toLowerCase();
+  const fc = document.getElementById('f-city').value;
+  const ft = document.getElementById('f-tier').value;
+
+  let rows = DATA.filter(a => {
+    if (fc && a.city !== fc) return false;
+    if (ft && tier(a.total) !== ft) return false;
+    if (activeChip === 'crm' && !a.crmRisk) return false;
+    if (activeChip && activeChip !== 'crm' && !a.tags.includes(activeChip)) return false;
+    if (q) {
+      const hay = [a.name, a.city, a.dm, a.email||'', a.phone||'', a.website, ...a.tags].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const cmpMap = {
+    rank:(a,b)=>a.rank-b.rank, name:(a,b)=>a.name.localeCompare(b.name),
+    city:(a,b)=>a.city.localeCompare(b.city), founded:(a,b)=>a.founded-b.founded,
+    agents:(a,b)=>a.agents-b.agents, listings:(a,b)=>a.listings-b.listings,
+    avgValNum:(a,b)=>a.avgValNum-b.avgValNum,
+    sizeFit:(a,b)=>a.sizeFit-b.sizeFit, techGap:(a,b)=>a.techGap-b.techGap,
+    recency:(a,b)=>a.recency-b.recency, dmAccess:(a,b)=>a.dmAccess-b.dmAccess,
+    contactScore:(a,b)=>a.contactScore-b.contactScore,
+    total:(a,b)=>a.total-b.total, tier:(a,b)=>tier(a.total).localeCompare(tier(b.total))
+  };
+  if (cmpMap[sortKey]) rows.sort((a,b) => cmpMap[sortKey](a,b) * sortDir);
+
+  // Update KPIs
+  const all = DATA;
+  document.getElementById('kpi-tot').textContent = rows.length;
+  document.getElementById('kpi-a').textContent = all.filter(a=>tier(a.total)==='A').length;
+  document.getElementById('kpi-b').textContent = all.filter(a=>tier(a.total)==='B').length;
+  document.getElementById('kpi-avg').textContent = Math.round(all.reduce((s,a)=>s+a.total,0)/all.length);
+  document.getElementById('rcount').textContent = `${rows.length} of ${DATA.length} agencies`;
+
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
+  rows.forEach((a, i) => {
+    const t = tier(a.total);
+    const isSelected = selectedName === a.name;
+    const hasMail = a.email && a.email !== 'N/A';
+    const hasPhone = a.phone && a.phone !== 'N/A';
+    const hasLinkedIn = !!a.linkedin;
+
+    const tagsHtml = a.tags.map(tg => `<span class="tag ${TAG_CLASS[tg]||''}">${TAG_LABELS[tg]||tg}</span>`).join('');
+
+    const tr = document.createElement('tr');
+    tr.className = 'row' + (isSelected ? ' selected' : '');
+    tr.onclick = () => openDrawer(a);
+    tr.innerHTML = `
+      <td><span class="rank-num">${i+1}</span></td>
+      <td>
+        <div class="agency-name">${a.name}</div>
+        <div class="agency-meta"><a href="https://${a.website}" target="_blank" onclick="e=>e.stopPropagation()" style="color:var(--muted);text-decoration:none">${a.website}</a></div>
+      </td>
+      <td><span class="city-tag">${a.city}</span></td>
+      <td><span class="founded-tag">${a.founded}</span></td>
+      <td><span class="ab${a.agentsSweet?' sweet':''}">${a.agentsLabel}</span></td>
+      <td style="color:var(--subtle)">${a.listings.toLocaleString()}+</td>
+      <td style="color:var(--subtle);white-space:nowrap">${a.avgVal}</td>
+      <td>${scoreBar(a.sizeFit,25,'c-size')}</td>
+      <td>${scoreBar(a.techGap,25,'c-tech')}</td>
+      <td>${scoreBar(a.recency,20,'c-rec')}</td>
+      <td>${scoreBar(a.dmAccess,15,'c-dm')}</td>
+      <td>${scoreBar(a.contactScore,15,'c-cont')}</td>
+      <td>
+        <div class="total-cell">
+          <span class="total-num t-${t}">${a.total}</span>
+          <div class="total-bar-wrap"><div class="total-bar"><div class="total-fill fill-${t}" style="width:${a.total}%"></div></div></div>
+        </div>
+      </td>
+      <td><span class="tb tb-${t}">${tierLabel(t)}</span></td>
+      <td>
+        <div class="contact-dots">
+          <span class="dot ${hasMail?'dot-y':'dot-n'}" title="${hasMail?a.email:'No email'}"></span>
+          <span style="font-size:10px;color:var(--muted)">Mail</span>
+          <span class="dot ${hasPhone?'dot-y':'dot-n'}" style="margin-left:6px" title="${hasPhone?a.phone:'No phone'}"></span>
+          <span style="font-size:10px;color:var(--muted)">Ph</span>
+          <span class="dot ${hasLinkedIn?'dot-y':'dot-n'}" style="margin-left:6px;background:${hasLinkedIn?'#3b82f6':''}"></span>
+          <span style="font-size:10px;color:var(--muted)">Li</span>
+        </div>
+      </td>
+      <td>${tagsHtml}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openDrawer(a) {
+  selectedName = a.name;
+  render(); // re-highlight selected row
+
+  const t = tier(a.total);
+
+  // Header
+  document.getElementById('d-tier').innerHTML = `<span class="tb tb-${t}">${tierLabel(t)}</span>`;
+  document.getElementById('d-name').textContent = a.name;
+  document.getElementById('d-sub').textContent = `${a.city} · Est. ${a.founded} · ${a.agentsLabel} agents · ${a.website}`;
+
+  // Score hero
+  const scoreEl = document.getElementById('d-score-big');
+  scoreEl.textContent = a.total;
+  scoreEl.className = `score-big t-${t}`;
+
+  const setBar = (id, val, max) => {
+    document.getElementById(`db-${id}`).style.width = `${val/max*100}%`;
+    document.getElementById(`ds-${id}`).textContent = `${val}/${max}`;
+  };
+  setBar('size', a.sizeFit, 25);
+  setBar('tech', a.techGap, 25);
+  setBar('rec',  a.recency, 20);
+  setBar('dm',   a.dmAccess, 15);
+  setBar('cont', a.contactScore, 15);
+
+  // Contacts
+  const hasMail  = a.email && a.email !== 'N/A';
+  const hasPhone = a.phone && a.phone !== 'N/A';
+  const hasLI    = !!a.linkedin;
+  document.getElementById('d-contacts').innerHTML = `
+    <div class="contact-row">
+      <span class="contact-icon">✉️</span>
+      <span class="contact-text ${hasMail?'found':'na'}">${hasMail?`<a href="mailto:${a.email}">${a.email}</a>`:'Not found — try website contact form'}</span>
+    </div>
+    <div class="contact-row">
+      <span class="contact-icon">📞</span>
+      <span class="contact-text ${hasPhone?'found':'na'}">${hasPhone?`<a href="tel:${a.phone}">${a.phone}</a>`:'Not found'}</span>
+    </div>
+    <div class="contact-row">
+      <span class="contact-icon" style="color:#3b82f6">in</span>
+      <span class="contact-text ${hasLI?'found':'na'}">${hasLI?`<a href="https://${a.linkedin}" target="_blank">${a.linkedin}</a>`:'No LinkedIn found'}</span>
+    </div>
+    <div class="contact-row">
+      <span class="contact-icon">🌐</span>
+      <span class="contact-text found"><a href="https://${a.website}" target="_blank">${a.website}</a></span>
+    </div>
+  `;
+
+  // Profile grid
+  document.getElementById('d-profile').innerHTML = `
+    <div class="d-field"><label>City</label><p>${a.city}</p></div>
+    <div class="d-field"><label>Founded</label><p>${a.founded}</p></div>
+    <div class="d-field"><label>Est. Agents</label><p>${a.agentsLabel}</p></div>
+    <div class="d-field"><label>Est. Active Listings</label><p>${a.listings.toLocaleString()}+</p></div>
+    <div class="d-field"><label>Avg. Property Value</label><p>${a.avgVal}</p></div>
+    <div class="d-field"><label>ICP Size Fit</label><p>${a.agentsSweet ? '✅ In sweet spot (5–50)' : '⚠️ Outside sweet spot'}</p></div>
+  `;
+
+  // DM
+  const hasDM = a.dm && a.dm !== 'Unknown';
+  document.getElementById('d-dm').innerHTML = `
+    <div class="d-field"><label>Name</label><p ${!hasDM?'class="na"':''}>${hasDM?a.dm:'Not identified'}</p></div>
+    <div class="d-field"><label>Title</label><p ${!hasDM?'class="na"':''}>${hasDM&&a.dmTitle!=='—'?a.dmTitle:'—'}</p></div>
+  `;
+
+  // CRM risk
+  document.getElementById('d-crm').innerHTML = `
+    <div class="crm-alert ${a.crmRisk?'crm-risk':'crm-ok'}">
+      ${a.crmRisk
+        ? '⚠️ <strong>CRM Displacement Risk: HIGH</strong> — This agency likely already has a CRM with portal feed. Pitch ListingLaunch as a copy quality layer or confirm their setup before the XML feed conversation.'
+        : '✅ <strong>CRM Displacement Risk: LOW</strong> — Likely still on manual uploads or Profolio. ListingLaunch would be the first automation they add, not a replacement — ideal positioning.'}
+    </div>
+  `;
+
+  // Tags
+  document.getElementById('d-tags').innerHTML = a.tags.length
+    ? a.tags.map(tg=>`<span class="tag ${TAG_CLASS[tg]||''}" style="font-size:12px;padding:4px 10px">${TAG_LABELS[tg]||tg}</span>`).join('')
+    : '<span style="color:var(--muted);font-size:13px">No special tags</span>';
+
+  document.getElementById('d-note').textContent = a.note;
+  document.getElementById('d-services').textContent = a.services;
+
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function closeDrawer() {
+  selectedName = null;
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('drawer').classList.remove('open');
+  document.querySelectorAll('tr.row.selected').forEach(r => r.classList.remove('selected'));
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+// Init — default sort by total desc
+document.querySelector('th[data-col="total"]').classList.add('desc');
+render();
+</script>
+</body>
+</html>

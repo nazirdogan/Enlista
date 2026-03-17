@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ListingsLaunch — Deep Ocean</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#020D1C;--surface:#061628;--teal:#00CED1;--teal-dim:#004A4D;--amber:#FFB347;--white:#EAF2F8;--muted:#3A5A72;--border:#0A2238;--mid:#5A8099;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;font-size:15px;line-height:1.8;overflow-x:hidden;}
+  .rozha{font-family:'Rozha One',serif;}
+
+  /* Ocean depth gradient bg */
+  body::before{content:'';position:fixed;inset:0;background:
+    radial-gradient(ellipse 120% 80% at 80% 20%,rgba(0,206,209,0.07) 0%,transparent 50%),
+    radial-gradient(ellipse 80% 60% at 20% 80%,rgba(255,179,71,0.04) 0%,transparent 50%),
+    linear-gradient(180deg,#020D1C 0%,#041420 100%);
+    pointer-events:none;z-index:0;}
+
+  nav{background:rgba(2,13,28,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:fixed;top:0;left:0;right:0;z-index:50;}
+
+  /* Orbs */
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.1);opacity:0.8;}}
+  .orb{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;}
+  .orb-teal{background:rgba(0,206,209,0.15);animation:pulse 6s ease-in-out infinite;}
+  .orb-amber{background:rgba(255,179,71,0.08);animation:pulse 8s ease-in-out infinite 2s;}
+
+  .btn-teal{display:inline-block;background:var(--teal);color:var(--bg);padding:13px 36px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:14px;letter-spacing:0.04em;text-decoration:none;border-radius:40px;transition:all 0.3s;border:1.5px solid var(--teal);}
+  .btn-teal:hover{background:transparent;color:var(--teal);box-shadow:0 0 40px rgba(0,206,209,0.3);}
+  .btn-ghost{display:inline-block;border:1.5px solid rgba(0,206,209,0.3);color:var(--teal);padding:12px 32px;font-family:'DM Sans',sans-serif;font-weight:400;font-size:14px;letter-spacing:0.04em;text-decoration:none;border-radius:40px;transition:all 0.3s;}
+  .btn-ghost:hover{border-color:var(--teal);background:rgba(0,206,209,0.05);}
+
+  /* Alternating features */
+  .feat-alt{display:grid;gap:0;align-items:center;padding:72px 0;border-bottom:1px solid var(--border);}
+  @media(min-width:768px){.feat-alt{grid-template-columns:1fr 1fr;gap:80px;}}
+  .feat-alt:last-child{border-bottom:none;}
+  .feat-alt.rev{direction:rtl;}
+  .feat-alt.rev > *{direction:ltr;}
+
+  /* Floating card */
+  .float-card{background:rgba(6,22,40,0.8);border:1px solid rgba(0,206,209,0.15);backdrop-filter:blur(20px);border-radius:16px;padding:32px;box-shadow:0 32px 80px rgba(0,0,0,0.5);}
+  .float-card:hover{border-color:rgba(0,206,209,0.35);box-shadow:0 32px 80px rgba(0,0,0,0.5),0 0 60px rgba(0,206,209,0.06);}
+
+  /* Glowing number */
+  .glow-num{font-family:'Rozha One',serif;font-size:clamp(80px,12vw,160px);line-height:1;color:rgba(0,206,209,0.08);position:absolute;pointer-events:none;letter-spacing:-0.02em;}
+
+  /* Testimonials: horizontal cards with teal left border */
+  .testi-card{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:36px;border-left:3px solid var(--teal);transition:all 0.3s;}
+  .testi-card:hover{border-color:rgba(0,206,209,0.4);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+
+  /* Pricing cards with amber highlight */
+  .price-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:48px 40px;transition:all 0.4s;}
+  .price-card:hover{border-color:rgba(0,206,209,0.25);transform:translateY(-4px);}
+  .price-card.featured{background:linear-gradient(135deg,rgba(0,206,209,0.08),rgba(0,206,209,0.03));border-color:rgba(0,206,209,0.4);box-shadow:0 0 80px rgba(0,206,209,0.08);}
+  .price-num{font-family:'Rozha One',serif;font-size:64px;line-height:1;color:var(--white);}
+  .price-card.featured .price-num{color:var(--teal);}
+  .p-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--mid);}
+  .p-row.on{color:var(--white);}
+  .p-row.on::before{content:'✓';color:var(--teal);font-size:12px;flex-shrink:0;width:16px;}
+  .p-row:not(.on)::before{content:'–';color:var(--border);font-size:12px;flex-shrink:0;width:16px;}
+  .p-row:last-child{border-bottom:none;}
+
+  input{background:rgba(6,22,40,0.6);border:1px solid var(--border);color:var(--white);padding:14px 20px;font-family:'DM Sans',sans-serif;font-size:14px;border-radius:8px;outline:none;width:100%;transition:border-color 0.3s;backdrop-filter:blur(10px);}
+  input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,206,209,0.1);}
+  input::placeholder{color:var(--muted);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+  .au{animation:fadeUp 0.9s ease both;}
+  .au-1{animation-delay:0.05s;}.au-2{animation-delay:0.2s;}.au-3{animation-delay:0.4s;}.au-4{animation-delay:0.6s;}
+
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+  .float-anim{animation:float 5s ease-in-out infinite;}
+
+  .teal-text{color:var(--teal);}
+  .amber-text{color:var(--amber);}
+</style>
+</head>
+<body>
+
+<nav class="px-8 py-4 flex justify-between items-center" style="position:fixed;top:0;left:0;right:0;z-index:50;">
+  <div class="rozha" style="font-size:22px;letter-spacing:0.02em;color:var(--white);">
+    Listings<span class="teal-text">Launch</span>
+  </div>
+  <div class="hidden md:flex gap-10" style="font-size:13px;letter-spacing:0.05em;color:var(--muted);">
+    <a href="#features" style="transition:color 0.3s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Platform</a>
+    <a href="#testimonials" style="transition:color 0.3s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Clients</a>
+    <a href="#pricing" style="transition:color 0.3s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
+  </div>
+  <a href="#cta" class="btn-teal" style="font-size:13px;padding:10px 24px;">Start Free</a>
+</nav>
+
+<!-- Hero: centered immersive -->
+<section style="position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 32px 80px;z-index:1;overflow:hidden;">
+  <div class="orb orb-teal" style="width:600px;height:600px;top:-100px;right:-100px;"></div>
+  <div class="orb orb-amber" style="width:400px;height:400px;bottom:0;left:-100px;"></div>
+  <div style="position:relative;z-index:1;max-width:800px;">
+    <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,206,209,0.2);padding:6px 16px;border-radius:40px;margin-bottom:32px;background:rgba(0,206,209,0.05);" class="au au-1">
+      <span style="width:6px;height:6px;background:var(--teal);border-radius:50%;box-shadow:0 0 10px var(--teal);"></span>
+      <span style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);">UAE Real Estate Platform</span>
+    </div>
+    <h1 class="rozha au au-2" style="font-size:clamp(52px,8vw,110px);line-height:1.02;color:var(--white);margin-bottom:24px;">
+      The depth<br/>your listings<br/><span class="teal-text">deserve.</span>
+    </h1>
+    <p class="au au-3" style="font-size:18px;line-height:1.8;color:var(--mid);max-width:540px;margin:0 auto 48px;">
+      AI-powered listing management for Dubai, Abu Dhabi, and Sharjah agencies. Publish to every portal. Qualify every lead. Stay RERA compliant — from one serene dashboard.
+    </p>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:64px;" class="au au-4">
+      <a href="#cta" class="btn-teal">Start 14-day Trial</a>
+      <a href="#features" class="btn-ghost">Explore Platform</a>
+    </div>
+    <!-- Floating stat pills -->
+    <div class="au au-4" style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <div style="background:rgba(6,22,40,0.7);border:1px solid var(--border);border-radius:40px;padding:10px 24px;backdrop-filter:blur(10px);">
+        <span class="rozha" style="color:var(--teal);font-size:22px;">840</span>
+        <span style="font-size:12px;color:var(--muted);margin-left:8px;">UAE Agencies</span>
+      </div>
+      <div style="background:rgba(6,22,40,0.7);border:1px solid var(--border);border-radius:40px;padding:10px 24px;backdrop-filter:blur(10px);">
+        <span class="rozha" style="color:var(--teal);font-size:22px;">124K</span>
+        <span style="font-size:12px;color:var(--muted);margin-left:8px;">Listings Managed</span>
+      </div>
+      <div style="background:rgba(6,22,40,0.7);border:1px solid var(--border);border-radius:40px;padding:10px 24px;backdrop-filter:blur(10px);">
+        <span class="rozha" style="color:var(--amber);font-size:22px;">&lt;4m</span>
+        <span style="font-size:12px;color:var(--muted);margin-left:8px;">To Publish</span>
+      </div>
+      <div style="background:rgba(6,22,40,0.7);border:1px solid var(--border);border-radius:40px;padding:10px 24px;backdrop-filter:blur(10px);">
+        <span class="rozha" style="color:var(--teal);font-size:22px;">99.9%</span>
+        <span style="font-size:12px;color:var(--muted);margin-left:8px;">Uptime SLA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features: alternating left/right -->
+<section id="features" style="padding:80px 48px;z-index:1;position:relative;max-width:1200px;margin:0 auto;">
+  <div style="text-align:center;margin-bottom:80px;">
+    <p style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;">Platform</p>
+    <h2 class="rozha" style="font-size:clamp(36px,5vw,64px);color:var(--white);">Six systems.<br/><span class="teal-text">Infinitely capable.</span></h2>
+  </div>
+  <div>
+    <div class="feat-alt">
+      <div style="position:relative;">
+        <div class="glow-num">01</div>
+        <div style="position:relative;z-index:1;">
+          <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">Module 01</p>
+          <h3 class="rozha" style="font-size:40px;color:var(--white);margin-bottom:16px;">AI Copy Engine</h3>
+          <p style="color:var(--mid);font-size:15px;line-height:1.9;max-width:480px;">Bilingual listing descriptions in English and Arabic — generated in seconds. Trained on UAE property data and tuned to Bayut, Property Finder, and Dubizzle's SEO algorithms.</p>
+        </div>
+      </div>
+      <div class="float-card float-anim">
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">AI Output Preview</p>
+        <p style="color:var(--white);font-size:15px;line-height:1.8;font-style:italic;">"An exceptional 4-bedroom villa on the Palm Jumeirah, offering breathtaking sea views and private beach access. Meticulously finished to the highest standard…"</p>
+        <div style="margin-top:20px;display:flex;justify-content:space-between;"><span style="font-size:12px;color:var(--teal);">EN Generated ✓</span><span style="font-size:12px;color:var(--teal);">AR Generated ✓</span><span style="font-size:12px;color:var(--muted);">3.2s</span></div>
+      </div>
+    </div>
+    <div class="feat-alt rev">
+      <div style="position:relative;">
+        <div class="glow-num" style="right:0;left:auto;">02</div>
+        <div style="position:relative;z-index:1;">
+          <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">Module 02</p>
+          <h3 class="rozha" style="font-size:40px;color:var(--white);margin-bottom:16px;">Portal Sync</h3>
+          <p style="color:var(--mid);font-size:15px;line-height:1.9;max-width:480px;">One-click broadcast to every UAE real estate portal simultaneously. Bayut, Property Finder, Dubizzle, Houza — all updated in under four minutes. No manual re-entry, ever.</p>
+        </div>
+      </div>
+      <div class="float-card" style="animation-delay:1s;animation:float 5s ease-in-out 1s infinite;">
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Portal Status</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;">Bayut</span><span style="color:var(--teal);font-size:13px;">● Synced · 2m ago</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;">Property Finder</span><span style="color:var(--teal);font-size:13px;">● Synced · 2m ago</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;">Dubizzle</span><span style="color:var(--teal);font-size:13px;">● Synced · 3m ago</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;">Houza</span><span style="color:var(--teal);font-size:13px;">● Synced · 3m ago</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="feat-alt">
+      <div style="position:relative;">
+        <div class="glow-num">03</div>
+        <div style="position:relative;z-index:1;">
+          <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;">Module 03</p>
+          <h3 class="rozha" style="font-size:40px;color:var(--white);margin-bottom:16px;">Lead Intelligence</h3>
+          <p style="color:var(--mid);font-size:15px;line-height:1.9;max-width:480px;">ML-ranked buyer intent scoring from every enquiry channel. WhatsApp qualification in Arabic and English, 24/7. Your agents always know who to call first.</p>
+        </div>
+      </div>
+      <div class="float-card" style="animation:float 6s ease-in-out 2s infinite;">
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Lead Pipeline Today</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;">Hot Leads</span><span class="amber-text font-medium" style="font-size:13px;">34</span></div><div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;width:82%;background:var(--amber);border-radius:2px;box-shadow:0 0 8px rgba(255,179,71,0.5);"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;">Qualified</span><span class="teal-text font-medium" style="font-size:13px;">128</span></div><div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;width:55%;background:var(--teal);border-radius:2px;box-shadow:0 0 8px rgba(0,206,209,0.4);"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;">New</span><span style="font-size:13px;color:var(--muted);">247</span></div><div style="height:4px;background:var(--border);border-radius:2px;"><div style="height:100%;width:100%;background:var(--border);border-radius:2px;"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="feat-alt rev" style="border-bottom:none;">
+      <div style="position:relative;">
+        <div class="glow-num" style="right:0;left:auto;">04</div>
+        <div style="position:relative;z-index:1;">
+          <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">Module 04–06</p>
+          <h3 class="rozha" style="font-size:40px;color:var(--white);margin-bottom:16px;">Compliance, Data & Photos</h3>
+          <p style="color:var(--mid);font-size:15px;line-height:1.9;max-width:480px;">Real-time RERA permit validation. Live DLD transaction benchmarks. AI-enhanced photography. Three more systems ensuring your listings are always compliant, priced correctly, and immaculate.</p>
+        </div>
+      </div>
+      <div class="float-card" style="animation:float 7s ease-in-out 3s infinite;">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:14px;background:rgba(0,206,209,0.06);border-radius:8px;border:1px solid rgba(0,206,209,0.15);"><span style="font-size:20px;">🛡️</span><div><p style="font-size:13px;font-weight:500;">RERA Permit Validated</p><p style="font-size:12px;color:var(--muted);">DLD No. 3847291 — Active</p></div></div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px;background:rgba(255,179,71,0.06);border-radius:8px;border:1px solid rgba(255,179,71,0.15);"><span style="font-size:20px;">📊</span><div><p style="font-size:13px;font-weight:500;">Market Benchmark</p><p style="font-size:12px;color:var(--muted);">Downtown Dubai · AED 2,847/sqft avg</p></div></div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px;background:rgba(0,206,209,0.06);border-radius:8px;border:1px solid rgba(0,206,209,0.15);"><span style="font-size:20px;">📸</span><div><p style="font-size:13px;font-weight:500;">8 Photos Enhanced</p><p style="font-size:12px;color:var(--muted);">Portal-optimised · Watermarked</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" style="padding:80px 48px;border-top:1px solid var(--border);position:relative;z-index:1;">
+  <div class="max-w-6xl mx-auto">
+    <div style="text-align:center;margin-bottom:64px;">
+      <p style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;">Client Voice</p>
+      <h2 class="rozha" style="font-size:clamp(32px,5vw,60px);color:var(--white);">Trusted across the UAE.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+      <div class="testi-card">
+        <p style="font-size:17px;line-height:1.8;color:var(--white);margin-bottom:24px;font-style:italic;">"Two days to four minutes. That is not a feature. That is a transformation of our entire operation."</p>
+        <div style="border-top:1px solid var(--border);padding-top:16px;"><p style="font-size:13px;color:var(--white);">Sarah Al Mansoori</p><p style="font-size:12px;color:var(--muted);">Head of Operations · Espace Real Estate, Dubai</p></div>
+      </div>
+      <div class="testi-card">
+        <p style="font-size:17px;line-height:1.8;color:var(--white);margin-bottom:24px;font-style:italic;">"Palm Jumeirah listings that convert at 3× the rate. The AI understands luxury property better than I expected."</p>
+        <div style="border-top:1px solid var(--border);padding-top:16px;"><p style="font-size:13px;color:var(--white);">James Whitfield</p><p style="font-size:12px;color:var(--muted);">Managing Director · Allsopp & Allsopp</p></div>
+      </div>
+      <div class="testi-card" style="border-left-color:var(--amber);">
+        <p style="font-size:17px;line-height:1.8;color:var(--white);margin-bottom:24px;font-style:italic;">"Not a single RERA suspension since we signed up. The compliance engine is something I can actually trust."</p>
+        <div style="border-top:1px solid var(--border);padding-top:16px;"><p style="font-size:13px;color:var(--white);">Fatima Al Hashimi</p><p style="font-size:12px;color:var(--muted);">Compliance Director · Dubai</p></div>
+      </div>
+      <div class="testi-card">
+        <p style="font-size:17px;line-height:1.8;color:var(--white);margin-bottom:24px;font-style:italic;">"600 listings, 4 portals, one platform. We grew 40% without adding a single operations coordinator."</p>
+        <div style="border-top:1px solid var(--border);padding-top:16px;"><p style="font-size:13px;color:var(--white);">Ravi Menon</p><p style="font-size:12px;color:var(--muted);">CEO · Metropolitan Premium Properties</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" style="padding:80px 48px;border-top:1px solid var(--border);position:relative;z-index:1;">
+  <div class="max-w-5xl mx-auto">
+    <div style="text-align:center;margin-bottom:64px;">
+      <p style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;">Pricing</p>
+      <h2 class="rozha" style="font-size:clamp(32px,5vw,60px);color:var(--white);">Clear pricing.<br/><span class="teal-text">No surprises.</span></h2>
+      <p style="color:var(--muted);margin-top:12px;">All plans in AED. 14-day free trial. Cancel anytime.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+      <div class="price-card">
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Starter</p>
+        <div class="price-num">299</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:32px;margin-top:4px;">AED / month</p>
+        <div style="margin-bottom:32px;">
+          <div class="p-row on">50 active listings</div>
+          <div class="p-row on">3 portal integrations</div>
+          <div class="p-row on">AI copy — English</div>
+          <div class="p-row on">Basic analytics</div>
+          <div class="p-row">Lead scoring</div>
+          <div class="p-row">WhatsApp bot</div>
+        </div>
+        <a href="#cta" class="btn-ghost" style="display:block;text-align:center;font-size:13px;padding:12px;">Get Started</a>
+      </div>
+      <div class="price-card featured">
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:20px;">Professional</p>
+        <div class="price-num">799</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:32px;margin-top:4px;">AED / month · Most popular</p>
+        <div style="margin-bottom:32px;">
+          <div class="p-row on">200 active listings</div>
+          <div class="p-row on">All portals</div>
+          <div class="p-row on">AI copy — EN + AR</div>
+          <div class="p-row on">Advanced analytics</div>
+          <div class="p-row on">Lead scoring</div>
+          <div class="p-row on">WhatsApp bot</div>
+          <div class="p-row on">RERA compliance</div>
+        </div>
+        <a href="#cta" class="btn-teal" style="display:block;text-align:center;font-size:13px;">Get Started</a>
+      </div>
+      <div class="price-card">
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Enterprise</p>
+        <div class="price-num">1,999</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:32px;margin-top:4px;">AED / month</p>
+        <div style="margin-bottom:32px;">
+          <div class="p-row on">Unlimited listings</div>
+          <div class="p-row on">Custom integrations</div>
+          <div class="p-row on">Full AI suite</div>
+          <div class="p-row on">Market analytics</div>
+          <div class="p-row on">Dedicated manager</div>
+          <div class="p-row on">API + SLA</div>
+        </div>
+        <a href="#cta" class="btn-ghost" style="display:block;text-align:center;font-size:13px;padding:12px;">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" style="padding:80px 48px;border-top:1px solid var(--border);position:relative;z-index:1;">
+  <div style="max-width:560px;margin:0 auto;text-align:center;">
+    <div class="orb orb-teal" style="width:300px;height:300px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.4;"></div>
+    <div style="position:relative;z-index:1;">
+      <p style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;">Begin</p>
+      <h2 class="rozha" style="font-size:clamp(36px,6vw,72px);color:var(--white);margin-bottom:16px;">Your first listing<br/><span class="teal-text">goes live today.</span></h2>
+      <p style="color:var(--muted);margin-bottom:48px;">14-day free trial. No credit card. UAE support team online 09:00–21:00 GST.</p>
+      <form style="display:flex;flex-direction:column;gap:12px;" onsubmit="return false;">
+        <input type="email" placeholder="Agency email address"/>
+        <input type="text" placeholder="Agency name"/>
+        <button type="submit" class="btn-teal" style="width:100%;display:block;cursor:pointer;border:none;font-size:14px;padding:15px;border-radius:40px;">Start Free Trial →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer style="border-top:1px solid var(--border);background:var(--surface);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:relative;z-index:1;">
+  <span class="rozha" style="font-size:18px;color:var(--white);">Listings<span class="teal-text">Launch</span></span>
+  <span style="color:var(--muted);font-size:12px;">© 2026 · Dubai, UAE</span>
+</footer>
+</body>
+</html>

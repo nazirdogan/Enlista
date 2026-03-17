@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enlista — Logo Explorations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.woff2') format('woff2'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.woff') format('woff'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-Variable.ttf') format('truetype');
+      font-weight: 300 900;
+      font-display: swap;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-VariableItalic.woff2') format('woff2'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-VariableItalic.woff') format('woff'),
+           url('../Satoshi_Complete/Fonts/WEB/fonts/Satoshi-VariableItalic.ttf') format('truetype');
+      font-weight: 300 900;
+      font-display: swap;
+      font-style: italic;
+    }
+  </style>
+
+  <style>
+    :root {
+      --ink:   #0E1F38;
+      --gold:  #C9A452;
+      --gold-l:#E8C97A;
+      --warm:  #F8F5F0;
+      --warm2: #EDE8DF;
+      --muted: #64748B;
+      --teal:  #0B4D57;
+      --mint:  #1EC99E;
+      --border:#2A3A52;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background: #080F1C;
+      color: var(--warm);
+      min-height: 100vh;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 80px 64px 56px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -80px;
+      width: 500px; height: 500px;
+      background: radial-gradient(ellipse, rgba(201,164,82,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .header-eyebrow {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-eyebrow::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--gold);
+      display: block;
+    }
+
+    .page-header h1 {
+      font-size: 60px;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 0.95;
+      color: var(--warm);
+    }
+    .page-header h1 em { font-style: normal; color: var(--gold); }
+
+    .header-meta {
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(248,245,240,0.35);
+      line-height: 1.75;
+      max-width: 400px;
+      font-weight: 400;
+    }
+
+    .toggle-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .toggle-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(248,245,240,0.25);
+    }
+    .toggle-btns {
+      display: flex;
+      background: rgba(255,255,255,0.05);
+      border-radius: 100px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .tbtn {
+      padding: 8px 22px;
+      border-radius: 100px;
+      border: none;
+      background: transparent;
+      color: rgba(248,245,240,0.35);
+      font-family: 'Satoshi', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .tbtn.active { background: var(--gold); color: var(--ink); }
+
+    /* ── GRID ── */
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+    }
+    @media (max-width: 1100px) { .logo-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 640px)  { .logo-grid { grid-template-columns: 1fr; } }
+
+    .logo-card {
+      background: #080F1C;
+      padding: 44px 40px 38px;
+      display: flex;
+      flex-direction: column;
+      animation: fadeUp 0.55s ease both;
+      transition: background 0.2s;
+    }
+    .logo-card:hover { background: #0c1525; }
+    .logo-card:nth-child(1)  { animation-delay: 0.04s; }
+    .logo-card:nth-child(2)  { animation-delay: 0.09s; }
+    .logo-card:nth-child(3)  { animation-delay: 0.14s; }
+    .logo-card:nth-child(4)  { animation-delay: 0.19s; }
+    .logo-card:nth-child(5)  { animation-delay: 0.24s; }
+    .logo-card:nth-child(6)  { animation-delay: 0.29s; }
+    .logo-card:nth-child(7)  { animation-delay: 0.34s; }
+    .logo-card:nth-child(8)  { animation-delay: 0.39s; }
+    .logo-card:nth-child(9)  { animation-delay: 0.44s; }
+    .logo-card:nth-child(10) { animation-delay: 0.49s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-num {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(201,164,82,0.4);
+      margin-bottom: 32px;
+    }
+
+    .logo-stage {
+      flex: 1;
+      min-height: 140px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 28px;
+      margin-bottom: 28px;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .stage-dark  { background: rgba(255,255,255,0.025); }
+    .stage-ink   { background: var(--ink); }
+    .stage-warm  { background: var(--warm2); }
+    .stage-gold  { background: var(--gold); }
+    .stage-teal  { background: var(--teal); }
+    .stage-black { background: #000; }
+    .stage-mid   { background: #141E2E; }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--warm);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .card-desc {
+      font-size: 11.5px;
+      color: rgba(248,245,240,0.3);
+      line-height: 1.7;
+    }
+
+    /* ════════════════════════════════════
+       LOGO DEFINITIONS
+    ════════════════════════════════════ */
+
+    /* ── 01  Slash Wordmark ── */
+    /* "Enlist" in regular weight + forward slash in gold + "a" in light weight
+       Conceptual: the slash represents speed, a cut through the process */
+    .l01 {
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+    }
+    .l01-enlist {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--warm);
+      line-height: 1;
+    }
+    .l01-slash {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: -0.08em;
+      line-height: 1;
+      margin: 0 2px;
+    }
+    .l01-a {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 42px;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      color: rgba(248,245,240,0.55);
+      line-height: 1;
+      font-style: italic;
+    }
+    .stage-warm .l01-enlist { color: var(--ink); }
+    .stage-warm .l01-a { color: rgba(14,31,56,0.45); }
+
+    /* ── 02  Property Pin "i" ── */
+    /* The dot on the "i" is replaced by a gold map-pin teardrop
+       The wordmark is otherwise clean; the surprise is in that single glyph */
+    .l02 {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--warm);
+      line-height: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      position: relative;
+    }
+    .l02-pre  { color: var(--warm); }
+    .l02-i {
+      position: relative;
+      color: var(--warm);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .l02-pin {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      top: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .l02-post { color: var(--warm); }
+
+    /* ── 03  Brutalist Stack ── */
+    /* "EN" in huge condensed gold, ruled off, "LISTA" in spaced-out thin caps below
+       Two weights, two scales — pure typographic contrast */
+    .l03 {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .l03-en {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 80px;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      color: var(--gold);
+      line-height: 0.85;
+    }
+    .l03-rule {
+      width: 100%;
+      height: 1.5px;
+      background: var(--gold);
+      margin: 10px 0 10px;
+      opacity: 0.5;
+    }
+    .l03-lista {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 12.5px;
+      font-weight: 400;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: rgba(248,245,240,0.55);
+    }
+
+    /* ── 04  Negative Space Block ── */
+    /* Solid gold filled rectangle; "ENLISTA" is punched out as negative space in dark
+       Works extremely well as an app icon */
+    .l04 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .l04-block {
+      background: var(--gold);
+      padding: 14px 24px 16px;
+      border-radius: 6px;
+    }
+    .l04-text {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .l04-sub {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(248,245,240,0.3);
+    }
+
+    /* ── 05  Staggered Weight Mark ── */
+    /* Each letter at a progressively increasing weight: 300→900
+       Creates a visual "loading bar" or "signal strength" feel */
+    .l05 {
+      display: flex;
+      align-items: baseline;
+      gap: 1px;
+    }
+    .l05 span {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 46px;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      display: inline-block;
+    }
+    .l05 .c1 { font-weight: 200; color: rgba(201,164,82,0.25); }
+    .l05 .c2 { font-weight: 300; color: rgba(201,164,82,0.38); }
+    .l05 .c3 { font-weight: 400; color: rgba(201,164,82,0.52); }
+    .l05 .c4 { font-weight: 500; color: rgba(201,164,82,0.65); }
+    .l05 .c5 { font-weight: 600; color: rgba(201,164,82,0.78); }
+    .l05 .c6 { font-weight: 700; color: rgba(201,164,82,0.88); }
+    .l05 .c7 { font-weight: 800; color: var(--gold); }
+
+    /* ── 06  Grid-Mark ── */
+    /* A 3×3 property grid where the top-left 5 cells form an "E"
+       Cells are small squares in gold on ink — reads instantly as both "E" and data grid */
+    .l06 {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .l06-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 14px);
+      grid-template-rows: repeat(3, 14px);
+      gap: 4px;
+    }
+    .l06-cell {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: rgba(201,164,82,0.18);
+      transition: background 0.2s;
+    }
+    .l06-cell.on { background: var(--gold); }
+    .l06-word {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      color: var(--warm);
+      line-height: 1;
+    }
+    .l06-word .ga { color: var(--gold); }
+    .stage-warm .l06-word { color: var(--ink); }
+
+    /* ── 07  Diamond Accent Mark ── */
+    /* A rotated square (diamond) in gold stroke precedes the name
+       The diamond echoes both compass (navigation/portal) and gemstone (premium)
+       Very clean, very geometric */
+    .l07 {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .l07-diamond svg {
+      width: 42px;
+      height: 42px;
+      display: block;
+      flex-shrink: 0;
+    }
+    .l07-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .l07-name {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      color: var(--warm);
+      line-height: 1;
+    }
+    .l07-tag {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(201,164,82,0.5);
+    }
+    .stage-warm .l07-name { color: var(--ink); }
+
+    /* ── 08  Split-Rule Bilingual ── */
+    /* Left: "Enlista" in Satoshi 800, full opacity
+       Right: "إنليستا" in Cairo, right-aligned, dimmer
+       A single vertical gold rule separates them — the brand's bilingual DNA made structural */
+    .l08 {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .l08-en {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--warm);
+      line-height: 1;
+      padding-right: 18px;
+    }
+    .l08-rule {
+      width: 1.5px;
+      height: 38px;
+      background: var(--gold);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+    .l08-ar {
+      font-family: 'Cairo', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(201,164,82,0.6);
+      direction: rtl;
+      line-height: 1;
+      padding-left: 18px;
+    }
+    .stage-warm .l08-en { color: var(--ink); }
+
+    /* ── 09  Kinetic Arc ── */
+    /* Three concentric quarter-arc strokes above the wordmark
+       Like a wifi / portal signal icon — maps to the "sync to all portals" core value
+       Elegant and product-relevant */
+    .l09 {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .l09-arcs svg { width: 54px; height: 28px; display: block; }
+    .l09-word {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      color: var(--warm);
+      line-height: 1;
+    }
+    .l09-word .ga { color: var(--gold); }
+    .stage-warm .l09-word { color: var(--ink); }
+
+    /* ── 10  Full-Bleed Halftone Mark ── */
+    /* The wordmark sits on a field of tiny gold dots that fade right-to-left
+       Very editorial / magazine. Speaks to precision and data. Unexpected for PropTech. */
+    .l10 {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      width: 100%;
+    }
+    .l10-dots {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+    .l10-word {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--warm);
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+    .l10-sub {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      position: relative;
+      z-index: 1;
+      margin-top: 8px;
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      padding: 40px 64px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(248,245,240,0.18);
+      letter-spacing: 0.02em;
+    }
+    .footer-mark {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: rgba(248,245,240,0.08);
+    }
+    .footer-mark em { font-style: normal; color: rgba(201,164,82,0.2); }
+
+    /* ── LIGHT MODE ── */
+    body.light { background: var(--warm); color: var(--ink); }
+    body.light .page-header::before { background: radial-gradient(ellipse, rgba(201,164,82,0.08) 0%, transparent 65%); }
+    body.light .page-header h1 { color: var(--ink); }
+    body.light .header-meta { color: rgba(14,31,56,0.4); }
+    body.light .toggle-label { color: rgba(14,31,56,0.28); }
+    body.light .toggle-btns { background: rgba(14,31,56,0.07); }
+    body.light .tbtn { color: rgba(14,31,56,0.4); }
+    body.light .logo-grid { background: rgba(14,31,56,0.08); }
+    body.light .logo-card { background: #FAFAFA; }
+    body.light .logo-card:hover { background: #F4F1EB; }
+    body.light .card-title { color: var(--ink); }
+    body.light .card-desc { color: rgba(14,31,56,0.35); }
+    body.light .stage-dark { background: rgba(14,31,56,0.04); }
+    body.light .stage-mid  { background: rgba(14,31,56,0.07); }
+    body.light .page-footer { border-top-color: rgba(14,31,56,0.08); }
+    body.light .footer-copy { color: rgba(14,31,56,0.18); }
+    body.light .footer-mark { color: rgba(14,31,56,0.08); }
+    body.light .l03-lista { color: rgba(14,31,56,0.45); }
+    body.light .l05 .c1 { color: rgba(14,31,56,0.12); }
+    body.light .l05 .c2 { color: rgba(14,31,56,0.22); }
+    body.light .l05 .c3 { color: rgba(14,31,56,0.34); }
+    body.light .l05 .c4 { color: rgba(14,31,56,0.48); }
+    body.light .l05 .c5 { color: rgba(14,31,56,0.63); }
+    body.light .l05 .c6 { color: rgba(14,31,56,0.78); }
+    body.light .l05 .c7 { color: var(--ink); }
+    body.light .l09-word { color: var(--ink); }
+    body.light .l10-word { color: var(--ink); }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div>
+      <div class="header-eyebrow">Creative Explorations · 2025</div>
+      <h1>Logo<br>Directions<br>for <em>Enlista</em></h1>
+      <p class="header-meta">10 distinct creative directions — from typographic experiments to geometric marks. Each concept stands on a different idea about what Enlista means.</p>
+    </div>
+    <div class="toggle-wrap">
+      <span class="toggle-label">Background</span>
+      <div class="toggle-btns">
+        <button class="tbtn active" onclick="setTheme('dark',this)">Dark</button>
+        <button class="tbtn" onclick="setTheme('light',this)">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="logo-grid">
+
+    <!-- ══ 01  Slash Wordmark ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 01</div>
+      <div class="logo-stage stage-ink">
+        <div class="l01">
+          <span class="l01-enlist">Enlist</span>
+          <span class="l01-slash">/</span>
+          <span class="l01-a">a</span>
+        </div>
+      </div>
+      <div class="card-title">Weight Contrast Slash</div>
+      <div class="card-desc">Heavy "Enlist" meets a gold forward-slash and a feather-light italic "a". The slash reads as speed — cutting through the old process. Three weights, one word, no icon needed.</div>
+    </div>
+
+    <!-- ══ 02  Property Pin "i" ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 02</div>
+      <div class="logo-stage stage-dark">
+        <div class="l02">
+          <span class="l02-pre">En</span>
+          <span class="l02-i">
+            <!-- dotless i with pin above -->
+            <svg class="l02-pin" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="5" cy="5" rx="4" ry="4" fill="#C9A452"/>
+              <path d="M5 9 L5 14" stroke="#C9A452" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <span style="font-family:'Satoshi',sans-serif;font-size:44px;font-weight:800;letter-spacing:-0.04em;color:var(--warm);line-height:1;padding-top:10px;">ı</span>
+          </span>
+          <span class="l02-post">sta</span>
+        </div>
+      </div>
+      <div class="card-title">Property Pin "i"</div>
+      <div class="card-desc">The dot above the "i" becomes a gold location pin. One glyph swap communicates the entire product idea: real estate + digital publishing. Subtle until you see it — then it's all you see.</div>
+    </div>
+
+    <!-- ══ 03  Brutalist Stack ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 03</div>
+      <div class="logo-stage stage-mid">
+        <div class="l03">
+          <div class="l03-en">EN</div>
+          <div class="l03-rule"></div>
+          <div class="l03-lista">L I S T A</div>
+        </div>
+      </div>
+      <div class="card-title">Brutalist Stack</div>
+      <div class="card-desc">Two-tier typographic architecture: "EN" at 80px weight 900 in gold, ruled off, "LISTA" in tracked small caps. Brutally confident. Looks like a Bloomberg terminal or a luxury auction house — both work for PropTech.</div>
+    </div>
+
+    <!-- ══ 04  Reverse Block ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 04</div>
+      <div class="logo-stage stage-dark" style="flex-direction:column;gap:12px;">
+        <div class="l04">
+          <div class="l04-block">
+            <div class="l04-text">ENLISTA</div>
+          </div>
+          <div class="l04-sub">Real Estate AI Platform</div>
+        </div>
+      </div>
+      <div class="card-title">Gold Reverse Block</div>
+      <div class="card-desc">A solid gold pill reverses the wordmark to ink. Feels like a premium label, a Chanel stamp, a builder's hallmark. Maximum contrast. Exceptional as a favicon, embossed card, or email signature.</div>
+    </div>
+
+    <!-- ══ 05  Signal Fade ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 05</div>
+      <div class="logo-stage stage-ink">
+        <div class="l05">
+          <span class="c1">E</span>
+          <span class="c2">n</span>
+          <span class="c3">l</span>
+          <span class="c4">i</span>
+          <span class="c5">s</span>
+          <span class="c6">t</span>
+          <span class="c7">a</span>
+        </div>
+      </div>
+      <div class="card-title">Signal Fade</div>
+      <div class="card-desc">Each letter steps from weight 200 to 900 — opacity builds like a signal bar or a strength meter. Metaphor: Enlista takes raw data and amplifies it to a live listing. Genuinely unique. Hard to unsee.</div>
+    </div>
+
+    <!-- ══ 06  Property Grid Mark ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 06</div>
+      <div class="logo-stage stage-dark">
+        <div class="l06">
+          <div class="l06-grid">
+            <!-- Row 1: cells 1,2,3 = ON (top bar of E) -->
+            <div class="l06-cell on"></div>
+            <div class="l06-cell on"></div>
+            <div class="l06-cell on"></div>
+            <!-- Row 2: cell 1 = ON, 2,3 = mid bar (shorter) -->
+            <div class="l06-cell on"></div>
+            <div class="l06-cell on"></div>
+            <div class="l06-cell"></div>
+            <!-- Row 3: cells 1,2,3 = ON (bottom bar of E) -->
+            <div class="l06-cell on"></div>
+            <div class="l06-cell on"></div>
+            <div class="l06-cell on"></div>
+          </div>
+          <div class="l06-word">Enlist<span class="ga">a</span></div>
+        </div>
+      </div>
+      <div class="card-title">Property Grid Mark</div>
+      <div class="card-desc">A 3×3 cell grid — reads as a data dashboard, a listing grid, and the letter "E" simultaneously. The inactive cells add depth. Clean enough for an app icon, meaningful enough for a brand mark.</div>
+    </div>
+
+    <!-- ══ 07  Diamond Mark ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 07</div>
+      <div class="logo-stage stage-ink">
+        <div class="l07">
+          <div class="l07-diamond">
+            <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Outer diamond (rotated square) -->
+              <rect x="6" y="6" width="30" height="30" rx="2" transform="rotate(45 21 21)"
+                    stroke="#C9A452" stroke-width="1.8" fill="none"/>
+              <!-- Inner diamond -->
+              <rect x="11" y="11" width="20" height="20" rx="1" transform="rotate(45 21 21)"
+                    stroke="#C9A452" stroke-width="0.7" fill="none" opacity="0.3"/>
+              <!-- Center "E" bars -->
+              <line x1="14" y1="18" x2="26" y2="18" stroke="#C9A452" stroke-width="2" stroke-linecap="round"/>
+              <line x1="14" y1="21" x2="22" y2="21" stroke="#C9A452" stroke-width="2" stroke-linecap="round"/>
+              <line x1="14" y1="24" x2="26" y2="24" stroke="#C9A452" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="l07-text">
+            <div class="l07-name">Enlista</div>
+            <div class="l07-tag">Real Estate AI · UAE</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-title">Diamond Compass Mark</div>
+      <div class="card-desc">A diamond (rotated square) enclosing the "E" letterform. Doubles as compass rose, gemstone, portal frame, and certificate seal. The geometry reads as precision and premium simultaneously.</div>
+    </div>
+
+    <!-- ══ 08  Bilingual Rule ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 08</div>
+      <div class="logo-stage stage-dark">
+        <div class="l08">
+          <div class="l08-en">Enlista</div>
+          <div class="l08-rule"></div>
+          <div class="l08-ar">إنليستا</div>
+        </div>
+      </div>
+      <div class="card-title">Dual-Language Rule</div>
+      <div class="card-desc">Latin and Arabic wordmarks separated by a single vertical gold rule. Neither language is primary — both are equal. Speaks directly to the bilingual-first architecture of the product. Unique in the PropTech category.</div>
+    </div>
+
+    <!-- ══ 09  Portal Signal ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 09</div>
+      <div class="logo-stage stage-ink">
+        <div class="l09">
+          <div class="l09-arcs">
+            <svg viewBox="0 0 54 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Three concentric upward arcs, fading gold -->
+              <path d="M4 28 Q4 4 27 4 Q50 4 50 28"
+                    stroke="#C9A452" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+              <path d="M11 28 Q11 11 27 11 Q43 11 43 28"
+                    stroke="#C9A452" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.55"/>
+              <path d="M18 28 Q18 18 27 18 Q36 18 36 28"
+                    stroke="#C9A452" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.25"/>
+            </svg>
+          </div>
+          <div class="l09-word">Enlist<span class="ga">a</span></div>
+        </div>
+      </div>
+      <div class="card-title">Portal Signal Arcs</div>
+      <div class="card-desc">Three gold arcs — like a wifi signal or broadcast icon — sit above the wordmark. They map directly to "sync to all portals." The outermost arc is full opacity; signal fades inward. Clean and product-literal.</div>
+    </div>
+
+    <!-- ══ 10  Halftone Field ══ -->
+    <div class="logo-card">
+      <div class="card-num">Option 10</div>
+      <div class="logo-stage stage-black" style="padding:28px 28px 24px; overflow:hidden; position:relative;">
+        <!-- Halftone dots rendered as SVG pattern in background -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.18" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="dots" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+              <circle cx="6" cy="6" r="1.8" fill="#C9A452"/>
+            </pattern>
+            <linearGradient id="fade" x1="100%" y1="0" x2="0%" y2="0">
+              <stop offset="0%" stop-color="white" stop-opacity="1"/>
+              <stop offset="60%" stop-color="white" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="dotmask">
+              <rect width="100%" height="100%" fill="url(#fade)"/>
+            </mask>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dots)" mask="url(#dotmask)"/>
+        </svg>
+        <div class="l10">
+          <div class="l10-word">Enlista</div>
+          <div class="l10-sub">Property AI Platform</div>
+        </div>
+      </div>
+      <div class="card-title">Halftone Field</div>
+      <div class="card-desc">A field of gold dots fades left from full density — like a data heatmap or an ink print. The wordmark sits clean over it. Editorial, unexpected, and tactile. Strong in pitch decks, print, and dark-mode interfaces.</div>
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <span class="footer-copy">Enlista Brand Identity · Creative Explorations · March 2025 · Confidential</span>
+    <span class="footer-mark">Enlist<em>a</em></span>
+  </footer>
+
+  <script>
+    function setTheme(theme, btn) {
+      document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.body.classList.toggle('light', theme === 'light');
+    }
+  </script>
+</body>
+</html>

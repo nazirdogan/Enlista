@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ListingsLaunch — Sage Luxury</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Raleway:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#111A10;--surface:#161F14;--panel:#1C261A;--sage:#7DB069;--sage-dim:#2A3E27;--cream:#F0E8D3;--gold:#C8A96E;--text:#C4D4B8;--muted:#4A6040;--border:#222E1E;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;font-weight:300;font-size:15px;line-height:1.9;overflow-x:hidden;}
+  .gilda{font-family:'Gilda Display',serif;}
+
+  /* Grain overlay */
+  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.5;}
+
+  /* Sticky sidebar layout */
+  .site-layout{display:flex;min-height:100vh;}
+  .sidebar{width:260px;flex-shrink:0;position:sticky;top:0;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:48px 36px;z-index:40;}
+  .main-content{flex:1;min-width:0;}
+  @media(max-width:900px){.sidebar{display:none;}.site-layout{display:block;}}
+
+  /* Mobile nav */
+  .mobile-nav{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:50;justify-content:space-between;align-items:center;}
+  @media(max-width:900px){.mobile-nav{display:flex;}}
+
+  .sidebar-logo{font-family:'Gilda Display',serif;font-size:22px;color:var(--cream);margin-bottom:64px;letter-spacing:0.02em;}
+  .sidebar-logo span{color:var(--sage);}
+
+  .side-link{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;padding:10px 0;border-bottom:1px solid transparent;transition:all 0.3s;position:relative;}
+  .side-link::before{content:'';width:0;height:1px;background:var(--sage);position:absolute;bottom:0;left:0;transition:width 0.3s;}
+  .side-link:hover{color:var(--cream);}
+  .side-link:hover::before{width:100%;}
+  .side-link .dot{width:4px;height:4px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background 0.3s;}
+  .side-link:hover .dot{background:var(--sage);}
+
+  .btn-sage{display:inline-block;background:var(--sage);color:var(--bg);padding:12px 28px;font-family:'Raleway',sans-serif;font-weight:500;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all 0.3s;}
+  .btn-sage:hover{background:var(--cream);box-shadow:0 8px 32px rgba(125,176,105,0.2);}
+  .btn-ghost-sage{display:inline-block;border:1px solid var(--border);color:var(--sage);padding:11px 28px;font-family:'Raleway',sans-serif;font-weight:400;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;border-radius:2px;}
+  .btn-ghost-sage:hover{border-color:var(--sage);background:rgba(125,176,105,0.06);}
+
+  /* Sections on right side */
+  section{padding:80px 64px;border-bottom:1px solid var(--border);}
+  @media(max-width:900px){section{padding:60px 24px;}}
+
+  .section-eye{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--sage);display:block;margin-bottom:16px;}
+
+  /* Feature: timeline style */
+  .feat-timeline{position:relative;padding-left:48px;margin-top:48px;}
+  .feat-timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:1px;background:var(--border);}
+  .feat-item{position:relative;padding-bottom:48px;}
+  .feat-item:last-child{padding-bottom:0;}
+  .feat-dot{position:absolute;left:-44px;top:6px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:2px solid var(--border);transition:all 0.4s;display:flex;align-items:center;justify-content:center;}
+  .feat-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--border);transition:background 0.4s;}
+  .feat-item:hover .feat-dot{border-color:var(--sage);}
+  .feat-item:hover .feat-dot::after{background:var(--sage);}
+
+  /* Testimonials: full-width quote strips */
+  .quote-strip{padding:52px 64px;border-bottom:1px solid var(--border);transition:background 0.3s;}
+  .quote-strip:hover{background:var(--panel);}
+  @media(max-width:900px){.quote-strip{padding:40px 24px;}}
+
+  /* Pricing: 3-up cards */
+  .price-card{background:var(--surface);border:1px solid var(--border);padding:48px 40px;transition:all 0.4s;}
+  .price-card:hover{border-color:rgba(125,176,105,0.3);}
+  .price-card.featured{background:var(--panel);border-color:rgba(125,176,105,0.4);}
+  .price-num{font-family:'Gilda Display',serif;font-size:64px;color:var(--cream);line-height:1;}
+  .price-card.featured .price-num{color:var(--sage);}
+  .p-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center;}
+  .p-row.on{color:var(--text);}
+  .p-row::before{content:'—';color:var(--border);font-size:11px;flex-shrink:0;}
+  .p-row.on::before{content:'✦';color:var(--sage);font-size:9px;}
+  .p-row:last-child{border-bottom:none;}
+
+  input{background:var(--panel);border:1px solid var(--border);color:var(--cream);padding:14px 20px;font-family:'Raleway',sans-serif;font-size:14px;border-radius:2px;outline:none;width:100%;transition:border-color 0.3s;letter-spacing:0.04em;}
+  input:focus{border-color:rgba(125,176,105,0.5);}
+  input::placeholder{color:var(--muted);}
+
+  @keyframes rise{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+  .rise{animation:rise 0.8s ease both;}
+  .rise-1{animation-delay:0.1s;}.rise-2{animation-delay:0.25s;}.rise-3{animation-delay:0.4s;}
+
+  /* Gold rule */
+  .gold-rule{width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:24px 0;}
+</style>
+</head>
+<body>
+
+<div class="site-layout">
+  <!-- Sticky sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">Listings<span>Launch</span></div>
+    <nav style="display:flex;flex-direction:column;gap:4px;flex:1;">
+      <a href="#hero" class="side-link"><span class="dot"></span>Home</a>
+      <a href="#features" class="side-link"><span class="dot"></span>Platform</a>
+      <a href="#testimonials" class="side-link"><span class="dot"></span>Clients</a>
+      <a href="#pricing" class="side-link"><span class="dot"></span>Pricing</a>
+      <a href="#cta" class="side-link"><span class="dot"></span>Start Free</a>
+    </nav>
+    <div style="margin-top:auto;">
+      <div style="background:var(--panel);border:1px solid var(--border);padding:20px;margin-bottom:24px;">
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Live Status</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;">Bayut</span><span style="color:var(--sage);font-size:11px;">● Live</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;">Prop. Finder</span><span style="color:var(--sage);font-size:11px;">● Live</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;">Dubizzle</span><span style="color:var(--sage);font-size:11px;">● Live</span></div>
+        </div>
+      </div>
+      <a href="#cta" class="btn-sage" style="display:block;text-align:center;font-size:11px;letter-spacing:0.15em;">Begin Free Trial</a>
+    </div>
+  </aside>
+
+  <!-- Mobile nav -->
+  <nav class="mobile-nav">
+    <span class="gilda" style="font-size:18px;color:var(--cream);">Listings<span style="color:var(--sage);">Launch</span></span>
+    <a href="#cta" class="btn-sage" style="font-size:11px;padding:10px 20px;">Start Free</a>
+  </nav>
+
+  <!-- Main scrolling content -->
+  <main class="main-content">
+
+    <!-- Hero -->
+    <section id="hero" style="min-height:100vh;display:flex;align-items:center;">
+      <div style="max-width:680px;">
+        <span class="section-eye rise rise-1">UAE Real Estate Platform</span>
+        <h1 class="gilda rise rise-2" style="font-size:clamp(48px,6vw,88px);line-height:1.05;color:var(--cream);margin-bottom:28px;">
+          Where listings<br/>
+          <em style="color:var(--sage);">grow.</em>
+        </h1>
+        <div class="gold-rule"></div>
+        <p class="rise rise-3" style="font-size:17px;line-height:1.9;color:var(--muted);max-width:520px;margin-bottom:48px;">
+          AI-powered listing management for Dubai, Abu Dhabi, and Sharjah agencies. From AI copy to multi-portal sync, lead intelligence to RERA compliance — in one considered platform.
+        </p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:64px;" class="rise rise-3">
+          <a href="#cta" class="btn-sage">Start 14-day Trial</a>
+          <a href="#features" class="btn-ghost-sage">Explore Platform</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;border-top:1px solid var(--border);padding-top:48px;">
+          <div><p class="gilda" style="font-size:48px;color:var(--cream);line-height:1;">840</p><p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:8px;">UAE Agencies</p></div>
+          <div><p class="gilda" style="font-size:48px;color:var(--cream);line-height:1;">124K</p><p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:8px;">Listings</p></div>
+          <div><p class="gilda" style="font-size:48px;color:var(--sage);line-height:1;">4m</p><p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:8px;">Avg. Publish</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features: timeline -->
+    <section id="features">
+      <span class="section-eye">The Platform</span>
+      <h2 class="gilda" style="font-size:clamp(32px,5vw,56px);color:var(--cream);line-height:1.1;margin-bottom:8px;">
+        Six disciplines.<br/><em style="color:var(--sage);">One system.</em>
+      </h2>
+      <div class="feat-timeline">
+        <div class="feat-item">
+          <div class="feat-dot"></div>
+          <h3 class="gilda" style="font-size:26px;color:var(--cream);margin-bottom:10px;">AI Listing Copy</h3>
+          <p style="color:var(--muted);max-width:560px;">Bilingual EN/AR listing descriptions generated in seconds. Each one tuned to Bayut, Property Finder, and Dubizzle's specific SEO requirements. From a one-bedroom in JVC to a five-bedroom villa on the Palm — copy that reflects the property and converts.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot"></div>
+          <h3 class="gilda" style="font-size:26px;color:var(--cream);margin-bottom:10px;">Multi-Portal Synchronisation</h3>
+          <p style="color:var(--muted);max-width:560px;">One click publishes to every major UAE portal simultaneously. Bayut, Property Finder, Dubizzle, and more — all updated in under four minutes. No manual re-entry. No missed portals.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot"></div>
+          <h3 class="gilda" style="font-size:26px;color:var(--cream);margin-bottom:10px;">Lead Intelligence</h3>
+          <p style="color:var(--muted);max-width:560px;">ML-scored buyer intent from every enquiry channel. WhatsApp qualification in Arabic and English, around the clock. Your agents receive ranked leads — they always know who matters most.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot"></div>
+          <h3 class="gilda" style="font-size:26px;color:var(--cream);margin-bottom:10px;">RERA Compliance</h3>
+          <p style="color:var(--muted);max-width:560px;">Automatic DLD permit validation before every publish. Full audit trail. Zero suspension risk. Compliance is built in — you never need to think about it.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot"></div>
+          <h3 class="gilda" style="font-size:26px;color:var(--cream);margin-bottom:10px;">Market Intelligence</h3>
+          <p style="color:var(--muted);max-width:560px;">Live DLD transaction data, AED per square foot benchmarks, and area demand maps across Dubai, Abu Dhabi, and Sharjah. The knowledge your team needs to advise with confidence.</p>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot"></div>
+          <h3 class="gilda" style="font-size:26px;color:var(--cream);margin-bottom:10px;">Photography Suite</h3>
+          <p style="color:var(--muted);max-width:560px;">AI-enhanced images, intelligent ordering, portal-specific sizing, and automated watermarking. Every listing presented at its absolute best, on every platform, automatically.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials: full-width strips -->
+    <section id="testimonials" style="padding:0;border-bottom:none;">
+      <div style="padding:64px 64px 0;" >
+        <span class="section-eye">Client Voice</span>
+        <h2 class="gilda" style="font-size:clamp(32px,5vw,56px);color:var(--cream);line-height:1.1;margin-bottom:48px;">
+          What thriving<br/>UAE agencies say.
+        </h2>
+      </div>
+      <div class="quote-strip">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;align-items:center;">
+          <div>
+            <p class="gilda italic" style="font-size:22px;line-height:1.6;color:var(--cream);">"Two days to four minutes. ListingsLaunch reimagined how we operate."</p>
+          </div>
+          <div>
+            <div class="gold-rule"></div>
+            <p style="font-size:13px;color:var(--sage);letter-spacing:0.08em;">Sarah Al Mansoori</p>
+            <p style="font-size:12px;color:var(--muted);">Head of Operations · Espace Real Estate, Dubai</p>
+          </div>
+        </div>
+      </div>
+      <div class="quote-strip">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;align-items:center;">
+          <div>
+            <p class="gilda italic" style="font-size:22px;line-height:1.6;color:var(--cream);">"Palm Jumeirah copy that converts at 3×. The AI reads the luxury market."</p>
+          </div>
+          <div>
+            <div class="gold-rule"></div>
+            <p style="font-size:13px;color:var(--sage);letter-spacing:0.08em;">James Whitfield</p>
+            <p style="font-size:12px;color:var(--muted);">Managing Director · Allsopp & Allsopp</p>
+          </div>
+        </div>
+      </div>
+      <div class="quote-strip">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;align-items:center;">
+          <div>
+            <p class="gilda italic" style="font-size:22px;line-height:1.6;color:var(--cream);">"Zero RERA suspensions. The compliance engine is our most trusted system."</p>
+          </div>
+          <div>
+            <div class="gold-rule"></div>
+            <p style="font-size:13px;color:var(--sage);letter-spacing:0.08em;">Fatima Al Hashimi</p>
+            <p style="font-size:12px;color:var(--muted);">Compliance Director · DLD Certified, Dubai</p>
+          </div>
+        </div>
+      </div>
+      <div class="quote-strip" style="border-bottom:none;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;align-items:center;">
+          <div>
+            <p class="gilda italic" style="font-size:22px;line-height:1.6;color:var(--cream);">"600+ listings, four portals. We grew 40% without a single new coordinator."</p>
+          </div>
+          <div>
+            <div class="gold-rule"></div>
+            <p style="font-size:13px;color:var(--sage);letter-spacing:0.08em;">Ravi Menon</p>
+            <p style="font-size:12px;color:var(--muted);">CEO · Metropolitan Premium Properties</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+      <span class="section-eye">Investment</span>
+      <h2 class="gilda" style="font-size:clamp(32px,5vw,56px);color:var(--cream);line-height:1.1;margin-bottom:8px;">Invest in growth.</h2>
+      <p style="color:var(--muted);margin-bottom:48px;">All plans in AED. Cancel anytime. 14-day free trial on every tier.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+        <div class="price-card">
+          <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;">Starter</p>
+          <div class="price-num">299</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:32px;margin-top:6px;">AED / month</p>
+          <div style="margin-bottom:32px;">
+            <div class="p-row on">50 active listings</div>
+            <div class="p-row on">3 portal integrations</div>
+            <div class="p-row on">AI copy — English</div>
+            <div class="p-row on">Basic analytics</div>
+            <div class="p-row">Lead scoring</div>
+            <div class="p-row">WhatsApp bot</div>
+          </div>
+          <a href="#cta" class="btn-ghost-sage" style="display:block;text-align:center;">Begin</a>
+        </div>
+        <div class="price-card featured">
+          <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--sage);margin-bottom:24px;">Professional</p>
+          <div class="price-num">799</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:32px;margin-top:6px;">AED / month · Recommended</p>
+          <div style="margin-bottom:32px;">
+            <div class="p-row on">200 active listings</div>
+            <div class="p-row on">All portals</div>
+            <div class="p-row on">AI copy — EN + AR</div>
+            <div class="p-row on">Lead intelligence</div>
+            <div class="p-row on">WhatsApp bot</div>
+            <div class="p-row on">RERA compliance</div>
+            <div class="p-row on">Priority support</div>
+          </div>
+          <a href="#cta" class="btn-sage" style="display:block;text-align:center;">Begin</a>
+        </div>
+        <div class="price-card">
+          <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;">Enterprise</p>
+          <div class="price-num">1,999</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:32px;margin-top:6px;">AED / month</p>
+          <div style="margin-bottom:32px;">
+            <div class="p-row on">Unlimited listings</div>
+            <div class="p-row on">Custom integrations</div>
+            <div class="p-row on">Full AI suite</div>
+            <div class="p-row on">Market analytics</div>
+            <div class="p-row on">Dedicated manager</div>
+            <div class="p-row on">API + SLA guarantee</div>
+          </div>
+          <a href="#cta" class="btn-ghost-sage" style="display:block;text-align:center;">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" style="border-bottom:none;">
+      <div style="max-width:560px;">
+        <span class="section-eye">Begin</span>
+        <h2 class="gilda" style="font-size:clamp(36px,5vw,64px);color:var(--cream);line-height:1.05;margin-bottom:20px;">
+          Your first listing,<br/><em style="color:var(--sage);">live today.</em>
+        </h2>
+        <p style="color:var(--muted);font-size:15px;margin-bottom:48px;">Fourteen days, complimentary. No payment required. UAE-based support team ready to help you set up in minutes.</p>
+        <form style="display:flex;flex-direction:column;gap:14px;max-width:480px;" onsubmit="return false;">
+          <input type="email" placeholder="Agency email address"/>
+          <input type="text" placeholder="Agency name"/>
+          <button type="submit" class="btn-sage" style="cursor:pointer;border:none;font-size:12px;letter-spacing:0.15em;padding:14px;display:block;width:100%;text-align:center;">Begin Complimentary Trial →</button>
+        </form>
+      </div>
+    </section>
+
+    <footer style="background:var(--surface);border-top:1px solid var(--border);padding:32px 64px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <span class="gilda" style="font-size:18px;color:var(--cream);">Listings<span style="color:var(--sage);">Launch</span></span>
+      <span style="color:var(--muted);font-size:12px;letter-spacing:0.05em;">© 2026 · Dubai, UAE</span>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

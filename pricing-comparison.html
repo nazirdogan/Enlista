@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ListingAI — Pricing Decision</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --parchment: #F7F4EF;
+      --navy: #1B3A6B;
+      --navy-mid: #244d8f;
+      --copper: #B87333;
+      --copper-light: #d4884a;
+      --ink: #1C1917;
+      --muted: #8C7E72;
+      --white: #FFFFFF;
+      --border: #E8E2D9;
+      --green: #16a34a;
+      --red: #dc2626;
+      --amber: #d97706;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--navy); }
+    .logo span { color: var(--copper); }
+    .nav-label { font-size: 0.75rem; color: var(--muted); border: 1px solid var(--border); border-radius: 100px; padding: 0.3rem 0.9rem; }
+
+    /* WRAPPER */
+    .page { max-width: 960px; margin: 0 auto; padding: 0 1.5rem 6rem; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 4rem 1rem 3rem; }
+    .hero-badge { display: inline-block; background: var(--navy); color: white; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 100px; margin-bottom: 1.25rem; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; color: var(--navy); line-height: 1.15; margin-bottom: 0.75rem; }
+    .hero h1 em { color: var(--copper); font-style: italic; }
+    .hero p { color: var(--muted); font-size: 0.9rem; max-width: 480px; margin: 0 auto; }
+
+    /* SECTION LABELS */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-label::before, .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-label span {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ─── TIER COMPARISON ─── */
+    .tier-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 24px rgba(27,58,107,0.08);
+    }
+
+    /* S1 — white side */
+    .s1-col { background: var(--white); }
+    .s1-col .col-header {
+      padding: 1.75rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .s1-col .col-header .label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+    .s1-col .col-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: var(--navy); margin-bottom: 0.3rem; }
+    .s1-col .col-header p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+    .s1-col .tier-rows { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 0.85rem; }
+
+    /* S3 — navy side */
+    .s3-col { background: var(--navy); border-left: 1.5px solid rgba(255,255,255,0.1); }
+    .s3-col .col-header {
+      padding: 1.75rem 2rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .s3-col .col-header .label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper-light); margin-bottom: 0.35rem; }
+    .s3-col .col-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: white; margin-bottom: 0.3rem; }
+    .s3-col .col-header p { font-size: 0.78rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+    .s3-col .tier-rows { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 0.85rem; }
+
+    /* tier row — S1 */
+    .tier-row {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .tier-row .tr-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.25rem; }
+    .tier-row .tr-name { font-weight: 600; font-size: 0.88rem; color: var(--ink); }
+    .tier-row .tr-price { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; color: var(--navy); line-height: 1; }
+    .tier-row .tr-price span { font-size: 0.78rem; color: var(--muted); font-family: 'DM Sans', sans-serif; }
+    .tier-row .tr-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.45; }
+    .tier-row .tr-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem; }
+    .tag { font-size: 0.68rem; background: var(--parchment); border: 1px solid var(--border); border-radius: 6px; padding: 0.2rem 0.5rem; color: var(--muted); }
+    .tier-row.highlight { border-color: var(--copper); background: #fff9f4; }
+    .tier-row.highlight .tr-name { color: var(--copper); }
+
+    /* tier row — S3 */
+    .tier-row-dark {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .tier-row-dark .tr-name { font-weight: 600; font-size: 0.88rem; color: white; }
+    .tier-row-dark .tr-price { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; color: var(--copper-light); line-height: 1; }
+    .tier-row-dark .tr-price span { font-size: 0.78rem; color: rgba(255,255,255,0.45); font-family: 'DM Sans', sans-serif; }
+    .tier-row-dark .tr-desc { font-size: 0.75rem; color: rgba(255,255,255,0.5); line-height: 1.45; }
+    .tier-row-dark .tr-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem; }
+    .tag-dark { font-size: 0.68rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 0.2rem 0.5rem; color: rgba(255,255,255,0.6); }
+    .tier-row-dark.highlight-dark { border-color: var(--copper); background: rgba(184,115,51,0.12); }
+    .tier-row-dark.highlight-dark .tr-name { color: var(--copper-light); }
+
+    /* verdict banner between the two columns */
+    .vs-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      background: var(--parchment);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .vs-banner strong { color: var(--ink); }
+
+    /* ─── REVENUE TABLE ─── */
+    .card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--navy); margin-bottom: 0.35rem; }
+    .card > p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+    .rev-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    .rev-table th {
+      padding: 0.65rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 2px solid var(--border);
+      text-align: left;
+    }
+    .rev-table th:nth-child(2) { text-align: right; color: var(--muted); }
+    .rev-table th:nth-child(3) { text-align: right; background: rgba(27,58,107,0.05); color: var(--navy); }
+    .rev-table th:nth-child(4) { text-align: right; color: var(--muted); }
+    .rev-table td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .rev-table tr:last-child td { border-bottom: none; }
+    .rev-table tr:nth-child(even) td { background: #fafaf9; }
+    .rev-table tr:nth-child(even) td:nth-child(3) { background: rgba(27,58,107,0.04); }
+    .rev-table td:first-child { color: var(--muted); font-size: 0.8rem; }
+    .rev-table td:nth-child(2) { text-align: right; font-weight: 600; }
+    .rev-table td:nth-child(3) { text-align: right; font-weight: 700; background: rgba(27,58,107,0.03); }
+    .rev-table td:nth-child(4) { text-align: right; font-size: 0.78rem; }
+    .plateau { color: var(--red); font-size: 0.68rem; font-weight: 600; background: #fff0f0; border-radius: 4px; padding: 0.1rem 0.4rem; }
+    .winner { color: var(--copper); }
+    .same { color: var(--muted); }
+    .cheaper { color: var(--green); font-weight: 700; }
+
+    /* mini bar */
+    .bar-wrap { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .bar { height: 6px; border-radius: 3px; display: inline-block; vertical-align: middle; }
+
+    /* ─── H2H TABLE ─── */
+    .h2h-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .h2h-table th {
+      padding: 0.6rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 2px solid var(--border);
+      text-align: left;
+    }
+    .h2h-table th:nth-child(2) { text-align: center; color: var(--muted); }
+    .h2h-table th:nth-child(3) { text-align: center; color: white; background: var(--navy); }
+    .h2h-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .h2h-table tr:last-child td { border-bottom: none; }
+    .h2h-table td:first-child { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
+    .h2h-table td:nth-child(2) { text-align: center; }
+    .h2h-table td:nth-child(3) { text-align: center; background: rgba(27,58,107,0.04); }
+    .yes { color: var(--green); font-weight: 700; }
+    .no { color: #ccc; }
+    .partial { color: var(--amber); font-weight: 600; }
+
+    /* ─── ROADMAP ─── */
+    .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 0.5rem; }
+    .phase {
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      background: var(--parchment);
+      position: relative;
+    }
+    .phase-num {
+      width: 2.25rem; height: 2.25rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem;
+      margin-bottom: 0.85rem;
+    }
+    .phase-1 .phase-num { background: var(--copper); color: white; }
+    .phase-2 .phase-num { background: var(--navy); color: white; }
+    .phase-3 .phase-num { background: var(--ink); color: white; }
+    .phase .phase-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+    .phase-1 .phase-tag { color: var(--copper); }
+    .phase-2 .phase-tag { color: var(--navy); }
+    .phase-3 .phase-tag { color: var(--muted); }
+    .phase h4 { font-weight: 700; color: var(--ink); font-size: 0.92rem; margin-bottom: 0.75rem; }
+    .phase ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .phase ul li { font-size: 0.78rem; color: var(--muted); display: flex; gap: 0.5rem; }
+    .phase ul li .dot { flex-shrink: 0; margin-top: 0.15rem; }
+    .phase .phase-footer { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--muted); }
+    .phase .phase-footer strong { color: var(--ink); }
+
+    /* connector arrow between phases */
+    .roadmap-wrap { position: relative; }
+    .roadmap-arrows {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: -0.5rem;
+      pointer-events: none;
+    }
+    .arrow-cell { display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: var(--border); padding: 0.25rem 0; }
+
+    /* ─── VERDICT ─── */
+    .verdict {
+      background: linear-gradient(135deg, var(--navy) 0%, #1e4d94 100%);
+      border-radius: 20px;
+      padding: 2.5rem 3rem;
+      color: white;
+      margin-bottom: 1.5rem;
+    }
+    .verdict .v-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--copper-light); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .verdict .v-label::before { content: ''; width: 20px; height: 2px; background: var(--copper); display: block; }
+    .verdict h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.25rem; }
+    .verdict-body { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
+    .verdict p { font-size: 0.86rem; color: rgba(255,255,255,0.75); line-height: 1.75; margin-bottom: 0.75rem; }
+    .verdict-stats { display: flex; flex-direction: column; gap: 0.75rem; min-width: 210px; }
+    .v-stat { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 1rem 1.25rem; }
+    .v-stat .v-val { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--copper-light); line-height: 1; display: block; }
+    .v-stat .v-desc { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+    .checklist { margin-top: 1rem; list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+    .checklist li { font-size: 0.82rem; color: rgba(255,255,255,0.8); display: flex; gap: 0.5rem; align-items: flex-start; }
+    .checklist li::before { content: '→'; color: var(--copper-light); font-weight: 700; flex-shrink: 0; }
+
+    @media (max-width: 700px) {
+      .tier-grid { grid-template-columns: 1fr; }
+      .s3-col { border-left: none; border-top: 1.5px solid rgba(255,255,255,0.1); }
+      .roadmap { grid-template-columns: 1fr; }
+      .verdict-body { grid-template-columns: 1fr; }
+      .verdict { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Listing<span>AI</span></div>
+  <div class="nav-label">Pricing Decision — Internal</div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Final Recommendation</div>
+    <h1>Structure 1 vs. <em>Structure 3</em></h1>
+    <p>Side-by-side pricing, revenue at scale, head-to-head comparison, and the phased launch roadmap.</p>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SECTION 1 — SIDE BY SIDE TIERS
+  ═════════════════════════════════════ -->
+  <div class="section-label"><span>01 — The Two Models</span></div>
+
+  <div class="tier-grid">
+
+    <!-- LEFT — Structure 1 -->
+    <div class="s1-col">
+      <div class="col-header">
+        <div class="label">Structure 1</div>
+        <h2>Flat-Rate Tiers</h2>
+        <p>Fixed monthly price per plan. Revenue stays flat regardless of how many agents the brokerage has — until they manually upgrade.</p>
+      </div>
+      <div class="tier-rows">
+
+        <div class="tier-row">
+          <div class="tr-top">
+            <span class="tr-name">Solo</span>
+            <span class="tr-price">$49<span>/mo</span></span>
+          </div>
+          <div class="tr-desc">1 agent · 15 listings/month · all core features</div>
+          <div class="tr-tags">
+            <span class="tag">1 agent</span>
+            <span class="tag">15 listings/mo</span>
+            <span class="tag">English + Arabic</span>
+            <span class="tag">Voice input</span>
+          </div>
+        </div>
+
+        <div class="tier-row highlight">
+          <div class="tr-top">
+            <span class="tr-name">Boutique ★</span>
+            <span class="tr-price">$149<span>/mo</span></span>
+          </div>
+          <div class="tr-desc">Up to 10 agents · 75 listings/month shared pool · team workspace</div>
+          <div class="tr-tags">
+            <span class="tag">Up to 10 agents</span>
+            <span class="tag">75 listings pool</span>
+            <span class="tag">Team workspace</span>
+            <span class="tag">Per-agent analytics</span>
+          </div>
+        </div>
+
+        <div class="tier-row">
+          <div class="tr-top">
+            <span class="tr-name">Agency</span>
+            <span class="tr-price">$299<span>/mo</span></span>
+          </div>
+          <div class="tr-desc">Up to 30 agents · 200 listings/month shared pool · white-label</div>
+          <div class="tr-tags">
+            <span class="tag">Up to 30 agents</span>
+            <span class="tag">200 listings pool</span>
+            <span class="tag">White-label</span>
+            <span class="tag">Priority AI</span>
+          </div>
+        </div>
+
+        <div class="tier-row" style="background:var(--parchment);">
+          <div class="tr-top">
+            <span class="tr-name">Enterprise</span>
+            <span class="tr-price" style="font-size:1.3rem; color:var(--muted);">Custom</span>
+          </div>
+          <div class="tr-desc">30+ agents · SLA · dedicated account manager</div>
+        </div>
+
+        <div style="background:#fff8f0; border:1px solid #fde8cc; border-radius:10px; padding:0.85rem 1rem; margin-top:0.25rem;">
+          <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin-bottom:0.3rem;">The plateau problem</div>
+          <div style="font-size:0.77rem; color:var(--muted); line-height:1.5;">A 3-agent firm and a 10-agent firm both pay <strong style="color:var(--ink);">$149/mo</strong>. You earn nothing extra when that agency adds 7 more agents.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT — Structure 3 -->
+    <div class="s3-col">
+      <div class="col-header">
+        <div class="label">Structure 3 — Recommended</div>
+        <h2>Per-Agent + Umbrella</h2>
+        <p>Each agent has their own account. The brokerage is the billing owner. Revenue grows automatically as the team grows.</p>
+      </div>
+      <div class="tier-rows">
+
+        <div class="tier-row-dark">
+          <div class="tr-top" style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="tr-name">Solo</span>
+            <span class="tr-price">$49<span>/mo</span></span>
+          </div>
+          <div class="tr-desc">1 agent · 15 listings/month · no umbrella needed</div>
+          <div class="tr-tags">
+            <span class="tag-dark">1 agent</span>
+            <span class="tag-dark">15 listings/mo</span>
+            <span class="tag-dark">English + Arabic</span>
+            <span class="tag-dark">Voice input</span>
+          </div>
+        </div>
+
+        <div class="tier-row-dark highlight-dark">
+          <div class="tr-top" style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="tr-name">Brokerage ★</span>
+            <span class="tr-price">$35<span>/agent/mo</span></span>
+          </div>
+          <div class="tr-desc">Min 3 agents · own account per agent · umbrella admin dashboard · 15 listings/agent/mo</div>
+          <div class="tr-tags">
+            <span class="tag-dark">Min 3 agents</span>
+            <span class="tag-dark">Own logins</span>
+            <span class="tag-dark">Admin dashboard</span>
+            <span class="tag-dark">15 listings/agent</span>
+          </div>
+        </div>
+
+        <div class="tier-row-dark">
+          <div class="tr-top" style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="tr-name">Agency</span>
+            <span class="tr-price">$25<span>/agent/mo</span></span>
+          </div>
+          <div class="tr-desc">Min 15 agents · volume discount · white-label · priority AI · 15 listings/agent/mo</div>
+          <div class="tr-tags">
+            <span class="tag-dark">Min 15 agents</span>
+            <span class="tag-dark">Volume discount</span>
+            <span class="tag-dark">White-label</span>
+            <span class="tag-dark">Priority AI</span>
+          </div>
+        </div>
+
+        <div class="tier-row-dark" style="background:rgba(255,255,255,0.04);">
+          <div class="tr-top" style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="tr-name">Enterprise</span>
+            <span class="tr-price" style="font-size:1.3rem; color:rgba(255,255,255,0.4);">Custom</span>
+          </div>
+          <div class="tr-desc">30+ agents · custom rate · SLA · dedicated support</div>
+        </div>
+
+        <div style="background:rgba(184,115,51,0.15); border:1px solid rgba(184,115,51,0.3); border-radius:10px; padding:0.85rem 1rem; margin-top:0.25rem;">
+          <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--copper-light); margin-bottom:0.3rem;">The expansion engine</div>
+          <div style="font-size:0.77rem; color:rgba(255,255,255,0.6); line-height:1.5;">Every agent the brokerage hires adds <strong style="color:white;">$35/mo</strong> automatically. No upsell call needed. No tier negotiation.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom comparison bar -->
+  <div style="background:var(--white); border:1.5px solid var(--border); border-top:none; border-radius:0 0 16px 16px; display:grid; grid-template-columns:1fr 1fr; overflow:hidden; margin-bottom:2.5rem;">
+    <div style="padding:1rem 2rem; border-right:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
+        <span style="color:var(--muted);">Annual value · 10-agent firm</span>
+        <strong style="color:var(--ink);">$1,788/yr</strong>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-top:0.3rem;">
+        <span style="color:var(--muted);">Annual value · 30-agent firm</span>
+        <strong style="color:var(--ink);">$3,588/yr</strong>
+      </div>
+    </div>
+    <div style="padding:1rem 2rem; background:rgba(27,58,107,0.03);">
+      <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
+        <span style="color:var(--muted);">Annual value · 10-agent firm</span>
+        <strong style="color:var(--copper);">$4,200/yr</strong>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-top:0.3rem;">
+        <span style="color:var(--muted);">Annual value · 30-agent firm</span>
+        <strong style="color:var(--copper);">$9,000/yr</strong>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       SECTION 2 — REVENUE AT SCALE
+  ═════════════════════════════════════ -->
+  <div class="section-label"><span>02 — Revenue at Scale</span></div>
+
+  <div class="card">
+    <h3>What ListingAI earns per customer as their team grows</h3>
+    <p>Structure 1 plateaus at each tier ceiling. Structure 3 grows continuously with every agent hired.</p>
+    <table class="rev-table">
+      <thead>
+        <tr>
+          <th>Agency size</th>
+          <th style="text-align:right;">Structure 1</th>
+          <th style="text-align:right; background:rgba(27,58,107,0.06); color:var(--navy);">Structure 3 ★</th>
+          <th style="text-align:right;">Difference</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1 agent</td>
+          <td>$49</td>
+          <td>$49</td>
+          <td class="same">—</td>
+        </tr>
+        <tr>
+          <td>3 agents <span style="font-size:0.7rem; color:var(--muted);">(min brokerage)</span></td>
+          <td>$149 <span class="plateau">plateau</span></td>
+          <td>$105</td>
+          <td class="cheaper">S3 cheaper ↓ $44</td>
+        </tr>
+        <tr>
+          <td>5 agents</td>
+          <td>$149 <span class="plateau">plateau</span></td>
+          <td>$175</td>
+          <td class="winner">+$26 (17%)</td>
+        </tr>
+        <tr>
+          <td>8 agents <span style="font-size:0.7rem; color:var(--muted);">(active median)</span></td>
+          <td>$149 <span class="plateau">plateau</span></td>
+          <td>$280</td>
+          <td class="winner">+$131 (88%)</td>
+        </tr>
+        <tr>
+          <td>10 agents</td>
+          <td>$149 <span class="plateau">plateau</span></td>
+          <td>$350</td>
+          <td class="winner">+$201 (135%)</td>
+        </tr>
+        <tr>
+          <td>15 agents <span style="font-size:0.7rem; color:var(--muted);">(Agency tier kicks in)</span></td>
+          <td>$299 <span class="plateau">plateau</span></td>
+          <td>$375</td>
+          <td class="winner">+$76 (25%)</td>
+        </tr>
+        <tr>
+          <td>20 agents</td>
+          <td>$299 <span class="plateau">plateau</span></td>
+          <td>$500</td>
+          <td class="winner">+$201 (67%)</td>
+        </tr>
+        <tr>
+          <td>30 agents</td>
+          <td>$299 <span class="plateau">plateau</span></td>
+          <td>$750</td>
+          <td class="winner">+$451 (151%)</td>
+        </tr>
+        <tr>
+          <td>50 agents</td>
+          <td style="color:var(--muted);">Custom</td>
+          <td>$1,250</td>
+          <td class="winner">Clear winner ✓</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--border);">
+      <div style="background:#fff8f0; border:1px solid #fde8cc; border-radius:10px; padding:0.85rem 1rem;">
+        <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin-bottom:0.3rem;">Structure 1 problem</div>
+        <div style="font-size:0.77rem; color:var(--muted); line-height:1.5;">Revenue jumps only when a customer manually upgrades their tier. A 10-agent firm paying $149/mo is being undercharged by <strong style="color:var(--ink);">$201/mo</strong> vs. what they'd pay under Structure 3.</div>
+      </div>
+      <div style="background:#f0f7ff; border:1px solid #c7d9f5; border-radius:10px; padding:0.85rem 1rem;">
+        <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--navy); margin-bottom:0.3rem;">Structure 3 advantage</div>
+        <div style="font-size:0.77rem; color:var(--muted); line-height:1.5;">Every hire the brokerage makes is automatic revenue. A 10-agent firm growing to 15 adds <strong style="color:var(--ink);">$175/mo</strong> to your MRR without any upsell action from you.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       SECTION 3 — HEAD TO HEAD
+  ═════════════════════════════════════ -->
+  <div class="section-label"><span>03 — Head to Head</span></div>
+
+  <div class="card">
+    <h3>Every dimension that matters</h3>
+    <p>Comparing both structures across product fit, revenue mechanics, complexity, and market alignment.</p>
+    <table class="h2h-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Structure 1 — Flat Tiers</th>
+          <th>Structure 3 — Per-Agent ★</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Easy for customers to understand</td>
+          <td class="yes">Yes — immediately ✓</td>
+          <td class="yes">Yes — PropSpace trained them ✓</td>
+        </tr>
+        <tr>
+          <td>Revenue grows when agency hires</td>
+          <td class="no">No — flat tier unchanged —</td>
+          <td class="yes">Yes — +$35 per new agent auto ✓</td>
+        </tr>
+        <tr>
+          <td>Revenue risk when agency fires</td>
+          <td class="yes">None — flat fee is stable ✓</td>
+          <td class="partial">Drops per seat removed ~</td>
+        </tr>
+        <tr>
+          <td>Each agent has their own login</td>
+          <td class="no">No — shared workspace —</td>
+          <td class="yes">Yes — individual accounts ✓</td>
+        </tr>
+        <tr>
+          <td>Brokerage admin oversight</td>
+          <td class="partial">Only after team features ship ~</td>
+          <td class="yes">Built into the model ✓</td>
+        </tr>
+        <tr>
+          <td>Matches agent listing behaviour</td>
+          <td class="partial">Pool can be dominated by 1 agent ~</td>
+          <td class="yes">15 listings/agent/mo is fair ✓</td>
+        </tr>
+        <tr>
+          <td>Launch with current codebase</td>
+          <td class="yes">Yes — Solo plan today ✓</td>
+          <td class="partial">Solo only — team needs building ~</td>
+        </tr>
+        <tr>
+          <td>Billing complexity</td>
+          <td class="yes">3 Stripe products — simple ✓</td>
+          <td class="partial">Metered billing + proration ~</td>
+        </tr>
+        <tr>
+          <td>Cheaper than PropSpace ($60/agent)</td>
+          <td class="yes">Yes — $149 vs $180 min ✓</td>
+          <td class="yes">Yes — $35 vs $60/agent ✓</td>
+        </tr>
+        <tr>
+          <td>NRR expansion without sales effort</td>
+          <td class="no">No — needs manual tier upgrade —</td>
+          <td class="yes">Yes — organic on every hire ✓</td>
+        </tr>
+        <tr>
+          <td>Annual contract risk</td>
+          <td class="partial" style="color:var(--red);">Don't sell annual — can't migrate ✗</td>
+          <td class="yes">Annual fine — model doesn't change ✓</td>
+        </tr>
+        <tr>
+          <td>Max revenue · 10-agent firm/yr</td>
+          <td style="font-weight:600;">$1,788</td>
+          <td style="font-weight:700; color:var(--copper);">$4,200</td>
+        </tr>
+        <tr>
+          <td>Max revenue · 30-agent firm/yr</td>
+          <td style="font-weight:600;">$3,588</td>
+          <td style="font-weight:700; color:var(--copper);">$9,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       SECTION 4 — PHASED ROADMAP
+  ═════════════════════════════════════ -->
+  <div class="section-label"><span>04 — Phased Launch Roadmap</span></div>
+
+  <div class="card">
+    <h3>Start with Structure 1. Ship Structure 3. Retire the flat tiers.</h3>
+    <p>The Solo plan is identical in both models — early customers never get re-priced. Monthly billing only on Structure 1 so migration to Structure 3 is frictionless.</p>
+
+    <div class="roadmap">
+
+      <div class="phase phase-1">
+        <div class="phase-num">1</div>
+        <div class="phase-tag">Now · 0–3 months</div>
+        <h4>Launch Solo Plan</h4>
+        <ul>
+          <li><span class="dot" style="color:var(--green);">✓</span>$49/mo · 15 listings · current code</li>
+          <li><span class="dot" style="color:var(--green);">✓</span>Wire up Stripe (1 product)</li>
+          <li><span class="dot" style="color:var(--green);">✓</span>Monthly billing only — no annual</li>
+          <li><span class="dot" style="color:var(--copper);">→</span>"Brokerage plan — coming soon" CTA</li>
+          <li><span class="dot" style="color:var(--copper);">→</span>Capture brokerage waitlist emails</li>
+        </ul>
+        <div class="phase-footer">Revenue starts: <strong>this sprint</strong></div>
+      </div>
+
+      <div class="phase phase-2">
+        <div class="phase-num">2</div>
+        <div class="phase-tag">3–9 months</div>
+        <h4>Launch Brokerage Plan</h4>
+        <ul>
+          <li><span class="dot" style="color:var(--green);">✓</span>Build agent-level accounts</li>
+          <li><span class="dot" style="color:var(--green);">✓</span>Brokerage admin umbrella dashboard</li>
+          <li><span class="dot" style="color:var(--green);">✓</span>$35/agent/mo · Stripe metered billing</li>
+          <li><span class="dot" style="color:var(--green);">✓</span>Invite flow (admin invites agents)</li>
+          <li><span class="dot" style="color:var(--copper);">→</span>Convert waitlist to paying accounts</li>
+        </ul>
+        <div class="phase-footer">Structure 3 live for <strong>2–10 agent firms</strong></div>
+      </div>
+
+      <div class="phase phase-3">
+        <div class="phase-num">3</div>
+        <div class="phase-tag">9–18 months</div>
+        <h4>Full Structure 3 + Enterprise</h4>
+        <ul>
+          <li><span class="dot" style="color:var(--green);">✓</span>Agency tier · $25/agent · min 15</li>
+          <li><span class="dot" style="color:var(--green);">✓</span>White-label exports + portal API sync</li>
+          <li><span class="dot" style="color:var(--green);">✓</span>Enterprise custom contracts</li>
+          <li><span class="dot" style="color:var(--copper);">→</span>Target Haus & Haus, MPP, Dacha tier</li>
+          <li><span class="dot" style="color:var(--copper);">→</span>Retire Structure 1 Boutique/Agency</li>
+        </ul>
+        <div class="phase-footer">Full per-agent model <strong>permanently live</strong></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       SECTION 5 — FINAL VERDICT
+  ═════════════════════════════════════ -->
+  <div class="section-label"><span>05 — Verdict</span></div>
+
+  <div class="verdict">
+    <div class="v-label">Final Recommendation</div>
+    <h2>Structure 3 is the right model.<br/>Structure 1 is the right launch.</h2>
+    <div class="verdict-body">
+      <div>
+        <p>Structure 3 — per-agent pricing with individual accounts under a brokerage umbrella — is the correct long-term architecture. It mirrors how the UAE market already thinks (PropSpace charges per user), it captures revenue growth automatically as agencies hire, and it gives agents the individual ownership they need while giving brokerages the oversight they require for compliance.</p>
+        <p>The Solo plan is identical in both structures at $49/mo — so launch it today, collect real customers, and use that MRR to fund building the umbrella dashboard. Never sell annual contracts on Structure 1 flat tiers: the moment you do, you've locked yourself out of a clean migration.</p>
+        <ul class="checklist">
+          <li>Ship $49 Solo on Stripe this sprint</li>
+          <li>Add brokerage waitlist CTA on the pricing page</li>
+          <li>Monthly-only billing on all Structure 1 plans</li>
+          <li>Build agent accounts + admin umbrella dashboard (Phase 2)</li>
+          <li>At Phase 2 launch, retire Boutique/Agency flat tiers</li>
+        </ul>
+      </div>
+      <div class="verdict-stats">
+        <div class="v-stat">
+          <span class="v-val">2.5×</span>
+          <div class="v-desc">more revenue per 30-agent agency vs. Structure 1 ($750 vs $299/mo)</div>
+        </div>
+        <div class="v-stat">
+          <span class="v-val">$35</span>
+          <div class="v-desc">per agent/mo — cheaper than PropSpace's $60/agent. Easy sell.</div>
+        </div>
+        <div class="v-stat">
+          <span class="v-val">$0</span>
+          <div class="v-desc">upsell effort needed. Every agent the brokerage hires = automatic MRR.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer style="text-align:center; padding:2.5rem 2rem; border-top:1px solid var(--border); background:var(--white); color:var(--muted); font-size:0.8rem;">
+  <strong style="color:var(--navy);">ListingAI</strong> — Pricing Decision · March 2026 · Internal
+</footer>
+
+</body>
+</html>
