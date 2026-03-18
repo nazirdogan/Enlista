@@ -184,7 +184,7 @@ export default function HomePage() {
           {/* Desktop CTA buttons */}
           <div className="hidden md:flex" style={{ alignItems: "center", gap: 10 }}>
             <a
-              href="#cta"
+              href="/auth?tab=signin"
               style={{
                 display: "inline-block",
                 border: `1.5px solid ${c.border}`,
@@ -199,7 +199,7 @@ export default function HomePage() {
               Sign in
             </a>
             <a
-              href="#cta"
+              href="/auth?tab=signup"
               style={{
                 display: "inline-block",
                 background: c.blue,
@@ -264,7 +264,7 @@ export default function HomePage() {
             })}
             <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 8 }}>
               <a
-                href="#cta"
+                href="/auth?tab=signin"
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
                   display: "block",
@@ -281,7 +281,7 @@ export default function HomePage() {
                 Sign in
               </a>
               <a
-                href="#cta"
+                href="/auth?tab=signup"
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
                   display: "block",
@@ -364,7 +364,7 @@ export default function HomePage() {
               }}
             >
               <a
-                href="#cta"
+                href="/auth?tab=signup"
                 style={{
                   display: "inline-block",
                   background: c.blue,
@@ -1474,47 +1474,24 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <form
-            style={{ display: "flex", flexDirection: "column", gap: 10 }}
+          <a
+            href="/auth?tab=signup"
+            style={{
+              display: "block",
+              textAlign: "center",
+              padding: 13,
+              background: c.blue,
+              color: "white",
+              fontSize: 13,
+              borderRadius: 6,
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+              fontFamily: "var(--font-jakarta), sans-serif",
+              textDecoration: "none",
+            }}
           >
-            {["Agency email", "Agency name"].map((placeholder) => (
-              <input
-                key={placeholder}
-                type={placeholder.includes("email") ? "email" : "text"}
-                placeholder={placeholder}
-                style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1.5px solid rgba(255,255,255,0.1)",
-                  color: "white",
-                  padding: "11px 16px",
-                  fontFamily: "var(--font-jakarta), sans-serif",
-                  fontSize: 13,
-                  borderRadius: 6,
-                  outline: "none",
-                  width: "100%",
-                }}
-              />
-            ))}
-            <button
-              type="submit"
-              style={{
-                padding: 13,
-                cursor: "pointer",
-                background: c.blue,
-                color: "white",
-                border: "none",
-                fontSize: 13,
-                borderRadius: 6,
-                display: "block",
-                width: "100%",
-                fontWeight: 600,
-                letterSpacing: "0.02em",
-                fontFamily: "var(--font-jakarta), sans-serif",
-              }}
-            >
-              Start Free Trial →
-            </button>
-          </form>
+            Start Free Trial →
+          </a>
         </div>
       </section>
 
