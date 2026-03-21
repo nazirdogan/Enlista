@@ -53,18 +53,25 @@ body {
   }
 }
 
-/* Mobile: features bento collapses to single column */
+/* Mobile: how it works section */
 @media (max-width: 767px) {
-  .features-bento {
-    grid-template-columns: 1fr !important;
-    grid-template-rows: auto !important;
+  .how-it-works-steps {
+    flex-direction: column !important;
   }
-  .features-bento-wide {
-    grid-column: span 1 !important;
-    padding: 24px !important;
+  .how-it-works-connector {
+    display: none !important;
   }
-  .features-bento-tall {
-    grid-row: span 1 !important;
+  .sample-output-columns {
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+  .sample-output-divider {
+    width: 100% !important;
+    height: 1px !important;
+    align-self: auto !important;
+  }
+  .sample-output-ar {
+    padding-left: 0 !important;
   }
 }
 
