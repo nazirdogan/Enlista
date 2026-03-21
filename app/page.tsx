@@ -654,7 +654,7 @@ export default function HomePage() {
               flexShrink: 0,
             }}
           >
-            →
+            {"\u2192"}
           </div>
 
           <BentoCard style={{ flex: 1, padding: 32 }}>
@@ -697,7 +697,7 @@ export default function HomePage() {
               flexShrink: 0,
             }}
           >
-            →
+            {"\u2192"}
           </div>
 
           <BentoCard style={{ flex: 1, padding: 32 }}>
