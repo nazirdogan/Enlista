@@ -579,301 +579,245 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* How It Works */}
       <section
         id="features"
         style={{ padding: "64px 24px", maxWidth: 1280, margin: "0 auto" }}
       >
-        <div style={{ marginBottom: 40 }}>
-          <SectionLabel>Platform</SectionLabel>
+        {/* Header */}
+        <div style={{ marginBottom: 48 }}>
+          <SectionLabel>How It Works</SectionLabel>
           <h2
             style={{
               fontWeight: 800,
               fontSize: "clamp(28px, 4vw, 44px)",
               color: c.dark,
+              marginBottom: 12,
             }}
           >
-            Six modules.
+            A complete listing in 30 seconds.
             <br />
-            One subscription.
+            Bilingual. Built to sell.
           </h2>
+          <p style={{ color: c.muted, fontSize: 15, lineHeight: 1.7 }}>
+            Speak or fill in the details — the AI handles the rest.
+          </p>
         </div>
 
-        {/* Bento grid */}
+        {/* 3-step flow */}
         <div
-          className="features-bento"
+          className="how-it-works-steps"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gridTemplateRows: "auto",
-            gap: 12,
+            display: "flex",
+            alignItems: "stretch",
+            gap: 0,
+            marginBottom: 16,
           }}
         >
-          {/* 01 — wide */}
-          <BentoCard
-            className="features-bento-wide"
-            style={{
-              gridColumn: "span 2",
-              padding: 40,
-              background: c.blue,
-              color: "white",
-            }}
-          >
+          <BentoCard style={{ flex: 1, padding: 32 }}>
             <span
               style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.6)",
-                display: "block",
-                marginBottom: 12,
-              }}
-            >
-              01 — Core
-            </span>
-            <h3 style={{ fontWeight: 800, fontSize: 28, marginBottom: 12 }}>
-              AI Listing Copy Engine
-            </h3>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.7)",
-                fontSize: 14,
-                lineHeight: 1.8,
-                maxWidth: 480,
-              }}
-            >
-              Bilingual EN/AR descriptions generated in seconds. Portal-tuned
-              for Bayut, Property Finder, and Dubizzle&apos;s SEO algorithms. From a
-              villa on the Palm to a studio in JLT — copy that converts.
-            </p>
-          </BentoCard>
-
-          {/* 02 */}
-          <BentoCard style={{ padding: 32 }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: c.muted,
-                display: "block",
-                marginBottom: 12,
-              }}
-            >
-              02
-            </span>
-            <h3
-              style={{
-                fontWeight: 700,
-                fontSize: 20,
-                color: c.dark,
-                marginBottom: 8,
-              }}
-            >
-              Portal Sync
-            </h3>
-            <p style={{ color: c.muted, fontSize: 13, lineHeight: 1.8 }}>
-              One click → every UAE portal updated in under 4 minutes.
-            </p>
-            <div
-              style={{ marginTop: 16, display: "flex", gap: 6, flexWrap: "wrap" }}
-            >
-              <Badge variant="green">Bayut ✓</Badge>
-              <Badge variant="green">PF ✓</Badge>
-              <Badge variant="green">Dubizzle ✓</Badge>
-            </div>
-          </BentoCard>
-
-          {/* 03 — tall */}
-          <BentoCard className="features-bento-tall" style={{ padding: 32, gridRow: "span 2" }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: c.muted,
-                display: "block",
-                marginBottom: 12,
-              }}
-            >
-              03
-            </span>
-            <h3
-              style={{
-                fontWeight: 700,
-                fontSize: 20,
-                color: c.dark,
-                marginBottom: 8,
-              }}
-            >
-              Lead Intelligence
-            </h3>
-            <p
-              style={{
-                color: c.muted,
-                fontSize: 13,
-                lineHeight: 1.8,
-                marginBottom: 24,
-              }}
-            >
-              ML-ranked buyer scoring. WhatsApp qualification 24/7. Your agents
-              always know who to call first.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                { label: "Hot", count: "34", pct: "82%", barColor: c.amber },
-                { label: "Qualified", count: "128", pct: "55%", barColor: c.blueLight },
-                { label: "New", count: "312", pct: "100%", barColor: c.border },
-              ].map((item) => (
-                <div key={item.label}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: 4,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: c.dark,
-                      }}
-                    >
-                      {item.label}
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-jetbrains), monospace",
-                        fontSize: 12,
-                        color: item.barColor,
-                      }}
-                    >
-                      {item.count}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      height: 4,
-                      background: c.bg,
-                      borderRadius: 2,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        height: "100%",
-                        width: item.pct,
-                        background: item.barColor,
-                        borderRadius: 2,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </BentoCard>
-
-          {/* 04 */}
-          <BentoCard style={{ padding: 32, background: c.dark }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.4)",
-                display: "block",
-                marginBottom: 12,
-              }}
-            >
-              04
-            </span>
-            <h3
-              style={{
-                fontWeight: 700,
-                fontSize: 20,
-                color: "white",
-                marginBottom: 8,
-              }}
-            >
-              RERA Compliance
-            </h3>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.5)",
-                fontSize: 13,
-                lineHeight: 1.8,
-              }}
-            >
-              DLD permit validation before every publish. Zero suspensions.
-              Automatic audit trail.
-            </p>
-          </BentoCard>
-
-          {/* 05 */}
-          <BentoCard style={{ padding: 32 }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: c.muted,
-                display: "block",
-                marginBottom: 12,
-              }}
-            >
-              05
-            </span>
-            <h3
-              style={{
-                fontWeight: 700,
-                fontSize: 20,
-                color: c.dark,
-                marginBottom: 8,
-              }}
-            >
-              Market Analytics
-            </h3>
-            <p style={{ color: c.muted, fontSize: 13, lineHeight: 1.8 }}>
-              Live DLD data. AED/sqft benchmarks. Area demand heatmaps.
-            </p>
-          </BentoCard>
-
-          {/* 06 */}
-          <BentoCard style={{ padding: 32, background: c.bluePale }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
+                fontSize: 36,
+                fontWeight: 300,
                 color: c.blue,
                 display: "block",
                 marginBottom: 12,
+                lineHeight: 1,
               }}
             >
-              06
+              1
             </span>
             <h3
               style={{
                 fontWeight: 700,
-                fontSize: 20,
+                fontSize: 18,
                 color: c.dark,
                 marginBottom: 8,
               }}
             >
-              Photo Suite
+              Speak or fill in the details
             </h3>
             <p style={{ color: c.muted, fontSize: 13, lineHeight: 1.8 }}>
-              AI image enhancement, smart ordering, portal sizing, watermarking.
+              Use your voice or a short form. Property type, size, key
+              features — say it or type it.
+            </p>
+          </BentoCard>
+
+          <div
+            className="how-it-works-connector"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "0 16px",
+              fontSize: 20,
+              color: c.muted,
+              flexShrink: 0,
+            }}
+          >
+            →
+          </div>
+
+          <BentoCard style={{ flex: 1, padding: 32 }}>
+            <span
+              style={{
+                fontSize: 36,
+                fontWeight: 300,
+                color: c.blue,
+                display: "block",
+                marginBottom: 12,
+                lineHeight: 1,
+              }}
+            >
+              2
+            </span>
+            <h3
+              style={{
+                fontWeight: 700,
+                fontSize: 18,
+                color: c.dark,
+                marginBottom: 8,
+              }}
+            >
+              AI writes your listing
+            </h3>
+            <p style={{ color: c.muted, fontSize: 13, lineHeight: 1.8 }}>
+              Bilingual EN/AR copy generated in seconds. Optimised for
+              Bayut, Property Finder, and Dubizzle.
+            </p>
+          </BentoCard>
+
+          <div
+            className="how-it-works-connector"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "0 16px",
+              fontSize: 20,
+              color: c.muted,
+              flexShrink: 0,
+            }}
+          >
+            →
+          </div>
+
+          <BentoCard style={{ flex: 1, padding: 32 }}>
+            <span
+              style={{
+                fontSize: 36,
+                fontWeight: 300,
+                color: c.blue,
+                display: "block",
+                marginBottom: 12,
+                lineHeight: 1,
+              }}
+            >
+              3
+            </span>
+            <h3
+              style={{
+                fontWeight: 700,
+                fontSize: 18,
+                color: c.dark,
+                marginBottom: 8,
+              }}
+            >
+              Copy and paste
+            </h3>
+            <p style={{ color: c.muted, fontSize: 13, lineHeight: 1.8 }}>
+              Done. Paste straight into any portal. No editing, no
+              reformatting.
             </p>
           </BentoCard>
         </div>
+
+        {/* Sample output card */}
+        <BentoCard style={{ padding: 40, marginTop: 12 }}>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: c.muted,
+              display: "block",
+              marginBottom: 24,
+            }}
+          >
+            Sample output — 2BR, Downtown Dubai
+          </span>
+          <div
+            className="sample-output-columns"
+            style={{ display: "flex", gap: 0 }}
+          >
+            {/* English column */}
+            <div style={{ flex: 1, paddingRight: 32 }}>
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: c.blue,
+                  marginBottom: 12,
+                }}
+              >
+                EN
+              </p>
+              <p style={{ color: c.text, fontSize: 14, lineHeight: 1.9 }}>
+                Nestled in the heart of Downtown Dubai, this well-appointed
+                2-bedroom apartment offers sweeping views of the iconic Burj
+                Khalifa skyline. Spanning 1,150 sq ft across a smart
+                open-plan layout, the residence features floor-to-ceiling
+                windows, a fully fitted kitchen, and two generously sized
+                en-suite bedrooms. Residents enjoy access to a rooftop
+                infinity pool, a state-of-the-art gymnasium, and 24-hour
+                concierge service — all just steps from Dubai Mall and the
+                Dubai Fountain.
+              </p>
+            </div>
+
+            {/* Vertical divider */}
+            <div
+              className="sample-output-divider"
+              style={{
+                width: 1,
+                background: c.border,
+                flexShrink: 0,
+                alignSelf: "stretch",
+              }}
+            />
+
+            {/* Arabic column */}
+            <div
+              dir="rtl"
+              className="sample-output-ar"
+              style={{ flex: 1, paddingLeft: 32, textAlign: "right" }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: c.blue,
+                  marginBottom: 12,
+                }}
+              >
+                AR
+              </p>
+              <p style={{ color: c.text, fontSize: 14, lineHeight: 1.9 }}>
+                تقع هذه الشقة المكوّنة من غرفتَي نوم في قلب وسط مدينة
+                دبي، وتوفّر إطلالات خلّابة على أفق برج خليفة الشهير. تمتد
+                الشقة على مساحة 1,150 قدم مربع بتصميم مفتوح ذكي، وتتميّز
+                بنوافذ تمتد من الأرض إلى السقف، ومطبخ مجهّز بالكامل،
+                وغرفتَي نوم واسعتَين مع حمّامَين ملحقَين. يتمتع السكان
+                بالوصول إلى مسبح لا نهاية له على السطح، وصالة رياضية
+                متكاملة، وخدمة كونسيرج على مدار الساعة — على بعد خطوات من
+                دبي مول ونافورة دبي.
+              </p>
+            </div>
+          </div>
+        </BentoCard>
       </section>
 
       {/* Testimonials */}
