@@ -157,12 +157,26 @@ export default function HomePage() {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontWeight: 800, fontSize: 17, color: c.dark }}>
-            Listings<span style={{ color: c.blue }}>Launch</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+            {/* Grid mark — 3×3 cells forming "E" */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 10px)', gridTemplateRows: 'repeat(3, 10px)', gap: 3 }}>
+              <div style={{ borderRadius: 2, background: c.blue }} />
+              <div style={{ borderRadius: 2, background: c.blue }} />
+              <div style={{ borderRadius: 2, background: c.blue }} />
+              <div style={{ borderRadius: 2, background: c.blue }} />
+              <div style={{ borderRadius: 2, background: c.blue }} />
+              <div style={{ borderRadius: 2, background: `rgba(29,78,216,0.14)` }} />
+              <div style={{ borderRadius: 2, background: c.blue }} />
+              <div style={{ borderRadius: 2, background: c.blue }} />
+              <div style={{ borderRadius: 2, background: c.blue }} />
+            </div>
+            <span style={{ fontWeight: 800, fontSize: 17, color: c.dark, letterSpacing: '-0.04em' }}>
+              Enlist<span style={{ color: c.blue }}>a</span>
+            </span>
           </div>
           {/* Desktop nav links */}
           <div className="hidden md:flex" style={{ gap: 8, fontSize: 13 }}>
-            {["Platform", "Clients", "Pricing"].map((label, i) => {
+            {["How It Works", "Clients", "Pricing"].map((label, i) => {
               const hrefs = ["#features", "#testimonials", "#pricing"];
               return (
                 <a
@@ -241,7 +255,7 @@ export default function HomePage() {
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
           <div className="md:hidden" style={{ paddingTop: 16, paddingBottom: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-            {["Platform", "Clients", "Pricing"].map((label, i) => {
+            {["How It Works", "Clients", "Pricing"].map((label, i) => {
               const hrefs = ["#features", "#testimonials", "#pricing"];
               return (
                 <a
@@ -391,7 +405,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                See the platform
+                See how it works
               </a>
             </div>
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
