@@ -103,6 +103,13 @@ export default function AuthForm() {
     if (t === 'signin' || t === 'signup') setTab(t)
   }, [searchParams])
 
+  // Persist outreach tracking token from URL to localStorage
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const t = params.get('t')
+    if (t) localStorage.setItem('enlista_outreach_token', t)
+  }, [])
+
   const switchTab = (t: Tab) => {
     setTab(t)
     router.replace(`/auth?tab=${t}`)
@@ -183,7 +190,20 @@ export default function AuthForm() {
         console.error('Agency creation error:', agencyError)
       }
 
-      toast.success('Account created! Welcome to ListingsLaunch.')
+      toast.success('Account created! Welcome to Enlista.')
+
+      // Attribute signup to outreach campaign if token present
+      const outreachToken = typeof window !== 'undefined'
+        ? localStorage.getItem('enlista_outreach_token')
+        : null
+      if (outreachToken && data.user?.id) {
+        fetch('/api/outreach/signup-hook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: outreachToken, userId: data.user.id }),
+        }).then(() => localStorage.removeItem('enlista_outreach_token'))
+      }
+
       router.push('/dashboard')
     } catch {
       toast.error('An unexpected error occurred.')
@@ -216,7 +236,7 @@ export default function AuthForm() {
         {/* Wordmark */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <h1 style={{ fontWeight: 800, fontSize: 24, color: '#0F1829', margin: 0 }}>
-            Listings<span style={{ color: '#1D4ED8' }}>Launch</span>
+            Enli<span style={{ color: '#1D4ED8' }}>sta</span>
           </h1>
           <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
             List it. In Arabic. In 30 seconds.
