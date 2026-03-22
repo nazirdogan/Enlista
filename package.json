@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "outreach:parse": "npx tsx scripts/outreach/parse-agents.ts",
     "outreach:send": "npx tsx scripts/outreach/send.ts",
-    "outreach:send:dry": "OUTREACH_BATCH_SIZE=5 npx tsx scripts/outreach/send.ts"
+    "outreach:send:dry": "OUTREACH_BATCH_SIZE=5 npx tsx scripts/outreach/send.ts",
+    "outreach:analyze": "npx tsx scripts/outreach/analyze.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
