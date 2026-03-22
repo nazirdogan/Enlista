@@ -54,7 +54,7 @@ export default async function AnalyticsPage() {
     <div>
       <PageHeading
         title="Analytics"
-        subtitle="Real data from your ListingsLaunch account."
+        subtitle="Real data from your Enlista account."
       />
 
       {/* Top stats */}

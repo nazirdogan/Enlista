@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import type { NextRequest } from 'next/server'
 
 // Mock Supabase
 vi.mock('@/lib/supabase/server', () => ({
@@ -15,7 +16,7 @@ describe('GET /api/go', () => {
     const req = new Request('https://enlista.ai/api/go?t=abc123', {
       headers: { 'x-forwarded-for': '1.2.3.4' },
     })
-    const res = await GET(req as any)
+    const res = await GET(req as unknown as NextRequest)
     expect(res.status).toBe(307)
     expect(res.headers.get('location')).toContain('/auth?t=abc123')
   })
@@ -23,7 +24,7 @@ describe('GET /api/go', () => {
   it('redirects to /auth without token when token is missing', async () => {
     const { GET } = await import('../route')
     const req = new Request('https://enlista.ai/api/go')
-    const res = await GET(req as any)
+    const res = await GET(req as unknown as NextRequest)
     expect(res.status).toBe(307)
     expect(res.headers.get('location')).toContain('/auth')
   })

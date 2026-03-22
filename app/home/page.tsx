@@ -274,7 +274,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Start Free — 14 days
+                Start Free — 7 days
               </a>
               <a
                 href="#features"
@@ -716,7 +716,7 @@ export default function HomePage() {
             {
               badge: "Espace Real Estate · Dubai",
               quote:
-                "Two days to four minutes. That's a 720× improvement. ListingsLaunch replaced our entire publishing workflow.",
+                "Two days to four minutes. That's a 720× improvement. Enlista replaced our entire publishing workflow.",
               name: "Sarah Al Mansoori",
               role: "Head of Operations",
               initial: "S",
@@ -860,7 +860,7 @@ export default function HomePage() {
             No surprises.
           </h2>
           <p style={{ color: c.muted, maxWidth: 280, fontSize: 13 }}>
-            All plans in AED. Cancel anytime. 14-day free trial included on
+            All plans in AED. Cancel anytime. 7-day free trial included on
             every tier.
           </p>
         </div>
@@ -1179,7 +1179,7 @@ export default function HomePage() {
                 marginBottom: 24,
               }}
             >
-              14-day free trial. No credit card. UAE support team available
+              7-day free trial. No credit card. UAE support team available
               daily.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

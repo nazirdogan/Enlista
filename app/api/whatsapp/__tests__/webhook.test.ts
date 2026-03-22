@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import type { NextRequest } from 'next/server'
 import { createHmac } from 'crypto'
 
 const APP_SECRET = 'test_secret'
@@ -30,7 +31,7 @@ describe('POST /api/whatsapp/webhook', () => {
       body,
       headers: { 'x-hub-signature-256': 'sha256=badsignature' },
     })
-    const res = await POST(req as any)
+    const res = await POST(req as unknown as NextRequest)
     expect(res.status).toBe(403)
   })
 
@@ -42,7 +43,7 @@ describe('POST /api/whatsapp/webhook', () => {
       body,
       headers: { 'x-hub-signature-256': makeSignature(body) },
     })
-    const res = await POST(req as any)
+    const res = await POST(req as unknown as NextRequest)
     expect(res.status).toBe(200)
   })
 })
@@ -52,7 +53,7 @@ describe('GET /api/whatsapp/webhook (verification)', () => {
     const { GET } = await import('../webhook/route')
     const url = 'https://enlista.ai/api/whatsapp/webhook?hub.mode=subscribe&hub.verify_token=test_verify_token&hub.challenge=challenge123'
     const req = new Request(url)
-    const res = await GET(req as any)
+    const res = await GET(req as unknown as NextRequest)
     expect(res.status).toBe(200)
     const text = await res.text()
     expect(text).toBe('challenge123')
