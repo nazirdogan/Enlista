@@ -1,4 +1,3 @@
-import { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
@@ -8,7 +7,7 @@ export class AdminAuthError extends Error {
   }
 }
 
-export async function requireAdmin(_req?: NextRequest) {
+export async function requireAdmin() {
   const cookieStore = cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
