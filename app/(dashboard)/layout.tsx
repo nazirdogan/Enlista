@@ -36,9 +36,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       }} className="hidden md:flex">
         {/* Wordmark */}
         <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <Link href="/dashboard" style={{ textDecoration: 'none' }}>
-            <span style={{ fontWeight: 800, fontSize: 18, color: 'white' }}>
-              Listings<span style={{ color: '#3B82F6' }}>Launch</span>
+          <Link href="/dashboard" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
+            {/* Grid mark — 3×3 cells forming "E" */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 10px)', gridTemplateRows: 'repeat(3, 10px)', gap: 3 }}>
+              {/* Row 1: top bar (all on) */}
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+              {/* Row 2: mid bar (2 on) */}
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+              <div style={{ borderRadius: 2, background: 'rgba(93,163,255,0.18)' }} />
+              {/* Row 3: bottom bar (all on) */}
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+              <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            </div>
+            <span style={{ fontWeight: 800, fontSize: 18, color: 'white', letterSpacing: '-0.04em' }}>
+              Enlist<span style={{ color: '#5DA3FF' }}>a</span>
             </span>
           </Link>
         </div>
@@ -83,9 +98,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         background: '#0F1829', alignItems: 'center',
         justifyContent: 'space-between', padding: '0 16px', zIndex: 50,
       }} className="md:hidden flex">
-        <span style={{ fontWeight: 800, fontSize: 16, color: 'white' }}>
-          Listings<span style={{ color: '#3B82F6' }}>Launch</span>
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 8px)', gridTemplateRows: 'repeat(3, 8px)', gap: 2 }}>
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            <div style={{ borderRadius: 2, background: 'rgba(93,163,255,0.18)' }} />
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+            <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
+          </div>
+          <span style={{ fontWeight: 800, fontSize: 16, color: 'white', letterSpacing: '-0.04em' }}>
+            Enlist<span style={{ color: '#5DA3FF' }}>a</span>
+          </span>
+        </div>
         <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'white' }}>
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
