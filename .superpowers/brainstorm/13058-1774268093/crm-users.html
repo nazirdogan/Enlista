@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista Admin CRM — Users</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #f4f5f7; display: flex; min-height: 100vh; font-size: 13px; color: #1a1a2e; }
+
+  .sidebar { width: 200px; background: #1a1a2e; flex-shrink: 0; display: flex; flex-direction: column; padding: 20px 0; }
+  .sidebar-logo { padding: 0 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-logo .brand { color: #fff; font-size: 13px; font-weight: 700; }
+  .sidebar-logo .sub { color: rgba(255,255,255,0.35); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .nav { padding: 12px 0; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; color: rgba(255,255,255,0.55); font-size: 12px; cursor: pointer; border-left: 3px solid transparent; }
+  .nav-item.active { color: #fff; background: rgba(99,102,241,0.15); border-left-color: #6366f1; }
+  .nav-item .icon { font-size: 14px; width: 18px; text-align: center; }
+  .nav-section { padding: 12px 16px 4px; color: rgba(255,255,255,0.2); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .main { flex: 1; overflow: auto; display: flex; flex-direction: column; }
+  .topbar { background: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; }
+  .topbar-title { font-size: 15px; font-weight: 700; color: #111; }
+  .topbar-meta { font-size: 11px; color: #9ca3af; }
+
+  .content { padding: 20px 24px; flex: 1; }
+
+  /* Filters bar */
+  .filters { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .search-box { display: flex; align-items: center; gap: 6px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 7px 12px; font-size: 12px; color: #9ca3af; flex: 1; max-width: 280px; }
+  .filter-btn { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 7px 12px; font-size: 11px; color: #374151; cursor: pointer; white-space: nowrap; }
+  .filter-btn.active { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+  .filter-divider { width: 1px; height: 20px; background: #e5e7eb; }
+  .export-btn { margin-left: auto; background: #1a1a2e; color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 11px; font-weight: 600; cursor: pointer; }
+
+  /* Stats strip */
+  .stats-strip { display: flex; gap: 14px; margin-bottom: 16px; }
+  .stat-pill { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .stat-pill .val { font-size: 18px; font-weight: 700; color: #111; }
+  .stat-pill .lbl { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Table */
+  .table-wrap { background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; text-align: left; border-bottom: 1px solid #f3f4f6; background: #fafafa; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid #f9fafb; transition: background 0.1s; cursor: pointer; }
+  tbody tr:hover { background: #f9fafb; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: 12px 16px; font-size: 12px; color: #374151; vertical-align: middle; }
+  .agency-name { font-weight: 600; color: #111; }
+  .agency-email { font-size: 10px; color: #9ca3af; margin-top: 1px; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .badge-trial { background: #fef3c7; color: #92400e; }
+  .badge-solo { background: #eff6ff; color: #1d4ed8; }
+  .badge-boutique { background: #f5f3ff; color: #6d28d9; }
+  .badge-agency { background: #fdf4ff; color: #86198f; }
+  .badge-churned { background: #fee2e2; color: #991b1b; }
+
+  .flag { font-size: 14px; margin-right: 4px; }
+  .city-cell { display: flex; align-items: center; }
+
+  .listings-bar { display: flex; align-items: center; gap: 6px; }
+  .bar-bg { width: 60px; height: 5px; background: #f3f4f6; border-radius: 3px; }
+  .bar-fill { height: 5px; background: #6366f1; border-radius: 3px; }
+
+  .last-active { font-size: 11px; }
+  .last-active.stale { color: #ef4444; }
+  .last-active.recent { color: #10b981; }
+  .last-active.mid { color: #f59e0b; }
+
+  .action-btn { background: none; border: 1px solid #e5e7eb; border-radius: 6px; padding: 4px 8px; font-size: 10px; color: #6b7280; cursor: pointer; }
+  .action-btn:hover { background: #f9fafb; }
+
+  /* Pagination */
+  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-top: 1px solid #f3f4f6; background: #fafafa; }
+  .pagination-info { font-size: 11px; color: #9ca3af; }
+  .pagination-btns { display: flex; gap: 4px; }
+  .page-btn { width: 28px; height: 28px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; font-size: 11px; color: #374151; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .page-btn.active { background: #6366f1; color: #fff; border-color: #6366f1; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Enlista</div>
+    <div class="sub">Admin CRM</div>
+  </div>
+  <div class="nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item"><span class="icon">📊</span> Overview</div>
+    <div class="nav-item active"><span class="icon">👥</span> Users</div>
+    <div class="nav-item"><span class="icon">💳</span> Subscriptions</div>
+    <div class="nav-item"><span class="icon">🏠</span> Listings</div>
+    <div class="nav-section">Growth</div>
+    <div class="nav-item"><span class="icon">📱</span> Outreach</div>
+    <div class="nav-item"><span class="icon">✉️</span> Emails</div>
+    <div class="nav-section">System</div>
+    <div class="nav-item"><span class="icon">⚙️</span> Settings</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Users</div>
+      <div class="topbar-meta">247 total agencies · 34 active trials · 18 paying</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Stats strip -->
+    <div class="stats-strip">
+      <div class="stat-pill">
+        <div><div class="val">247</div><div class="lbl">Total Signups</div></div>
+      </div>
+      <div class="stat-pill">
+        <div><div class="val">34</div><div class="lbl">Active Trials</div></div>
+      </div>
+      <div class="stat-pill">
+        <div><div class="val">18</div><div class="lbl">Paying</div></div>
+      </div>
+      <div class="stat-pill">
+        <div><div class="val" style="color:#ef4444">5</div><div class="lbl">At-Risk (14d inactive)</div></div>
+      </div>
+      <div class="stat-pill">
+        <div><div class="val">Dubai</div><div class="lbl">Top City</div></div>
+      </div>
+      <div class="stat-pill">
+        <div><div class="val">UAE</div><div class="lbl">Top Country</div></div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="search-box">🔍 &nbsp;Search agency, email, city...</div>
+      <div class="filter-btn active">All</div>
+      <div class="filter-btn">Trial</div>
+      <div class="filter-btn">Solo</div>
+      <div class="filter-btn">Boutique</div>
+      <div class="filter-btn">Agency</div>
+      <div class="filter-btn">Churned</div>
+      <div class="filter-divider"></div>
+      <div class="filter-btn">🇦🇪 UAE</div>
+      <div class="filter-btn">🇸🇦 KSA</div>
+      <div class="filter-btn">At-Risk</div>
+      <div class="export-btn">⬇ Export CSV</div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Agency</th>
+            <th>Location</th>
+            <th>Plan</th>
+            <th>Signed Up</th>
+            <th>Listings</th>
+            <th>Last Active</th>
+            <th>Source</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="agency-name">Prestige Group</div>
+              <div class="agency-email">info@prestigegroup.ae</div>
+            </td>
+            <td><div class="city-cell"><span class="flag">🇦🇪</span> Dubai</div></td>
+            <td><span class="badge badge-agency">Agency</span></td>
+            <td>Jan 5, 2026</td>
+            <td>
+              <div class="listings-bar">
+                <span>31</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:52px;"></div></div>
+              </div>
+            </td>
+            <td><span class="last-active recent">Today</span></td>
+            <td>Organic</td>
+            <td><button class="action-btn">View →</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agency-name">Gulf Homes LLC</div>
+              <div class="agency-email">hello@gulfhomes.com</div>
+            </td>
+            <td><div class="city-cell"><span class="flag">🇦🇪</span> Abu Dhabi</div></td>
+            <td><span class="badge badge-boutique">Boutique</span></td>
+            <td>Feb 12, 2026</td>
+            <td>
+              <div class="listings-bar">
+                <span>14</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:28px;"></div></div>
+              </div>
+            </td>
+            <td><span class="last-active recent">Yesterday</span></td>
+            <td>WhatsApp B1</td>
+            <td><button class="action-btn">View →</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agency-name">Tamimi Real Estate</div>
+              <div class="agency-email">ops@tamimi-re.sa</div>
+            </td>
+            <td><div class="city-cell"><span class="flag">🇸🇦</span> Riyadh</div></td>
+            <td><span class="badge badge-solo">Solo</span></td>
+            <td>Feb 28, 2026</td>
+            <td>
+              <div class="listings-bar">
+                <span>7</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:14px;"></div></div>
+              </div>
+            </td>
+            <td><span class="last-active mid">5 days ago</span></td>
+            <td>WhatsApp A1</td>
+            <td><button class="action-btn">View →</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agency-name">Aisha Properties</div>
+              <div class="agency-email">aisha@prop.ae</div>
+            </td>
+            <td><div class="city-cell"><span class="flag">🇦🇪</span> Dubai</div></td>
+            <td><span class="badge badge-trial">Trial</span></td>
+            <td>Mar 20, 2026</td>
+            <td>
+              <div class="listings-bar">
+                <span>2</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:4px;"></div></div>
+              </div>
+            </td>
+            <td><span class="last-active recent">Today</span></td>
+            <td>WhatsApp B1</td>
+            <td><button class="action-btn">View →</button></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agency-name">Aldar Partners</div>
+              <div class="agency-email">team@aldarpartners.ae</div>
+            </td>
+            <td><div class="city-cell"><span class="flag">🇦🇪</span> Dubai</div></td>
+            <td><span class="badge badge-trial">Trial</span></td>
+            <td>Mar 21, 2026</td>
+            <td>
+              <div class="listings-bar">
+                <span>1</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:2px;"></div></div>
+              </div>
+            </td>
+            <td><span class="last-active recent">2 hours ago</span></td>
+            <td>WhatsApp A2</td>
+            <td><button class="action-btn">View →</button></td>
+          </tr>
+          <tr style="opacity:0.6;">
+            <td>
+              <div class="agency-name">Horizon Realty</div>
+              <div class="agency-email">contact@horizonrealty.ae</div>
+            </td>
+            <td><div class="city-cell"><span class="flag">🇦🇪</span> Sharjah</div></td>
+            <td><span class="badge badge-churned">Churned</span></td>
+            <td>Dec 10, 2025</td>
+            <td>
+              <div class="listings-bar">
+                <span>3</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:6px;background:#ef4444;"></div></div>
+              </div>
+            </td>
+            <td><span class="last-active stale">22 days ago</span></td>
+            <td>Organic</td>
+            <td><button class="action-btn">View →</button></td>
+          </tr>
+          <tr style="opacity:0.6;">
+            <td>
+              <div class="agency-name">Doha Living</div>
+              <div class="agency-email">info@dohaliving.qa</div>
+            </td>
+            <td><div class="city-cell"><span class="flag">🇶🇦</span> Doha</div></td>
+            <td><span class="badge badge-churned">Churned</span></td>
+            <td>Nov 22, 2025</td>
+            <td>
+              <div class="listings-bar">
+                <span>5</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:10px;background:#ef4444;"></div></div>
+              </div>
+            </td>
+            <td><span class="last-active stale">31 days ago</span></td>
+            <td>WhatsApp A1</td>
+            <td><button class="action-btn">View →</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <div class="pagination-info">Showing 7 of 247 users</div>
+        <div class="pagination-btns">
+          <div class="page-btn">←</div>
+          <div class="page-btn active">1</div>
+          <div class="page-btn">2</div>
+          <div class="page-btn">3</div>
+          <div class="page-btn">…</div>
+          <div class="page-btn">25</div>
+          <div class="page-btn">→</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

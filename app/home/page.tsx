@@ -136,7 +136,7 @@ export default function HomePage() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
           <div style={{ fontWeight: 800, fontSize: 17, color: c.dark }}>
-            Listings<span style={{ color: c.blue }}>Launch</span>
+            Enlist<span style={{ color: c.blue }}>a</span>
           </div>
           <div
             style={{
@@ -1261,7 +1261,7 @@ export default function HomePage() {
         }}
       >
         <span style={{ fontWeight: 800, fontSize: 15, color: "white" }}>
-          Listings<span style={{ color: c.blueLight }}>Launch</span>
+          Enlist<span style={{ color: c.blueLight }}>a</span>
         </span>
         <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
           © 2026 · Dubai, UAE
