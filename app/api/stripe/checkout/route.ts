@@ -17,11 +17,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthenticated" }, { status: 401 })
     }
 
-    const { data: agency } = await supabase
+    const { data: agency, error: agencyError } = await supabase
       .from('agencies')
       .select('id')
       .eq('user_id', user.id)
       .single()
+
+    if (agencyError || !agency) {
+      return NextResponse.json({ error: "Agency not found" }, { status: 400 })
+    }
 
     const selectedPlan = PLANS[plan as PlanKey]
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
@@ -36,11 +40,15 @@ export async function POST(req: NextRequest) {
         trial_period_days: 14,
         metadata: {
           plan,
-          agency_id: agency?.id ?? '',
+          agency_id: agency.id,
           plan_amount: String(selectedPlan.price),
         },
       },
     })
+
+    if (!session.url) {
+      return NextResponse.json({ error: "No checkout URL returned" }, { status: 500 })
+    }
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
