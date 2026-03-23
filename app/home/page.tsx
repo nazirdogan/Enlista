@@ -871,7 +871,7 @@ export default function HomePage() {
             gap: 16,
           }}
         >
-          {/* Starter */}
+          {/* Solo */}
           <div
             style={{
               background: c.white,
@@ -890,7 +890,7 @@ export default function HomePage() {
                 marginBottom: 20,
               }}
             >
-              Starter
+              Solo
             </p>
             <div
               style={{
@@ -900,7 +900,7 @@ export default function HomePage() {
                 color: c.dark,
               }}
             >
-              299
+              75
             </div>
             <p
               style={{
@@ -914,12 +914,12 @@ export default function HomePage() {
             </p>
             <div style={{ marginBottom: 28 }}>
               {[
-                { label: "50 active listings", on: true },
-                { label: "3 portal integrations", on: true },
+                { label: "10 active listings", on: true },
                 { label: "AI copy — English", on: true },
+                { label: "Bayut & Property Finder", on: true },
                 { label: "Basic analytics", on: true },
+                { label: "Arabic copy", on: false },
                 { label: "Lead scoring", on: false },
-                { label: "WhatsApp bot", on: false },
               ].map((item) => (
                 <div
                   key={item.label}
@@ -964,7 +964,7 @@ export default function HomePage() {
             </a>
           </div>
 
-          {/* Professional */}
+          {/* Boutique */}
           <div
             style={{
               background: c.dark,
@@ -984,7 +984,7 @@ export default function HomePage() {
                 marginBottom: 20,
               }}
             >
-              Professional · Recommended
+              Boutique · Recommended
             </p>
             <div
               style={{
@@ -994,7 +994,7 @@ export default function HomePage() {
                 color: c.blueLight,
               }}
             >
-              799
+              120
             </div>
             <p
               style={{
@@ -1008,13 +1008,12 @@ export default function HomePage() {
             </p>
             <div style={{ marginBottom: 28 }}>
               {[
-                "200 active listings",
+                "50 active listings",
                 "All portals",
                 "AI copy — EN + AR",
                 "Advanced analytics",
                 "Lead scoring",
                 "WhatsApp bot",
-                "RERA compliance",
               ].map((label) => (
                 <div
                   key={label}
@@ -1072,7 +1071,7 @@ export default function HomePage() {
                 marginBottom: 20,
               }}
             >
-              Enterprise
+              Agency
             </p>
             <div
               style={{
@@ -1082,7 +1081,7 @@ export default function HomePage() {
                 color: c.dark,
               }}
             >
-              1,999
+              250
             </div>
             <p
               style={{
@@ -1097,11 +1096,13 @@ export default function HomePage() {
             <div style={{ marginBottom: 28 }}>
               {[
                 "Unlimited listings",
-                "Custom integrations",
-                "Full AI suite",
-                "Market analytics",
-                "Dedicated manager",
-                "API + SLA",
+                "All portals",
+                "AI copy — EN + AR",
+                "Advanced analytics",
+                "Lead scoring",
+                "WhatsApp bot",
+                "RERA compliance check",
+                "5 team seats",
               ].map((label) => (
                 <div
                   key={label}

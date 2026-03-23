@@ -1021,7 +1021,7 @@ export default function HomePage() {
                 color: c.dark,
               }}
             >
-              199
+              75
             </div>
             <p
               style={{
@@ -1035,12 +1035,12 @@ export default function HomePage() {
             </p>
             <div style={{ marginBottom: 28 }}>
               {[
-                { label: "25 active listings", on: true },
-                { label: "2 portal integrations", on: true },
+                { label: "10 active listings", on: true },
                 { label: "AI copy — English", on: true },
+                { label: "Bayut & Property Finder", on: true },
                 { label: "Basic analytics", on: true },
+                { label: "Arabic copy", on: false },
                 { label: "Lead scoring", on: false },
-                { label: "WhatsApp bot", on: false },
               ].map((item) => (
                 <div
                   key={item.label}
@@ -1118,7 +1118,7 @@ export default function HomePage() {
                 color: c.dark,
               }}
             >
-              499
+              120
             </div>
             <p
               style={{
@@ -1132,9 +1132,9 @@ export default function HomePage() {
             </p>
             <div style={{ marginBottom: 28 }}>
               {[
-                { label: "100 active listings", on: true },
-                { label: "3 portal integrations", on: true },
+                { label: "50 active listings", on: true },
                 { label: "AI copy — EN + AR", on: true },
+                { label: "All 3 portals", on: true },
                 { label: "Advanced analytics", on: true },
                 { label: "Lead scoring", on: true },
                 { label: "WhatsApp bot", on: false },
@@ -1216,7 +1216,7 @@ export default function HomePage() {
                 color: c.blueLight,
               }}
             >
-              999
+              250
             </div>
             <p
               style={{
@@ -1230,13 +1230,13 @@ export default function HomePage() {
             </p>
             <div style={{ marginBottom: 28 }}>
               {[
-                "500 active listings",
+                "Unlimited listings",
                 "All portals",
                 "AI copy — EN + AR",
                 "Advanced analytics",
                 "Lead scoring",
                 "WhatsApp bot",
-                "RERA compliance",
+                "RERA compliance check",
                 "5 team seats",
               ].map((label) => (
                 <div

@@ -8,17 +8,17 @@ export const PLANS = {
   solo: {
     name: "Solo",
     priceId: process.env.STRIPE_PRICE_SOLO!,
-    price: 199,
+    price: 75,
   },
   boutique: {
     name: "Boutique",
     priceId: process.env.STRIPE_PRICE_BOUTIQUE!,
-    price: 499,
+    price: 120,
   },
   agency: {
     name: "Agency",
     priceId: process.env.STRIPE_PRICE_AGENCY!,
-    price: 999,
+    price: 250,
   },
 } as const;
 
