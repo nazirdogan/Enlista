@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = 'Enlista <hello@enlista.ai>'
 
-type EmailPayload =
+export type EmailPayload =
   | { type: 'welcome'; to: string; agencyName: string }
   | { type: 'trial_expiry'; to: string; agencyName: string; expiresAt: string }
   | { type: 'payment_failed'; to: string; agencyName: string }
