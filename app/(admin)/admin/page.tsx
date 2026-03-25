@@ -1,7 +1,10 @@
 import { requireAdmin, AdminAuthError } from '@/lib/admin/auth'
 import { getOverviewKpis, getSignupTrend } from '@/lib/admin/queries'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { KpiCard } from '@/components/admin/KpiCard'
-import { ChartPlaceholder } from '@/components/admin/ChartPlaceholder'
+import { BarChart } from '@/components/admin/BarChart'
+import { DonutChart } from '@/components/admin/DonutChart'
+import { ChartModal } from '@/components/admin/ChartModal'
 import { redirect } from 'next/navigation'
 
 export default async function AdminOverviewPage() {
@@ -12,6 +15,13 @@ export default async function AdminOverviewPage() {
   }
 
   const [kpis, trend] = await Promise.all([getOverviewKpis(), getSignupTrend(6)])
+
+  const db = createAdminClient()
+  const { data: subData } = await db.from('subscriptions').select('plan').eq('status', 'active')
+  const planCounts = (subData ?? []).reduce((acc: Record<string, number>, s) => {
+    acc[s.plan] = (acc[s.plan] ?? 0) + 1
+    return acc
+  }, {})
 
   return (
     <div>
@@ -36,11 +46,20 @@ export default async function AdminOverviewPage() {
         <div className="grid grid-cols-3 gap-3.5 mb-5">
           <div className="col-span-2 bg-white rounded-xl p-4 border border-gray-200">
             <div className="text-xs font-semibold text-gray-700 mb-3">Signups — Last 6 Months</div>
-            <ChartPlaceholder height={120} label={trend.map(t => `${t.month}: ${t.signups}`).join(' · ')} />
+            <ChartModal title="Signups — Last 6 Months" expandedContent={<BarChart data={trend} xKey="month" yKey="signups" height={300} />}>
+              <BarChart data={trend} xKey="month" yKey="signups" height={120} />
+            </ChartModal>
           </div>
           <div className="bg-white rounded-xl p-4 border border-gray-200">
             <div className="text-xs font-semibold text-gray-700 mb-3">Plan Distribution</div>
-            <ChartPlaceholder height={120} />
+            <ChartModal title="Plan Distribution">
+              <DonutChart data={[
+                { name: 'Agency', value: planCounts.agency ?? 0 },
+                { name: 'Boutique', value: planCounts.boutique ?? 0 },
+                { name: 'Solo', value: planCounts.solo ?? 0 },
+                { name: 'Trial', value: kpis.activeTrials },
+              ]} height={120} />
+            </ChartModal>
           </div>
         </div>
 
