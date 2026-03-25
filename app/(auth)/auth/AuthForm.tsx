@@ -185,6 +185,8 @@ export default function AuthForm() {
         name: agencyName,
         email: agencyEmail,
         phone: phoneNumber,
+        city,
+        country,
       })
       if (agencyError && agencyError.code !== '23505') {
         console.error('Agency creation error:', agencyError)
