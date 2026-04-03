@@ -167,7 +167,7 @@ export default function HomePage() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <a
-            href="#cta"
+            href="/auth"
             style={{
               display: "inline-block",
               border: `1.5px solid ${c.border}`,
@@ -179,10 +179,10 @@ export default function HomePage() {
               textDecoration: "none",
             }}
           >
-            Sign in
+            Login
           </a>
           <a
-            href="#cta"
+            href="/contact-sales"
             style={{
               display: "inline-block",
               background: c.blue,
@@ -195,7 +195,7 @@ export default function HomePage() {
               textDecoration: "none",
             }}
           >
-            Get Started Free
+            Contact Sales
           </a>
         </div>
       </nav>
@@ -262,7 +262,7 @@ export default function HomePage() {
               }}
             >
               <a
-                href="#cta"
+                href="/contact-sales"
                 style={{
                   display: "inline-block",
                   background: c.blue,
@@ -274,22 +274,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Start Free — 7 days
-              </a>
-              <a
-                href="#features"
-                style={{
-                  display: "inline-block",
-                  border: `1.5px solid ${c.border}`,
-                  color: c.text,
-                  padding: "10px 24px",
-                  fontWeight: 500,
-                  fontSize: 13,
-                  borderRadius: 6,
-                  textDecoration: "none",
-                }}
-              >
-                See the platform
+                Contact Sales
               </a>
             </div>
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
@@ -947,7 +932,7 @@ export default function HomePage() {
               ))}
             </div>
             <a
-              href="#cta"
+              href="/contact-sales"
               style={{
                 display: "block",
                 textAlign: "center",
@@ -960,7 +945,7 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Get Started
+              Contact Sales
             </a>
           </div>
 
@@ -1035,7 +1020,7 @@ export default function HomePage() {
               ))}
             </div>
             <a
-              href="#cta"
+              href="/contact-sales"
               style={{
                 display: "block",
                 textAlign: "center",
@@ -1048,7 +1033,7 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Get Started
+              Contact Sales
             </a>
           </div>
 
@@ -1124,7 +1109,7 @@ export default function HomePage() {
               ))}
             </div>
             <a
-              href="#cta"
+              href="/contact-sales"
               style={{
                 display: "block",
                 textAlign: "center",
@@ -1150,102 +1135,70 @@ export default function HomePage() {
       >
         <div
           style={{
-            maxWidth: 800,
+            maxWidth: 640,
             margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 56,
-            alignItems: "center",
+            textAlign: "center",
           }}
         >
-          <div>
-            <h2
-              style={{
-                fontWeight: 800,
-                fontSize: "clamp(32px, 5vw, 52px)",
-                color: "white",
-                marginBottom: 16,
-                lineHeight: 1.1,
-              }}
-            >
-              Start building your
-              <br />
-              listing stack today.
-            </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.45)",
-                fontSize: 14,
-                lineHeight: 1.8,
-                marginBottom: 24,
-              }}
-            >
-              7-day free trial. No credit card. UAE support team available
-              daily.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                "Setup in under 10 minutes",
-                "Connect portals on day one",
-                "RERA compliance active by default",
-              ].map((item) => (
-                <div
-                  key={item}
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    alignItems: "center",
-                    fontSize: 13,
-                    color: "rgba(255,255,255,0.5)",
-                  }}
-                >
-                  <span style={{ color: c.green }}>✓</span>
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-          <form
-            style={{ display: "flex", flexDirection: "column", gap: 10 }}
+          <h2
+            style={{
+              fontWeight: 800,
+              fontSize: "clamp(32px, 5vw, 52px)",
+              color: "white",
+              marginBottom: 16,
+              lineHeight: 1.1,
+            }}
           >
-            {["Agency email", "Agency name"].map((placeholder) => (
-              <input
-                key={placeholder}
-                type={placeholder.includes("email") ? "email" : "text"}
-                placeholder={placeholder}
-                style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1.5px solid rgba(255,255,255,0.1)",
-                  color: "white",
-                  padding: "11px 16px",
-                  fontFamily: "var(--font-jakarta), sans-serif",
-                  fontSize: 13,
-                  borderRadius: 6,
-                  outline: "none",
-                  width: "100%",
-                }}
-              />
-            ))}
-            <button
-              type="submit"
+            Ready to transform your
+            <br />
+            listing workflow?
+          </h2>
+          <p
+            style={{
+              color: "rgba(255,255,255,0.45)",
+              fontSize: 14,
+              lineHeight: 1.8,
+              marginBottom: 32,
+              maxWidth: 440,
+              margin: "0 auto 32px",
+            }}
+          >
+            Talk to our team to see how Enlista can power your agency&apos;s listings, compliance, and analytics.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <a
+              href="/contact-sales"
               style={{
-                padding: 13,
-                cursor: "pointer",
+                display: "inline-block",
                 background: c.blue,
                 color: "white",
-                border: "none",
-                fontSize: 13,
-                borderRadius: 6,
-                display: "block",
-                width: "100%",
+                padding: "13px 32px",
                 fontWeight: 600,
-                letterSpacing: "0.02em",
+                fontSize: 14,
+                borderRadius: 6,
+                textDecoration: "none",
                 fontFamily: "var(--font-jakarta), sans-serif",
               }}
             >
-              Start Free Trial →
-            </button>
-          </form>
+              Contact Sales
+            </a>
+            <a
+              href="/auth"
+              style={{
+                display: "inline-block",
+                border: "1.5px solid rgba(255,255,255,0.2)",
+                color: "white",
+                padding: "13px 32px",
+                fontWeight: 500,
+                fontSize: 14,
+                borderRadius: 6,
+                textDecoration: "none",
+                fontFamily: "var(--font-jakarta), sans-serif",
+              }}
+            >
+              Login
+            </a>
+          </div>
         </div>
       </section>
 
