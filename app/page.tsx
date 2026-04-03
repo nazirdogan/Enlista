@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -111,27 +110,6 @@ function BentoCard({
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
-  const router = useRouter();
-
-  async function handleCheckout(plan: "solo" | "boutique" | "agency") {
-    setCheckoutLoading(plan);
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        router.push(data.url);
-      }
-    } catch {
-      // fall through
-    } finally {
-      setCheckoutLoading(null);
-    }
-  }
   return (
     <div
       className={`${plusJakarta.variable} ${jetbrainsMono.variable}`}
@@ -198,7 +176,7 @@ export default function HomePage() {
           {/* Desktop CTA buttons */}
           <div className="hidden md:flex" style={{ alignItems: "center", gap: 10 }}>
             <a
-              href="/auth?tab=signin"
+              href="/auth"
               style={{
                 display: "inline-block",
                 border: `1.5px solid ${c.border}`,
@@ -210,10 +188,10 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Sign in
+              Login
             </a>
             <a
-              href="/auth?tab=signup"
+              href="/contact-sales"
               style={{
                 display: "inline-block",
                 background: c.blue,
@@ -226,7 +204,7 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Get Started Free
+              Contact Sales
             </a>
           </div>
           {/* Mobile hamburger */}
@@ -278,7 +256,7 @@ export default function HomePage() {
             })}
             <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 8 }}>
               <a
-                href="/auth?tab=signin"
+                href="/auth"
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
                   display: "block",
@@ -292,10 +270,10 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Sign in
+                Login
               </a>
               <a
-                href="/auth?tab=signup"
+                href="/contact-sales"
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
                   display: "block",
@@ -309,7 +287,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Get Started Free
+                Contact Sales
               </a>
             </div>
           </div>
@@ -378,7 +356,7 @@ export default function HomePage() {
               }}
             >
               <a
-                href="/auth?tab=signup"
+                href="/contact-sales"
                 style={{
                   display: "inline-block",
                   background: c.blue,
@@ -390,22 +368,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Start Free — 7 days
-              </a>
-              <a
-                href="#features"
-                style={{
-                  display: "inline-block",
-                  border: `1.5px solid ${c.border}`,
-                  color: c.text,
-                  padding: "10px 24px",
-                  fontWeight: 500,
-                  fontSize: 13,
-                  borderRadius: 6,
-                  textDecoration: "none",
-                }}
-              >
-                See how it works
+                Contact Sales
               </a>
             </div>
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
@@ -835,22 +798,18 @@ export default function HomePage() {
         >
           {[
             {
-              badge: "Espace Real Estate · Dubai",
+              badge: "Agency in Dubai",
               quote:
                 "Two days to four minutes. That's a 720× improvement. Enlista replaced our entire publishing workflow.",
-              name: "Sarah Al Mansoori",
-              role: "Head of Operations",
-              initial: "S",
+              label: "Head of Operations",
               avatarBg: c.blue,
               dark: false,
             },
             {
-              badge: "Allsopp & Allsopp · Dubai",
+              badge: "Agency in Dubai Marina",
               quote:
                 "Our Palm Jumeirah listings convert at 3× the previous rate. The AI copy is indistinguishable from our best agents.",
-              name: "James Whitfield",
-              role: "Managing Director",
-              initial: "J",
+              label: "Managing Director",
               avatarBg: c.dark,
               dark: false,
             },
@@ -859,25 +818,21 @@ export default function HomePage() {
               badgeVariant: "green" as const,
               quote:
                 "Zero RERA suspensions. The compliance engine is the most reliable system in our entire operation.",
-              name: "Fatima Al Hashimi",
-              role: "Compliance Director",
-              initial: "F",
+              label: "Compliance Director",
               avatarBg: c.green,
               dark: true,
             },
             {
-              badge: "Metropolitan Premium Properties",
+              badge: "Agency in Abu Dhabi",
               quote:
                 "600+ listings, 4 portals, one platform. Scaled 40% without adding a single coordinator to our team.",
-              name: "Ravi Menon",
-              role: "Chief Executive",
-              initial: "R",
+              label: "Chief Executive",
               avatarBg: c.amber,
               dark: false,
             },
-          ].map((t) => (
+          ].map((t, i) => (
             <div
-              key={t.name}
+              key={i}
               style={{
                 background: t.dark ? c.dark : c.white,
                 border: `1px solid ${t.dark ? "transparent" : c.border}`,
@@ -906,47 +861,17 @@ export default function HomePage() {
                 style={{
                   borderTop: `1px solid ${t.dark ? "rgba(255,255,255,0.08)" : c.border}`,
                   paddingTop: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
                 }}
               >
-                <div
+                <p
                   style={{
-                    width: 32,
-                    height: 32,
-                    background: t.avatarBg,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    color: "white",
-                    flexShrink: 0,
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
                   }}
                 >
-                  {t.initial}
-                </div>
-                <div>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: t.dark ? "white" : c.dark,
-                    }}
-                  >
-                    {t.name}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: 11,
-                      color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
-                    }}
-                  >
-                    {t.role}
-                  </p>
-                </div>
+                  — {t.label}
+                </p>
               </div>
             </div>
           ))}
@@ -1067,9 +992,8 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => handleCheckout("solo")}
-              disabled={checkoutLoading !== null}
+            <a
+              href="/contact-sales"
               style={{
                 display: "block",
                 width: "100%",
@@ -1080,13 +1004,11 @@ export default function HomePage() {
                 fontWeight: 500,
                 fontSize: 13,
                 borderRadius: 6,
-                background: "transparent",
-                cursor: checkoutLoading !== null ? "not-allowed" : "pointer",
-                opacity: checkoutLoading === "solo" ? 0.6 : 1,
+                textDecoration: "none",
               }}
             >
-              {checkoutLoading === "solo" ? "Redirecting…" : "Get Started"}
-            </button>
+              Contact Sales
+            </a>
           </div>
 
           {/* Boutique */}
@@ -1164,9 +1086,8 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => handleCheckout("boutique")}
-              disabled={checkoutLoading !== null}
+            <a
+              href="/contact-sales"
               style={{
                 display: "block",
                 width: "100%",
@@ -1177,13 +1098,11 @@ export default function HomePage() {
                 fontWeight: 500,
                 fontSize: 13,
                 borderRadius: 6,
-                background: "transparent",
-                cursor: checkoutLoading !== null ? "not-allowed" : "pointer",
-                opacity: checkoutLoading === "boutique" ? 0.6 : 1,
+                textDecoration: "none",
               }}
             >
-              {checkoutLoading === "boutique" ? "Redirecting…" : "Get Started"}
-            </button>
+              Contact Sales
+            </a>
           </div>
 
           {/* Agency — Recommended */}
@@ -1258,9 +1177,8 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => handleCheckout("agency")}
-              disabled={checkoutLoading !== null}
+            <a
+              href="/contact-sales"
               style={{
                 display: "block",
                 width: "100%",
@@ -1271,13 +1189,11 @@ export default function HomePage() {
                 fontWeight: 600,
                 fontSize: 13,
                 borderRadius: 6,
-                border: "none",
-                cursor: checkoutLoading !== null ? "not-allowed" : "pointer",
-                opacity: checkoutLoading === "agency" ? 0.6 : 1,
+                textDecoration: "none",
               }}
             >
-              {checkoutLoading === "agency" ? "Redirecting…" : "Get Started"}
-            </button>
+              Contact Sales
+            </a>
           </div>
 
           {/* Enterprise */}
@@ -1351,7 +1267,7 @@ export default function HomePage() {
               ))}
             </div>
             <a
-              href="mailto:sales@listingai.ae"
+              href="/contact-sales"
               style={{
                 display: "block",
                 textAlign: "center",
@@ -1377,79 +1293,70 @@ export default function HomePage() {
       >
         <div
           style={{
-            maxWidth: 800,
+            maxWidth: 640,
             margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 56,
-            alignItems: "center",
+            textAlign: "center",
           }}
         >
-          <div>
-            <h2
-              style={{
-                fontWeight: 800,
-                fontSize: "clamp(32px, 5vw, 52px)",
-                color: "white",
-                marginBottom: 16,
-                lineHeight: 1.1,
-              }}
-            >
-              Start building your
-              <br />
-              listing stack today.
-            </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.45)",
-                fontSize: 14,
-                lineHeight: 1.8,
-                marginBottom: 24,
-              }}
-            >
-              7-day free trial. No credit card. UAE support team available
-              daily.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                "Setup in under 10 minutes",
-                "Connect portals on day one",
-                "RERA compliance active by default",
-              ].map((item) => (
-                <div
-                  key={item}
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    alignItems: "center",
-                    fontSize: 13,
-                    color: "rgba(255,255,255,0.5)",
-                  }}
-                >
-                  <span style={{ color: c.green }}>✓</span>
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-          <a
-            href="/auth?tab=signup"
+          <h2
             style={{
-              display: "block",
-              textAlign: "center",
-              padding: 13,
-              background: c.blue,
+              fontWeight: 800,
+              fontSize: "clamp(32px, 5vw, 52px)",
               color: "white",
-              fontSize: 13,
-              borderRadius: 6,
-              fontWeight: 600,
-              letterSpacing: "0.02em",
-              fontFamily: "var(--font-jakarta), sans-serif",
-              textDecoration: "none",
+              marginBottom: 16,
+              lineHeight: 1.1,
             }}
           >
-            Start Free Trial →
-          </a>
+            Ready to transform your
+            <br />
+            listing workflow?
+          </h2>
+          <p
+            style={{
+              color: "rgba(255,255,255,0.45)",
+              fontSize: 14,
+              lineHeight: 1.8,
+              marginBottom: 32,
+              maxWidth: 440,
+              margin: "0 auto 32px",
+            }}
+          >
+            Talk to our team to see how Enlista can power your agency&apos;s listings, compliance, and analytics.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <a
+              href="/contact-sales"
+              style={{
+                display: "inline-block",
+                background: c.blue,
+                color: "white",
+                padding: "13px 32px",
+                fontWeight: 600,
+                fontSize: 14,
+                borderRadius: 6,
+                textDecoration: "none",
+                fontFamily: "var(--font-jakarta), sans-serif",
+              }}
+            >
+              Contact Sales
+            </a>
+            <a
+              href="/auth"
+              style={{
+                display: "inline-block",
+                border: "1.5px solid rgba(255,255,255,0.2)",
+                color: "white",
+                padding: "13px 32px",
+                fontWeight: 500,
+                fontSize: 14,
+                borderRadius: 6,
+                textDecoration: "none",
+                fontFamily: "var(--font-jakarta), sans-serif",
+              }}
+            >
+              Login
+            </a>
+          </div>
         </div>
       </section>
 
