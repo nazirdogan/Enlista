@@ -52,7 +52,7 @@ export default function AuthForm() {
   const supabase = createClient()
 
   const tabParam = searchParams.get('tab')
-  const [tab, setTab] = useState<Tab>(tabParam === 'signin' ? 'signin' : 'signup')
+  const [tab, setTab] = useState<Tab>(tabParam === 'signup' ? 'signup' : 'signin')
   const [loading, setLoading] = useState(false)
   const [sessionChecked, setSessionChecked] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -241,42 +241,44 @@ export default function AuthForm() {
             Enli<span style={{ color: '#1D4ED8' }}>sta</span>
           </h1>
           <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
-            List it. In Arabic. In 30 seconds.
+            {tab === 'signin' ? 'Sign in to your agency account' : 'List it. In Arabic. In 30 seconds.'}
           </p>
         </div>
 
-        {/* Tab switcher */}
-        <div style={{
-          display: 'flex',
-          background: '#F2F4F7',
-          borderRadius: 8,
-          padding: 4,
-          marginBottom: 28,
-          gap: 4,
-        }}>
-          {(['signup', 'signin'] as Tab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => switchTab(t)}
-              style={{
-                flex: 1,
-                padding: '8px 0',
-                borderRadius: 6,
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: 13,
-                fontWeight: tab === t ? 600 : 400,
-                color: tab === t ? '#0F1829' : '#64748B',
-                background: tab === t ? '#FFFFFF' : 'transparent',
-                boxShadow: tab === t ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                fontFamily: 'inherit',
-                transition: 'all 0.15s',
-              }}
-            >
-              {t === 'signup' ? 'Sign Up' : 'Sign In'}
-            </button>
-          ))}
-        </div>
+        {/* Tab switcher — only show when signup tab is explicitly requested */}
+        {tabParam === 'signup' && (
+          <div style={{
+            display: 'flex',
+            background: '#F2F4F7',
+            borderRadius: 8,
+            padding: 4,
+            marginBottom: 28,
+            gap: 4,
+          }}>
+            {(['signup', 'signin'] as Tab[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => switchTab(t)}
+                style={{
+                  flex: 1,
+                  padding: '8px 0',
+                  borderRadius: 6,
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                  fontWeight: tab === t ? 600 : 400,
+                  color: tab === t ? '#0F1829' : '#64748B',
+                  background: tab === t ? '#FFFFFF' : 'transparent',
+                  boxShadow: tab === t ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {t === 'signup' ? 'Sign Up' : 'Sign In'}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Sign In form */}
         {tab === 'signin' && (
@@ -532,7 +534,7 @@ export default function AuthForm() {
         {/* Footer toggle */}
         <p style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: '#64748B', marginBottom: 0 }}>
           {tab === 'signin' ? (
-            <>New here?{' '}<button onClick={() => switchTab('signup')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Create an account</button></>
+            <>Don&apos;t have an account?{' '}<a href="/contact-sales" style={{ color: '#1D4ED8', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>Contact Sales</a></>
           ) : (
             <>Already have an account?{' '}<button onClick={() => switchTab('signin')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Sign in</button></>
           )}
