@@ -699,22 +699,18 @@ export default function HomePage() {
         >
           {[
             {
-              badge: "Espace Real Estate · Dubai",
+              badge: "Agency in Dubai",
               quote:
                 "Two days to four minutes. That's a 720× improvement. Enlista replaced our entire publishing workflow.",
-              name: "Sarah Al Mansoori",
-              role: "Head of Operations",
-              initial: "S",
+              label: "Head of Operations",
               avatarBg: c.blue,
               dark: false,
             },
             {
-              badge: "Allsopp & Allsopp · Dubai",
+              badge: "Agency in Dubai Marina",
               quote:
                 "Our Palm Jumeirah listings convert at 3× the previous rate. The AI copy is indistinguishable from our best agents.",
-              name: "James Whitfield",
-              role: "Managing Director",
-              initial: "J",
+              label: "Managing Director",
               avatarBg: c.dark,
               dark: false,
             },
@@ -723,25 +719,21 @@ export default function HomePage() {
               badgeVariant: "green" as const,
               quote:
                 "Zero RERA suspensions. The compliance engine is the most reliable system in our entire operation.",
-              name: "Fatima Al Hashimi",
-              role: "Compliance Director",
-              initial: "F",
+              label: "Compliance Director",
               avatarBg: c.green,
               dark: true,
             },
             {
-              badge: "Metropolitan Premium Properties",
+              badge: "Agency in Abu Dhabi",
               quote:
                 "600+ listings, 4 portals, one platform. Scaled 40% without adding a single coordinator to our team.",
-              name: "Ravi Menon",
-              role: "Chief Executive",
-              initial: "R",
+              label: "Chief Executive",
               avatarBg: c.amber,
               dark: false,
             },
-          ].map((t) => (
+          ].map((t, i) => (
             <div
-              key={t.name}
+              key={i}
               style={{
                 background: t.dark ? c.dark : c.white,
                 border: `1px solid ${t.dark ? "transparent" : c.border}`,
@@ -770,47 +762,17 @@ export default function HomePage() {
                 style={{
                   borderTop: `1px solid ${t.dark ? "rgba(255,255,255,0.08)" : c.border}`,
                   paddingTop: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
                 }}
               >
-                <div
+                <p
                   style={{
-                    width: 32,
-                    height: 32,
-                    background: t.avatarBg,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    color: "white",
-                    flexShrink: 0,
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
                   }}
                 >
-                  {t.initial}
-                </div>
-                <div>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: t.dark ? "white" : c.dark,
-                    }}
-                  >
-                    {t.name}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: 11,
-                      color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
-                    }}
-                  >
-                    {t.role}
-                  </p>
-                </div>
+                  — {t.label}
+                </p>
               </div>
             </div>
           ))}
