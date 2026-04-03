@@ -238,7 +238,7 @@ export default function AuthForm() {
         {/* Wordmark */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <h1 style={{ fontWeight: 800, fontSize: 24, color: '#0F1829', margin: 0 }}>
-            Enli<span style={{ color: '#1D4ED8' }}>sta</span>
+            Enlist<span style={{ color: '#1D4ED8' }}>a</span>
           </h1>
           <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
             {tab === 'signin' ? 'Sign in to your agency account' : 'List it. In Arabic. In 30 seconds.'}
