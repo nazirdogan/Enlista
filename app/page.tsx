@@ -175,7 +175,7 @@ const pricingPlans = [
     name: "Enterprise",
     tagline: "For brokerages & teams",
     priceLabel: "Custom",
-    priceSub: "per agent / per month",
+    priceSub: "",
     creditsLabel: "Unlimited listings",
     cta: "Contact sales",
     ctaHref: "/contact-sales",
@@ -189,7 +189,6 @@ const pricingPlans = [
       "SLA guarantee",
       "Admin dashboard & analytics",
       "Bulk listing management",
-      "Portal integrations (Bayut, PF)",
     ],
   },
 ];
@@ -997,16 +996,6 @@ export default function HomePage() {
 
         {/* Hero */}
         <div style={{ textAlign: "center", padding: "0 0 56px" }}>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 6,
-            background: "#EFF6FF", border: "1px solid #BFDBFE",
-            borderRadius: 100, padding: "5px 14px", marginBottom: 20,
-          }}>
-            <Zap size={13} color="#1D4ED8" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8", letterSpacing: "0.04em" }}>
-              CREDIT-BASED · CANCEL ANYTIME
-            </span>
-          </div>
           <h2 style={{
             fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 800,
             color: "#0F172A", lineHeight: 1.15, marginBottom: 16,
@@ -1015,9 +1004,15 @@ export default function HomePage() {
             <br />
             <span style={{ color: "#1D4ED8" }}>Nothing more.</span>
           </h2>
-          <p style={{ fontSize: 16, color: "#6B7280", maxWidth: 480, margin: "0 auto" }}>
-            Each listing generation uses one credit. Start free, upgrade when you need more volume.
-          </p>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 6,
+            background: "#EFF6FF", border: "1px solid #BFDBFE",
+            borderRadius: 100, padding: "5px 14px",
+          }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8", letterSpacing: "0.04em" }}>
+              CANCEL ANYTIME
+            </span>
+          </div>
         </div>
 
         {/* Plan cards */}
@@ -1026,7 +1021,7 @@ export default function HomePage() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
             gap: 20,
-            alignItems: "start",
+            alignItems: "stretch",
           }}
         >
           {pricingPlans.map((plan) => (
@@ -1042,6 +1037,8 @@ export default function HomePage() {
                   : "0 2px 12px rgba(0,0,0,0.04)",
                 position: "relative",
                 overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
               {plan.badge && (
@@ -1128,7 +1125,7 @@ export default function HomePage() {
               )}
 
               {/* Feature list */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
                 {plan.features.map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
                     <div style={{
@@ -1145,20 +1142,6 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {plan.key === "enterprise" && (
-                <div style={{
-                  marginTop: 20, padding: "12px 14px",
-                  background: "#F0F9FF", borderRadius: 10, border: "1px solid #BFDBFE",
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                    <Building2 size={13} color="#1D4ED8" />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8" }}>Minimum 10 agents</span>
-                  </div>
-                  <p style={{ fontSize: 11, color: "#6B7280", margin: 0 }}>
-                    Custom pricing scales automatically as your team grows.
-                  </p>
-                </div>
-              )}
             </div>
           ))}
         </div>
