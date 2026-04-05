@@ -1,0 +1,5 @@
+{"type":"server-started","port":51101,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:51101","screen_dir":"/Users/nazir/ListingAI/.superpowers/brainstorm/58335-1775197141/content","state_dir":"/Users/nazir/ListingAI/.superpowers/brainstorm/58335-1775197141/state"}
+{"type":"screen-added","file":"/Users/nazir/ListingAI/.superpowers/brainstorm/58335-1775197141/content/design-overview.html"}
+{"type":"screen-added","file":"/Users/nazir/ListingAI/.superpowers/brainstorm/58335-1775197141/content/design-overview-v2.html"}
+{"type":"screen-added","file":"/Users/nazir/ListingAI/.superpowers/brainstorm/58335-1775197141/content/waiting.html"}
+{"type":"server-stopped","reason":"idle timeout"}

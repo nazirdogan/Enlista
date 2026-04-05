@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enlista — Instagram Content Strategy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ─── REAL ENLISTA BRAND TOKENS (extracted from enlista.io) ─── */
+    :root {
+      --page-bg:    #F2F4F7;   /* actual site body background */
+      --surface:    #FFFFFF;   /* card / nav background */
+      --ink:        #0F1829;   /* heading text / dark section bg */
+      --body-col:   #1E293B;   /* body text */
+      --muted:      #64748B;   /* secondary / label text */
+      --border:     #DDE3EC;   /* card borders */
+      --blue:       #1D4ED8;   /* PRIMARY — CTA, accent, logo "a" */
+      --blue-mid:   #3B82F6;   /* chart / mid blue */
+      --blue-tint:  #EFF6FF;   /* light blue pill bg */
+      --blue-muted: rgba(29,78,216,0.12);
+      --green:      #059669;   /* RERA / live / success */
+      --green-tint: #ECFDF5;
+      --amber:      #D97706;
+      --dark-alt:   #0A1120;   /* slightly darker than ink */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--page-bg);
+      color: var(--body-col);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; }
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 7px);
+      gap: 2px;
+    }
+    .lg { width: 7px; height: 7px; border-radius: 1.5px; background: var(--blue); }
+    .lg.dim { background: rgba(29,78,216,0.25); }
+    .brand-name { font-size: 17px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+    .brand-name span { color: var(--blue); }
+    .nav-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .nav-cta { background: var(--blue); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 14px; border-radius: 6px; }
+
+    /* HERO — dark section matching the site's own dark CTA block */
+    .hero {
+      background: var(--ink);
+      padding: 80px 56px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(29,78,216,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(29,78,216,0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-inner { position: relative; max-width: 740px; }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue-muted); border: 1px solid rgba(29,78,216,0.3);
+      color: #93B4FF; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 6px; margin-bottom: 24px;
+    }
+    .hero-h1 {
+      font-size: 50px; font-weight: 800; color: #fff;
+      line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+    .hero-h1 span { color: #60A5FA; }
+    .hero-sub { font-size: 16px; color: rgba(255,255,255,0.5); max-width: 500px; line-height: 1.65; }
+    .hero-stats {
+      margin-top: 48px; display: flex; gap: 48px;
+      padding-top: 36px; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .hs-num { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .hs-lbl { font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+
+    /* SECTIONS */
+    .sec { padding: 64px 56px; }
+    .sec-alt { background: var(--surface); }
+    .sec-dark { background: var(--ink); }
+    .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+    .eyebrow-light { color: rgba(96,165,250,0.8); }
+    .sec-h2 { font-size: 30px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; }
+    .sec-h2-light { color: #fff; }
+    .sec-intro { font-size: 15px; color: var(--muted); max-width: 540px; line-height: 1.7; margin-bottom: 44px; }
+    .sec-intro-light { color: rgba(255,255,255,0.45); }
+
+    /* BRAND TOKENS GRID */
+    .tokens-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .tok-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 26px; }
+    .tok-card h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink); margin-bottom: 18px; }
+
+    .palette { display: flex; gap: 8px; flex-wrap: wrap; }
+    .sw { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .sw-c { width: 42px; height: 42px; border-radius: 7px; border: 1px solid rgba(0,0,0,0.07); }
+    .sw-l { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
+
+    .type-row { display: flex; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .type-row:last-child { border-bottom: none; }
+    .type-tag { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; min-width: 32px; }
+    .type-s { font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+    .type-spec { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+    .rule-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .rule-row:last-child { border-bottom: none; }
+    .rbadge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 8px; border-radius: 4px; white-space: nowrap; height: fit-content; flex-shrink: 0; }
+    .rb-do { background: var(--green-tint); color: var(--green); }
+    .rb-dont { background: #FEF2F2; color: #DC2626; }
+    .rule-text { font-size: 13px; color: var(--body-col); line-height: 1.5; }
+
+    /* PILLARS */
+    .pillars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 0; }
+    .pillar {
+      background: var(--surface); border: 1px solid var(--border);
+      border-top: 3px solid var(--blue); border-radius: 10px; padding: 20px 16px;
+    }
+    .p-pct { font-size: 26px; font-weight: 800; color: var(--blue); letter-spacing: -0.02em; margin-bottom: 7px; }
+    .p-name { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 5px; line-height: 1.3; }
+    .p-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    /* IDEAS */
+    .ideas { display: flex; flex-direction: column; gap: 48px; }
+    .idea-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .idea-hdr { display: flex; align-items: flex-start; padding: 28px 32px; border-bottom: 1px solid var(--border); gap: 18px; }
+    .idea-num { font-size: 52px; font-weight: 800; color: var(--border); letter-spacing: -0.04em; line-height: 1; flex-shrink: 0; }
+    .idea-meta { flex: 1; }
+    .idea-series {
+      display: inline-block; background: var(--blue-tint); color: var(--blue);
+      border: 1px solid rgba(29,78,216,0.2); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px;
+      border-radius: 100px; margin-bottom: 9px;
+    }
+    .idea-title { font-size: 24px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 7px; }
+    .idea-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .idea-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .ibadge { font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 100px; white-space: nowrap; }
+    .ib-p { background: rgba(15,24,41,0.07); color: var(--ink); }
+    .ib-f { background: var(--green-tint); color: var(--green); }
+    .ib-r { background: var(--blue-tint); color: var(--blue); }
+
+    .idea-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .idea-col { padding: 24px 32px; border-right: 1px solid var(--border); }
+    .idea-col:last-child { border-right: none; }
+    .col-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; }
+
+    /* POST MOCKUPS — use actual site's visual language */
+    .pm { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 12px; }
+    .pm-light { background: var(--page-bg); padding: 18px; min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+    .pm-dark  { background: var(--ink); padding: 18px; min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+    .pm-card-wrap { background: var(--page-bg); padding: 10px; min-height: 180px; }
+    .pm-card-inner { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; height: 100%; }
+
+    .pm-ew  { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 7px; }
+    .pm-ew-d { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(96,165,250,0.75); margin-bottom: 7px; }
+    .pm-h  { font-size: 20px; font-weight: 800; color: var(--ink); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .pm-h span { color: var(--blue); }
+    .pm-hd { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .pm-hd span { color: #60A5FA; }
+    .pm-sub  { font-size: 11px; color: var(--muted); }
+    .pm-sub-d { font-size: 11px; color: rgba(255,255,255,0.38); }
+    .pm-wm {
+      position: absolute; top: 12px; right: 12px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .pm-wm-grid { display: grid; grid-template-columns: repeat(3,4px); gap: 1.5px; }
+    .pm-wm-sq { width: 4px; height: 4px; border-radius: 1px; background: var(--blue); opacity: 0.5; }
+    .pm-wm-sq.d { opacity: 0.2; }
+    .pm-wm-txt { font-size: 9px; font-weight: 700; color: var(--muted); }
+    .pm-wm-txt-d { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.25); }
+
+    .big-stat { font-size: 38px; font-weight: 800; color: var(--blue); letter-spacing: -0.03em; line-height: 1; }
+    .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .g-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--green-tint); color: var(--green); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; margin-bottom: 9px; }
+    .g-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .b-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--blue-tint); color: var(--blue); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; margin-bottom: 9px; }
+
+    .dot-row { display: flex; gap: 4px; margin-top: 10px; }
+    .di { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+    .di.a { background: var(--blue); width: 14px; border-radius: 3px; }
+
+    /* Dashboard card recreations */
+    .dash-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .dash-row:last-child { border-bottom: none; }
+    .dash-live { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--green); font-weight: 600; }
+
+    /* Slides breakdown */
+    .slides { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; margin-top: 8px; }
+    .sl { border-radius: 6px; border: 1px solid var(--border); overflow: hidden; }
+    .sl-hdr { padding: 5px 7px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .sl-dark { background: var(--ink); }
+    .sl-dark .sl-hdr { color: rgba(255,255,255,0.35); }
+    .sl-light { background: var(--page-bg); }
+    .sl-light .sl-hdr { color: var(--muted); }
+    .sl-body { padding: 5px 7px 9px; font-size: 10px; line-height: 1.4; color: var(--muted); }
+    .sl-dark .sl-body { color: rgba(255,255,255,0.38); }
+
+    /* Caption block */
+    .cap-block { background: var(--page-bg); border: 1px solid var(--border); border-radius: 9px; padding: 16px; margin-top: 6px; }
+    .cap-row { display: flex; gap: 10px; margin-bottom: 9px; }
+    .cap-row:last-child { margin-bottom: 0; }
+    .cap-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue); background: var(--blue-tint); padding: 3px 8px; border-radius: 4px; white-space: nowrap; height: fit-content; margin-top: 2px; flex-shrink: 0; }
+    .cap-txt { font-size: 12px; color: var(--body-col); line-height: 1.55; }
+
+    /* Why list */
+    .why { list-style: none; }
+    .why li { display: flex; gap: 9px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--body-col); }
+    .why li:last-child { border-bottom: none; }
+    .wd { width: 5px; height: 5px; border-radius: 50%; background: var(--blue); margin-top: 6px; flex-shrink: 0; }
+
+    /* Hashtags */
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+    .tag { font-size: 11px; font-weight: 500; background: var(--page-bg); border: 1px solid var(--border); color: var(--muted); padding: 3px 9px; border-radius: 100px; }
+
+    /* Weekly grid table */
+    .wtable { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .wtable th { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+    .wtable td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--body-col); }
+    .wtable tr:hover td { background: var(--page-bg); }
+    .wtable tr:last-child td { border-bottom: none; }
+    .td-day { font-weight: 700; color: var(--ink); }
+    .td-note { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 2px; }
+
+    /* Grid preview */
+    .grid-prev { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; max-width: 380px; margin: 0 auto; }
+    .gp { aspect-ratio: 1; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px; }
+    .gp-lbl { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-align: center; }
+    .gp-val { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; text-align: center; line-height: 1.2; }
+
+    footer { background: var(--ink); padding: 36px 56px; display: flex; justify-content: space-between; align-items: center; }
+    .ft-brand { display: flex; align-items: center; gap: 8px; }
+    .ft-name { font-size: 16px; font-weight: 800; color: #fff; }
+    .ft-name span { color: #60A5FA; }
+    .ft-note { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+    .note { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
+    .note strong { color: var(--ink); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="logo-grid">
+      <div class="lg"></div><div class="lg"></div><div class="lg"></div>
+      <div class="lg"></div><div class="lg dim"></div><div class="lg"></div>
+      <div class="lg"></div><div class="lg"></div><div class="lg"></div>
+    </div>
+    <div class="brand-name">Enlist<span>a</span></div>
+  </div>
+  <div class="nav-label">Instagram Content Strategy — 2026</div>
+  <div class="nav-cta">5 Post Series</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-pill">▲ Instagram Content Strategy</div>
+    <h1 class="hero-h1">5 Content Series<br>to Build <span>Enlista</span><br>on Instagram.</h1>
+    <p class="hero-sub">Built from the actual enlista.io brand — Plus Jakarta Sans, #1D4ED8 blue, the light gray SaaS aesthetic, and the clean dashboard visual language of the real product.</p>
+    <div class="hero-stats">
+      <div><div class="hs-num">5</div><div class="hs-lbl">Pillars</div></div>
+      <div><div class="hs-num">7×</div><div class="hs-lbl">Posts/week</div></div>
+      <div><div class="hs-num">&lt;4 min</div><div class="hs-lbl">Core proof point</div></div>
+      <div><div class="hs-num">UAE</div><div class="hs-lbl">Primary market</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BRAND TOKENS -->
+<div class="sec">
+  <div class="eyebrow">Brand Foundation — From enlista.io</div>
+  <h2 class="sec-h2">Actual Brand Identity</h2>
+  <p class="sec-intro">Extracted directly from the live website. Every post must use these tokens. The brand is clean, modern B2B SaaS — not dark luxury, not gold, not editorial serif.</p>
+
+  <div class="tokens-grid">
+    <!-- Palette -->
+    <div class="tok-card">
+      <h3>Colour Palette</h3>
+      <div class="palette">
+        <div class="sw"><div class="sw-c" style="background:#F2F4F7;border-color:#DDE3EC;"></div><div class="sw-l">Page BG</div></div>
+        <div class="sw"><div class="sw-c" style="background:#FFFFFF;border-color:#DDE3EC;"></div><div class="sw-l">Surface</div></div>
+        <div class="sw"><div class="sw-c" style="background:#0F1829;"></div><div class="sw-l">Ink</div></div>
+        <div class="sw"><div class="sw-c" style="background:#1E293B;"></div><div class="sw-l">Body</div></div>
+        <div class="sw"><div class="sw-c" style="background:#1D4ED8;"></div><div class="sw-l">Blue ★</div></div>
+        <div class="sw"><div class="sw-c" style="background:#3B82F6;"></div><div class="sw-l">Blue Mid</div></div>
+        <div class="sw"><div class="sw-c" style="background:#EFF6FF;border-color:#DDE3EC;"></div><div class="sw-l">Tint</div></div>
+        <div class="sw"><div class="sw-c" style="background:#059669;"></div><div class="sw-l">Green</div></div>
+        <div class="sw"><div class="sw-c" style="background:#ECFDF5;border-color:#DDE3EC;"></div><div class="sw-l">Grn Tint</div></div>
+        <div class="sw"><div class="sw-c" style="background:#64748B;"></div><div class="sw-l">Muted</div></div>
+        <div class="sw"><div class="sw-c" style="background:#DDE3EC;border-color:#DDE3EC;"></div><div class="sw-l">Border</div></div>
+        <div class="sw"><div class="sw-c" style="background:#D97706;"></div><div class="sw-l">Amber</div></div>
+      </div>
+      <p class="note" style="margin-top:14px;">★ <strong>#1D4ED8</strong> is the brand blue — used on every CTA, accent element, and the "a" in the logo. Not gold. Not teal. This exact blue lives in the product.</p>
+    </div>
+
+    <!-- Typography -->
+    <div class="tok-card">
+      <h3>Typography — Plus Jakarta Sans Only</h3>
+      <div class="type-row">
+        <div class="type-tag">H1</div>
+        <div class="type-s" style="font-size:26px;">Moves the needle.</div>
+        <div class="type-spec">60px / 800</div>
+      </div>
+      <div class="type-row">
+        <div class="type-tag">H2</div>
+        <div class="type-s" style="font-size:20px;">Built to sell.</div>
+        <div class="type-spec">44px / 800</div>
+      </div>
+      <div class="type-row">
+        <div class="type-tag">H3</div>
+        <div class="type-s" style="font-size:15px;">Speak or fill in details</div>
+        <div class="type-spec">18px / 700</div>
+      </div>
+      <div class="type-row">
+        <div class="type-tag">Label</div>
+        <div class="type-s" style="font-size:10px;letter-spacing:0.14em;font-weight:700;">HOW IT WORKS</div>
+        <div class="type-spec">10px / 700 UC</div>
+      </div>
+      <div class="type-row">
+        <div class="type-tag">Body</div>
+        <div class="type-s" style="font-size:13px;font-weight:400;color:var(--muted);">AI handles the rest.</div>
+        <div class="type-spec">15px / 400</div>
+      </div>
+      <p class="note">One font throughout. Plus Jakarta Sans at every weight — from the nav to the dark CTA section. It's exactly what the product looks like.</p>
+    </div>
+
+    <!-- Logo -->
+    <div class="tok-card">
+      <h3>Logo Usage on Posts</h3>
+      <div style="display:flex;align-items:center;gap:24px;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="display:grid;grid-template-columns:repeat(3,9px);gap:2.5px;">
+            <div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div><div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div><div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div>
+            <div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div><div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div><div style="width:9px;height:9px;border-radius:2px;background:rgba(29,78,216,0.14);"></div>
+            <div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div><div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div><div style="width:9px;height:9px;border-radius:2px;background:#1D4ED8;"></div>
+          </div>
+          <span style="font-size:19px;font-weight:800;color:#0F1829;letter-spacing:-0.02em;">Enlist<span style="color:#1D4ED8;">a</span></span>
+        </div>
+        <div style="background:#0F1829;padding:12px 16px;border-radius:7px;display:flex;align-items:center;gap:7px;">
+          <div style="display:grid;grid-template-columns:repeat(3,7px);gap:2px;">
+            <div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div>
+            <div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:rgba(59,130,246,0.25);"></div>
+            <div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div>
+          </div>
+          <span style="font-size:14px;font-weight:800;color:#fff;">Enlist<span style="color:#60A5FA;">a</span></span>
+        </div>
+      </div>
+      <ul class="why">
+        <li><div class="wd"></div>3×3 blue grid icon — represents multi-portal sync visually</li>
+        <li><div class="wd"></div>Centre-right square is lighter — reproduce faithfully on all posts</li>
+        <li><div class="wd"></div>Final "a" in blue (#1D4ED8 on light, #60A5FA on dark backgrounds)</li>
+        <li><div class="wd"></div>Watermark on every post — top-right or bottom-right, small and consistent</li>
+      </ul>
+    </div>
+
+    <!-- Do/Don't -->
+    <div class="tok-card">
+      <h3>Tone of Voice — Do &amp; Don't</h3>
+      <div class="rule-row"><div class="rbadge rb-do">✓ Do</div><div class="rule-text"><strong>Specific numbers always.</strong> "&lt;4 min avg. publish time" not "fast." "124K listings managed" not "thousands." Precision earns trust.</div></div>
+      <div class="rule-row"><div class="rbadge rb-do">✓ Do</div><div class="rule-text"><strong>Industry-native language.</strong> "Portal", "RERA", "DLD", "per sqft", "Bayut", "PF." Write as if you work in UAE real estate.</div></div>
+      <div class="rule-row"><div class="rbadge rb-do">✓ Do</div><div class="rule-text"><strong>Short, direct sentences.</strong> "Transparent pricing. No surprises." mirrors the site's own copy voice — confident, no fluff.</div></div>
+      <div class="rule-row"><div class="rbadge rb-dont">✕ Don't</div><div class="rule-text"><strong>No gold, no luxury aesthetic.</strong> Enlista is B2B SaaS. Blue and clean. Not desert gold and dark luxury.</div></div>
+      <div class="rule-row"><div class="rbadge rb-dont">✕ Don't</div><div class="rule-text"><strong>No "AI revolution" language.</strong> The site says "AI handles the rest" — quiet confidence, not hype.</div></div>
+      <div class="rule-row"><div class="rbadge rb-dont">✕ Don't</div><div class="rule-text"><strong>No other fonts.</strong> Plus Jakarta Sans only. No Syne, no serif, no display type. One font = one brand.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PILLARS -->
+<div class="sec sec-alt">
+  <div class="eyebrow">The Framework</div>
+  <h2 class="sec-h2">5 Content Pillars</h2>
+  <p class="sec-intro">Every post maps to one of five pillars — structured so the feed is never all product, never all community, always balanced and varied.</p>
+  <div class="pillars">
+    <div class="pillar"><div class="p-pct">30%</div><div class="p-name">⚡ Speed & Efficiency</div><div class="p-desc">The &lt;4 min proof point made visual. Workflow before/after comparisons.</div></div>
+    <div class="pillar"><div class="p-pct">25%</div><div class="p-name">📊 UAE Market Data</div><div class="p-desc">DLD stats, area trends, portal data. Enlista as the smart industry voice.</div></div>
+    <div class="pillar"><div class="p-pct">20%</div><div class="p-name">🖥 Product Showcase</div><div class="p-desc">Screenshot the real dashboard. The UI is good-looking — use it directly.</div></div>
+    <div class="pillar"><div class="p-pct">15%</div><div class="p-name">🏆 Client Results</div><div class="p-desc">"720× improvement." Real metrics from real UAE agencies.</div></div>
+    <div class="pillar"><div class="p-pct">10%</div><div class="p-name">🌇 Broker Life</div><div class="p-desc">Relatable UAE broker content. RERA stress, portal juggling, client quirks.</div></div>
+  </div>
+</div>
+
+<!-- 5 IDEAS -->
+<div class="sec">
+  <div class="eyebrow">5 Content Series</div>
+  <h2 class="sec-h2">The Post Concepts</h2>
+  <p class="sec-intro">Each series has a fixed template, fixed aesthetic, and fixed cadence. The goal: every post looks like it belongs to Enlista without anyone seeing the logo.</p>
+
+  <div class="ideas">
+
+    <!-- 01 -->
+    <div class="idea-card">
+      <div class="idea-hdr">
+        <div class="idea-num">01</div>
+        <div class="idea-meta">
+          <div class="idea-series">Series: "Under 4 Minutes"</div>
+          <div class="idea-title">The Workflow Comparison Carousel</div>
+          <div class="idea-desc">Side-by-side breakdown of listing manually vs. Enlista — step by step, timed. Visual style directly mirrors the product's own dashboard: white cards on light gray, blue accents, green "● Live" status pills.</div>
+        </div>
+        <div class="idea-badges">
+          <div class="ibadge ib-p">⚡ Speed & Efficiency</div>
+          <div class="ibadge ib-f">Carousel · 5–7 slides</div>
+          <div class="ibadge ib-r">2× / month</div>
+        </div>
+      </div>
+      <div class="idea-body">
+        <div class="idea-col">
+          <div class="col-lbl">Cover Slide Visual</div>
+          <div class="pm">
+            <div class="pm-dark">
+              <div class="pm-wm">
+                <div class="pm-wm-grid"><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq d"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div></div>
+                <div class="pm-wm-txt-d">enlista.io</div>
+              </div>
+              <div class="pm-ew-d">TIME STUDY · DUBAI MARINA · 3BR</div>
+              <div class="pm-hd" style="font-size:30px;"><span>&lt;4 min</span><br>vs 2 hours.</div>
+              <div class="pm-sub-d" style="margin-bottom:10px;">We timed both. The gap might surprise you.</div>
+              <div class="dot-row"><div class="di a"></div><div class="di"></div><div class="di"></div><div class="di"></div><div class="di"></div></div>
+            </div>
+          </div>
+          <div class="slides">
+            <div class="sl sl-dark"><div class="sl-hdr">Slide 1</div><div class="sl-body">Cover: "&lt;4 min vs 2hr" on dark bg. Blue stat. White headline.</div></div>
+            <div class="sl sl-light"><div class="sl-hdr">Slide 2</div><div class="sl-body">Manual: step timeline, amber ⏱ timestamps. Card on light bg.</div></div>
+            <div class="sl sl-dark"><div class="sl-hdr">Slide 3</div><div class="sl-body">Enlista: same steps, green ✓ timestamps. Compressed visually.</div></div>
+            <div class="sl sl-light"><div class="sl-hdr">Slides 4–5</div><div class="sl-body">Dashboard screenshot: "Bayut ● Live · PF ● Live · Dubizzle ● Live"</div></div>
+          </div>
+          <div class="col-lbl" style="margin-top:14px;">Hashtags</div>
+          <div class="tags">
+            <div class="tag">#UAERealEstate</div><div class="tag">#DubaiProperty</div>
+            <div class="tag">#PropTech</div><div class="tag">#Bayut</div>
+            <div class="tag">#PropertyFinder</div><div class="tag">#RERA</div>
+          </div>
+        </div>
+        <div class="idea-col">
+          <div class="col-lbl">Caption Anatomy</div>
+          <div class="cap-block">
+            <div class="cap-row"><div class="cap-tag">Hook</div><div class="cap-txt">We timed it. Here's exactly how long it takes to list a 3BR in Dubai Marina — manually vs. on Enlista.</div></div>
+            <div class="cap-row"><div class="cap-tag">Manual</div><div class="cap-txt">Write EN copy (40 min) → translate to AR (30 min) → upload to Bayut (20 min) → PF (20 min) → Dubizzle (20 min) → RERA check (20 min). Total: 2h 30min.</div></div>
+            <div class="cap-row"><div class="cap-tag">Enlista</div><div class="cap-txt">Speak or type the details. Hit generate. EN + AR copy, all 3 portals, RERA checked. Under 4 minutes.</div></div>
+            <div class="cap-row"><div class="cap-tag">CTA</div><div class="cap-txt">Start your free 14-day trial → link in bio. No card required.</div></div>
+          </div>
+          <div class="col-lbl" style="margin-top:18px;">Why It Works</div>
+          <ul class="why">
+            <li><div class="wd"></div>The "&lt;4 min" stat comes directly from the live website — already validated messaging</li>
+            <li><div class="wd"></div>Dark cover slide stops scroll; mirrors the site's own dark section visual</li>
+            <li><div class="wd"></div>Save-worthy — brokers screenshot operational comparisons and share with teams</li>
+            <li><div class="wd"></div>Swappable per community/property type — infinite variations from one template</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="idea-card">
+      <div class="idea-hdr">
+        <div class="idea-num">02</div>
+        <div class="idea-meta">
+          <div class="idea-series">Series: "Dubai By Numbers"</div>
+          <div class="idea-title">UAE Market Intelligence — Static Post</div>
+          <div class="idea-desc">Weekly data post that mirrors the Enlista dashboard card aesthetic exactly: white card on #F2F4F7 background, one dominant blue stat, thin blue accent bar, DLD source attribution in muted 10px type. Editorial, trustworthy, save-worthy.</div>
+        </div>
+        <div class="idea-badges">
+          <div class="ibadge ib-p">📊 Market Data</div>
+          <div class="ibadge ib-f">Static post</div>
+          <div class="ibadge ib-r">1× / week</div>
+        </div>
+      </div>
+      <div class="idea-body">
+        <div class="idea-col">
+          <div class="col-lbl">Post Visual</div>
+          <div class="pm">
+            <div class="pm-card-wrap" style="min-height:190px;">
+              <div class="pm-card-inner" style="display:flex;flex-direction:column;justify-content:space-between;min-height:168px;">
+                <div>
+                  <div class="pm-ew">MARKET UPDATE · Q1 2026</div>
+                  <div style="width:24px;height:3px;background:var(--blue);border-radius:2px;margin-bottom:12px;"></div>
+                  <div class="big-stat">+23%</div>
+                  <div style="font-size:13px;font-weight:700;color:var(--ink);margin-top:5px;line-height:1.3;">Palm Jumeirah<br>price per sqft YoY</div>
+                </div>
+                <div style="font-size:10px;color:var(--muted);">Source: DLD Transactions Registry · Mar 2026</div>
+              </div>
+            </div>
+          </div>
+          <p class="note"><strong>Layout:</strong> White card (#FFF) on page-bg (#F2F4F7). Blue stat in Plus Jakarta Sans 800. Thin blue bar above the number. Source attribution in 10px muted. Logo watermark top-right. Exactly how data looks inside the real Enlista dashboard.</p>
+          <div class="col-lbl" style="margin-top:14px;">Topic Rotation</div>
+          <ul class="why">
+            <li><div class="wd"></div>Highest price/sqft communities — monthly</li>
+            <li><div class="wd"></div>Bayut vs PF vs Dubizzle: where leads actually click</li>
+            <li><div class="wd"></div>Off-plan vs ready — quarterly transaction split</li>
+            <li><div class="wd"></div>Most-searched Dubai property types</li>
+            <li><div class="wd"></div>RERA permit renewals trend</li>
+          </ul>
+        </div>
+        <div class="idea-col">
+          <div class="col-lbl">Caption Anatomy</div>
+          <div class="cap-block">
+            <div class="cap-row"><div class="cap-tag">Hook</div><div class="cap-txt">Palm Jumeirah just logged its strongest Q1 in 4 years. Here's the number every agent listing there needs to know.</div></div>
+            <div class="cap-row"><div class="cap-tag">Data</div><div class="cap-txt">+23% price/sqft YoY. Average 2BR: AED 4.2M. Days on market: 18 (down from 31 in Q1 2025). Source: DLD, March 2026.</div></div>
+            <div class="cap-row"><div class="cap-tag">Insight</div><div class="cap-txt">Window is short. The listing live on all 3 portals first wins the inquiry. Manual workflows cost agencies leads they'll never know they lost.</div></div>
+            <div class="cap-row"><div class="cap-tag">CTA</div><div class="cap-txt">Save this for your next client briefing. Link in bio to try Enlista free.</div></div>
+          </div>
+          <div class="col-lbl" style="margin-top:18px;">Why It Works</div>
+          <ul class="why">
+            <li><div class="wd"></div>Brokers actively seek market data — genuinely useful, not just promotional</li>
+            <li><div class="wd"></div>"Save" trigger rate on data posts is Instagram's highest engagement signal</li>
+            <li><div class="wd"></div>White card visual matches exactly what data looks like inside the Enlista product — seamless brand continuity</li>
+            <li><div class="wd"></div>Positions Enlista as a business partner, not just a listing tool</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="idea-card">
+      <div class="idea-hdr">
+        <div class="idea-num">03</div>
+        <div class="idea-meta">
+          <div class="idea-series">Series: "How It Works"</div>
+          <div class="idea-title">Product Walkthrough Carousel</div>
+          <div class="idea-desc">Mirrors the site's own "HOW IT WORKS" section structure — 3 numbered steps, real UI screenshots, clean light background. Shows the product working rather than describing it. Every slide looks like a page from the actual website.</div>
+        </div>
+        <div class="idea-badges">
+          <div class="ibadge ib-p">🖥 Product Showcase</div>
+          <div class="ibadge ib-f">Carousel · 4–5 slides</div>
+          <div class="ibadge ib-r">2× / month</div>
+        </div>
+      </div>
+      <div class="idea-body">
+        <div class="idea-col">
+          <div class="col-lbl">Cover Slide Visual</div>
+          <div class="pm">
+            <div class="pm-light">
+              <div class="pm-wm">
+                <div class="pm-wm-grid"><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq d"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div></div>
+                <div class="pm-wm-txt">enlista.io</div>
+              </div>
+              <div class="pm-ew">HOW IT WORKS · 3 STEPS</div>
+              <div class="pm-h">A complete listing<br>in <span>30 seconds.</span></div>
+              <div class="pm-sub">Bilingual. Portal-ready. RERA clean.</div>
+              <div class="dot-row" style="margin-top:10px;">
+                <div class="di a"></div><div class="di"></div><div class="di"></div><div class="di"></div>
+              </div>
+            </div>
+          </div>
+          <p class="note"><strong>Layout:</strong> Light (#F2F4F7) cover. Slides 2–4 show real product UI: voice input screen → bilingual EN/AR copy output → portal status "● Live" confirmation card. Blue step numbers, same font weight as the site. Each slide numbered identically to the site's own 1→2→3 flow.</p>
+          <div class="col-lbl" style="margin-top:14px;">Series Variations</div>
+          <ul class="why">
+            <li><div class="wd"></div>"How RERA compliance gets checked automatically"</li>
+            <li><div class="wd"></div>"How the bilingual Arabic copy is actually generated"</li>
+            <li><div class="wd"></div>"How lead scoring tells you who to call first"</li>
+            <li><div class="wd"></div>"How portal sync works across Bayut, PF, Dubizzle"</li>
+          </ul>
+        </div>
+        <div class="idea-col">
+          <div class="col-lbl">Caption Anatomy</div>
+          <div class="cap-block">
+            <div class="cap-row"><div class="cap-tag">Hook</div><div class="cap-txt">Most brokers don't know you can go from "I have a 3BR in JBR" to live on all 3 portals in under 30 seconds. Here's exactly how.</div></div>
+            <div class="cap-row"><div class="cap-tag">Steps</div><div class="cap-txt">Step 1: Speak or type your property details. Step 2: Enlista writes full EN + AR listing copy. Step 3: One click — live on Bayut, Property Finder, and Dubizzle. RERA checked automatically.</div></div>
+            <div class="cap-row"><div class="cap-tag">Proof</div><div class="cap-txt">124K listings managed. 840 active agencies. 99.9% portal uptime. Swipe to see each step →</div></div>
+            <div class="cap-row"><div class="cap-tag">CTA</div><div class="cap-txt">Try it free for 14 days. Link in bio.</div></div>
+          </div>
+          <div class="col-lbl" style="margin-top:18px;">Why It Works</div>
+          <ul class="why">
+            <li><div class="wd"></div>Mirrors the site's section structure — consistent brand experience from Instagram to landing page</li>
+            <li><div class="wd"></div>Real UI screenshots are more convincing than illustration — the dashboard is clean enough to show directly</li>
+            <li><div class="wd"></div>Directly addresses "but how does it actually work?" before the objection forms</li>
+            <li><div class="wd"></div>3-step framing reduces the perceived complexity of switching tools</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="idea-card">
+      <div class="idea-hdr">
+        <div class="idea-num">04</div>
+        <div class="idea-meta">
+          <div class="idea-series">Series: "Client Results"</div>
+          <div class="idea-title">Agency Quote + Metrics Carousel</div>
+          <div class="idea-desc">Directly lifts from the "CLIENT RESULTS" section on the actual site. Espace Real Estate's "720× improvement" quote on the dark section bg, followed by a before/after metrics slide on a white card. Proof, not claims.</div>
+        </div>
+        <div class="idea-badges">
+          <div class="ibadge ib-p">🏆 Client Results</div>
+          <div class="ibadge ib-f">Carousel · 3–4 slides</div>
+          <div class="ibadge ib-r">1–2× / month</div>
+        </div>
+      </div>
+      <div class="idea-body">
+        <div class="idea-col">
+          <div class="col-lbl">Cover Slide Visual</div>
+          <div class="pm">
+            <div class="pm-dark">
+              <div class="pm-wm">
+                <div class="pm-wm-grid"><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq d"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div><div class="pm-wm-sq"></div></div>
+                <div class="pm-wm-txt-d">enlista.io</div>
+              </div>
+              <div class="g-pill"><div class="g-dot"></div>Verified Result</div>
+              <div class="pm-hd" style="font-size:17px;line-height:1.35;">"Two days to four minutes.<br>That's a <span>720×</span> improvement."</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.38);margin-top:7px;">Operations Manager · Espace Real Estate · Dubai</div>
+            </div>
+          </div>
+          <p class="note"><strong>Layout:</strong> Quote slide on dark (#0F1829) — matching the site's own dark CTA section. Green "Verified Result" pill adds credibility. Slide 2: before/after metrics on white card (same dashboard card style). Slide 3: "How they did it" 3-step breakdown on light bg.</p>
+        </div>
+        <div class="idea-col">
+          <div class="col-lbl">Caption Anatomy</div>
+          <div class="cap-block">
+            <div class="cap-row"><div class="cap-tag">Hook</div><div class="cap-txt">Espace Real Estate replaced their entire listing workflow with Enlista. Here's what a 720× improvement looks like in practice.</div></div>
+            <div class="cap-row"><div class="cap-tag">Before</div><div class="cap-txt">48+ hours from property shoot to listing live across Bayut, PF and Dubizzle. Manual copy, manual translation, manual upload, manual RERA check.</div></div>
+            <div class="cap-row"><div class="cap-tag">After</div><div class="cap-txt">Under 4 minutes. Bilingual copy generated. All portals live simultaneously. Zero RERA suspensions since launch.</div></div>
+            <div class="cap-row"><div class="cap-tag">CTA</div><div class="cap-txt">14-day trial, no card required. Link in bio.</div></div>
+          </div>
+          <div class="col-lbl" style="margin-top:18px;">Why It Works</div>
+          <ul class="why">
+            <li><div class="wd"></div>"720×" is on the live site already — a real, validated, extraordinary claim</li>
+            <li><div class="wd"></div>Dark quote slide contrasts visually with light market data posts in the feed</li>
+            <li><div class="wd"></div>Named UAE agencies (Espace) carry huge credibility with the brokerage community</li>
+            <li><div class="wd"></div>Specific metrics beat vague claims every time — "720×" is impossible to ignore</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="idea-card">
+      <div class="idea-hdr">
+        <div class="idea-num">05</div>
+        <div class="idea-meta">
+          <div class="idea-series">Series: "Portal Status"</div>
+          <div class="idea-title">Broker Life — Relatable Static Post</div>
+          <div class="idea-desc">Community-building content styled as a portal status card — the exact same "● Live" green dot dashboard card from the product. The joke is delivered through Enlista's own visual language. Witty, industry-native, highly shareable.</div>
+        </div>
+        <div class="idea-badges">
+          <div class="ibadge ib-p">🌇 Broker Life</div>
+          <div class="ibadge ib-f">Static post</div>
+          <div class="ibadge ib-r">1× / week</div>
+        </div>
+      </div>
+      <div class="idea-body">
+        <div class="idea-col">
+          <div class="col-lbl">Post Visual</div>
+          <div class="pm">
+            <div class="pm-card-wrap" style="min-height:190px;">
+              <div class="pm-card-inner" style="display:flex;flex-direction:column;justify-content:space-between;min-height:168px;">
+                <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">PORTAL STATUS · SUNDAY EVENING</div>
+                <div class="dash-row"><span style="font-size:12px;font-weight:600;color:var(--ink);">Your listing</span><div class="dash-live"><div class="g-dot"></div>Live</div></div>
+                <div class="dash-row"><span style="font-size:12px;font-weight:600;color:var(--ink);">Your competitor's listing</span><div class="dash-live"><div class="g-dot"></div>Live <span style="color:var(--muted);font-weight:400;margin-left:3px;">2hr ago</span></div></div>
+                <div style="font-size:12px;color:var(--muted);font-style:italic;padding-top:12px;">Same property. Different workflow.</div>
+              </div>
+            </div>
+          </div>
+          <p class="note"><strong>Layout:</strong> This is the portal status card from the Enlista dashboard, turned into a post. White card on #F2F4F7. "● Live" green pill. The punchline is delivered entirely through the product's own UI — original, on-brand, memorable.</p>
+          <div class="col-lbl" style="margin-top:14px;">Series Topics</div>
+          <ul class="why">
+            <li><div class="wd"></div>"RERA suspended your listing. At 11pm. On Friday."</li>
+            <li><div class="wd"></div>"The landlord who needs it live tomorrow — sends photos at midnight."</li>
+            <li><div class="wd"></div>"Your Arabic copy: Google Translated. Their Arabic copy: actually sounds right."</li>
+            <li><div class="wd"></div>"The client who's 'almost ready to sign' for the 4th month in a row."</li>
+          </ul>
+        </div>
+        <div class="idea-col">
+          <div class="col-lbl">Caption Anatomy</div>
+          <div class="cap-block">
+            <div class="cap-row"><div class="cap-tag">Hook</div><div class="cap-txt">You and your competitor listed the same building. Yours went live 2 hours later. Guess who got the inquiry.</div></div>
+            <div class="cap-row"><div class="cap-tag">Relate</div><div class="cap-txt">Manual portal sync is a race you're running backwards. Bayut first, then PF, then Dubizzle — by the time you're done, someone else already has the lead.</div></div>
+            <div class="cap-row"><div class="cap-tag">Pivot</div><div class="cap-txt">With Enlista: one click, all three go live at the same time. The race doesn't change — just your position in it.</div></div>
+            <div class="cap-row"><div class="cap-tag">CTA</div><div class="cap-txt">Tag the agent who'd feel this one. 👇</div></div>
+          </div>
+          <div class="col-lbl" style="margin-top:18px;">Why It Works</div>
+          <ul class="why">
+            <li><div class="wd"></div>"Tag an agent" drives organic reach — UAE brokers follow each other closely</li>
+            <li><div class="wd"></div>Using the actual dashboard card as the joke delivery is original — no other brand can copy this</li>
+            <li><div class="wd"></div>Relatable content humanises the feed; prevents it feeling like an ad channel</li>
+            <li><div class="wd"></div>Comment flooding = strong algorithmic boost — these posts outperform on reach</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- WEEKLY GRID -->
+<div class="sec sec-alt">
+  <div class="eyebrow">Posting Cadence</div>
+  <h2 class="sec-h2">Weekly Content Grid</h2>
+  <p class="sec-intro">7 posts per week. Dark and light posts alternate to create visual rhythm. Product posts and community posts are balanced so the feed never feels like an ad channel.</p>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+    <table class="wtable">
+      <thead>
+        <tr>
+          <th>Day</th><th>Format</th><th>Series</th><th>Direction</th><th>Aesthetic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-day">Monday</td>
+          <td><span class="ibadge ib-f">Static</span></td>
+          <td>Dubai By Numbers</td>
+          <td>Weekly DLD/market data drop<div class="td-note">"Start the week informed."</div></td>
+          <td><span style="font-size:12px;color:var(--muted);">☀️ White card</span></td>
+        </tr>
+        <tr>
+          <td class="td-day">Tuesday</td>
+          <td><span class="ibadge ib-f">Carousel</span></td>
+          <td>Under 4 Minutes</td>
+          <td>Manual vs Enlista workflow comparison<div class="td-note">"The scroll-stopper."</div></td>
+          <td><span style="font-size:12px;color:var(--muted);">🌑 Dark #0F1829</span></td>
+        </tr>
+        <tr>
+          <td class="td-day">Wednesday</td>
+          <td><span class="ibadge ib-f">Carousel</span></td>
+          <td>How It Works</td>
+          <td>Product walkthrough — real UI, 3-step flow<div class="td-note">"Mid-week trust builder."</div></td>
+          <td><span style="font-size:12px;color:var(--muted);">☀️ Light #F2F4F7</span></td>
+        </tr>
+        <tr>
+          <td class="td-day">Thursday</td>
+          <td><span class="ibadge ib-f">Static</span></td>
+          <td>Portal Status</td>
+          <td>Broker life — dashboard card format, shareable<div class="td-note">"Tag your team post."</div></td>
+          <td><span style="font-size:12px;color:var(--muted);">☀️ White card</span></td>
+        </tr>
+        <tr>
+          <td class="td-day">Friday</td>
+          <td><span class="ibadge ib-f">Carousel</span></td>
+          <td>Client Results</td>
+          <td>Quote card + before/after metrics<div class="td-note">"End-of-week social proof."</div></td>
+          <td><span style="font-size:12px;color:var(--muted);">🌑 Dark #0F1829</span></td>
+        </tr>
+        <tr>
+          <td class="td-day">Saturday</td>
+          <td><span class="ibadge ib-f">Reel</span></td>
+          <td>Product Demo</td>
+          <td>Under 60s: voice input → bilingual copy → portals live<div class="td-note">"Show don't tell."</div></td>
+          <td><span style="font-size:12px;color:var(--muted);">Product UI</span></td>
+        </tr>
+        <tr>
+          <td class="td-day">Sunday</td>
+          <td><span class="ibadge ib-f">Static</span></td>
+          <td>Flex</td>
+          <td>Repurpose a top performer or react to UAE property news<div class="td-note">"Stay agile on trend."</div></td>
+          <td><span style="font-size:12px;color:var(--muted);">Varies</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- GRID PREVIEW -->
+<div class="sec sec-dark">
+  <div class="eyebrow eyebrow-light">Feed Architecture</div>
+  <h2 class="sec-h2 sec-h2-light">The 3×3 Grid Strategy</h2>
+  <p class="sec-intro sec-intro-light">Alternating dark and light posts create a recognisable stripe pattern. The dark (#0F1829) column on the right is consistently the client results and workflow posts — anchoring the grid visually.</p>
+
+  <div class="grid-prev">
+    <div class="gp" style="background:#1a2740;">
+      <div class="gp-lbl" style="color:rgba(96,165,250,0.7);">MARKET DATA</div>
+      <div class="gp-val" style="color:#fff;">+23%</div>
+    </div>
+    <div class="gp" style="background:var(--surface);">
+      <div class="gp-lbl" style="color:var(--muted);">4 MIN<br>LISTING</div>
+      <div class="gp-val" style="color:var(--blue);">&lt;4m</div>
+    </div>
+    <div class="gp" style="background:#0a1120;">
+      <div class="gp-lbl" style="color:rgba(96,165,250,0.6);">CLIENT<br>RESULT</div>
+      <div class="gp-val" style="color:#fff;">720×</div>
+    </div>
+    <div class="gp" style="background:var(--page-bg);">
+      <div class="gp-lbl" style="color:var(--muted);">HOW IT<br>WORKS</div>
+      <div class="gp-val" style="color:var(--blue);">3 steps</div>
+    </div>
+    <div class="gp" style="background:#1a2740;">
+      <div class="gp-lbl" style="color:rgba(96,165,250,0.7);">PORTAL<br>STATUS</div>
+      <div class="gp-val" style="color:#4ADE80;font-size:11px;">● Live<br>● Live</div>
+    </div>
+    <div class="gp" style="background:var(--surface);">
+      <div class="gp-lbl" style="color:var(--muted);">MARKET<br>DATA</div>
+      <div class="gp-val" style="color:var(--blue);">+18%</div>
+    </div>
+    <div class="gp" style="background:#0a1120;">
+      <div class="gp-lbl" style="color:rgba(96,165,250,0.6);">REEL<br>DEMO</div>
+      <div class="gp-val" style="color:#fff;font-size:20px;">▶</div>
+    </div>
+    <div class="gp" style="background:var(--page-bg);">
+      <div class="gp-lbl" style="color:var(--muted);">HOW IT<br>WORKS</div>
+      <div class="gp-val" style="color:var(--blue);">EN+AR</div>
+    </div>
+    <div class="gp" style="background:#1a2740;">
+      <div class="gp-lbl" style="color:rgba(96,165,250,0.7);">CLIENT<br>RESULT</div>
+      <div class="gp-val" style="color:#fff;">+40%</div>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:12px;color:rgba(255,255,255,0.28);margin-top:18px;">Dark (#0F1829) anchors the right column consistently — the Enlista "signature stripe" in the feed.</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-brand">
+    <div style="display:grid;grid-template-columns:repeat(3,7px);gap:2px;">
+      <div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div>
+      <div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:rgba(59,130,246,0.25);"></div>
+      <div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div><div style="width:7px;height:7px;border-radius:1.5px;background:#3B82F6;"></div>
+    </div>
+    <div class="ft-name">Enlist<span>a</span></div>
+  </div>
+  <div class="ft-note">Instagram Content Strategy · Built from enlista.io · April 2026</div>
+</footer>
+
+</body>
+</html>

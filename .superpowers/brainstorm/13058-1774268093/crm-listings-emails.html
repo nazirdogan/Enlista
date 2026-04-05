@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista Admin CRM — Listings + Emails</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #f4f5f7; display: flex; min-height: 100vh; font-size: 13px; color: #1a1a2e; }
+
+  .sidebar { width: 200px; background: #1a1a2e; flex-shrink: 0; display: flex; flex-direction: column; padding: 20px 0; }
+  .sidebar-logo { padding: 0 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-logo .brand { color: #fff; font-size: 13px; font-weight: 700; }
+  .sidebar-logo .sub { color: rgba(255,255,255,0.35); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .nav { padding: 12px 0; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; color: rgba(255,255,255,0.55); font-size: 12px; cursor: pointer; border-left: 3px solid transparent; }
+  .nav-item.active { color: #fff; background: rgba(99,102,241,0.15); border-left-color: #6366f1; }
+  .nav-item .icon { font-size: 14px; width: 18px; text-align: center; }
+  .nav-section { padding: 12px 16px 4px; color: rgba(255,255,255,0.2); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .main { flex: 1; overflow: auto; }
+  .topbar { background: #fff; padding: 14px 24px; border-bottom: 1px solid #e5e7eb; }
+  .topbar-title { font-size: 15px; font-weight: 700; color: #111; }
+  .topbar-meta { font-size: 11px; color: #9ca3af; }
+
+  .content { padding: 20px 24px; }
+
+  /* Page tabs */
+  .page-tabs { display: flex; gap: 0; border-bottom: 2px solid #e5e7eb; margin-bottom: 24px; }
+  .page-tab { padding: 10px 20px; font-size: 13px; font-weight: 500; color: #9ca3af; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+  .page-tab.active { color: #6366f1; border-bottom-color: #6366f1; font-weight: 700; }
+
+  /* KPI row */
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+  .kpi-card { background: #fff; border-radius: 10px; padding: 14px 16px; border: 1px solid #e5e7eb; }
+  .kpi-label { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .kpi-value { font-size: 22px; font-weight: 700; color: #111; line-height: 1; margin-bottom: 4px; }
+  .kpi-delta { font-size: 10px; }
+  .up { color: #10b981; }
+  .neutral { color: #9ca3af; }
+
+  .row2 { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .card { background: #fff; border-radius: 10px; padding: 16px; border: 1px solid #e5e7eb; }
+  .card-title { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .card-title span { font-size: 10px; color: #9ca3af; font-weight: 400; }
+
+  /* Bar chart */
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 90px; }
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+  .bar { width: 100%; border-radius: 3px 3px 0 0; }
+  .bar-label { font-size: 9px; color: #9ca3af; }
+  .bar-val { font-size: 9px; color: #374151; font-weight: 600; }
+
+  /* Horizontal bar rows */
+  .hbar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .hbar-label { font-size: 11px; color: #374151; width: 70px; flex-shrink: 0; }
+  .hbar-track { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; }
+  .hbar-fill { height: 8px; border-radius: 4px; }
+  .hbar-val { font-size: 10px; color: #6b7280; font-weight: 600; width: 30px; text-align: right; flex-shrink: 0; }
+
+  /* Top users table */
+  .mini-table { width: 100%; border-collapse: collapse; }
+  .mini-table th { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 0 8px; text-align: left; border-bottom: 1px solid #f3f4f6; }
+  .mini-table td { padding: 8px 0; font-size: 11px; color: #374151; border-bottom: 1px solid #f9fafb; }
+  .mini-table tr:last-child td { border-bottom: none; }
+  .rank { font-size: 11px; font-weight: 700; color: #9ca3af; }
+  .agency-bold { font-weight: 600; color: #111; }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 20px; font-size: 9px; font-weight: 600; }
+  .badge-agency { background: #fdf4ff; color: #86198f; }
+  .badge-boutique { background: #f5f3ff; color: #6d28d9; }
+  .badge-solo { background: #eff6ff; color: #1d4ed8; }
+
+  /* ── DIVIDER ── */
+  .section-divider { border: none; border-top: 2px dashed #e5e7eb; margin: 32px 0 28px; }
+  .section-heading { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 4px; }
+  .section-sub { font-size: 11px; color: #9ca3af; margin-bottom: 20px; }
+
+  /* Email KPIs */
+  .email-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+
+  /* Resend status */
+  .resend-status { display: flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; font-size: 12px; color: #065f46; font-weight: 500; }
+
+  /* Email type rows */
+  .email-types { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .email-type-card { background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; padding: 14px; }
+  .email-type-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .email-type-name { font-size: 12px; font-weight: 700; color: #111; }
+  .email-type-count { font-size: 11px; color: #9ca3af; }
+  .email-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #f9fafb; }
+  .email-stat-row:last-child { border-bottom: none; }
+  .email-stat-label { font-size: 11px; color: #6b7280; }
+  .email-stat-value { font-size: 12px; font-weight: 700; color: #111; }
+  .deliver-good { color: #10b981; }
+  .deliver-warn { color: #f59e0b; }
+  .deliver-bad { color: #ef4444; }
+
+  /* User email table */
+  .table-wrap { background: #fff; border-radius: 10px; border: 1px solid #e5e7eb; overflow: hidden; }
+  .table-header { padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f3f4f6; }
+  .table-title { font-size: 12px; font-weight: 600; color: #374151; flex: 1; }
+  .search-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 7px; padding: 5px 10px; font-size: 11px; color: #9ca3af; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 16px; text-align: left; border-bottom: 1px solid #f3f4f6; background: #fafafa; }
+  tbody tr { border-bottom: 1px solid #f9fafb; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: 10px 16px; font-size: 11px; color: #374151; vertical-align: middle; }
+  .name-bold { font-weight: 600; color: #111; font-size: 12px; }
+  .email-addr { font-size: 11px; color: #6366f1; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+  .dot-green { background: #10b981; }
+  .dot-yellow { background: #f59e0b; }
+  .dot-red { background: #ef4444; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Enlista</div>
+    <div class="sub">Admin CRM</div>
+  </div>
+  <div class="nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item"><span class="icon">📊</span> Overview</div>
+    <div class="nav-item"><span class="icon">👥</span> Users</div>
+    <div class="nav-item"><span class="icon">💳</span> Subscriptions</div>
+    <div class="nav-item active"><span class="icon">🏠</span> Listings</div>
+    <div class="nav-section">Growth</div>
+    <div class="nav-item"><span class="icon">📱</span> Outreach</div>
+    <div class="nav-item"><span class="icon">✉️</span> Emails</div>
+    <div class="nav-section">System</div>
+    <div class="nav-item"><span class="icon">⚙️</span> Settings</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Listings &amp; Emails</div>
+    <div class="topbar-meta">Scroll down to see both sections</div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ LISTINGS ══ -->
+    <div class="section-heading">🏠 Listings Analytics</div>
+    <div class="section-sub">All AI-generated listings across every agency on the platform</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Generated</div>
+        <div class="kpi-value">1,284</div>
+        <div class="kpi-delta up">↑ 184 this month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg per User</div>
+        <div class="kpi-value">4.8</div>
+        <div class="kpi-delta up">↑ 0.6 vs last mo</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Published</div>
+        <div class="kpi-value">741</div>
+        <div class="kpi-delta neutral">57.7% publish rate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Hours Saved</div>
+        <div class="kpi-value">856h</div>
+        <div class="kpi-delta neutral">@ 40 min/listing</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Top Community</div>
+        <div class="kpi-value" style="font-size:15px;">Dubai Marina</div>
+        <div class="kpi-delta neutral">142 listings</div>
+      </div>
+    </div>
+
+    <div class="row2">
+      <!-- Monthly trend -->
+      <div class="card">
+        <div class="card-title">Listings Generated per Month <span>Last 6 months</span></div>
+        <div class="bar-chart">
+          <div class="bar-group"><div class="bar-val">148</div><div class="bar" style="height:55px;background:#c7d2fe;"></div><div class="bar-label">Oct</div></div>
+          <div class="bar-group"><div class="bar-val">162</div><div class="bar" style="height:60px;background:#a5b4fc;"></div><div class="bar-label">Nov</div></div>
+          <div class="bar-group"><div class="bar-val">171</div><div class="bar" style="height:64px;background:#818cf8;"></div><div class="bar-label">Dec</div></div>
+          <div class="bar-group"><div class="bar-val">189</div><div class="bar" style="height:70px;background:#6366f1;"></div><div class="bar-label">Jan</div></div>
+          <div class="bar-group"><div class="bar-val">196</div><div class="bar" style="height:73px;background:#4f46e5;"></div><div class="bar-label">Feb</div></div>
+          <div class="bar-group"><div class="bar-val">218</div><div class="bar" style="height:82px;background:#4338ca;"></div><div class="bar-label">Mar</div></div>
+        </div>
+      </div>
+
+      <!-- By property type -->
+      <div class="card">
+        <div class="card-title">By Property Type</div>
+        <div class="hbar-row"><div class="hbar-label">Apartment</div><div class="hbar-track"><div class="hbar-fill" style="width:72%;background:#6366f1;"></div></div><div class="hbar-val">926</div></div>
+        <div class="hbar-row"><div class="hbar-label">Villa</div><div class="hbar-track"><div class="hbar-fill" style="width:18%;background:#818cf8;"></div></div><div class="hbar-val">231</div></div>
+        <div class="hbar-row"><div class="hbar-label">Townhouse</div><div class="hbar-track"><div class="hbar-fill" style="width:6%;background:#a5b4fc;"></div></div><div class="hbar-val">77</div></div>
+        <div class="hbar-row"><div class="hbar-label">Penthouse</div><div class="hbar-track"><div class="hbar-fill" style="width:3%;background:#c7d2fe;"></div></div><div class="hbar-val">38</div></div>
+        <div class="hbar-row"><div class="hbar-label">Office</div><div class="hbar-track"><div class="hbar-fill" style="width:1%;background:#e0e7ff;"></div></div><div class="hbar-val">12</div></div>
+      </div>
+
+      <!-- By tone -->
+      <div class="card">
+        <div class="card-title">By Tone</div>
+        <div class="hbar-row"><div class="hbar-label">Professional</div><div class="hbar-track"><div class="hbar-fill" style="width:55%;background:#6366f1;"></div></div><div class="hbar-val">706</div></div>
+        <div class="hbar-row"><div class="hbar-label">Luxury</div><div class="hbar-track"><div class="hbar-fill" style="width:30%;background:#a78bfa;"></div></div><div class="hbar-val">385</div></div>
+        <div class="hbar-row"><div class="hbar-label">Investment</div><div class="hbar-track"><div class="hbar-fill" style="width:15%;background:#c4b5fd;"></div></div><div class="hbar-val">193</div></div>
+      </div>
+    </div>
+
+    <!-- Top users by listings -->
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-title">Top Agencies by Listings Generated</div>
+      <table class="mini-table">
+        <tr><th>#</th><th>Agency</th><th>Plan</th><th>Listings</th><th>Avg / Month</th><th>Last Generated</th></tr>
+        <tr>
+          <td class="rank">1</td>
+          <td class="agency-bold">Prestige Group</td>
+          <td><span class="badge badge-agency">Agency</span></td>
+          <td><strong>31</strong></td>
+          <td>10.3</td>
+          <td>Today</td>
+        </tr>
+        <tr>
+          <td class="rank">2</td>
+          <td class="agency-bold">Gulf Homes LLC</td>
+          <td><span class="badge badge-boutique">Boutique</span></td>
+          <td><strong>14</strong></td>
+          <td>7.0</td>
+          <td>Yesterday</td>
+        </tr>
+        <tr>
+          <td class="rank">3</td>
+          <td class="agency-bold">Tamimi Real Estate</td>
+          <td><span class="badge badge-solo">Solo</span></td>
+          <td><strong>7</strong></td>
+          <td>3.5</td>
+          <td>5 days ago</td>
+        </tr>
+        <tr>
+          <td class="rank">4</td>
+          <td class="agency-bold">Aisha Properties</td>
+          <td><span class="badge" style="background:#fef3c7;color:#92400e;">Trial</span></td>
+          <td><strong>2</strong></td>
+          <td>2.0</td>
+          <td>Today</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ══ EMAILS ══ -->
+    <hr class="section-divider">
+    <div class="section-heading">✉️ Emails</div>
+    <div class="section-sub">User email directory + transactional email delivery via Resend API</div>
+
+    <div class="resend-status">
+      <span>🟢</span>
+      <span><strong>Resend connected</strong> · API key active · Last event synced 2 min ago</span>
+      <span style="margin-left:auto;font-size:10px;color:#065f46;">resend.com/dashboard →</span>
+    </div>
+
+    <div class="email-kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Emails Sent (30d)</div>
+        <div class="kpi-value">892</div>
+        <div class="kpi-delta up">All transactional</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Delivery Rate</div>
+        <div class="kpi-value">98.4%</div>
+        <div class="kpi-delta up">↑ healthy</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Bounced</div>
+        <div class="kpi-value" style="color:#ef4444;">14</div>
+        <div class="kpi-delta" style="color:#ef4444;">1.6% — check these</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Spam Complaints</div>
+        <div class="kpi-value" style="color:#10b981;">0</div>
+        <div class="kpi-delta up">Clean sender rep</div>
+      </div>
+    </div>
+
+    <!-- Email type cards -->
+    <div class="email-types">
+      <div class="email-type-card">
+        <div class="email-type-header">
+          <div class="email-type-name">Welcome Email</div>
+          <div class="email-type-count">247 sent</div>
+        </div>
+        <div class="email-stat-row"><div class="email-stat-label">Delivered</div><div class="email-stat-value deliver-good">244 (98.8%)</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Bounced</div><div class="email-stat-value deliver-warn">3</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Template</div><div class="email-stat-value" style="color:#9ca3af;">welcome-v2</div></div>
+      </div>
+      <div class="email-type-card">
+        <div class="email-type-header">
+          <div class="email-type-name">Trial Expiry Warning</div>
+          <div class="email-type-count">189 sent</div>
+        </div>
+        <div class="email-stat-row"><div class="email-stat-label">Delivered</div><div class="email-stat-value deliver-good">186 (98.4%)</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Bounced</div><div class="email-stat-value deliver-warn">3</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Template</div><div class="email-stat-value" style="color:#9ca3af;">trial-expiry-v1</div></div>
+      </div>
+      <div class="email-type-card">
+        <div class="email-type-header">
+          <div class="email-type-name">Payment Failed</div>
+          <div class="email-type-count">8 sent</div>
+        </div>
+        <div class="email-stat-row"><div class="email-stat-label">Delivered</div><div class="email-stat-value deliver-good">8 (100%)</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Bounced</div><div class="email-stat-value deliver-good">0</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Template</div><div class="email-stat-value" style="color:#9ca3af;">payment-failed-v1</div></div>
+      </div>
+      <div class="email-type-card">
+        <div class="email-type-header">
+          <div class="email-type-name">Subscription Confirmed</div>
+          <div class="email-type-count">18 sent</div>
+        </div>
+        <div class="email-stat-row"><div class="email-stat-label">Delivered</div><div class="email-stat-value deliver-good">18 (100%)</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Bounced</div><div class="email-stat-value deliver-good">0</div></div>
+        <div class="email-stat-row"><div class="email-stat-label">Template</div><div class="email-stat-value" style="color:#9ca3af;">sub-confirmed-v1</div></div>
+      </div>
+    </div>
+
+    <!-- User email directory -->
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">User Email Directory</div>
+        <div class="search-box">🔍 Search name or email...</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Agency</th>
+            <th>Work Email</th>
+            <th>Personal Email</th>
+            <th>Plan</th>
+            <th>Welcome Sent</th>
+            <th>Last Email</th>
+            <th>Delivery</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="name-bold">Prestige Group</div></td>
+            <td><span class="email-addr">info@prestigegroup.ae</span></td>
+            <td><span class="email-addr">nazim@gmail.com</span></td>
+            <td>Agency</td>
+            <td>Jan 5</td>
+            <td>Sub Confirmed</td>
+            <td><span class="status-dot dot-green"></span>Delivered</td>
+          </tr>
+          <tr>
+            <td><div class="name-bold">Gulf Homes LLC</div></td>
+            <td><span class="email-addr">hello@gulfhomes.com</span></td>
+            <td><span class="email-addr">mariam@hotmail.com</span></td>
+            <td>Boutique</td>
+            <td>Feb 12</td>
+            <td>Payment Failed</td>
+            <td><span class="status-dot dot-yellow"></span>Delivered</td>
+          </tr>
+          <tr>
+            <td><div class="name-bold">Tamimi Real Estate</div></td>
+            <td><span class="email-addr">ops@tamimi-re.sa</span></td>
+            <td>—</td>
+            <td>Solo</td>
+            <td>Feb 28</td>
+            <td>Trial Expiry</td>
+            <td><span class="status-dot dot-green"></span>Delivered</td>
+          </tr>
+          <tr>
+            <td><div class="name-bold">Horizon Realty</div></td>
+            <td><span class="email-addr">contact@horizonrealty.ae</span></td>
+            <td>—</td>
+            <td style="color:#9ca3af;">Churned</td>
+            <td>Dec 10</td>
+            <td>Sub Cancelled</td>
+            <td><span class="status-dot dot-red"></span>Bounced</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

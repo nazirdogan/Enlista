@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enlista — Logo Kit</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      background: #F8FAFC;
+      color: #0F172A;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    header h1 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #64748B;
+      margin-bottom: 32px;
+    }
+
+    /* ── Logo preview ── */
+    .logo-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 40px 56px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 16px);
+      grid-template-rows: repeat(3, 16px);
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .cell {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      background: #2563EB;
+    }
+    .cell.off { background: #DBEAFE; }
+    .wordmark {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #0F172A;
+      line-height: 1;
+    }
+    .wordmark span { color: #2563EB; }
+
+    /* ── Download grid ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(37,99,235,0.1);
+      border-color: #BFDBFE;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .card-icon.svg { background: #EFF6FF; color: #1D4ED8; }
+    .card-icon.png { background: #F0FDF4; color: #15803D; }
+    .card-icon.png2x { background: #FFF7ED; color: #C2410C; }
+    .card-icon.pdf { background: #FFF1F2; color: #BE123C; }
+
+    .card-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0F172A;
+      text-align: center;
+    }
+    .card-desc {
+      font-size: 11px;
+      color: #94A3B8;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .btn {
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #2563EB;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      width: 100%;
+      justify-content: center;
+    }
+    .btn:hover { background: #1D4ED8; }
+    .btn:active { transform: scale(0.97); }
+    .btn svg { flex-shrink: 0; }
+
+    /* success flash */
+    .btn.done { background: #16A34A; }
+
+    footer {
+      margin-top: 32px;
+      font-size: 11px;
+      color: #CBD5E1;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Enlista — Logo Kit</h1>
+    <div class="logo-preview">
+      <div class="logo">
+        <div class="grid">
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell off"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
+        <div class="wordmark">Enlist<span>a</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-icon svg">SVG</div>
+      <div class="card-label">Vector SVG</div>
+      <div class="card-desc">Scales to any size without loss</div>
+      <button class="btn" onclick="downloadSVG(this)">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-icon png">PNG</div>
+      <div class="card-label">PNG — 1×</div>
+      <div class="card-desc">448 × 112 px — web &amp; apps</div>
+      <button class="btn" onclick="downloadPNG(this, 2)">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-icon png2x">PNG</div>
+      <div class="card-label">PNG — 2×</div>
+      <div class="card-desc">896 × 224 px — retina &amp; print</div>
+      <button class="btn" onclick="downloadPNG(this, 4)">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-icon pdf">PDF</div>
+      <div class="card-label">PDF</div>
+      <div class="card-desc">Print-ready, white background</div>
+      <button class="btn" onclick="downloadPDF(this)">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download
+      </button>
+    </div>
+
+  </div>
+
+  <footer>All files use Enlista brand colours: #2563EB · #DBEAFE · #0F172A</footer>
+
+  <script>
+    // ─────────────────────────────────────────────
+    //  Shared logo renderer → canvas
+    //  scale: multiplier on 224×56 base dimensions
+    // ─────────────────────────────────────────────
+    function renderToCanvas(scale) {
+      const W = 224, H = 56;
+      const canvas = document.createElement('canvas');
+      canvas.width  = W * scale;
+      canvas.height = H * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(scale, scale);
+
+      // White background
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, W, H);
+
+      // Grid
+      const blue  = '#2563EB';
+      const light = '#DBEAFE';
+      const cell  = 16, gap = 4, r = 3;
+      const cells = [
+        [0,0,true ],[1,0,true ],[2,0,true ],
+        [0,1,true ],[1,1,true ],[2,1,false],
+        [0,2,true ],[1,2,true ],[2,2,true ],
+      ];
+      cells.forEach(([col, row, on]) => {
+        const x = col * (cell + gap);
+        const y = row * (cell + gap);
+        ctx.fillStyle = on ? blue : light;
+        ctx.beginPath();
+        ctx.roundRect(x, y, cell, cell, r);
+        ctx.fill();
+      });
+
+      // Wordmark
+      const fontSize = 36;
+      ctx.font = `800 ${fontSize}px -apple-system, "Helvetica Neue", Arial, sans-serif`;
+      ctx.textBaseline = 'alphabetic';
+      const tx = 56 + 16; // grid 56px + gap 16px
+      const ty = 43;
+
+      ctx.fillStyle = '#0F172A';
+      ctx.fillText('Enlist', tx, ty);
+      const enlistW = ctx.measureText('Enlist').width;
+
+      ctx.fillStyle = '#2563EB';
+      ctx.fillText('a', tx + enlistW, ty);
+
+      return canvas;
+    }
+
+    // ─────────────────────────────────────────────
+    //  SVG string (vector, no raster)
+    // ─────────────────────────────────────────────
+    function buildSVG() {
+      // We embed the font stack inline; tspan handles the two-colour wordmark
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224 56" width="224" height="56">
+  <!-- 3x3 grid: 8 blue cells + 1 light (row2 col3 off) -->
+  <rect x="0"  y="0"  width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="20" y="0"  width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="40" y="0"  width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="0"  y="20" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="20" y="20" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="40" y="20" width="16" height="16" rx="3" fill="#DBEAFE"/>
+  <rect x="0"  y="40" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="20" y="40" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="40" y="40" width="16" height="16" rx="3" fill="#2563EB"/>
+  <text x="72" y="43"
+    font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif"
+    font-size="36" font-weight="800" letter-spacing="-1.5">
+    <tspan fill="#0F172A">Enlist</tspan><tspan fill="#2563EB">a</tspan>
+  </text>
+</svg>`;
+    }
+
+    // ─────────────────────────────────────────────
+    //  Helpers
+    // ─────────────────────────────────────────────
+    function flash(btn, label) {
+      const orig = btn.innerHTML;
+      btn.classList.add('done');
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> ${label}`;
+      setTimeout(() => { btn.classList.remove('done'); btn.innerHTML = orig; }, 2000);
+    }
+
+    function triggerDownload(href, filename) {
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      a.click();
+    }
+
+    // ─────────────────────────────────────────────
+    //  Download handlers
+    // ─────────────────────────────────────────────
+    function downloadSVG(btn) {
+      const blob = new Blob([buildSVG()], { type: 'image/svg+xml' });
+      triggerDownload(URL.createObjectURL(blob), 'enlista-logo.svg');
+      flash(btn, 'Saved!');
+    }
+
+    function downloadPNG(btn, scale) {
+      const canvas = renderToCanvas(scale);
+      canvas.toBlob(blob => {
+        triggerDownload(URL.createObjectURL(blob), scale === 2 ? 'enlista-logo.png' : 'enlista-logo@2x.png');
+        flash(btn, 'Saved!');
+      }, 'image/png');
+    }
+
+    function downloadPDF(btn) {
+      const canvas = renderToCanvas(4);
+      const imgData = canvas.toDataURL('image/png');
+
+      const { jsPDF } = window.jspdf;
+      // Page is logo + 20px padding on each side, in px
+      const pw = 224 + 40, ph = 56 + 40;
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: [pw, ph],
+        hotfixes: ['px_scaling'],
+      });
+      doc.addImage(imgData, 'PNG', 20, 20, 224, 56);
+      doc.save('enlista-logo.pdf');
+      flash(btn, 'Saved!');
+    }
+  </script>
+
+</body>
+</html>

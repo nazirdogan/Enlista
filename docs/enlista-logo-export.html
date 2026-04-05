@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 448px;
+    height: 112px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 28px 32px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    line-height: 1;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 16px);
+    grid-template-rows: repeat(3, 16px);
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .cell {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    background: #2563EB;
+  }
+  .cell.off {
+    background: #DBEAFE;
+  }
+  .wordmark {
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #0F172A;
+    white-space: nowrap;
+  }
+  .wordmark span {
+    color: #2563EB;
+  }
+</style>
+</head>
+<body>
+  <div class="logo">
+    <div class="grid">
+      <!-- Row 1: all on -->
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <!-- Row 2: on, on, off -->
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell off"></div>
+      <!-- Row 3: all on -->
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+    </div>
+    <div class="wordmark">Enlist<span>a</span></div>
+  </div>
+</body>
+</html>

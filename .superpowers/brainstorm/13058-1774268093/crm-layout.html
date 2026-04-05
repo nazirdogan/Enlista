@@ -1,0 +1,141 @@
+<h2>Admin CRM — Overall Layout</h2>
+<p class="subtitle">Which structure feels right for navigating across Users, Subscriptions, Outreach, and Analytics?</p>
+
+<div class="cards">
+  <div class="card" data-choice="sidebar" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa;padding:12px;border-radius:6px;display:flex;gap:8px;height:220px;">
+      <div style="width:130px;background:#1a1a2e;border-radius:6px;padding:10px;flex-shrink:0;">
+        <div style="color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:12px;opacity:0.5;">ENLISTA ADMIN</div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:4px;padding:6px 8px;margin-bottom:4px;color:#fff;font-size:10px;">📊 Overview</div>
+        <div style="padding:6px 8px;margin-bottom:4px;color:rgba(255,255,255,0.6);font-size:10px;">👥 Users</div>
+        <div style="padding:6px 8px;margin-bottom:4px;color:rgba(255,255,255,0.6);font-size:10px;">💳 Subscriptions</div>
+        <div style="padding:6px 8px;margin-bottom:4px;color:rgba(255,255,255,0.6);font-size:10px;">🏠 Listings</div>
+        <div style="padding:6px 8px;margin-bottom:4px;color:rgba(255,255,255,0.6);font-size:10px;">📱 Outreach</div>
+        <div style="padding:6px 8px;margin-bottom:4px;color:rgba(255,255,255,0.6);font-size:10px;">✉️ Emails</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+            <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">TOTAL SIGNUPS</div>
+            <div style="font-size:18px;font-weight:700;color:#111">247</div>
+            <div style="font-size:9px;color:#10b981;">↑ 12 this week</div>
+          </div>
+          <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+            <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">MRR</div>
+            <div style="font-size:18px;font-weight:700;color:#111">AED 8,450</div>
+            <div style="font-size:9px;color:#10b981;">↑ 3 new subs</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+            <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">TRIAL→PAID</div>
+            <div style="font-size:18px;font-weight:700;color:#111">18%</div>
+            <div style="font-size:9px;color:#f59e0b;">↓ 2% this mo</div>
+          </div>
+          <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+            <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">LISTINGS GEN.</div>
+            <div style="font-size:18px;font-weight:700;color:#111">1,284</div>
+            <div style="font-size:9px;color:#10b981;">4.8 avg/user</div>
+          </div>
+        </div>
+        <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+          <div style="font-size:9px;color:#6b7280;margin-bottom:4px;">RECENT SIGNUPS</div>
+          <div style="font-size:9px;color:#374151;border-bottom:1px solid #f3f4f6;padding-bottom:3px;margin-bottom:3px;">Aisha Properties · Dubai · Trial</div>
+          <div style="font-size:9px;color:#374151;border-bottom:1px solid #f3f4f6;padding-bottom:3px;margin-bottom:3px;">Tamimi Real Estate · Riyadh · Solo</div>
+          <div style="font-size:9px;color:#374151;">Gulf Homes · Abu Dhabi · Boutique</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Left Sidebar Navigation</h3>
+      <p>Fixed dark sidebar with section links. Classic admin layout. Easy to navigate between sections without losing context. Recommended for data-heavy tools.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="topnav" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa;padding:12px;border-radius:6px;height:220px;display:flex;flex-direction:column;gap:6px;">
+      <div style="background:#1a1a2e;border-radius:6px;padding:8px 12px;display:flex;gap:12px;align-items:center;">
+        <div style="color:#fff;font-size:10px;font-weight:700;margin-right:8px;">ENLISTA ADMIN</div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:4px;padding:4px 8px;color:#fff;font-size:9px;">Overview</div>
+        <div style="padding:4px 8px;color:rgba(255,255,255,0.6);font-size:9px;">Users</div>
+        <div style="padding:4px 8px;color:rgba(255,255,255,0.6);font-size:9px;">Subscriptions</div>
+        <div style="padding:4px 8px;color:rgba(255,255,255,0.6);font-size:9px;">Outreach</div>
+        <div style="padding:4px 8px;color:rgba(255,255,255,0.6);font-size:9px;">Listings</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+          <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">TOTAL SIGNUPS</div>
+          <div style="font-size:18px;font-weight:700;color:#111">247</div>
+        </div>
+        <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+          <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">MRR</div>
+          <div style="font-size:18px;font-weight:700;color:#111">AED 8,450</div>
+        </div>
+        <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+          <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">TRIAL→PAID</div>
+          <div style="font-size:18px;font-weight:700;color:#111">18%</div>
+        </div>
+        <div style="flex:1;background:#fff;border-radius:6px;padding:8px;border:1px solid #e5e7eb;">
+          <div style="font-size:9px;color:#6b7280;margin-bottom:2px;">LISTINGS GEN.</div>
+          <div style="font-size:18px;font-weight:700;color:#111">1,284</div>
+        </div>
+      </div>
+      <div style="flex:1;background:#fff;border-radius:6px;padding:10px;border:1px solid #e5e7eb;">
+        <div style="font-size:9px;color:#6b7280;margin-bottom:6px;">SIGNUPS BY CITY</div>
+        <div style="display:flex;align-items:flex-end;gap:4px;height:70px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:24px;background:#6366f1;border-radius:3px 3px 0 0;height:60px;"></div>
+            <div style="font-size:7px;color:#6b7280;">Dubai</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:24px;background:#6366f1;border-radius:3px 3px 0 0;height:35px;opacity:0.7;"></div>
+            <div style="font-size:7px;color:#6b7280;">Riyadh</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:24px;background:#6366f1;border-radius:3px 3px 0 0;height:25px;opacity:0.5;"></div>
+            <div style="font-size:7px;color:#6b7280;">Abu Dhabi</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:24px;background:#6366f1;border-radius:3px 3px 0 0;height:18px;opacity:0.4;"></div>
+            <div style="font-size:7px;color:#6b7280;">Doha</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Top Navigation Tabs</h3>
+      <p>Horizontal nav bar with tabs. Maximizes vertical space for charts and tables. Better on wide screens. Less convenient when you have 6+ sections to navigate.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <h3>Sections included in the CRM</h3>
+  <p class="subtitle">Both layouts will contain the same 6 sections:</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px;">
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px;">
+      <div style="font-size:11px;font-weight:700;color:#065f46;margin-bottom:4px;">📊 Overview</div>
+      <div style="font-size:10px;color:#374151;">KPI cards, signup trend, MRR trend, top cities</div>
+    </div>
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px;">
+      <div style="font-size:11px;font-weight:700;color:#1e40af;margin-bottom:4px;">👥 Users</div>
+      <div style="font-size:10px;color:#374151;">All agencies, location, plan, listings count, last active</div>
+    </div>
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px;">
+      <div style="font-size:11px;font-weight:700;color:#6b21a8;margin-bottom:4px;">💳 Subscriptions</div>
+      <div style="font-size:10px;color:#374151;">Plan breakdown, MRR, LTV, churn, retention</div>
+    </div>
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px;">
+      <div style="font-size:11px;font-weight:700;color:#9a3412;margin-bottom:4px;">🏠 Listings</div>
+      <div style="font-size:10px;color:#374151;">Total generated, avg/user, by type, by tone, trend</div>
+    </div>
+    <div style="background:#fdf4ff;border:1px solid #f0abfc;border-radius:8px;padding:10px;">
+      <div style="font-size:11px;font-weight:700;color:#86198f;margin-bottom:4px;">📱 Outreach</div>
+      <div style="font-size:10px;color:#374151;">Contacts, variants, clicks, signups, spend, ROAS</div>
+    </div>
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px;">
+      <div style="font-size:11px;font-weight:700;color:#0c4a6e;margin-bottom:4px;">✉️ Emails</div>
+      <div style="font-size:10px;color:#374151;">User emails, Resend transactional delivery status</div>
+    </div>
+  </div>
+</div>

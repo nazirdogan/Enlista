@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista Wordmark Concepts V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #F8FAFC;
+    color: #0F172A;
+    padding: 3rem 2rem;
+  }
+  h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    text-align: center;
+    color: #64748B;
+    font-size: 0.95rem;
+    margin-bottom: 3rem;
+  }
+  .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    border: 1px solid #E2E8F0;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 4px 20px rgba(37,99,235,0.1), 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #2563EB;
+    white-space: nowrap;
+  }
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .card-desc {
+    color: #64748B;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  .previews {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .preview-box {
+    border-radius: 12px;
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .preview-light {
+    background: #FAFAFA;
+    border: 1px solid #F1F5F9;
+  }
+  .preview-dark {
+    background: #0F172A;
+    border: 1px solid #1E293B;
+  }
+  .preview-box img {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+  }
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+  }
+  .tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 100px;
+    background: #EFF6FF;
+    color: #2563EB;
+  }
+</style>
+</head>
+<body>
+  <h1>Enlista Wordmarks — V2</h1>
+  <p class="subtitle">5 typography-only logo directions</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-num">Wordmark 1</span>
+        <span class="card-title">Gradient Flow</span>
+      </div>
+      <div class="card-desc">Extra-bold weight with a horizontal gradient flowing from dark navy to Enlista blue — premium and modern.</div>
+      <div class="previews">
+        <div class="preview-box preview-light">
+          <img src="enlista_wordmark_v2_1_gradient.svg" alt="Gradient Flow">
+        </div>
+        <div class="preview-box preview-dark">
+          <img src="enlista_wordmark_v2_1_gradient.svg" alt="Gradient Flow Dark" style="filter: brightness(1.8) saturate(1.2);">
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Premium</span>
+        <span class="tag">Gradient</span>
+        <span class="tag">Bold</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-num">Wordmark 2</span>
+        <span class="card-title">Split Tone</span>
+      </div>
+      <div class="card-desc">The "a" is oversized and offset in blue with an AI dot accent — draws the eye to the AI-powered differentiator.</div>
+      <div class="previews">
+        <div class="preview-box preview-light">
+          <img src="enlista_wordmark_v2_2_split.svg" alt="Split Tone">
+        </div>
+        <div class="preview-box preview-dark">
+          <img src="enlista_wordmark_v2_2_split.svg" alt="Split Tone Dark" style="filter: brightness(1.8) saturate(1.2);">
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Playful</span>
+        <span class="tag">Distinctive</span>
+        <span class="tag">AI Accent</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-num">Wordmark 3</span>
+        <span class="card-title">Underline Accent</span>
+      </div>
+      <div class="card-desc">Clean wordmark with a thick gradient underline beneath the "a" and a subtle rule under the rest — editorial and sharp.</div>
+      <div class="previews">
+        <div class="preview-box preview-light">
+          <img src="enlista_wordmark_v2_3_underline.svg" alt="Underline Accent">
+        </div>
+        <div class="preview-box preview-dark">
+          <img src="enlista_wordmark_v2_3_underline.svg" alt="Underline Accent Dark" style="filter: brightness(1.8) saturate(1.2);">
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Editorial</span>
+        <span class="tag">Clean</span>
+        <span class="tag">Professional</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-num">Wordmark 4</span>
+        <span class="card-title">Stencil Cut</span>
+      </div>
+      <div class="card-desc">All-caps with horizontal stencil cuts through each letter — industrial, bold, and highly unique. Blue accent bar below.</div>
+      <div class="previews">
+        <div class="preview-box preview-light">
+          <img src="enlista_wordmark_v2_4_stencil.svg" alt="Stencil Cut">
+        </div>
+        <div class="preview-box preview-dark">
+          <img src="enlista_wordmark_v2_4_stencil.svg" alt="Stencil Cut Dark" style="filter: brightness(1.8) saturate(1.2);">
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Industrial</span>
+        <span class="tag">Unique</span>
+        <span class="tag">All-Caps</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-num">Wordmark 5</span>
+        <span class="card-title">Connected Ligature</span>
+      </div>
+      <div class="card-desc">Semi-bold lowercase with a custom swash connecting "t" to "a" — the "a" fades to blue with sparkle dots suggesting AI magic.</div>
+      <div class="previews">
+        <div class="preview-box preview-light">
+          <img src="enlista_wordmark_v2_5_ligature.svg" alt="Connected Ligature">
+        </div>
+        <div class="preview-box preview-dark">
+          <img src="enlista_wordmark_v2_5_ligature.svg" alt="Connected Ligature Dark" style="filter: brightness(1.8) saturate(1.2);">
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Friendly</span>
+        <span class="tag">Custom Type</span>
+        <span class="tag">Elegant</span>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

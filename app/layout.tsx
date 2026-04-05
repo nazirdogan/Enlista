@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ListingsLaunch — Bilingual Property Listings for UAE Agents",
+  title: "Enlista — Bilingual Property Listings for UAE Agents",
   description:
     "Generate professional English and Arabic property listings in 30 seconds. Built for UAE real estate agents.",
 };

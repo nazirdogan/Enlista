@@ -85,3 +85,115 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #1D4ED8;
 }
+
+/* ── Smooth scroll ───────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Hero entrance animations ────────────────────────────── */
+@keyframes heroUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroRight {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.hero-item {
+  animation: heroUp 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+.hero-bento {
+  animation: heroRight 0.82s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+.hero-d0 { animation-delay: 0.05s; }
+.hero-d1 { animation-delay: 0.18s; }
+.hero-d2 { animation-delay: 0.30s; }
+.hero-d3 { animation-delay: 0.42s; }
+.hero-d4 { animation-delay: 0.54s; }
+.hero-d5 { animation-delay: 0.66s; }
+
+/* ── Scroll-reveal ───────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.reveal-left  { transform: translateX(-20px); }
+.reveal.reveal-right { transform: translateX(20px); }
+.reveal.reveal-scale { transform: scale(0.96); }
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* ── Mobile menu slide-down ──────────────────────────────── */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mobile-menu-open {
+  animation: slideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Interactive hover states ────────────────────────────── */
+.btn-primary-hover {
+  transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+.btn-primary-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(29, 78, 216, 0.38);
+}
+.btn-primary-hover:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-outline-hover {
+  transition: background 0.16s ease, transform 0.16s ease, border-color 0.16s ease !important;
+}
+.btn-outline-hover:hover {
+  background: #F1F5F9 !important;
+  transform: translateY(-1px);
+}
+
+.nav-link-hover {
+  transition: color 0.15s ease, background 0.15s ease;
+  border-radius: 6px;
+}
+.nav-link-hover:hover {
+  color: #1D4ED8 !important;
+  background: #EFF6FF;
+}
+
+.bento-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+.bento-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.09);
+}
+
+.pricing-card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+.pricing-card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.11);
+}
+
+.testimonial-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+.testimonial-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

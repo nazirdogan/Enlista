@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" width="480" height="140">
+  <!-- Logo 7: Layered Listing Cards -->
+  <!-- Three stacked property cards fanning out — represents portfolio management -->
+  <defs>
+    <filter id="cardShadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="1"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.12"/></feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g transform="translate(12, 12)">
+    <!-- Back card -->
+    <rect x="24" y="8" width="68" height="88" rx="8" fill="#E0E7F1" filter="url(#cardShadow)" transform="rotate(6, 58, 52)"/>
+
+    <!-- Middle card -->
+    <rect x="16" y="10" width="68" height="88" rx="8" fill="#B8C9E8" filter="url(#cardShadow)" transform="rotate(-3, 50, 54)"/>
+
+    <!-- Front card -->
+    <g filter="url(#cardShadow)">
+      <rect x="10" y="14" width="68" height="88" rx="8" fill="white" stroke="#DDE3EC" stroke-width="1"/>
+      <!-- Card content — mini listing -->
+      <rect x="18" y="22" width="52" height="28" rx="4" fill="#EFF6FF"/>
+      <!-- Tiny building icon in card image area -->
+      <rect x="36" y="28" width="4" height="16" rx="1" fill="#3B82F6" opacity="0.5"/>
+      <rect x="42" y="32" width="4" height="12" rx="1" fill="#3B82F6" opacity="0.4"/>
+      <rect x="48" y="26" width="4" height="18" rx="1" fill="#3B82F6" opacity="0.6"/>
+      <!-- Text lines -->
+      <rect x="18" y="56" width="40" height="3" rx="1.5" fill="#0F1829" opacity="0.7"/>
+      <rect x="18" y="63" width="30" height="3" rx="1.5" fill="#64748B" opacity="0.4"/>
+      <rect x="18" y="70" width="36" height="3" rx="1.5" fill="#64748B" opacity="0.3"/>
+      <!-- Price tag -->
+      <rect x="18" y="80" width="24" height="10" rx="5" fill="#1D4ED8"/>
+      <text x="22" y="88" font-family="system-ui" font-size="6" font-weight="700" fill="white">AED 2.1M</text>
+      <!-- Status dot -->
+      <circle cx="62" cy="85" r="3" fill="#059669"/>
+    </g>
+  </g>
+
+  <!-- Wordmark — clean and modern -->
+  <text x="128" y="64" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="#0F1829" letter-spacing="-1">enlista</text>
+
+  <!-- Thin underline accent that tapers -->
+  <line x1="128" y1="74" x2="172" y2="74" stroke="#1D4ED8" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Subtext -->
+  <text x="128" y="96" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="11" font-weight="500" fill="#64748B" letter-spacing="2.5">LISTING INTELLIGENCE</text>
+</svg>

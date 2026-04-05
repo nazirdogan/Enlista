@@ -136,7 +136,7 @@ export default function HomePage() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
           <div style={{ fontWeight: 800, fontSize: 17, color: c.dark }}>
-            Listings<span style={{ color: c.blue }}>Launch</span>
+            Enlist<span style={{ color: c.blue }}>a</span>
           </div>
           <div
             style={{
@@ -167,7 +167,7 @@ export default function HomePage() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <a
-            href="#cta"
+            href="/auth"
             style={{
               display: "inline-block",
               border: `1.5px solid ${c.border}`,
@@ -179,10 +179,10 @@ export default function HomePage() {
               textDecoration: "none",
             }}
           >
-            Sign in
+            Login
           </a>
           <a
-            href="#cta"
+            href="/contact-sales"
             style={{
               display: "inline-block",
               background: c.blue,
@@ -195,7 +195,7 @@ export default function HomePage() {
               textDecoration: "none",
             }}
           >
-            Get Started Free
+            Contact Sales
           </a>
         </div>
       </nav>
@@ -262,7 +262,7 @@ export default function HomePage() {
               }}
             >
               <a
-                href="#cta"
+                href="/contact-sales"
                 style={{
                   display: "inline-block",
                   background: c.blue,
@@ -274,22 +274,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Start Free — 14 days
-              </a>
-              <a
-                href="#features"
-                style={{
-                  display: "inline-block",
-                  border: `1.5px solid ${c.border}`,
-                  color: c.text,
-                  padding: "10px 24px",
-                  fontWeight: 500,
-                  fontSize: 13,
-                  borderRadius: 6,
-                  textDecoration: "none",
-                }}
-              >
-                See the platform
+                Contact Sales
               </a>
             </div>
             <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
@@ -714,22 +699,18 @@ export default function HomePage() {
         >
           {[
             {
-              badge: "Espace Real Estate · Dubai",
+              badge: "Agency in Dubai",
               quote:
-                "Two days to four minutes. That's a 720× improvement. ListingsLaunch replaced our entire publishing workflow.",
-              name: "Sarah Al Mansoori",
-              role: "Head of Operations",
-              initial: "S",
+                "Two days to four minutes. That's a 720× improvement. Enlista replaced our entire publishing workflow.",
+              label: "Head of Operations",
               avatarBg: c.blue,
               dark: false,
             },
             {
-              badge: "Allsopp & Allsopp · Dubai",
+              badge: "Agency in Dubai Marina",
               quote:
                 "Our Palm Jumeirah listings convert at 3× the previous rate. The AI copy is indistinguishable from our best agents.",
-              name: "James Whitfield",
-              role: "Managing Director",
-              initial: "J",
+              label: "Managing Director",
               avatarBg: c.dark,
               dark: false,
             },
@@ -738,25 +719,21 @@ export default function HomePage() {
               badgeVariant: "green" as const,
               quote:
                 "Zero RERA suspensions. The compliance engine is the most reliable system in our entire operation.",
-              name: "Fatima Al Hashimi",
-              role: "Compliance Director",
-              initial: "F",
+              label: "Compliance Director",
               avatarBg: c.green,
               dark: true,
             },
             {
-              badge: "Metropolitan Premium Properties",
+              badge: "Agency in Abu Dhabi",
               quote:
                 "600+ listings, 4 portals, one platform. Scaled 40% without adding a single coordinator to our team.",
-              name: "Ravi Menon",
-              role: "Chief Executive",
-              initial: "R",
+              label: "Chief Executive",
               avatarBg: c.amber,
               dark: false,
             },
-          ].map((t) => (
+          ].map((t, i) => (
             <div
-              key={t.name}
+              key={i}
               style={{
                 background: t.dark ? c.dark : c.white,
                 border: `1px solid ${t.dark ? "transparent" : c.border}`,
@@ -785,47 +762,17 @@ export default function HomePage() {
                 style={{
                   borderTop: `1px solid ${t.dark ? "rgba(255,255,255,0.08)" : c.border}`,
                   paddingTop: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
                 }}
               >
-                <div
+                <p
                   style={{
-                    width: 32,
-                    height: 32,
-                    background: t.avatarBg,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    color: "white",
-                    flexShrink: 0,
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
                   }}
                 >
-                  {t.initial}
-                </div>
-                <div>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: t.dark ? "white" : c.dark,
-                    }}
-                  >
-                    {t.name}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: 11,
-                      color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
-                    }}
-                  >
-                    {t.role}
-                  </p>
-                </div>
+                  — {t.label}
+                </p>
               </div>
             </div>
           ))}
@@ -860,7 +807,7 @@ export default function HomePage() {
             No surprises.
           </h2>
           <p style={{ color: c.muted, maxWidth: 280, fontSize: 13 }}>
-            All plans in AED. Cancel anytime. 14-day free trial included on
+            All plans in AED. Cancel anytime. 7-day free trial included on
             every tier.
           </p>
         </div>
@@ -871,7 +818,7 @@ export default function HomePage() {
             gap: 16,
           }}
         >
-          {/* Starter */}
+          {/* Solo */}
           <div
             style={{
               background: c.white,
@@ -890,7 +837,7 @@ export default function HomePage() {
                 marginBottom: 20,
               }}
             >
-              Starter
+              Solo
             </p>
             <div
               style={{
@@ -900,7 +847,7 @@ export default function HomePage() {
                 color: c.dark,
               }}
             >
-              299
+              75
             </div>
             <p
               style={{
@@ -914,12 +861,12 @@ export default function HomePage() {
             </p>
             <div style={{ marginBottom: 28 }}>
               {[
-                { label: "50 active listings", on: true },
-                { label: "3 portal integrations", on: true },
+                { label: "10 active listings", on: true },
                 { label: "AI copy — English", on: true },
+                { label: "Bayut & Property Finder", on: true },
                 { label: "Basic analytics", on: true },
+                { label: "Arabic copy", on: false },
                 { label: "Lead scoring", on: false },
-                { label: "WhatsApp bot", on: false },
               ].map((item) => (
                 <div
                   key={item.label}
@@ -947,7 +894,7 @@ export default function HomePage() {
               ))}
             </div>
             <a
-              href="#cta"
+              href="/contact-sales"
               style={{
                 display: "block",
                 textAlign: "center",
@@ -960,11 +907,11 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Get Started
+              Contact Sales
             </a>
           </div>
 
-          {/* Professional */}
+          {/* Boutique */}
           <div
             style={{
               background: c.dark,
@@ -984,7 +931,7 @@ export default function HomePage() {
                 marginBottom: 20,
               }}
             >
-              Professional · Recommended
+              Boutique · Recommended
             </p>
             <div
               style={{
@@ -994,7 +941,7 @@ export default function HomePage() {
                 color: c.blueLight,
               }}
             >
-              799
+              120
             </div>
             <p
               style={{
@@ -1008,13 +955,12 @@ export default function HomePage() {
             </p>
             <div style={{ marginBottom: 28 }}>
               {[
-                "200 active listings",
+                "50 active listings",
                 "All portals",
                 "AI copy — EN + AR",
                 "Advanced analytics",
                 "Lead scoring",
                 "WhatsApp bot",
-                "RERA compliance",
               ].map((label) => (
                 <div
                   key={label}
@@ -1036,7 +982,7 @@ export default function HomePage() {
               ))}
             </div>
             <a
-              href="#cta"
+              href="/contact-sales"
               style={{
                 display: "block",
                 textAlign: "center",
@@ -1049,7 +995,7 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Get Started
+              Contact Sales
             </a>
           </div>
 
@@ -1072,7 +1018,7 @@ export default function HomePage() {
                 marginBottom: 20,
               }}
             >
-              Enterprise
+              Agency
             </p>
             <div
               style={{
@@ -1082,7 +1028,7 @@ export default function HomePage() {
                 color: c.dark,
               }}
             >
-              1,999
+              250
             </div>
             <p
               style={{
@@ -1097,11 +1043,13 @@ export default function HomePage() {
             <div style={{ marginBottom: 28 }}>
               {[
                 "Unlimited listings",
-                "Custom integrations",
-                "Full AI suite",
-                "Market analytics",
-                "Dedicated manager",
-                "API + SLA",
+                "All portals",
+                "AI copy — EN + AR",
+                "Advanced analytics",
+                "Lead scoring",
+                "WhatsApp bot",
+                "RERA compliance check",
+                "5 team seats",
               ].map((label) => (
                 <div
                   key={label}
@@ -1123,7 +1071,7 @@ export default function HomePage() {
               ))}
             </div>
             <a
-              href="#cta"
+              href="/contact-sales"
               style={{
                 display: "block",
                 textAlign: "center",
@@ -1149,102 +1097,70 @@ export default function HomePage() {
       >
         <div
           style={{
-            maxWidth: 800,
+            maxWidth: 640,
             margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 56,
-            alignItems: "center",
+            textAlign: "center",
           }}
         >
-          <div>
-            <h2
-              style={{
-                fontWeight: 800,
-                fontSize: "clamp(32px, 5vw, 52px)",
-                color: "white",
-                marginBottom: 16,
-                lineHeight: 1.1,
-              }}
-            >
-              Start building your
-              <br />
-              listing stack today.
-            </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.45)",
-                fontSize: 14,
-                lineHeight: 1.8,
-                marginBottom: 24,
-              }}
-            >
-              14-day free trial. No credit card. UAE support team available
-              daily.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                "Setup in under 10 minutes",
-                "Connect portals on day one",
-                "RERA compliance active by default",
-              ].map((item) => (
-                <div
-                  key={item}
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    alignItems: "center",
-                    fontSize: 13,
-                    color: "rgba(255,255,255,0.5)",
-                  }}
-                >
-                  <span style={{ color: c.green }}>✓</span>
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-          <form
-            style={{ display: "flex", flexDirection: "column", gap: 10 }}
+          <h2
+            style={{
+              fontWeight: 800,
+              fontSize: "clamp(32px, 5vw, 52px)",
+              color: "white",
+              marginBottom: 16,
+              lineHeight: 1.1,
+            }}
           >
-            {["Agency email", "Agency name"].map((placeholder) => (
-              <input
-                key={placeholder}
-                type={placeholder.includes("email") ? "email" : "text"}
-                placeholder={placeholder}
-                style={{
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1.5px solid rgba(255,255,255,0.1)",
-                  color: "white",
-                  padding: "11px 16px",
-                  fontFamily: "var(--font-jakarta), sans-serif",
-                  fontSize: 13,
-                  borderRadius: 6,
-                  outline: "none",
-                  width: "100%",
-                }}
-              />
-            ))}
-            <button
-              type="submit"
+            Ready to transform your
+            <br />
+            listing workflow?
+          </h2>
+          <p
+            style={{
+              color: "rgba(255,255,255,0.45)",
+              fontSize: 14,
+              lineHeight: 1.8,
+              marginBottom: 32,
+              maxWidth: 440,
+              margin: "0 auto 32px",
+            }}
+          >
+            Talk to our team to see how Enlista can power your agency&apos;s listings, compliance, and analytics.
+          </p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <a
+              href="/contact-sales"
               style={{
-                padding: 13,
-                cursor: "pointer",
+                display: "inline-block",
                 background: c.blue,
                 color: "white",
-                border: "none",
-                fontSize: 13,
-                borderRadius: 6,
-                display: "block",
-                width: "100%",
+                padding: "13px 32px",
                 fontWeight: 600,
-                letterSpacing: "0.02em",
+                fontSize: 14,
+                borderRadius: 6,
+                textDecoration: "none",
                 fontFamily: "var(--font-jakarta), sans-serif",
               }}
             >
-              Start Free Trial →
-            </button>
-          </form>
+              Contact Sales
+            </a>
+            <a
+              href="/auth"
+              style={{
+                display: "inline-block",
+                border: "1.5px solid rgba(255,255,255,0.2)",
+                color: "white",
+                padding: "13px 32px",
+                fontWeight: 500,
+                fontSize: 14,
+                borderRadius: 6,
+                textDecoration: "none",
+                fontFamily: "var(--font-jakarta), sans-serif",
+              }}
+            >
+              Login
+            </a>
+          </div>
         </div>
       </section>
 
@@ -1261,7 +1177,7 @@ export default function HomePage() {
         }}
       >
         <span style={{ fontWeight: 800, fontSize: 15, color: "white" }}>
-          Listings<span style={{ color: c.blueLight }}>Launch</span>
+          Enlist<span style={{ color: c.blueLight }}>a</span>
         </span>
         <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
           © 2026 · Dubai, UAE

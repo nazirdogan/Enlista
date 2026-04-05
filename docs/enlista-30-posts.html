@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enlista — 30 Instagram Content Ideas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F2F4F7;
+      --surface: #FFFFFF;
+      --ink: #0F1829;
+      --body: #1E293B;
+      --muted: #64748B;
+      --border: #DDE3EC;
+      --blue: #1D4ED8;
+      --blue-mid: #3B82F6;
+      --blue-tint: #EFF6FF;
+      --green: #059669;
+      --green-tint: #ECFDF5;
+      --amber: #D97706;
+      --amber-tint: #FFFBEB;
+      --dark: #0F1829;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--body); font-size: 14px; line-height: 1.6; }
+
+    /* NAV */
+    nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 48px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 9px; }
+    .lg-grid { display: grid; grid-template-columns: repeat(3,6px); gap: 2px; }
+    .lg-sq { width: 6px; height: 6px; border-radius: 1px; background: var(--blue); }
+    .lg-sq.d { background: rgba(29,78,216,0.22); }
+    .logo-txt { font-size: 16px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+    .logo-txt span { color: var(--blue); }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .nav-pill { background: var(--blue); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 5px; }
+
+    /* HERO */
+    .hero { background: var(--ink); padding: 64px 48px 56px; position: relative; overflow: hidden; }
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(29,78,216,0.07) 1px,transparent 1px), linear-gradient(90deg,rgba(29,78,216,0.07) 1px,transparent 1px); background-size: 36px 36px; }
+    .hero-inner { position: relative; max-width: 800px; }
+    .hero-pill { display: inline-flex; align-items: center; gap: 7px; background: rgba(29,78,216,0.15); border: 1px solid rgba(29,78,216,0.3); color: #93B4FF; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 11px; border-radius: 5px; margin-bottom: 20px; }
+    .hero-h1 { font-size: 44px; font-weight: 800; color: #fff; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 14px; }
+    .hero-h1 span { color: #60A5FA; }
+    .hero-sub { font-size: 15px; color: rgba(255,255,255,0.48); max-width: 560px; line-height: 1.65; }
+    .hero-stats { margin-top: 40px; display: flex; gap: 40px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .hs { }
+    .hs-n { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .hs-l { font-size: 10px; color: rgba(255,255,255,0.32); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+
+    /* FILTER BAR */
+    .filter-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 48px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .filter-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-right: 4px; }
+    .ftag { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; border: 1px solid var(--border); color: var(--muted); background: var(--bg); cursor: default; }
+    .ftag.carousel { background: var(--blue-tint); color: var(--blue); border-color: rgba(29,78,216,0.2); }
+    .ftag.static { background: var(--green-tint); color: var(--green); border-color: rgba(5,150,105,0.2); }
+    .ftag.pain { background: #FEF2F2; color: #DC2626; border-color: rgba(220,38,38,0.2); }
+    .ftag.feature { background: var(--amber-tint); color: var(--amber); border-color: rgba(217,119,6,0.2); }
+    .ftag.proof { background: rgba(15,24,41,0.06); color: var(--ink); border-color: rgba(15,24,41,0.15); }
+
+    /* MAIN GRID */
+    .main { padding: 40px 48px; }
+    .section-hdr { margin-bottom: 24px; }
+    .section-hdr h2 { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+    .section-hdr p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+
+    /* POST CARDS */
+    .posts-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+    .post-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 72px 1fr;
+    }
+    .post-num {
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+    }
+    .post-card.carousel-card .post-num { background: var(--blue); color: rgba(255,255,255,0.3); }
+    .post-card.static-card .post-num { background: var(--ink); color: rgba(255,255,255,0.2); }
+
+    .post-body { padding: 18px 22px; }
+    .post-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+    .post-title { font-size: 16px; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.25; }
+    .post-badges { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+    .pbadge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+    .pb-carousel { background: var(--blue-tint); color: var(--blue); }
+    .pb-static { background: var(--green-tint); color: var(--green); }
+    .pb-pain { background: #FEF2F2; color: #DC2626; }
+    .pb-feature { background: var(--amber-tint); color: var(--amber); }
+    .pb-proof { background: rgba(15,24,41,0.07); color: var(--ink); }
+    .pb-speed { background: rgba(29,78,216,0.1); color: var(--blue); }
+    .pb-edu { background: #F0FDF4; color: #15803D; }
+
+    .post-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-top: 1px solid var(--border); }
+    .post-col { padding: 12px 16px; border-right: 1px solid var(--border); }
+    .post-col:last-child { border-right: none; }
+    .pc-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 7px; }
+    .pc-text { font-size: 12px; color: var(--body); line-height: 1.5; }
+    .pc-text strong { color: var(--ink); }
+
+    /* Slide list */
+    .slide-list { list-style: none; }
+    .slide-list li { font-size: 11px; color: var(--muted); padding: 3px 0; display: flex; gap: 7px; }
+    .sl-num { font-weight: 700; color: var(--blue); flex-shrink: 0; }
+
+    /* Hook highlight */
+    .hook-text { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.45; font-style: italic; }
+
+    /* Section dividers */
+    .sec-divider { display: flex; align-items: center; gap: 16px; margin: 40px 0 24px; }
+    .sec-divider-line { flex: 1; height: 1px; background: var(--border); }
+    .sec-divider-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+    /* FOOTER */
+    footer { background: var(--ink); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+    .ft-logo { display: flex; align-items: center; gap: 8px; }
+    .ft-name { font-size: 15px; font-weight: 800; color: #fff; }
+    .ft-name span { color: #60A5FA; }
+    .ft-note { font-size: 12px; color: rgba(255,255,255,0.28); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="lg-grid">
+      <div class="lg-sq"></div><div class="lg-sq"></div><div class="lg-sq"></div>
+      <div class="lg-sq"></div><div class="lg-sq"></div><div class="lg-sq d"></div>
+      <div class="lg-sq"></div><div class="lg-sq"></div><div class="lg-sq"></div>
+    </div>
+    <div class="logo-txt">Enlist<span>a</span></div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-tag">30 Instagram Content Ideas</div>
+    <div class="nav-pill">20 Carousels · 10 Statics</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-pill">▲ Content Plan · 2026</div>
+    <h1 class="hero-h1">30 Posts.<br>One <span>Clear Message.</span></h1>
+    <p class="hero-sub">AI-powered listings in under a minute — voice-to-live, bilingual, RERA-clean. Every post below is built to prove that one idea from every angle: speed, convenience, features, pain points, and proof.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-n">20</div><div class="hs-l">Carousels</div></div>
+      <div class="hs"><div class="hs-n">10</div><div class="hs-l">Statics</div></div>
+      <div class="hs"><div class="hs-n">&lt;1 min</div><div class="hs-l">Core message</div></div>
+      <div class="hs"><div class="hs-n">5</div><div class="hs-l">Content pillars</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">Format →</span>
+  <span class="ftag carousel">Carousel</span>
+  <span class="ftag static">Static</span>
+  <span class="filter-label" style="margin-left:8px;">Pillar →</span>
+  <span class="ftag pain">Pain Point</span>
+  <span class="ftag feature">Feature</span>
+  <span class="ftag proof">Social Proof</span>
+  <span class="ftag" style="background:var(--blue-tint);color:var(--blue);border-color:rgba(29,78,216,0.2);">Speed/Convenience</span>
+  <span class="ftag" style="background:#F0FDF4;color:#15803D;border-color:rgba(21,128,61,0.2);">Education</span>
+</div>
+
+<div class="main">
+
+  <!-- ── SECTION 1: HOW IT WORKS ── -->
+  <div class="eyebrow">Section 1 — How It Works</div>
+  <div class="section-hdr">
+    <h2>The Core Product Story</h2>
+    <p>Posts that explain exactly what Enlista does and how it does it — voice to listing in under 60 seconds.</p>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- 01 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">01</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Speak. Generate. Live. The 3-step listing that takes under a minute.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-feature">Feature</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"A complete listing in under 60 seconds. Here's exactly how."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover: "Under 60 seconds" — dark bg, blue stat</li>
+              <li><span class="sl-num">2</span>Step 1: Speak or type — voice input UI screenshot</li>
+              <li><span class="sl-num">3</span>Step 2: AI generates EN + AR copy — side-by-side output</li>
+              <li><span class="sl-num">4</span>Step 3: Bayut ● Live · PF ● Live · Dubizzle ● Live</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">Walk through all 3 steps. End with: "124K listings managed this way. Your next one could take under a minute." CTA: 14-day free trial, link in bio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">02</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">We recorded it. Voice input → bilingual copy → 3 portals live. Watch what happens.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 5 slides</span><span class="pbadge pb-speed">Speed</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"We recorded the whole thing. 58 seconds start to finish."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover: dark bg, "58 seconds" in large blue</li>
+              <li><span class="sl-num">2</span>Screenshot: voice input field — "3BR, Downtown Dubai, Burj view…"</li>
+              <li><span class="sl-num">3</span>Screenshot: AI Copy EN — generated output card</li>
+              <li><span class="sl-num">4</span>Screenshot: AI Copy AR — bilingual output side by side</li>
+              <li><span class="sl-num">5</span>Dashboard: portal status all green ● Live</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">Narrate each step as if in real time. "We said: 3 bedroom, Downtown Dubai, Burj view. Enlista heard everything." Keep it punchy, present tense.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="post-card static-card">
+      <div class="post-num">03</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">"Speak or fill in the details. The AI handles the rest." — the simplest listing workflow in UAE real estate.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-feature">Feature</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">White card on #F2F4F7 bg. Large voice waveform icon in blue. Headline in Plus Jakarta Sans 800. "enlista.io" watermark top-right.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"Say it once.<br>List it everywhere."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">Short and clean — mirror the product's own copy. "Voice input. AI copy. All 3 portals. Under a minute. That's Enlista." CTA: link in bio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">04</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">What Enlista actually does — explained for someone who's never heard of it.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 6 slides</span><span class="pbadge pb-edu">Education</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"UAE brokers are listing in under a minute. Here's the tool making it happen."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dark bg, blue headline</li>
+              <li><span class="sl-num">2</span>The problem: manual listing = 2+ hours</li>
+              <li><span class="sl-num">3</span>The solution: Enlista in 3 bullet points</li>
+              <li><span class="sl-num">4</span>Feature: bilingual EN+AR copy</li>
+              <li><span class="sl-num">5</span>Feature: multi-portal sync</li>
+              <li><span class="sl-num">6</span>Feature: RERA compliance + lead scoring</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">Write as if explaining to a new UAE broker. No jargon on slide 2, but get technical from slide 3 onwards. End with the 124K stat.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /posts-grid -->
+
+  <!-- ── SECTION 2: PAIN POINTS ── -->
+  <div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">Section 2 — Pain Points</div><div class="sec-divider-line"></div></div>
+  <div class="section-hdr">
+    <h2>The Problems Enlista Solves</h2>
+    <p>Content that names the exact frustrations UAE brokers live with — and pivots to the solution.</p>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- 05 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">05</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">The true cost of listing manually in Dubai (we broke it down minute by minute).</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 6 slides</span><span class="pbadge pb-pain">Pain Point</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"We timed it. 2 hours 34 minutes — for one listing. Swipe to see where the time goes."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover: "2h 34min" in large amber on dark bg</li>
+              <li><span class="sl-num">2</span>Write EN copy: 40 min ⏱</li>
+              <li><span class="sl-num">3</span>Translate to Arabic: 30 min ⏱</li>
+              <li><span class="sl-num">4</span>Upload to 3 portals: 60 min ⏱</li>
+              <li><span class="sl-num">5</span>RERA compliance check: 24 min ⏱</li>
+              <li><span class="sl-num">6</span>With Enlista: all of the above → &lt;1 min ✓</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"If you list 20 properties a month, that's 50+ hours of admin. What could you do with 50 hours back?" End with trial CTA.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="post-card static-card">
+      <div class="post-num">06</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Your listing went live 2 hours after your competitor's. Same property. Different workflow.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-pain">Pain Point</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Dashboard "Portal Status" card aesthetic. Two rows: "Your listing ● Live" and "Competitor's listing ● Live 2hr ago". White card on light bg. Punchline at bottom in muted italic.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"Same property.<br>Different workflow.<br>Different result."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"The inquiry went to whoever listed first. On all 3 portals. Simultaneously. That's what Enlista does." Keep it short — 4 lines max + CTA.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">07</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">RERA suspended your listing. Here's exactly why — and how to make sure it never happens again.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 5 slides</span><span class="pbadge pb-pain">Pain Point</span><span class="pbadge pb-edu">Education</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"RERA suspended your listing at 11pm on a Friday. Here are the 4 reasons it happens — and how to avoid all of them."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dark bg, red "SUSPENDED" label</li>
+              <li><span class="sl-num">2</span>Reason 1: expired DLD permit</li>
+              <li><span class="sl-num">3</span>Reason 2: missing RERA fields on portal upload</li>
+              <li><span class="sl-num">4</span>Reason 3: incorrect agent license number</li>
+              <li><span class="sl-num">5</span>How Enlista checks all 3 automatically — "RERA ✓ All clean"</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">Speak as an industry authority. "We've seen these errors cost agencies 48-hour delays." Bridge to: "Enlista's compliance check runs automatically before every submission."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">08</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Your Arabic listing copy is losing you Arabic buyers. Here's what bad translation costs you.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-pain">Pain Point</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"Arabic buyers can tell when your listing was Google Translated. Most stop reading at line 2."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dark bg, bold Arabic text headline</li>
+              <li><span class="sl-num">2</span>Bad example: Google Translate output (cold, literal)</li>
+              <li><span class="sl-num">3</span>Good example: Enlista AI output (natural, UAE-market Arabic)</li>
+              <li><span class="sl-num">4</span>Stat: "Listings with native AR copy see 3× more Arabic-speaker clicks on Bayut"</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"The UAE's biggest buyer pool reads Arabic first. If your listing reads like a legal document in Arabic, you've already lost them." Pivot to Enlista's AI AR copy feature.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 -->
+    <div class="post-card static-card">
+      <div class="post-num">09</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">"I'll do the listing tomorrow." — Every hour a property isn't live, it's losing leads.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-pain">Pain Point</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Dark bg (#0F1829). Large italic quote in white. Sub-text in blue: "The listing that goes live first gets the inquiry." Logo watermark. Minimal, high-contrast, typographic.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"The listing that goes live first<br>gets the inquiry.<br>Every time."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"When 'tomorrow' costs you a lead. With Enlista — voice input to live listing in under a minute. No more tomorrow." Short, direct, CTA.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">10</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">5 portal upload mistakes Dubai brokers make every week (and how to never make them again).</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 7 slides</span><span class="pbadge pb-pain">Pain Point</span><span class="pbadge pb-edu">Education</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"5 portal mistakes that are costing you leads. If you're uploading manually, you're probably making at least 3 of these."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — light bg, numbered list preview</li>
+              <li><span class="sl-num">2</span>Mistake 1: listing on one portal at a time</li>
+              <li><span class="sl-num">3</span>Mistake 2: copy-pasting EN copy as AR</li>
+              <li><span class="sl-num">4</span>Mistake 3: wrong/expired RERA permit number</li>
+              <li><span class="sl-num">5</span>Mistake 4: no lead response system connected</li>
+              <li><span class="sl-num">6</span>Mistake 5: inconsistent formatting across portals</li>
+              <li><span class="sl-num">7</span>Solution: Enlista handles all 5 automatically</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">Write as industry expert. "We've audited hundreds of portal listings across Dubai. These 5 errors are everywhere." Each mistake gets one sentence. End: "Enlista eliminates all 5 before you hit publish."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 3: FEATURES ── -->
+  <div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">Section 3 — Features Deep Dive</div><div class="sec-divider-line"></div></div>
+  <div class="section-hdr">
+    <h2>Product Features — One at a Time</h2>
+    <p>Each feature gets its own post. Show the UI. Explain the benefit. Keep it specific.</p>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- 11 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">11</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">The voice-to-listing feature: say it once, get a full bilingual listing in seconds.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-feature">Feature</span><span class="pbadge pb-speed">Speed</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"You don't write the listing anymore. You say it. Here's what that looks like."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — light bg, large mic icon, blue headline</li>
+              <li><span class="sl-num">2</span>Screenshot: voice waveform + property details being spoken</li>
+              <li><span class="sl-num">3</span>Screenshot: full EN listing output — "Generated ✓"</li>
+              <li><span class="sl-num">4</span>Screenshot: full AR listing output side by side</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Property type. Size. Location. Key features. Say it in 30 seconds. Enlista writes the full EN and AR listing. No editing needed. No translation needed."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">12</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Multi-portal sync explained: one click, three portals live simultaneously.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-feature">Feature</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"Bayut. Property Finder. Dubizzle. One click. All three. Simultaneously."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dark bg, 3 portal logos + "One Click" in blue</li>
+              <li><span class="sl-num">2</span>Dashboard: portal status card — all 3 ● Live</li>
+              <li><span class="sl-num">3</span>Before: manual upload timeline, 60 min shown</li>
+              <li><span class="sl-num">4</span>After: simultaneous sync — enquiries start within minutes</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Every minute your listing is on Bayut but not Property Finder — you're invisible to one third of the market." Explain why simultaneous matters. Then show the one-click solution.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13 -->
+    <div class="post-card static-card">
+      <div class="post-num">13</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">RERA ✓ All clean. — What it means and why it matters for your agency.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-feature">Feature</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Recreate the RERA dashboard card from the actual Enlista UI. "RERA ✓ All clean" in green. White card on #F2F4F7 background. Simple, clean, confidence-inspiring.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"RERA ✓ All clean.<br>Automatically.<br>Every time."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Enlista checks every listing for DLD permit validity, agent license, and portal compliance fields before it submits — so you never wake up to a suspension notice again."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">14</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Lead scoring: Enlista tells you exactly who to call first — and why.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 5 slides</span><span class="pbadge pb-feature">Feature</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"34 hot leads. You have 2 hours. Enlista tells you exactly which 3 to call first."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dashboard card "Hot Leads: 34 ↑ 6 today" on dark bg</li>
+              <li><span class="sl-num">2</span>What lead scoring is — explained simply</li>
+              <li><span class="sl-num">3</span>What signals Enlista reads (views, portal activity, response time)</li>
+              <li><span class="sl-num">4</span>UI screenshot: lead list ranked by score</li>
+              <li><span class="sl-num">5</span>"Call the right lead first. Close faster."</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Not all 34 leads are equal. Enlista scores them by engagement signals — who viewed twice, who messaged on WhatsApp, who opened the AR version. Your highest-intent leads rise to the top."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">15</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">The bilingual listing feature: why EN + AR together outperforms either one alone.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-feature">Feature</span><span class="pbadge pb-edu">Education</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"English-only listings miss 40% of UAE buyers. Here's what bilingual copy actually does to your enquiry rate."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — light bg, EN/AR flag icons, blue headline</li>
+              <li><span class="sl-num">2</span>Data: UAE buyer language split on Bayut</li>
+              <li><span class="sl-num">3</span>Side by side: EN copy output vs AR copy output</li>
+              <li><span class="sl-num">4</span>Enlista generates both simultaneously — zero extra effort</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Enlista doesn't translate your English listing. It writes a separate, native-quality Arabic listing from the same property details. Both in under a minute."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 16 -->
+    <div class="post-card static-card">
+      <div class="post-num">16</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Enquiries this week: +24%. What happens when your listings go live faster.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-feature">Feature</span><span class="pbadge pb-speed">Speed</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Recreate the "Enquiries this week +24%" bar chart card from the Enlista dashboard. White card on page-bg. Blue bars growing Mon→Sun. "+24%" in blue top-right. Authentic product UI as the post itself.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"Enquiries this week.<br><span style="color:var(--blue);">+24%</span><br>This is what faster listings look like."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"When your listing hits all 3 portals in under a minute — instead of staggered over 2 hours — it captures buyers who are actively searching right now. That's the enquiry spike."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 17 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">17</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">WhatsApp bot: how Enlista handles inbound enquiries automatically while you're in a viewing.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-feature">Feature</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"You're in a viewing. 6 WhatsApp messages came in. Enlista answered all of them."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dark bg, WhatsApp notification style UI</li>
+              <li><span class="sl-num">2</span>How the bot qualifies leads with 3 questions</li>
+              <li><span class="sl-num">3</span>How it logs responses to your lead score</li>
+              <li><span class="sl-num">4</span>"You come back from the viewing. Hot leads are already ranked."</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"The WhatsApp bot is connected to Enlista's lead scoring — every response it collects moves a lead up or down your call list. You close the deal; Enlista handles the inbox."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 4: SPEED & CONVENIENCE ── -->
+  <div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">Section 4 — Speed & Convenience</div><div class="sec-divider-line"></div></div>
+  <div class="section-hdr">
+    <h2>The &lt;1 Minute Promise</h2>
+    <p>Posts that make the speed and convenience tangible — with real time comparisons and visual proof.</p>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- 18 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">18</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Manual vs Enlista: A full week of listings compared side by side.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 5 slides</span><span class="pbadge pb-speed">Speed</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"Week 1: Manual listing. Week 2: Enlista. Same agency. Same workload. Very different numbers."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — split dark/light bg left/right</li>
+              <li><span class="sl-num">2</span>Manual week: hours spent, listings published, errors</li>
+              <li><span class="sl-num">3</span>Enlista week: same numbers, dramatically different</li>
+              <li><span class="sl-num">4</span>Side by side comparison table</li>
+              <li><span class="sl-num">5</span>"50 hours saved. 0 RERA suspensions. 3× faster to live."</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">Use a real or hypothetical agency example. "10 listings per week, 3 portals each, bilingual. That's 30 uploads manually. With Enlista: 10 clicks." Make the math undeniable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 19 -->
+    <div class="post-card static-card">
+      <div class="post-num">19</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">"The listing was live before the client left the office." — A true story.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-speed">Speed</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Dark bg (#0F1829). Large italic quote in white. Sub-stat in blue below: "&lt;4 min avg. publish time." Minimal and bold. The quote IS the post.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"The listing was live<br>before the client<br>left the office."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"That's not unusual with Enlista. Voice to live on all 3 portals — under a minute. The client sees it go live in real time. That's the kind of impression that gets referrals." CTA: trial link.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 20 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">20</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">If you list 20 properties a month manually — you spend 50 hours on admin. Here's the maths.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-speed">Speed</span><span class="pbadge pb-pain">Pain Point</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"20 listings/month × 2.5 hours each = 50 hours of admin. What are you doing with those 50 hours?"</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — "50 hours" in large blue on dark bg</li>
+              <li><span class="sl-num">2</span>The maths breakdown — time per task per listing</li>
+              <li><span class="sl-num">3</span>What 50 hours = in AED at an agent's hourly rate</li>
+              <li><span class="sl-num">4</span>With Enlista: 20 listings = 20 minutes total</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"50 hours = more than a full working week. Spent on copy, uploads, and compliance checks. Enlista does all of it in the time it takes to describe the property."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 21 -->
+    <div class="post-card static-card">
+      <div class="post-num">21</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">124K listings. &lt;4 min each. 99.9% portal uptime. The numbers behind Enlista.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-proof">Social Proof</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">3-stat layout matching the site's hero stat row. "124K · &lt;4 min · 99.9%" in Plus Jakarta Sans 800, blue. White surface on #F2F4F7. Labels in muted below each. Clean, credibility-driving.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"124K listings managed.<br>&lt;4 min average publish time.<br>99.9% portal uptime."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"These aren't projections. This is what 840 active UAE agencies have built with Enlista." Keep it short. Let the numbers do the talking. CTA: start your free trial.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 5: SOCIAL PROOF ── -->
+  <div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">Section 5 — Social Proof & Results</div><div class="sec-divider-line"></div></div>
+  <div class="section-hdr">
+    <h2>Real Agencies. Real Results.</h2>
+    <p>Testimonials, case studies, and proof points — the evidence that converts a follower into a trial signup.</p>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- 22 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">22</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">"Two days to four minutes. That's a 720× improvement." — Espace Real Estate, Dubai.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-proof">Social Proof</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"Espace Real Estate replaced their entire listing workflow. The result was a 720× improvement. Here's what changed."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dark bg, "720×" in large blue, green "Verified" pill</li>
+              <li><span class="sl-num">2</span>Before: 48+ hours, manual process breakdown</li>
+              <li><span class="sl-num">3</span>After: &lt;4 minutes, all portals, bilingual, RERA clean</li>
+              <li><span class="sl-num">4</span>Full quote card — ops manager attribution</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Espace is one of Dubai's most active agencies. This is exactly how they described the switch. 720× is not a marketing number — it's two days vs four minutes. The maths doesn't lie."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 23 -->
+    <div class="post-card static-card">
+      <div class="post-num">23</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">840 active agencies. All listing in under a minute. What they switched from.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-proof">Social Proof</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Dark bg. "840" in massive white type, weight 800. "active UAE agencies" in muted below. Blue subtext: "All listing in under a minute." Logo watermark. Pure typographic confidence.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"840 agencies.<br>One workflow.<br>Under a minute."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Every one of them switched from manual listing. Every one of them got time back. Join 840 UAE agencies on Enlista — 14-day free trial, no card required." Clean, direct, social proof first.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 24 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">24</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">5 agencies. 5 different use cases. One platform. How UAE brokers actually use Enlista.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 7 slides</span><span class="pbadge pb-proof">Social Proof</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"A solo broker. A boutique agency. A 50-agent firm. Here's how each one uses Enlista differently."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — light bg, "5 agencies" headline</li>
+              <li><span class="sl-num">2</span>Solo broker: "Lists 25 props/month, alone"</li>
+              <li><span class="sl-num">3</span>Boutique 5-person team: AR buyer focus</li>
+              <li><span class="sl-num">4</span>Mid-size: compliance + team seats</li>
+              <li><span class="sl-num">5</span>Off-plan specialist: speed to live critical</li>
+              <li><span class="sl-num">6</span>Enterprise: API + custom integrations</li>
+              <li><span class="sl-num">7</span>What they all have in common: under 1 min per listing</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Different agencies. Different workflows. Different markets. But the same result: listings live faster, leads scored automatically, RERA clean." Tailor each slide to a real use case.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 6: MARKET INTELLIGENCE ── -->
+  <div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">Section 6 — Market Intelligence</div><div class="sec-divider-line"></div></div>
+  <div class="section-hdr">
+    <h2>Dubai By Numbers</h2>
+    <p>Weekly data posts that make Enlista the most informed voice in UAE PropTech — not just a tool vendor.</p>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- 25 -->
+    <div class="post-card static-card">
+      <div class="post-num">25</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Dubai market pulse: the top 5 communities by price/sqft growth this quarter.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-edu">Education</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">White card on #F2F4F7. Numbered list (1–5) in Plus Jakarta Sans 700. Community name in ink, % growth in blue. Thin blue accent bar top of card. "Source: DLD Q1 2026" in 10px muted.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"Top 5 communities.<br>Strongest growth.<br>Q1 2026."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"If you're listing in these communities right now, speed to market matters more than ever. Active buyers have more to choose from. Your listing needs to be first and bilingual." Bridge to Enlista.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 26 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">26</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Bayut vs Property Finder vs Dubizzle: where are UAE buyers actually clicking in 2026?</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 4 slides</span><span class="pbadge pb-edu">Education</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"You're paying for 3 portals. Here's which one is actually driving your enquiries."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — 3 portal logos side by side, question mark</li>
+              <li><span class="sl-num">2</span>Bayut: primary Arabic-speaking buyer traffic</li>
+              <li><span class="sl-num">3</span>Property Finder: expat/international buyer index</li>
+              <li><span class="sl-num">4</span>Dubizzle: high volume, lower AED tier — why it still matters</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"The answer: all three, for different buyer segments. Which is exactly why not being on all three simultaneously is leaving money on the table. Enlista puts you everywhere at once."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 27 -->
+    <div class="post-card static-card">
+      <div class="post-num">27</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Off-plan vs ready: how the UAE transaction split in Q1 2026 affects what you list and how fast.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-edu">Education</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Two-column split on white card. Left: "Off-Plan" with % in blue. Right: "Ready" with % in ink. Source: DLD attribution in muted. Clean, editorial data visual.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"Off-plan: 58%<br>Ready: 42%<br>Q1 2026 — UAE transactions."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Off-plan listings move fast — buyers decide quickly when payment plans are involved. Your listing needs to be live the moment the unit is releasable. Manual workflows can't keep up with that pace."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 7: BROKER LIFE ── -->
+  <div class="sec-divider"><div class="sec-divider-line"></div><div class="sec-divider-label">Section 7 — Broker Life & Community</div><div class="sec-divider-line"></div></div>
+  <div class="section-hdr">
+    <h2>Relatable Content — Make Brokers Feel Seen</h2>
+    <p>Witty, industry-native posts styled as dashboard cards. The punchline is delivered through the product's own UI.</p>
+  </div>
+
+  <div class="posts-grid">
+
+    <!-- 28 -->
+    <div class="post-card static-card">
+      <div class="post-num">28</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Portal Status: Your listing ● Live — Your manual upload process ● Still running.</div>
+          <div class="post-badges"><span class="pbadge pb-static">Static</span><span class="pbadge pb-pain">Relatable</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Visual Direction</div>
+            <div class="pc-text">Enlista dashboard portal status card. Two rows: "Your listing (Enlista) ● Live" in green and "Your listing (manual) ● Still uploading to PF…" in amber. White card, light bg. Deadpan humour through UI.</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Headline on Post</div>
+            <div class="hook-text">"Portal status.<br>Sunday. 7pm.<br>One of these is you."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Tag the agent still manually uploading to Dubizzle right now. 👇 (We've got a better way.)" Short. Funny. Invite the comment. CTA in bio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 29 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">29</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">The 7 stages of listing a property manually in Dubai. Relatable? Read on.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 8 slides</span><span class="pbadge pb-pain">Relatable</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"7 stages of listing a property manually in Dubai. Stop us when it gets relatable."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — light bg, numbered icons</li>
+              <li><span class="sl-num">2</span>Stage 1: "Wait for the photos. They said 20 mins. It's been 2 hours."</li>
+              <li><span class="sl-num">3</span>Stage 2: "Write the EN copy. On your phone. In an Uber."</li>
+              <li><span class="sl-num">4</span>Stage 3: "Google Translate the Arabic. Hope for the best."</li>
+              <li><span class="sl-num">5</span>Stage 4: "Upload to Bayut. Wrong permit number. Restart."</li>
+              <li><span class="sl-num">6</span>Stage 5: "Repeat for Property Finder. And Dubizzle."</li>
+              <li><span class="sl-num">7</span>Stage 6: "RERA suspension notice at 11pm."</li>
+              <li><span class="sl-num">8</span>Stage 7 (Enlista): "Under 1 minute. All done."</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"If you got to stage 4, you're not alone. Every UAE broker has lived this. There's a much better way — and it takes under a minute." High engagement expected — save and share triggers.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 30 -->
+    <div class="post-card carousel-card">
+      <div class="post-num">30</div>
+      <div class="post-body">
+        <div class="post-top">
+          <div class="post-title">Stop writing listings. Start closing deals. Here's what changes when your listings write themselves.</div>
+          <div class="post-badges"><span class="pbadge pb-carousel">Carousel · 5 slides</span><span class="pbadge pb-speed">Speed</span><span class="pbadge pb-proof">Proof</span></div>
+        </div>
+        <div class="post-cols">
+          <div class="post-col">
+            <div class="pc-label">Hook (Cover Slide)</div>
+            <div class="hook-text">"Stop writing listings. Start closing deals. Here's what changes when the listing writes itself."</div>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Slide Breakdown</div>
+            <ul class="slide-list">
+              <li><span class="sl-num">1</span>Cover — dark bg, large blue headline</li>
+              <li><span class="sl-num">2</span>Before: time allocation breakdown (admin-heavy)</li>
+              <li><span class="sl-num">3</span>After: time freed for viewings, follow-ups, closes</li>
+              <li><span class="sl-num">4</span>Stat: "840 agencies · 124K listings · &lt;4 min each"</li>
+              <li><span class="sl-num">5</span>CTA: "14-day free trial. No card. Start in 10 minutes."</li>
+            </ul>
+          </div>
+          <div class="post-col">
+            <div class="pc-label">Caption Direction</div>
+            <div class="pc-text">"Every hour spent writing listing copy is an hour you're not closing. Enlista gives you that time back — every listing, every portal, every time. Try it free for 14 days." Final post = strongest CTA.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <div class="ft-logo">
+    <div style="display:grid;grid-template-columns:repeat(3,6px);gap:2px;">
+      <div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div><div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div><div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div>
+      <div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div><div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div><div style="width:6px;height:6px;border-radius:1px;background:rgba(59,130,246,0.25);"></div>
+      <div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div><div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div><div style="width:6px;height:6px;border-radius:1px;background:#3B82F6;"></div>
+    </div>
+    <div class="ft-name">Enlist<span>a</span></div>
+  </div>
+  <div class="ft-note">30 Instagram Content Ideas · Built from enlista.io · April 2026</div>
+</footer>
+
+</body>
+</html>

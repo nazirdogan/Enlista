@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista Admin CRM — Overview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #f4f5f7; display: flex; min-height: 100vh; font-size: 13px; color: #1a1a2e; }
+
+  /* Sidebar */
+  .sidebar { width: 200px; background: #1a1a2e; flex-shrink: 0; display: flex; flex-direction: column; padding: 20px 0; }
+  .sidebar-logo { padding: 0 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-logo .brand { color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
+  .sidebar-logo .sub { color: rgba(255,255,255,0.35); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .nav { padding: 12px 0; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; color: rgba(255,255,255,0.55); font-size: 12px; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; }
+  .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .nav-item.active { color: #fff; background: rgba(99,102,241,0.15); border-left-color: #6366f1; }
+  .nav-item .icon { font-size: 14px; width: 18px; text-align: center; }
+  .nav-section { padding: 12px 16px 4px; color: rgba(255,255,255,0.2); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  /* Main */
+  .main { flex: 1; overflow: auto; }
+  .topbar { background: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; }
+  .topbar-title { font-size: 15px; font-weight: 700; color: #111; }
+  .topbar-meta { font-size: 11px; color: #9ca3af; }
+  .topbar-badge { background: #dcfce7; color: #065f46; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
+
+  .content { padding: 20px 24px; }
+
+  /* KPI Cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+  .kpi-card { background: #fff; border-radius: 10px; padding: 16px; border: 1px solid #e5e7eb; }
+  .kpi-label { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .kpi-value { font-size: 24px; font-weight: 700; color: #111; line-height: 1; margin-bottom: 6px; }
+  .kpi-delta { font-size: 11px; display: flex; align-items: center; gap: 4px; }
+  .kpi-delta.up { color: #10b981; }
+  .kpi-delta.down { color: #ef4444; }
+  .kpi-delta.neutral { color: #f59e0b; }
+
+  /* Charts Row */
+  .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .card { background: #fff; border-radius: 10px; padding: 16px; border: 1px solid #e5e7eb; }
+  .card-title { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .card-title span { font-size: 10px; color: #9ca3af; font-weight: 400; }
+
+  /* Bar chart */
+  .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 100px; }
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .bar-stack { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 1px; }
+  .bar { width: 100%; border-radius: 3px 3px 0 0; }
+  .bar-label { font-size: 9px; color: #9ca3af; }
+  .bar-val { font-size: 9px; color: #374151; font-weight: 600; }
+
+  /* Donut chart placeholder */
+  .donut-wrap { display: flex; align-items: center; justify-content: center; gap: 16px; }
+  .donut { width: 90px; height: 90px; border-radius: 50%; background: conic-gradient(#6366f1 0% 45%, #a78bfa 45% 70%, #c4b5fd 70% 85%, #e9d5ff 85% 100%); position: relative; flex-shrink: 0; }
+  .donut::after { content: ''; position: absolute; width: 52px; height: 52px; background: #fff; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .donut-legend { display: flex; flex-direction: column; gap: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #374151; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Bottom row */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* Table */
+  .mini-table { width: 100%; border-collapse: collapse; }
+  .mini-table th { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 0 8px; text-align: left; border-bottom: 1px solid #f3f4f6; }
+  .mini-table td { padding: 8px 0; font-size: 11px; color: #374151; border-bottom: 1px solid #f9fafb; }
+  .mini-table td:last-child { text-align: right; }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 20px; font-size: 9px; font-weight: 600; }
+  .badge-trial { background: #fef3c7; color: #92400e; }
+  .badge-solo { background: #eff6ff; color: #1d4ed8; }
+  .badge-boutique { background: #f5f3ff; color: #6d28d9; }
+  .badge-agency { background: #fdf4ff; color: #86198f; }
+
+  /* Alert list */
+  .alert-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f9fafb; }
+  .alert-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .alert-icon.warn { background: #fef3c7; }
+  .alert-icon.info { background: #eff6ff; }
+  .alert-icon.danger { background: #fee2e2; }
+  .alert-text { font-size: 11px; color: #374151; line-height: 1.4; }
+  .alert-time { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Enlista</div>
+    <div class="sub">Admin CRM</div>
+  </div>
+  <div class="nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active"><span class="icon">📊</span> Overview</div>
+    <div class="nav-item"><span class="icon">👥</span> Users</div>
+    <div class="nav-item"><span class="icon">💳</span> Subscriptions</div>
+    <div class="nav-item"><span class="icon">🏠</span> Listings</div>
+    <div class="nav-section">Growth</div>
+    <div class="nav-item"><span class="icon">📱</span> Outreach</div>
+    <div class="nav-item"><span class="icon">✉️</span> Emails</div>
+    <div class="nav-section">System</div>
+    <div class="nav-item"><span class="icon">⚙️</span> Settings</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Overview</div>
+      <div class="topbar-meta">Last updated: just now · March 2026</div>
+    </div>
+    <div class="topbar-badge">🟢 All systems live</div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPI Row -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Signups</div>
+        <div class="kpi-value">247</div>
+        <div class="kpi-delta up">↑ 12 this week</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">MRR</div>
+        <div class="kpi-value">AED 8,450</div>
+        <div class="kpi-delta up">↑ AED 1,250 vs last mo</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Trial → Paid</div>
+        <div class="kpi-value">18%</div>
+        <div class="kpi-delta neutral">↓ 2% vs last mo</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active Trials</div>
+        <div class="kpi-value">34</div>
+        <div class="kpi-delta up">↑ 8 expiring soon</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Listings Generated</div>
+        <div class="kpi-value">1,284</div>
+        <div class="kpi-delta up">4.8 avg / user</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Outreach ROAS</div>
+        <div class="kpi-value">3.2×</div>
+        <div class="kpi-delta up">↑ from 2.7× last mo</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Churn Rate</div>
+        <div class="kpi-value">4.1%</div>
+        <div class="kpi-delta down">↑ 1.2% vs last mo</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg LTV</div>
+        <div class="kpi-value">AED 2,340</div>
+        <div class="kpi-delta up">↑ AED 180 vs last mo</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-title">Signups & MRR — Last 6 Months <span>Monthly</span></div>
+        <div class="bar-chart">
+          <div class="bar-group">
+            <div class="bar-val">28</div>
+            <div class="bar-stack">
+              <div class="bar" style="height:42px;background:#c7d2fe;"></div>
+            </div>
+            <div class="bar-label">Oct</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-val">35</div>
+            <div class="bar-stack">
+              <div class="bar" style="height:52px;background:#a5b4fc;"></div>
+            </div>
+            <div class="bar-label">Nov</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-val">41</div>
+            <div class="bar-stack">
+              <div class="bar" style="height:62px;background:#818cf8;"></div>
+            </div>
+            <div class="bar-label">Dec</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-val">38</div>
+            <div class="bar-stack">
+              <div class="bar" style="height:56px;background:#6366f1;"></div>
+            </div>
+            <div class="bar-label">Jan</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-val">45</div>
+            <div class="bar-stack">
+              <div class="bar" style="height:68px;background:#4f46e5;"></div>
+            </div>
+            <div class="bar-label">Feb</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar-val">60</div>
+            <div class="bar-stack">
+              <div class="bar" style="height:90px;background:#4338ca;"></div>
+            </div>
+            <div class="bar-label">Mar</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Plan Distribution</div>
+        <div class="donut-wrap">
+          <div class="donut"></div>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#6366f1;"></div>Solo · 45%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#a78bfa;"></div>Boutique · 25%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#c4b5fd;"></div>Agency · 15%</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#e9d5ff;"></div>Trial · 15%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-row">
+      <div class="card">
+        <div class="card-title">Recent Signups <span>View all →</span></div>
+        <table class="mini-table">
+          <tr><th>Agency</th><th>City</th><th>Plan</th><th>Listings</th></tr>
+          <tr>
+            <td>Aisha Properties</td>
+            <td>Dubai</td>
+            <td><span class="badge badge-trial">Trial</span></td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>Tamimi Real Estate</td>
+            <td>Riyadh</td>
+            <td><span class="badge badge-solo">Solo</span></td>
+            <td>7</td>
+          </tr>
+          <tr>
+            <td>Gulf Homes LLC</td>
+            <td>Abu Dhabi</td>
+            <td><span class="badge badge-boutique">Boutique</span></td>
+            <td>14</td>
+          </tr>
+          <tr>
+            <td>Prestige Group</td>
+            <td>Dubai</td>
+            <td><span class="badge badge-agency">Agency</span></td>
+            <td>31</td>
+          </tr>
+          <tr>
+            <td>Aldar Partners</td>
+            <td>Dubai</td>
+            <td><span class="badge badge-trial">Trial</span></td>
+            <td>1</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Alerts & Attention Needed</div>
+        <div class="alert-item">
+          <div class="alert-icon warn">⚠️</div>
+          <div>
+            <div class="alert-text"><strong>8 trials expiring</strong> in the next 3 days — no subscription started</div>
+            <div class="alert-time">Conversion opportunity</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-icon danger">🔴</div>
+          <div>
+            <div class="alert-text"><strong>Gulf Homes LLC</strong> — payment failed, subscription at risk</div>
+            <div class="alert-time">2 hours ago via Stripe webhook</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-icon warn">⚠️</div>
+          <div>
+            <div class="alert-text"><strong>5 users</strong> haven't generated a listing in 14+ days</div>
+            <div class="alert-time">Churn risk</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-icon info">📱</div>
+          <div>
+            <div class="alert-text"><strong>Variant B1</strong> outperforming by 2.4× — consider pausing A2</div>
+            <div class="alert-time">Outreach analysis · today</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Make nav items clickable for demo feel
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

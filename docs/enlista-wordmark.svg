@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 48" width="540" height="144">
+  <!-- Enlista wordmark only -->
+  <text
+    x="0"
+    y="38"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="42"
+    font-weight="800"
+    letter-spacing="-1.5"
+  ><tspan fill="#0F172A">Enlist</tspan><tspan fill="#2563EB">a</tspan></text>
+</svg>

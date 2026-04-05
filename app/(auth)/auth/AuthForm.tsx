@@ -37,7 +37,7 @@ const INPUT_ERROR: React.CSSProperties = {
 }
 
 function validatePassword(pw: string): string | null {
-  if (pw.length !== 12) return 'Password must be exactly 12 characters'
+  if (pw.length < 12) return 'Password must be at least 12 characters'
   if (!/[A-Z]/.test(pw)) return 'Must include an uppercase letter'
   if (!/[a-z]/.test(pw)) return 'Must include a lowercase letter'
   if (!/[0-9]/.test(pw)) return 'Must include a number'
@@ -46,13 +46,37 @@ function validatePassword(pw: string): string | null {
   return null
 }
 
+type StrengthLevel = 'weak' | 'fair' | 'good' | 'strong'
+
+function getPasswordStrength(pw: string): { level: StrengthLevel; score: number; label: string } {
+  if (!pw) return { level: 'weak', score: 0, label: '' }
+  let score = 0
+  if (pw.length >= 12) score++
+  if (pw.length >= 16) score++
+  if (/[A-Z]/.test(pw)) score++
+  if (/[a-z]/.test(pw)) score++
+  if (/[0-9]/.test(pw)) score++
+  if (/[!@#$%^&*()\-_=+[\]{}|;':",.<>?/\\]/.test(pw)) score++
+  if (score <= 2) return { level: 'weak', score, label: 'Weak' }
+  if (score <= 3) return { level: 'fair', score, label: 'Fair' }
+  if (score <= 4) return { level: 'good', score, label: 'Good' }
+  return { level: 'strong', score, label: 'Strong' }
+}
+
+const STRENGTH_COLORS: Record<StrengthLevel, string> = {
+  weak: '#EF4444',
+  fair: '#F97316',
+  good: '#EAB308',
+  strong: '#22C55E',
+}
+
 export default function AuthForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
 
   const tabParam = searchParams.get('tab')
-  const [tab, setTab] = useState<Tab>(tabParam === 'signin' ? 'signin' : 'signup')
+  const [tab, setTab] = useState<Tab>(tabParam === 'signup' ? 'signup' : 'signin')
   const [loading, setLoading] = useState(false)
   const [sessionChecked, setSessionChecked] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -102,6 +126,13 @@ export default function AuthForm() {
     const t = searchParams.get('tab')
     if (t === 'signin' || t === 'signup') setTab(t)
   }, [searchParams])
+
+  // Persist outreach tracking token from URL to localStorage
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const t = params.get('t')
+    if (t) localStorage.setItem('enlista_outreach_token', t)
+  }, [])
 
   const switchTab = (t: Tab) => {
     setTab(t)
@@ -178,12 +209,27 @@ export default function AuthForm() {
         name: agencyName,
         email: agencyEmail,
         phone: phoneNumber,
+        city,
+        country,
       })
       if (agencyError && agencyError.code !== '23505') {
         console.error('Agency creation error:', agencyError)
       }
 
-      toast.success('Account created! Welcome to ListingsLaunch.')
+      toast.success('Account created! Welcome to Enlista.')
+
+      // Attribute signup to outreach campaign if token present
+      const outreachToken = typeof window !== 'undefined'
+        ? localStorage.getItem('enlista_outreach_token')
+        : null
+      if (outreachToken && data.user?.id) {
+        fetch('/api/outreach/signup-hook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: outreachToken, userId: data.user.id }),
+        }).then(() => localStorage.removeItem('enlista_outreach_token'))
+      }
+
       router.push('/dashboard')
     } catch {
       toast.error('An unexpected error occurred.')
@@ -216,45 +262,47 @@ export default function AuthForm() {
         {/* Wordmark */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <h1 style={{ fontWeight: 800, fontSize: 24, color: '#0F1829', margin: 0 }}>
-            Listings<span style={{ color: '#1D4ED8' }}>Launch</span>
+            Enlist<span style={{ color: '#1D4ED8' }}>a</span>
           </h1>
           <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
-            List it. In Arabic. In 30 seconds.
+            {tab === 'signin' ? 'Sign in to your agency account' : 'List it. In Arabic. In 30 seconds.'}
           </p>
         </div>
 
-        {/* Tab switcher */}
-        <div style={{
-          display: 'flex',
-          background: '#F2F4F7',
-          borderRadius: 8,
-          padding: 4,
-          marginBottom: 28,
-          gap: 4,
-        }}>
-          {(['signup', 'signin'] as Tab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => switchTab(t)}
-              style={{
-                flex: 1,
-                padding: '8px 0',
-                borderRadius: 6,
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: 13,
-                fontWeight: tab === t ? 600 : 400,
-                color: tab === t ? '#0F1829' : '#64748B',
-                background: tab === t ? '#FFFFFF' : 'transparent',
-                boxShadow: tab === t ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                fontFamily: 'inherit',
-                transition: 'all 0.15s',
-              }}
-            >
-              {t === 'signup' ? 'Sign Up' : 'Sign In'}
-            </button>
-          ))}
-        </div>
+        {/* Tab switcher — only show when signup tab is explicitly requested */}
+        {tabParam === 'signup' && (
+          <div style={{
+            display: 'flex',
+            background: '#F2F4F7',
+            borderRadius: 8,
+            padding: 4,
+            marginBottom: 28,
+            gap: 4,
+          }}>
+            {(['signup', 'signin'] as Tab[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => switchTab(t)}
+                style={{
+                  flex: 1,
+                  padding: '8px 0',
+                  borderRadius: 6,
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                  fontWeight: tab === t ? 600 : 400,
+                  color: tab === t ? '#0F1829' : '#64748B',
+                  background: tab === t ? '#FFFFFF' : 'transparent',
+                  boxShadow: tab === t ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {t === 'signup' ? 'Sign Up' : 'Sign In'}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Sign In form */}
         {tab === 'signin' && (
@@ -429,7 +477,7 @@ export default function AuthForm() {
                   onChange={(e) => { setPassword(e.target.value); setPwError(null) }}
                   required
                   autoComplete="new-password"
-                  placeholder="Exactly 12 characters"
+                  placeholder="Min. 12 characters"
                   style={{ ...inputStyle(!!pwError), paddingRight: 44 }}
                   onFocus={(e) => { e.target.style.borderColor = pwError ? '#EF4444' : '#1D4ED8' }}
                   onBlur={(e) => { e.target.style.borderColor = pwError ? '#EF4444' : '#DDE3EC' }}
@@ -446,11 +494,34 @@ export default function AuthForm() {
                   {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {/* Strength meter */}
+              {password && (() => {
+                const { level, label } = getPasswordStrength(password)
+                const color = STRENGTH_COLORS[level]
+                const segments = 4
+                const filled = level === 'weak' ? 1 : level === 'fair' ? 2 : level === 'good' ? 3 : 4
+                return (
+                  <div style={{ marginTop: 8 }}>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      {Array.from({ length: segments }).map((_, i) => (
+                        <div key={i} style={{
+                          flex: 1, height: 4, borderRadius: 2,
+                          background: i < filled ? color : '#E2E8F0',
+                          transition: 'background 0.2s',
+                        }} />
+                      ))}
+                    </div>
+                    <p style={{ fontSize: 11, color, marginTop: 4, marginBottom: 0, fontWeight: 600 }}>
+                      {label}{level !== 'strong' ? ' — Add length, mixed case, numbers & symbols for stronger security' : ' — Great password'}
+                    </p>
+                  </div>
+                )
+              })()}
               {pwError && (
                 <p style={{ fontSize: 12, color: '#EF4444', marginTop: 4, marginBottom: 0 }}>{pwError}</p>
               )}
               <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 4, marginBottom: 0 }}>
-                Exactly 12 characters · uppercase · lowercase · number · special character
+                Minimum 12 characters · uppercase · lowercase · number · special character
               </p>
             </div>
 
@@ -510,7 +581,7 @@ export default function AuthForm() {
         {/* Footer toggle */}
         <p style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: '#64748B', marginBottom: 0 }}>
           {tab === 'signin' ? (
-            <>New here?{' '}<button onClick={() => switchTab('signup')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Create an account</button></>
+            <>Don&apos;t have an account?{' '}<a href="/contact-sales" style={{ color: '#1D4ED8', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>Contact Sales</a></>
           ) : (
             <>Already have an account?{' '}<button onClick={() => switchTab('signin')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Sign in</button></>
           )}

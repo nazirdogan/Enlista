@@ -28,8 +28,8 @@ const FEATURES = [
 ]
 
 const TONES = [
-  { value: 'professional', label: 'Agency Pro', desc: 'Structured, data-forward broker copy — Betterhomes / Allsopp style' },
-  { value: 'luxury', label: 'Luxury Editorial', desc: 'Lifestyle-led, aspirational narrative — Engel & Völkers / Hamptons style' },
+  { value: 'professional', label: 'Agency Pro', desc: 'Structured, data-forward broker copy' },
+  { value: 'luxury', label: 'Luxury Editorial', desc: 'Lifestyle-led, aspirational narrative' },
   { value: 'investment', label: 'Investor Brief', desc: 'ROI-first, metrics-driven, yield-focused copy' },
 ]
 
@@ -105,7 +105,7 @@ function Stepper({
   )
 }
 
-type FormErrors = Partial<Record<'property_type' | 'price_aed' | 'community' | 'size_sqft', string>>
+type FormErrors = Partial<Record<'property_type' | 'price_aed' | 'community' | 'size_sqft' | 'bedrooms' | 'bathrooms' | 'parking', string>>
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
@@ -124,9 +124,9 @@ export default function NewListingPage() {
   const [form, setForm] = useState<FormData>({
     property_type: '',
     listing_type: 'sale',
-    bedrooms: 2,
-    bathrooms: 2,
-    parking: 1,
+    bedrooms: 0,
+    bathrooms: 0,
+    parking: 0,
     floor_number: '',
     size_sqft: '',
     price_aed: '',
@@ -163,6 +163,9 @@ export default function NewListingPage() {
     if (!form.price_aed) newErrors.price_aed = 'Price is required'
     if (!form.community) newErrors.community = 'Please select a community'
     if (!form.size_sqft) newErrors.size_sqft = 'Size is required'
+    if (form.bedrooms === 0) newErrors.bedrooms = 'Bedrooms is required'
+    if (form.bathrooms === 0) newErrors.bathrooms = 'Bathrooms is required'
+    if (form.parking === 0) newErrors.parking = 'Parking is required'
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -299,9 +302,18 @@ export default function NewListingPage() {
         <section>
           <SectionLabel>02 — Property Details</SectionLabel>
           <div style={{ display: 'grid', gap: 28, marginBottom: 28 }} className="grid-cols-1 sm:grid-cols-3">
-            <Stepper label="Bedrooms" value={form.bedrooms} onChange={(v) => setForm((p) => ({ ...p, bedrooms: v }))} min={0} max={10} />
-            <Stepper label="Bathrooms" value={form.bathrooms} onChange={(v) => setForm((p) => ({ ...p, bathrooms: v }))} min={1} max={10} />
-            <Stepper label="Parking" value={form.parking} onChange={(v) => setForm((p) => ({ ...p, parking: v }))} min={0} max={5} />
+            <div>
+              <Stepper label="Bedrooms" value={form.bedrooms} onChange={(v) => setForm((p) => ({ ...p, bedrooms: v }))} min={0} max={10} />
+              <FieldError message={errors.bedrooms} />
+            </div>
+            <div>
+              <Stepper label="Bathrooms" value={form.bathrooms} onChange={(v) => setForm((p) => ({ ...p, bathrooms: v }))} min={0} max={10} />
+              <FieldError message={errors.bathrooms} />
+            </div>
+            <div>
+              <Stepper label="Parking" value={form.parking} onChange={(v) => setForm((p) => ({ ...p, parking: v }))} min={0} max={5} />
+              <FieldError message={errors.parking} />
+            </div>
           </div>
           <div style={{ display: 'grid', gap: 20, marginBottom: 20 }} className="grid-cols-1 sm:grid-cols-2">
             <div>
