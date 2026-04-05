@@ -64,6 +64,7 @@ export default function ListingDetailPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState<OutputTab>('compact')
+  const [userPlan, setUserPlan] = useState<string>('free')
 
   const [enText, setEnText] = useState('')
   const [arText, setArText] = useState('')
@@ -100,6 +101,20 @@ export default function ListingDetailPage() {
   useEffect(() => {
     fetchListing()
   }, [fetchListing])
+
+  useEffect(() => {
+    async function fetchPlan() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data: agency } = await supabase
+        .from('agencies')
+        .select('plan')
+        .eq('user_id', user.id)
+        .single()
+      if (agency?.plan) setUserPlan(agency.plan)
+    }
+    fetchPlan()
+  }, [supabase])
 
   const handleSave = async () => {
     if (!listing) return
@@ -331,39 +346,65 @@ export default function ListingDetailPage() {
         )}
 
         {activeTab === 'whatsapp' && (
-          <div style={{ background: '#EFF6FF', border: '1.5px solid #1D4ED8', borderRadius: 10, padding: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <div>
-                <p style={{ fontSize: 12, fontWeight: 600, color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>WhatsApp Message</p>
-                <p style={{ fontSize: 11, color: '#6B90D4', margin: '2px 0 0 0' }}>Ready to send · Max 150 words</p>
+          userPlan === 'pro' || userPlan === 'enterprise' ? (
+            <div style={{ background: '#EFF6FF', border: '1.5px solid #1D4ED8', borderRadius: 10, padding: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <div>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>WhatsApp Message</p>
+                  <p style={{ fontSize: 11, color: '#6B90D4', margin: '2px 0 0 0' }}>Ready to send · Max 150 words</p>
+                </div>
+                <CopyButton text={listing.whatsapp_text ?? ''} label="Copy for WhatsApp" />
               </div>
-              <CopyButton text={listing.whatsapp_text ?? ''} label="Copy for WhatsApp" />
+              <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', color: '#1E293B', margin: 0 }}>
+                {listing.whatsapp_text ?? 'No WhatsApp message generated.'}
+              </p>
             </div>
-            <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', color: '#1E293B', margin: 0 }}>
-              {listing.whatsapp_text ?? 'No WhatsApp message generated.'}
-            </p>
-          </div>
+          ) : (
+            <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: 10, padding: 32, textAlign: 'center' }}>
+              <p style={{ fontSize: 22, margin: '0 0 8px' }}>💬</p>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#0F172A', margin: '0 0 6px' }}>WhatsApp copy is a Pro feature</p>
+              <p style={{ fontSize: 13, color: '#64748B', margin: '0 0 20px', maxWidth: 340, marginLeft: 'auto', marginRight: 'auto' }}>
+                Upgrade to Pro to get a ready-to-send WhatsApp message generated with every listing.
+              </p>
+              <a href="/pricing" style={{ display: 'inline-block', padding: '10px 24px', background: '#1D4ED8', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                Upgrade to Pro
+              </a>
+            </div>
+          )
         )}
 
         {activeTab === 'instagram' && (
-          <div style={{ background: 'linear-gradient(135deg, #f3e7ff 0%, #fde8f0 100%)', border: '1px solid #e9d5ff', borderRadius: 10, padding: 20 }}>
-            <div style={{ marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Caption</p>
-                <CopyButton text={captionWithoutHashtags} label="Copy Caption" />
+          userPlan === 'pro' || userPlan === 'enterprise' ? (
+            <div style={{ background: 'linear-gradient(135deg, #f3e7ff 0%, #fde8f0 100%)', border: '1px solid #e9d5ff', borderRadius: 10, padding: 20 }}>
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Caption</p>
+                  <CopyButton text={captionWithoutHashtags} label="Copy Caption" />
+                </div>
+                <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', color: '#1E293B', margin: 0 }}>
+                  {captionWithoutHashtags || 'No caption generated.'}
+                </p>
               </div>
-              <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', color: '#1E293B', margin: 0 }}>
-                {captionWithoutHashtags || 'No caption generated.'}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Hashtags</p>
+                  <CopyButton text={hashtags} label="Copy Hashtags" />
+                </div>
+                <p style={{ fontSize: 13, color: '#7C3AED', lineHeight: 1.8, margin: 0 }}>{hashtags || 'No hashtags generated.'}</p>
+              </div>
+            </div>
+          ) : (
+            <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: 10, padding: 32, textAlign: 'center' }}>
+              <p style={{ fontSize: 22, margin: '0 0 8px' }}>📸</p>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#0F172A', margin: '0 0 6px' }}>Instagram copy is a Pro feature</p>
+              <p style={{ fontSize: 13, color: '#64748B', margin: '0 0 20px', maxWidth: 340, marginLeft: 'auto', marginRight: 'auto' }}>
+                Upgrade to Pro to get an Instagram caption and hashtag set generated with every listing.
               </p>
+              <a href="/pricing" style={{ display: 'inline-block', padding: '10px 24px', background: '#1D4ED8', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                Upgrade to Pro
+              </a>
             </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Hashtags</p>
-                <CopyButton text={hashtags} label="Copy Hashtags" />
-              </div>
-              <p style={{ fontSize: 13, color: '#7C3AED', lineHeight: 1.8, margin: 0 }}>{hashtags || 'No hashtags generated.'}</p>
-            </div>
-          </div>
+          )
         )}
       </div>
 
