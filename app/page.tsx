@@ -308,18 +308,6 @@ export default function HomePage() {
         >
           {/* Left */}
           <div>
-            <Badge variant="green" style={{ marginBottom: 20 }}>
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  background: c.green,
-                  borderRadius: "50%",
-                  display: "inline-block",
-                }}
-              />
-              Live — 840 active agencies
-            </Badge>
             <h1
               style={{
                 fontWeight: 800,
@@ -370,26 +358,6 @@ export default function HomePage() {
               >
                 Contact Sales
               </a>
-            </div>
-            <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-              {[
-                { num: "124K", label: "listings managed" },
-                { num: "<4 min", label: "avg. publish time" },
-                { num: "99.9%", label: "portal uptime" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <p
-                    style={{
-                      fontWeight: 800,
-                      fontSize: 24,
-                      color: c.dark,
-                    }}
-                  >
-                    {stat.num}
-                  </p>
-                  <p style={{ fontSize: 12, color: c.muted }}>{stat.label}</p>
-                </div>
-              ))}
             </div>
           </div>
 

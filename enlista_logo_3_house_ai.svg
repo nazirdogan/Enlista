@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <!-- Logo 3: Abstract House Roofline + AI Sparkle -->
+  <!-- A minimalist roof angle with an AI spark/cursor element -->
+  <defs>
+    <linearGradient id="grad3a" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1D4ED8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(15, 15)">
+    <!-- House roofline — a clean chevron -->
+    <path d="M45 18 L10 55 L18 55 L45 30 L72 55 L80 55 L45 18Z" fill="#1D4ED8"/>
+
+    <!-- House body -->
+    <rect x="20" y="52" width="50" height="32" rx="2" fill="#1D4ED8"/>
+
+    <!-- Door -->
+    <rect x="36" y="62" width="18" height="22" rx="3" fill="white"/>
+    <circle cx="50" cy="74" r="1.5" fill="#1D4ED8"/>
+
+    <!-- Window left -->
+    <rect x="24" y="58" width="10" height="10" rx="2" fill="white" opacity="0.85"/>
+    <line x1="29" y1="58" x2="29" y2="68" stroke="#1D4ED8" stroke-width="0.8" opacity="0.4"/>
+    <line x1="24" y1="63" x2="34" y2="63" stroke="#1D4ED8" stroke-width="0.8" opacity="0.4"/>
+
+    <!-- AI Sparkle — four-pointed star -->
+    <g transform="translate(72, 12)">
+      <path d="M8 0 L10 6 L16 8 L10 10 L8 16 L6 10 L0 8 L6 6Z" fill="#3B82F6"/>
+    </g>
+    <!-- Smaller secondary sparkle -->
+    <g transform="translate(82, 28)">
+      <path d="M4 0 L5 3 L8 4 L5 5 L4 8 L3 5 L0 4 L3 3Z" fill="#3B82F6" opacity="0.6"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="120" y="68" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="46" font-weight="700" fill="#0F1829" letter-spacing="-0.5">enlista</text>
+
+  <!-- AI badge -->
+  <rect x="345" y="48" width="36" height="22" rx="11" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="363" y="64" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="12" font-weight="700" fill="#1D4ED8" text-anchor="middle">AI</text>
+</svg>

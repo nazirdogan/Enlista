@@ -3,6 +3,16 @@ import { stripe } from "@/lib/stripe"
 import { createAdminClient } from "@/lib/supabase/admin"
 import Stripe from "stripe"
 
+function getPlanCreditLimit(plan: string): number {
+  switch (plan) {
+    case 'free':       return 1
+    case 'plus':       return 5
+    case 'pro':        return 15
+    case 'enterprise': return 9999
+    default:           return 1
+  }
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.text()
   const sig = req.headers.get("stripe-signature")
@@ -26,8 +36,49 @@ export async function POST(req: NextRequest) {
   const db = createAdminClient()
 
   switch (event.type) {
+
+    // ── New subscription started ────────────────────────────────────────────
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session
+
+      // ── Credit pack (one-time payment) ──────────────────────────────────
+      if (session.mode === "payment") {
+        // Retrieve the payment intent to get our metadata
+        const paymentIntentId = typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : (session.payment_intent as { id?: string } | null)?.id ?? null
+
+        if (paymentIntentId) {
+          const pi = await stripe.paymentIntents.retrieve(paymentIntentId)
+          const meta = pi.metadata ?? {}
+
+          if (meta.type === "credit_pack" && meta.agency_id && meta.credits) {
+            const creditsToAdd = parseInt(meta.credits, 10)
+            const { error: creditErr } = await db.rpc('add_extra_credits', {
+              p_agency_id: meta.agency_id,
+              p_credits: creditsToAdd,
+            })
+            if (creditErr) {
+              // Fallback: direct update if RPC doesn't exist yet
+              console.warn("RPC add_extra_credits failed, using direct update:", creditErr)
+              const { data: ag } = await db
+                .from('agencies')
+                .select('extra_credits')
+                .eq('id', meta.agency_id)
+                .single()
+              if (ag) {
+                await db
+                  .from('agencies')
+                  .update({ extra_credits: (ag.extra_credits ?? 0) + creditsToAdd })
+                  .eq('id', meta.agency_id)
+              }
+            }
+          }
+        }
+        break
+      }
+
+      // ── Subscription checkout ────────────────────────────────────────────
       if (!session.subscription) break
 
       const sub = await stripe.subscriptions.retrieve(session.subscription as string)
@@ -45,6 +96,7 @@ export async function POST(req: NextRequest) {
 
       if (!customerId) console.warn("checkout.session.completed: no customer ID on session", session.id)
 
+      // Upsert subscription record
       const { error: upsertError } = await db.from('subscriptions').upsert({
         agency_id: agencyId,
         plan,
@@ -57,45 +109,105 @@ export async function POST(req: NextRequest) {
         trial_end: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'stripe_subscription_id' })
+
       if (upsertError) {
         console.error("DB upsert failed:", upsertError)
         return NextResponse.json({ error: "DB write failed" }, { status: 500 })
       }
+
+      // Update agency plan + reset credits to the new plan's monthly allowance
+      const creditLimit = getPlanCreditLimit(plan)
+      await db.from('agencies').update({
+        plan,
+        is_trial: false,
+        credits_remaining: creditLimit,
+        credits_reset_at: new Date().toISOString(),
+      }).eq('id', agencyId)
+
       break
     }
 
+    // ── Subscription renewed (invoice paid) — reset monthly credits ────────
+    case "invoice.paid": {
+      const invoice = event.data.object as Stripe.Invoice
+      const subscriptionId = invoice.parent?.subscription_details?.subscription
+      if (!subscriptionId) break
+
+      const sub = await stripe.subscriptions.retrieve(String(subscriptionId))
+      const agencyId = sub.metadata?.agency_id
+      const plan = sub.metadata?.plan
+      if (!agencyId || !plan) break
+
+      const creditLimit = getPlanCreditLimit(plan)
+      await db.from('agencies').update({
+        credits_remaining: creditLimit,
+        credits_reset_at: new Date().toISOString(),
+      }).eq('id', agencyId)
+
+      // Keep subscription period_end up to date
+      const periodEnd = sub.items.data[0]?.current_period_end
+      await db.from('subscriptions').update({
+        status: sub.status,
+        current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+        updated_at: new Date().toISOString(),
+      }).eq('stripe_subscription_id', sub.id)
+
+      break
+    }
+
+    // ── Plan changed (upgrade / downgrade) ─────────────────────────────────
     case "customer.subscription.updated": {
       const sub = event.data.object as Stripe.Subscription
       const periodEnd = sub.items.data[0]?.current_period_end
-      const { error: updateError } = await db.from('subscriptions')
+      const agencyId = sub.metadata?.agency_id
+      const plan = sub.metadata?.plan
+
+      await db.from('subscriptions')
         .update({
           status: sub.status,
+          plan: plan ?? undefined,
           current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
           trial_end: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
           updated_at: new Date().toISOString(),
         })
         .eq('stripe_subscription_id', sub.id)
-      if (updateError) console.error("DB update failed:", updateError)
+
+      // If plan metadata is present, sync to agency
+      if (agencyId && plan) {
+        await db.from('agencies').update({ plan }).eq('id', agencyId)
+      }
+
       break
     }
 
+    // ── Subscription cancelled — revert to free ────────────────────────────
     case "customer.subscription.deleted": {
       const sub = event.data.object as Stripe.Subscription
-      const { error: deleteError } = await db.from('subscriptions')
+      const agencyId = sub.metadata?.agency_id
+
+      await db.from('subscriptions')
         .update({ status: 'cancelled', cancelled_at: new Date().toISOString(), updated_at: new Date().toISOString() })
         .eq('stripe_subscription_id', sub.id)
-      if (deleteError) console.error("DB update failed:", deleteError)
+
+      if (agencyId) {
+        await db.from('agencies').update({
+          plan: 'free',
+          credits_remaining: 1,
+          credits_reset_at: new Date().toISOString(),
+        }).eq('id', agencyId)
+      }
+
       break
     }
 
+    // ── Payment failed ─────────────────────────────────────────────────────
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice
       const subscriptionId = invoice.parent?.subscription_details?.subscription
       if (subscriptionId) {
-        const { error: paymentFailedError } = await db.from('subscriptions')
+        await db.from('subscriptions')
           .update({ status: 'past_due', updated_at: new Date().toISOString() })
           .eq('stripe_subscription_id', String(subscriptionId))
-        if (paymentFailedError) console.error("DB update failed:", paymentFailedError)
       }
       break
     }

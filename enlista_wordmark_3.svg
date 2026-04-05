@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 110" width="520" height="110">
+  <!-- Wordmark 3: Uppercase Tracked with Inline Rule -->
+  <!-- All caps, wide letter-spacing, a horizontal line cuts through the middle — architectural feel -->
+  <defs>
+    <linearGradient id="wm3grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1D4ED8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+    <mask id="textMask3">
+      <rect x="0" y="0" width="520" height="110" fill="white"/>
+      <text x="20" y="66" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="52" font-weight="800" fill="black" letter-spacing="14">ENLISTA</text>
+    </mask>
+  </defs>
+
+  <!-- Text -->
+  <text x="20" y="66" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="52" font-weight="800" fill="#0F1829" letter-spacing="14">ENLISTA</text>
+
+  <!-- Horizontal rule cutting through text -->
+  <line x1="20" y1="52" x2="490" y2="52" stroke="url(#wm3grad)" stroke-width="2.5"/>
+
+  <!-- Small tagline below -->
+  <text x="22" y="90" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="10" font-weight="600" fill="#64748B" letter-spacing="6">INTELLIGENT PROPERTY PLATFORM</text>
+</svg>

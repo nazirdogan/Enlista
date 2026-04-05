@@ -37,13 +37,37 @@ const INPUT_ERROR: React.CSSProperties = {
 }
 
 function validatePassword(pw: string): string | null {
-  if (pw.length !== 12) return 'Password must be exactly 12 characters'
+  if (pw.length < 12) return 'Password must be at least 12 characters'
   if (!/[A-Z]/.test(pw)) return 'Must include an uppercase letter'
   if (!/[a-z]/.test(pw)) return 'Must include a lowercase letter'
   if (!/[0-9]/.test(pw)) return 'Must include a number'
   if (!/[!@#$%^&*()\-_=+[\]{}|;':",.<>?/\\]/.test(pw))
     return 'Must include a special character'
   return null
+}
+
+type StrengthLevel = 'weak' | 'fair' | 'good' | 'strong'
+
+function getPasswordStrength(pw: string): { level: StrengthLevel; score: number; label: string } {
+  if (!pw) return { level: 'weak', score: 0, label: '' }
+  let score = 0
+  if (pw.length >= 12) score++
+  if (pw.length >= 16) score++
+  if (/[A-Z]/.test(pw)) score++
+  if (/[a-z]/.test(pw)) score++
+  if (/[0-9]/.test(pw)) score++
+  if (/[!@#$%^&*()\-_=+[\]{}|;':",.<>?/\\]/.test(pw)) score++
+  if (score <= 2) return { level: 'weak', score, label: 'Weak' }
+  if (score <= 3) return { level: 'fair', score, label: 'Fair' }
+  if (score <= 4) return { level: 'good', score, label: 'Good' }
+  return { level: 'strong', score, label: 'Strong' }
+}
+
+const STRENGTH_COLORS: Record<StrengthLevel, string> = {
+  weak: '#EF4444',
+  fair: '#F97316',
+  good: '#EAB308',
+  strong: '#22C55E',
 }
 
 export default function AuthForm() {
@@ -453,7 +477,7 @@ export default function AuthForm() {
                   onChange={(e) => { setPassword(e.target.value); setPwError(null) }}
                   required
                   autoComplete="new-password"
-                  placeholder="Exactly 12 characters"
+                  placeholder="Min. 12 characters"
                   style={{ ...inputStyle(!!pwError), paddingRight: 44 }}
                   onFocus={(e) => { e.target.style.borderColor = pwError ? '#EF4444' : '#1D4ED8' }}
                   onBlur={(e) => { e.target.style.borderColor = pwError ? '#EF4444' : '#DDE3EC' }}
@@ -470,11 +494,34 @@ export default function AuthForm() {
                   {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {/* Strength meter */}
+              {password && (() => {
+                const { level, label } = getPasswordStrength(password)
+                const color = STRENGTH_COLORS[level]
+                const segments = 4
+                const filled = level === 'weak' ? 1 : level === 'fair' ? 2 : level === 'good' ? 3 : 4
+                return (
+                  <div style={{ marginTop: 8 }}>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      {Array.from({ length: segments }).map((_, i) => (
+                        <div key={i} style={{
+                          flex: 1, height: 4, borderRadius: 2,
+                          background: i < filled ? color : '#E2E8F0',
+                          transition: 'background 0.2s',
+                        }} />
+                      ))}
+                    </div>
+                    <p style={{ fontSize: 11, color, marginTop: 4, marginBottom: 0, fontWeight: 600 }}>
+                      {label}{level !== 'strong' ? ' — Add length, mixed case, numbers & symbols for stronger security' : ' — Great password'}
+                    </p>
+                  </div>
+                )
+              })()}
               {pwError && (
                 <p style={{ fontSize: 12, color: '#EF4444', marginTop: 4, marginBottom: 0 }}>{pwError}</p>
               )}
               <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 4, marginBottom: 0 }}>
-                Exactly 12 characters · uppercase · lowercase · number · special character
+                Minimum 12 characters · uppercase · lowercase · number · special character
               </p>
             </div>
 

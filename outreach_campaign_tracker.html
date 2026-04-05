@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista — Outreach Campaign Tracker</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0f; color: #e0e0e0; }
+
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 28px 40px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.header h1 { font-size: 24px; font-weight: 700; color: #fff; }
+.header .subtitle { color: #8892b0; font-size: 13px; margin-top: 4px; }
+.sender-badge {
+  background: rgba(100,255,218,0.1); border: 1px solid rgba(100,255,218,0.2);
+  padding: 6px 14px; border-radius: 8px; font-size: 13px; color: #64ffda;
+}
+
+.stats-bar {
+  display: flex; gap: 16px; padding: 20px 40px;
+  background: #0f0f1a; border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-wrap: wrap;
+}
+.stat {
+  background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px;
+  padding: 14px 20px; min-width: 140px; text-align: center;
+}
+.stat-num { font-size: 32px; font-weight: 800; }
+.stat-label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.c-teal { color: #64ffda; }
+.c-blue { color: #3b82f6; }
+.c-yellow { color: #e8b059; }
+.c-green { color: #25d366; }
+.c-purple { color: #8b5cf6; }
+.c-red { color: #ef4444; }
+
+.sequence-info {
+  padding: 16px 40px; background: #0d0d18;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; gap: 32px; align-items: center; font-size: 13px; color: #6b7280;
+}
+.seq-step { display: flex; align-items: center; gap: 6px; }
+.seq-dot { width: 8px; height: 8px; border-radius: 50%; }
+.seq-dot.active { background: #64ffda; }
+.seq-dot.future { background: #2a2a4a; }
+.seq-arrow { color: #2a2a4a; }
+
+.controls {
+  padding: 16px 40px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  background: #0a0a0f;
+}
+.search-box {
+  flex: 1; min-width: 250px; padding: 9px 14px;
+  background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 8px;
+  color: #fff; font-size: 13px; outline: none;
+}
+.search-box:focus { border-color: #64ffda; }
+.filter-btn {
+  padding: 7px 14px; border-radius: 6px; border: 1px solid #2a2a4a;
+  background: #1a1a2e; color: #8892b0; cursor: pointer; font-size: 12px;
+}
+.filter-btn:hover, .filter-btn.active { background: #64ffda; color: #0a0a0f; border-color: #64ffda; font-weight: 600; }
+
+.table-wrap { padding: 16px 40px 40px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { position: sticky; top: 0; z-index: 10; }
+th {
+  background: #1a1a2e; padding: 10px 8px; text-align: left; color: #64ffda;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+  border-bottom: 2px solid #2a2a4a; cursor: pointer;
+}
+td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+tr:hover td { background: rgba(100,255,218,0.03); }
+
+.name-cell { font-weight: 600; color: #fff; }
+.agency-cell { color: #8892b0; font-size: 12px; }
+
+.status-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+}
+.status-draft { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+.status-sent { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.status-opened { background: rgba(232,176,89,0.15); color: #e8b059; }
+.status-replied { background: rgba(100,255,218,0.15); color: #64ffda; }
+.status-booked { background: rgba(37,211,102,0.15); color: #25d366; }
+.status-declined { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+.step-pills { display: flex; gap: 3px; }
+.step-pill {
+  width: 24px; height: 6px; border-radius: 3px; background: #2a2a4a;
+}
+.step-pill.done { background: #64ffda; }
+.step-pill.current { background: #3b82f6; }
+
+.action-btn {
+  padding: 4px 10px; border-radius: 4px; border: 1px solid #2a2a4a;
+  background: transparent; color: #8892b0; cursor: pointer; font-size: 11px;
+  transition: all 0.15s; margin: 1px;
+}
+.action-btn:hover { border-color: #64ffda; color: #64ffda; }
+.action-btn.wa { border-color: rgba(37,211,102,0.3); color: #25d366; }
+.action-btn.wa:hover { background: rgba(37,211,102,0.1); }
+.action-btn.email { border-color: rgba(59,130,246,0.3); color: #3b82f6; }
+.action-btn.email:hover { background: rgba(59,130,246,0.1); }
+
+select.status-select {
+  background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 6px;
+  color: #e0e0e0; padding: 4px 8px; font-size: 11px; cursor: pointer; outline: none;
+}
+
+.send-guide {
+  margin: 0 40px 20px; padding: 16px 20px;
+  background: #12121e; border: 1px solid #2a2a4a; border-radius: 10px;
+}
+.send-guide h3 { color: #64ffda; font-size: 13px; margin-bottom: 8px; }
+.send-guide p { color: #8892b0; font-size: 12px; line-height: 1.6; }
+.send-guide .highlight { color: #e8b059; font-weight: 600; }
+
+@media (max-width: 900px) {
+  .header, .stats-bar, .controls, .table-wrap, .send-guide { padding-left: 16px; padding-right: 16px; }
+  .stat { min-width: 100px; padding: 10px 14px; }
+  .stat-num { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Enlista — Outreach Campaign</h1>
+    <div class="subtitle">Dubai Real Estate Brokerage CEO Outreach • 5-Email Sequence</div>
+  </div>
+  <div class="sender-badge">Sending from: nazir@enlista.io</div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num c-teal" id="s-total">22</div><div class="stat-label">Total Contacts</div></div>
+  <div class="stat"><div class="stat-num c-purple" id="s-draft">22</div><div class="stat-label">In Drafts</div></div>
+  <div class="stat"><div class="stat-num c-blue" id="s-sent">0</div><div class="stat-label">Sent</div></div>
+  <div class="stat"><div class="stat-num c-yellow" id="s-opened">0</div><div class="stat-label">Opened</div></div>
+  <div class="stat"><div class="stat-num c-green" id="s-replied">0</div><div class="stat-label">Replied</div></div>
+  <div class="stat"><div class="stat-num c-teal" id="s-booked">0</div><div class="stat-label">Demo Booked</div></div>
+</div>
+
+<div class="sequence-info">
+  <span style="color:#8892b0; font-weight:600;">Sequence:</span>
+  <div class="seq-step"><span class="seq-dot active"></span> Email 1: Cold Intro (Day 0)</div>
+  <span class="seq-arrow">→</span>
+  <div class="seq-step"><span class="seq-dot future"></span> Email 2: Time Savings (Day 3)</div>
+  <span class="seq-arrow">→</span>
+  <div class="seq-step"><span class="seq-dot future"></span> Email 3: Peer Story (Day 7)</div>
+  <span class="seq-arrow">→</span>
+  <div class="seq-step"><span class="seq-dot future"></span> Email 4: Portal Edge (Day 14)</div>
+  <span class="seq-arrow">→</span>
+  <div class="seq-step"><span class="seq-dot future"></span> Email 5: Breakup (Day 28)</div>
+</div>
+
+<div class="send-guide">
+  <h3>Sending Instructions</h3>
+  <p>
+    All 22 drafts are live in your Gmail. Before sending: open each draft, change the <span class="highlight">"From" address to nazir@enlista.io</span> (if you've set it up as a Send As alias), review the copy, then hit send.
+    Send <span class="highlight">5-8 emails per day max</span>, on <span class="highlight">Tuesday–Thursday between 9-11 AM GST</span>. That means your full first wave goes out across 3-4 sending days.
+    Track status below by updating each contact's status as you go.
+  </p>
+</div>
+
+<div class="controls">
+  <input type="text" class="search-box" id="search" placeholder="Search by name, agency, or email...">
+  <button class="filter-btn active" data-status="all">All</button>
+  <button class="filter-btn" data-status="draft">Draft</button>
+  <button class="filter-btn" data-status="sent">Sent</button>
+  <button class="filter-btn" data-status="opened">Opened</button>
+  <button class="filter-btn" data-status="replied">Replied</button>
+  <button class="filter-btn" data-status="booked">Booked</button>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+  <tr>
+    <th>#</th>
+    <th>Contact</th>
+    <th>Agency</th>
+    <th>Agents</th>
+    <th>Email</th>
+    <th>Subject Line</th>
+    <th>Sequence</th>
+    <th>Status</th>
+    <th>Actions</th>
+    <th>Notes</th>
+  </tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<script>
+const CONTACTS = [
+  { name: "Abdullah Alajaji", title: "Founder & CEO", agency: "Driven Properties", agents: 126, email: "a@drivenproperties.com", phone: "+971509643016", subject: "listing uploads", step: 1, status: "draft", notes: "" },
+  { name: "Calum White", title: "Founder & CEO", agency: "White & Co Real Estate", agents: 125, email: "info@whiteandcogroup.com", phone: "+97148762333", subject: "listing workflow", step: 1, status: "draft", notes: "" },
+  { name: "Nikita Kuznetsov", title: "Founder & CEO", agency: "Metropolitan Premium Properties", agents: 124, email: "n@luxury-vienna.com", phone: "+97143605561", subject: "listing descriptions at scale", step: 1, status: "draft", notes: "" },
+  { name: "Luke Remington", title: "Founder & MD", agency: "haus & haus", agents: 92, email: "l@hausandhaus.com", phone: "+97143025800", subject: "listing uploads for haus & haus", step: 1, status: "draft", notes: "" },
+  { name: "Alessia Sheglova", title: "CEO", agency: "Dacha Real Estate", agents: 60, email: "a@dacha-re.com", phone: "+971525268032", subject: "listing workflow at Dacha", step: 1, status: "draft", notes: "" },
+  { name: "Loai Al Fakir", title: "Founder & CEO", agency: "Provident Real Estate", agents: 52, email: "loai@providentestate.com", phone: "+971505057143", subject: "listing time across 52 agents", step: 1, status: "draft", notes: "" },
+  { name: "Sam McCone", title: "Founder & MP", agency: "McCone Properties", agents: 48, email: "s@mcconeproperties.com", phone: "+97150927", subject: "listing admin at McCone", step: 1, status: "draft", notes: "" },
+  { name: "Gaurav Aidasani", title: "Founder & MD", agency: "Union Square House RE", agents: 43, email: "g@ushre.com", phone: "", subject: "portal uploads at Union Square House", step: 1, status: "draft", notes: "" },
+  { name: "Saleem Karsaz", title: "Founder & CEO", agency: "Aeon & Trisl RE", agents: 40, email: "s@aeontrisl.com", phone: "+971585740577", subject: "listing time at Aeon & Trisl", step: 1, status: "draft", notes: "" },
+  { name: "Gino Cross", title: "MD / Co-Founder", agency: "Strada", agents: 37, email: "crossgino@gmail.com", phone: "+971558235580", subject: "listing workflow at Strada", step: 1, status: "draft", notes: "" },
+  { name: "Nick Wood", title: "CEO", agency: "Hamptons International", agents: 37, email: "nwood@hmpt.biz", phone: "+97143661662", subject: "listing operations at Hamptons", step: 1, status: "draft", notes: "" },
+  { name: "Karam Din", title: "Founder & Chairman", agency: "Alarfeen Real Estate", agents: 36, email: "customercare@alarfeenrealestate.ae", phone: "+971524398995", subject: "listing uploads at Alarfeen", step: 1, status: "draft", notes: "" },
+  { name: "Chris Gibson", title: "CEO - ME", agency: "Savills Dubai", agents: 33, email: "cgibson@savills.com", phone: "+97335602785", subject: "listing efficiency at Savills Dubai", step: 1, status: "draft", notes: "" },
+  { name: "Richard Waind", title: "CEO", agency: "betterhomes", agents: 29, email: "richard.waind@bhomes.com", phone: "+971600522233", subject: "listing uploads across betterhomes", step: 1, status: "draft", notes: "" },
+  { name: "Jake Jones", title: "CEO & Founder", agency: "Elite Property Brokerage", agents: 26, email: "info@elitepropertydxb.com", phone: "+97147701087", subject: "listing time at Elite Property", step: 1, status: "draft", notes: "" },
+  { name: "Rohit Singh Rana", title: "Chairman & CEO", agency: "Xperience Realty", agents: 25, email: "callme.ranasahib@gmail.com", phone: "+919414930539", subject: "listing workflow at Xperience Realty", step: 1, status: "draft", notes: "" },
+  { name: "Husni Al Bayari", title: "Chairman & Founder", agency: "D&B Properties", agents: 24, email: "husni@dandbdubai.com", phone: "+97148719200", subject: "listing operations at D&B", step: 1, status: "draft", notes: "" },
+  { name: "Dean Charter", title: "MD & Founder", agency: "Paragon Properties", agents: 23, email: "chris@paragonproperties.ae", phone: "+971565566955", subject: "listings across Dubai and RAK", step: 1, status: "draft", notes: "" },
+  { name: "George Azar", title: "Chairman & CEO", agency: "Dubai Sotheby's Intl Realty", agents: 22, email: "ga@luxhabitatsir.com", phone: "+97144550896", subject: "listing quality at Sotheby's Dubai", step: 1, status: "draft", notes: "" },
+  { name: "Lewis Allsopp", title: "Chairman", agency: "Allsopp & Allsopp", agents: 21, email: "lewis@allsoppandallsopp.com", phone: "+971555734382", subject: "listing workflow at Allsopp & Allsopp", step: 1, status: "draft", notes: "" },
+  { name: "Carl Allsopp", title: "CEO", agency: "Allsopp & Allsopp MC", agents: 20, email: "carl@allsoppandallsopp.com", phone: "+971503982821", subject: "listing time at Allsopp Motor City", step: 1, status: "draft", notes: "" },
+  { name: "Matthew Small", title: "CEO", agency: "Williams International RE", agents: 20, email: "matthew@williamsinternationalgroup.com", phone: "+971563785656", subject: "listing uploads at Williams International", step: 1, status: "draft", notes: "" }
+];
+
+// Load saved state
+const saved = localStorage.getItem('enlista_campaign');
+if (saved) {
+  try {
+    const parsed = JSON.parse(saved);
+    parsed.forEach((s, i) => {
+      if (CONTACTS[i]) {
+        CONTACTS[i].status = s.status || 'draft';
+        CONTACTS[i].step = s.step || 1;
+        CONTACTS[i].notes = s.notes || '';
+      }
+    });
+  } catch(e) {}
+}
+
+function save() {
+  localStorage.setItem('enlista_campaign', JSON.stringify(CONTACTS.map(c => ({ status: c.status, step: c.step, notes: c.notes }))));
+  updateStats();
+}
+
+let filterStatus = 'all';
+let searchTerm = '';
+
+function updateStats() {
+  const counts = { draft: 0, sent: 0, opened: 0, replied: 0, booked: 0, declined: 0 };
+  CONTACTS.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
+  document.getElementById('s-total').textContent = CONTACTS.length;
+  document.getElementById('s-draft').textContent = counts.draft;
+  document.getElementById('s-sent').textContent = counts.sent;
+  document.getElementById('s-opened').textContent = counts.opened;
+  document.getElementById('s-replied').textContent = counts.replied;
+  document.getElementById('s-booked').textContent = counts.booked;
+}
+
+function render() {
+  const tbody = document.getElementById('tbody');
+  let html = '';
+  CONTACTS.forEach((c, i) => {
+    if (filterStatus !== 'all' && c.status !== filterStatus) return;
+    if (searchTerm) {
+      const hay = [c.name, c.agency, c.email, c.subject].join(' ').toLowerCase();
+      if (!hay.includes(searchTerm.toLowerCase())) return;
+    }
+    const phoneClean = c.phone.replace(/[^0-9]/g, '');
+    html += `<tr>
+      <td style="color:#6b7280">${i + 1}</td>
+      <td><div class="name-cell">${c.name}</div><div style="font-size:11px;color:#6b7280">${c.title}</div></td>
+      <td class="agency-cell">${c.agency}</td>
+      <td style="text-align:center;color:#64ffda;font-weight:700">${c.agents}</td>
+      <td><a href="mailto:${c.email}" style="color:#3b82f6;text-decoration:none;font-size:12px">${c.email}</a></td>
+      <td style="color:#8892b0;font-size:12px">${c.subject}</td>
+      <td>
+        <div class="step-pills">
+          ${[1,2,3,4,5].map(s => `<div class="step-pill ${s < c.step ? 'done' : s === c.step ? 'current' : ''}"></div>`).join('')}
+        </div>
+        <div style="font-size:10px;color:#6b7280;margin-top:3px">Step ${c.step}/5</div>
+      </td>
+      <td>
+        <select class="status-select" onchange="updateStatus(${i}, this.value)">
+          <option value="draft" ${c.status==='draft'?'selected':''}>Draft</option>
+          <option value="sent" ${c.status==='sent'?'selected':''}>Sent</option>
+          <option value="opened" ${c.status==='opened'?'selected':''}>Opened</option>
+          <option value="replied" ${c.status==='replied'?'selected':''}>Replied</option>
+          <option value="booked" ${c.status==='booked'?'selected':''}>Booked</option>
+          <option value="declined" ${c.status==='declined'?'selected':''}>Declined</option>
+        </select>
+      </td>
+      <td style="white-space:nowrap">
+        <a class="action-btn email" href="https://mail.google.com/mail/u/0/#drafts" target="_blank">Open Draft</a>
+        ${phoneClean ? `<a class="action-btn wa" href="https://wa.me/${phoneClean}" target="_blank">WhatsApp</a>` : ''}
+      </td>
+      <td><input type="text" value="${c.notes}" onchange="updateNotes(${i}, this.value)" placeholder="Add note..." style="background:#1a1a2e;border:1px solid #2a2a4a;border-radius:4px;color:#e0e0e0;padding:4px 8px;font-size:11px;width:120px;outline:none"></td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+  updateStats();
+}
+
+function updateStatus(i, val) { CONTACTS[i].status = val; save(); render(); }
+function updateNotes(i, val) { CONTACTS[i].notes = val; save(); }
+
+document.getElementById('search').addEventListener('input', e => { searchTerm = e.target.value; render(); });
+
+document.querySelectorAll('[data-status]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-status]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterStatus = btn.dataset.status;
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>

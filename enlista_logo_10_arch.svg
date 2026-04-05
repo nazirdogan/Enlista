@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" width="480" height="140">
+  <!-- Logo 10: Architectural Arch + Skyline -->
+  <!-- An elegant arch doorway with a skyline silhouette — Dubai luxury real estate meets technology -->
+  <defs>
+    <linearGradient id="archGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1D4ED8;stop-opacity:1" />
+    </linearGradient>
+    <clipPath id="archClip">
+      <path d="M14 112 L14 44 A42 42 0 0 1 98 44 L98 112 Z"/>
+    </clipPath>
+  </defs>
+
+  <g transform="translate(10, 6)">
+    <!-- Main arch shape -->
+    <path d="M14 112 L14 44 A42 42 0 0 1 98 44 L98 112 Z" fill="url(#archGrad)"/>
+
+    <!-- Inner arch cutout (door) -->
+    <path d="M30 112 L30 56 A26 26 0 0 1 82 56 L82 112 Z" fill="white"/>
+
+    <!-- Skyline silhouette inside the arch doorway -->
+    <g clip-path="url(#archClip)">
+      <g fill="#EFF6FF">
+        <!-- Tall tower -->
+        <rect x="36" y="68" width="8" height="44" rx="1"/>
+        <rect x="38" y="62" width="4" height="6" rx="1"/>
+        <line x1="40" y1="56" x2="40" y2="62" stroke="#EFF6FF" stroke-width="1.5"/>
+        <!-- Medium building -->
+        <rect x="46" y="78" width="10" height="34" rx="1"/>
+        <!-- Short building -->
+        <rect x="58" y="86" width="8" height="26" rx="1"/>
+        <!-- Tall right tower -->
+        <rect x="68" y="72" width="8" height="40" rx="1"/>
+        <rect x="70" y="66" width="4" height="6" rx="1"/>
+      </g>
+      <!-- Building window dots -->
+      <g fill="#1D4ED8" opacity="0.15">
+        <circle cx="40" cy="76" r="1"/>
+        <circle cx="40" cy="82" r="1"/>
+        <circle cx="40" cy="88" r="1"/>
+        <circle cx="50" cy="86" r="1"/>
+        <circle cx="50" cy="92" r="1"/>
+        <circle cx="50" cy="98" r="1"/>
+        <circle cx="72" cy="80" r="1"/>
+        <circle cx="72" cy="86" r="1"/>
+        <circle cx="72" cy="92" r="1"/>
+      </g>
+    </g>
+
+    <!-- Keystone accent at top of arch -->
+    <circle cx="56" cy="16" r="3" fill="white" opacity="0.9"/>
+
+    <!-- Thin decorative inner arch line -->
+    <path d="M24 112 L24 48 A32 32 0 0 1 88 48 L88 112" fill="none" stroke="white" stroke-width="0.5" opacity="0.25"/>
+  </g>
+
+  <!-- Wordmark — luxurious spacing -->
+  <text x="134" y="62" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="46" font-weight="700" fill="#0F1829" letter-spacing="5">enlista</text>
+
+  <!-- Double line accent -->
+  <line x1="134" y1="74" x2="440" y2="74" stroke="#DDE3EC" stroke-width="0.6"/>
+  <line x1="134" y1="78" x2="440" y2="78" stroke="#DDE3EC" stroke-width="0.6"/>
+
+  <!-- Tagline between lines would be too busy — place below -->
+  <text x="134" y="100" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#64748B" letter-spacing="3.5">WHERE AI MEETS REAL ESTATE</text>
+
+  <!-- Small accent mark -->
+  <rect x="134" y="108" width="20" height="2.5" rx="1.25" fill="#1D4ED8"/>
+</svg>

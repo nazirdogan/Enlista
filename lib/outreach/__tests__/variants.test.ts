@@ -10,16 +10,16 @@ describe('VARIANTS', () => {
 
 describe('renderVariant', () => {
   it('interpolates first name and link', () => {
-    const msg = renderVariant('B1', 'Ahmed', 'https://enlista.ai/go?t=abc123')
+    const msg = renderVariant('B1', 'Ahmed', 'https://enlista.io/go?t=abc123')
     expect(msg).toContain('Ahmed')
-    expect(msg).toContain('https://enlista.ai/go?t=abc123')
+    expect(msg).toContain('https://enlista.io/go?t=abc123')
     expect(msg).not.toContain('[First Name]')
     expect(msg).not.toContain('[link]')
   })
 
   it('renders all 4 variants without placeholders', () => {
     for (const variant of ['A1','A2','B1','B2'] as const) {
-      const msg = renderVariant(variant, 'Sara', 'https://enlista.ai/go?t=xyz')
+      const msg = renderVariant(variant, 'Sara', 'https://enlista.io/go?t=xyz')
       expect(msg).not.toContain('[')
       expect(msg).not.toContain(']')
     }

@@ -1,4 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 interface PropertyData {
   property_type: string
@@ -94,16 +96,9 @@ function buildPrompt(data: PropertyData): string {
   const styleContext = getStyleContext(tone)
   const communityTag = data.community?.replace(/\s+/g, '') ?? 'Dubai'
 
-  // Compute estimated yield for investment tone if enough data
-  let yieldNote = ''
-  if (tone === 'investment' && data.price_aed && data.size_sqft) {
-    const estAnnualRent = Math.round(data.price_aed * 0.065) // ~6.5% Dubai avg
-    yieldNote = `\nEstimated gross yield reference (if not specified in additional notes): ~${((estAnnualRent / data.price_aed) * 100).toFixed(1)}% based on Dubai market averages.`
-  }
-
   return `You are an elite UAE real estate copywriter. You have studied how the top agencies in Dubai write listings — Betterhomes, Allsopp & Allsopp, Engel & Völkers, Espace, Hamptons International, and Provident Estate. You know what works on Bayut and Property Finder.
 
-${styleContext}${yieldNote}
+${styleContext}
 
 Property details:
 ${propertyDescription}
@@ -129,7 +124,107 @@ Generate exactly the following outputs in JSON format. Each output must reflect 
 Return only valid JSON, no markdown code blocks, no extra text.`
 }
 
+// ─── Credit helpers ───────────────────────────────────────────────────────────
+
+interface AgencyCredits {
+  id: string
+  plan: string
+  credits_remaining: number
+  extra_credits: number
+  credits_reset_at: string | null
+}
+
+function getPlanLimit(plan: string): number {
+  switch (plan) {
+    case 'free':       return 1
+    case 'plus':       return 5
+    case 'pro':        return 15
+    case 'enterprise': return 9999
+    default:           return 1
+  }
+}
+
+async function checkAndDecrementCredits(userId: string): Promise<
+  | { ok: true; creditsRemaining: number; extraCredits: number }
+  | { ok: false; error: string; creditsRemaining: number; extraCredits: number }
+> {
+  const db = createAdminClient()
+
+  const { data: agency, error: fetchErr } = await db
+    .from('agencies')
+    .select('id, plan, credits_remaining, extra_credits, credits_reset_at')
+    .eq('user_id', userId)
+    .single<AgencyCredits>()
+
+  if (fetchErr || !agency) {
+    return { ok: false, error: 'Agency not found', creditsRemaining: 0, extraCredits: 0 }
+  }
+
+  // Auto-reset if we've rolled into a new calendar month
+  let creditsRemaining = agency.credits_remaining
+  const resetAt = agency.credits_reset_at ? new Date(agency.credits_reset_at) : null
+  const now = new Date()
+  if (!resetAt || (resetAt.getFullYear() < now.getFullYear()) ||
+      (resetAt.getFullYear() === now.getFullYear() && resetAt.getMonth() < now.getMonth())) {
+    creditsRemaining = getPlanLimit(agency.plan)
+    await db
+      .from('agencies')
+      .update({ credits_remaining: creditsRemaining, credits_reset_at: now.toISOString() })
+      .eq('id', agency.id)
+  }
+
+  const totalCredits = creditsRemaining + agency.extra_credits
+
+  if (totalCredits <= 0) {
+    return {
+      ok: false,
+      error: 'No listing credits remaining. Purchase more credits or upgrade your plan.',
+      creditsRemaining,
+      extraCredits: agency.extra_credits,
+    }
+  }
+
+  // Deduct: use monthly credits first, then extra credits
+  let newMonthly = creditsRemaining
+  let newExtra = agency.extra_credits
+  if (newMonthly > 0) {
+    newMonthly -= 1
+  } else {
+    newExtra -= 1
+  }
+
+  const { error: updateErr } = await db
+    .from('agencies')
+    .update({ credits_remaining: newMonthly, extra_credits: newExtra })
+    .eq('id', agency.id)
+
+  if (updateErr) {
+    console.error('Failed to decrement credits:', updateErr)
+    return { ok: false, error: 'Failed to update credits', creditsRemaining, extraCredits: agency.extra_credits }
+  }
+
+  return { ok: true, creditsRemaining: newMonthly, extraCredits: newExtra }
+}
+
+// ─── Route handler ────────────────────────────────────────────────────────────
+
 export async function POST(request: Request) {
+  // ── Auth check ────────────────────────────────────────────────────────────
+  const isDev = process.env.NODE_ENV === 'development'
+  let userId: string | null = null
+
+  if (isDev && process.env.DEV_USER_ID) {
+    userId = process.env.DEV_USER_ID
+  } else {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return Response.json({ error: 'Unauthenticated' }, { status: 401 })
+    }
+    userId = user.id
+  }
+
+  // ── Parse body ────────────────────────────────────────────────────────────
   let body: PropertyData
   try {
     body = await request.json()
@@ -141,6 +236,21 @@ export async function POST(request: Request) {
     return Response.json({ error: 'property_type and price_aed are required' }, { status: 400 })
   }
 
+  // ── Credit check & decrement ──────────────────────────────────────────────
+  const creditResult = await checkAndDecrementCredits(userId)
+  if (!creditResult.ok) {
+    return Response.json(
+      {
+        error: creditResult.error,
+        creditsRemaining: creditResult.creditsRemaining,
+        extraCredits: creditResult.extraCredits,
+        outOfCredits: true,
+      },
+      { status: 402 }
+    )
+  }
+
+  // ── AI generation ─────────────────────────────────────────────────────────
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey || apiKey === 'placeholder') {
     return Response.json(
@@ -182,7 +292,12 @@ export async function POST(request: Request) {
       ...generated,
     }
 
-    return Response.json({ listing })
+    return Response.json({
+      listing,
+      // Return updated credit counts so the UI can refresh without a separate fetch
+      creditsRemaining: creditResult.creditsRemaining,
+      extraCredits: creditResult.extraCredits,
+    })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'AI generation failed'
     return Response.json({ error: message }, { status: 500 })

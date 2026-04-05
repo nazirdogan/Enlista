@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista Logo Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: #F2F4F7;
+    color: #0F1829;
+    padding: 40px 20px;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 16px;
+    color: #64748B;
+  }
+  .grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(29,78,216,0.12);
+  }
+  .card-label {
+    display: inline-block;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  .card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .card p {
+    font-size: 14px;
+    color: #64748B;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: #FAFBFC;
+    border-radius: 12px;
+    border: 1px solid #EEF1F6;
+    margin-bottom: 16px;
+  }
+  .logo-container img {
+    max-width: 100%;
+    height: auto;
+  }
+  .dark-preview {
+    background: #0F1829;
+    border-color: #1E293B;
+  }
+  .row {
+    display: flex;
+    gap: 16px;
+  }
+  .row .logo-container {
+    flex: 1;
+  }
+  .colors {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    justify-content: center;
+  }
+  .swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Enlista Logo Concepts</h1>
+    <p>Five distinct logo options — same brand color palette</p>
+    <div class="colors">
+      <div class="swatch" style="background:#1D4ED8" title="#1D4ED8 Primary"></div>
+      <div class="swatch" style="background:#3B82F6" title="#3B82F6 Light Blue"></div>
+      <div class="swatch" style="background:#0F1829" title="#0F1829 Dark"></div>
+      <div class="swatch" style="background:#EFF6FF" title="#EFF6FF Pale Blue"></div>
+      <div class="swatch" style="background:#64748B" title="#64748B Muted"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- Logo 1 -->
+    <div class="card">
+      <span class="card-label">Option 1</span>
+      <h3>The Property Pin</h3>
+      <p>A building grid inside a location pin — communicates real estate + location at a glance. Great for app icons and favicons.</p>
+      <div class="row">
+        <div class="logo-container">
+          <img src="enlista_logo_1_building.svg" alt="Enlista Logo 1 - Light">
+        </div>
+        <div class="logo-container dark-preview">
+          <img src="enlista_logo_1_building.svg" alt="Enlista Logo 1 - Dark">
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo 2 -->
+    <div class="card">
+      <span class="card-label">Option 2</span>
+      <h3>The List Lettermark</h3>
+      <p>The letter "E" built from listing-style bullet lines inside a rounded square. Ties the name "Enlista" directly to its core function — managing listings.</p>
+      <div class="row">
+        <div class="logo-container">
+          <img src="enlista_logo_2_lettermark.svg" alt="Enlista Logo 2 - Light">
+        </div>
+        <div class="logo-container dark-preview">
+          <img src="enlista_logo_2_lettermark.svg" alt="Enlista Logo 2 - Dark">
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo 3 -->
+    <div class="card">
+      <span class="card-label">Option 3</span>
+      <h3>Smart Home</h3>
+      <p>A clean house silhouette paired with AI sparkle accents and an "AI" badge. Instantly communicates AI-powered real estate technology.</p>
+      <div class="row">
+        <div class="logo-container">
+          <img src="enlista_logo_3_house_ai.svg" alt="Enlista Logo 3 - Light">
+        </div>
+        <div class="logo-container dark-preview">
+          <img src="enlista_logo_3_house_ai.svg" alt="Enlista Logo 3 - Dark">
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo 4 -->
+    <div class="card">
+      <span class="card-label">Option 4</span>
+      <h3>Portal Sync</h3>
+      <p>Three fanned bars represent multi-portal syndication — Enlista's core value prop of syncing listings across platforms. The tagline reinforces the workflow.</p>
+      <div class="row">
+        <div class="logo-container">
+          <img src="enlista_logo_4_portal_bars.svg" alt="Enlista Logo 4 - Light">
+        </div>
+        <div class="logo-container dark-preview">
+          <img src="enlista_logo_4_portal_bars.svg" alt="Enlista Logo 4 - Dark">
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo 5 -->
+    <div class="card">
+      <span class="card-label">Option 5</span>
+      <h3>The Badge</h3>
+      <p>A professional circular emblem with a geometric "E" and text cursor — blends authority with tech. Works well for watermarks, stamps, and formal contexts.</p>
+      <div class="row">
+        <div class="logo-container">
+          <img src="enlista_logo_5_badge.svg" alt="Enlista Logo 5 - Light">
+        </div>
+        <div class="logo-container dark-preview">
+          <img src="enlista_logo_5_badge.svg" alt="Enlista Logo 5 - Dark">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

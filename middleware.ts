@@ -24,6 +24,11 @@ export async function middleware(request: NextRequest) {
     }
   )
 
+  // DEV ONLY: skip all auth checks in development
+  if (process.env.NODE_ENV === 'development') {
+    return supabaseResponse
+  }
+
   // Always use getUser() — not getSession() — to verify JWT server-side
   const { data: { user } } = await supabase.auth.getUser()
 

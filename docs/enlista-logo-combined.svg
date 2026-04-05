@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 56" width="720" height="168">
+  <!-- Enlista combined logo: icon + wordmark -->
+
+  <!-- 3×3 grid icon -->
+  <!-- Row 1 -->
+  <rect x="0"  y="0"  width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="20" y="0"  width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="40" y="0"  width="16" height="16" rx="3" fill="#2563EB"/>
+
+  <!-- Row 2 -->
+  <rect x="0"  y="20" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="20" y="20" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="40" y="20" width="16" height="16" rx="3" fill="#DBEAFE"/>
+
+  <!-- Row 3 -->
+  <rect x="0"  y="40" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="20" y="40" width="16" height="16" rx="3" fill="#2563EB"/>
+  <rect x="40" y="40" width="16" height="16" rx="3" fill="#2563EB"/>
+
+  <!-- Wordmark -->
+  <text
+    x="72"
+    y="43"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="36"
+    font-weight="800"
+    letter-spacing="-1.5"
+  ><tspan fill="#0F172A">Enlist</tspan><tspan fill="#2563EB">a</tspan></text>
+</svg>
