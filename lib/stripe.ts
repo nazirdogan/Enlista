@@ -18,6 +18,18 @@ export const PLANS = {
     price: 40,        // USD/month
     credits: 15,      // listings per month
   },
+  plus_annual: {
+    name: "Plus",
+    priceId: process.env.STRIPE_PRICE_PLUS_ANNUAL!,
+    price: 255,       // USD/year ($21.25/mo — 15% off monthly)
+    credits: 5,
+  },
+  pro_annual: {
+    name: "Pro",
+    priceId: process.env.STRIPE_PRICE_PRO_ANNUAL!,
+    price: 408,       // USD/year ($34/mo — 15% off monthly)
+    credits: 15,
+  },
 } as const;
 
 export type PlanKey = keyof typeof PLANS;
