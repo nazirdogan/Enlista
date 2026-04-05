@@ -127,9 +127,8 @@ const pricingPlans = [
     features: [
       "Full AI listing generation",
       "English + Arabic output",
-      "Compact portal version",
-      "Highlight bullets",
-      "WhatsApp & Instagram copy",
+      "Property portal copy (Bayut, PF, Dubizzle)",
+      "Compact listing & highlight bullets",
       "1 listing credit per month",
     ],
   },
@@ -164,6 +163,7 @@ const pricingPlans = [
     badge: "Most popular",
     features: [
       "Everything in Plus",
+      "WhatsApp & Instagram copy",
       "15 listing credits per month",
       "Priority support",
       "Advanced analytics",
@@ -332,7 +332,7 @@ export default function HomePage() {
               Login
             </a>
             <a
-              href="/contact-sales"
+              href="/auth?tab=signup"
               style={{
                 display: "inline-block",
                 background: c.blue,
@@ -345,7 +345,7 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Contact Sales
+              Start free trial
             </a>
           </div>
           {/* Mobile hamburger */}
@@ -414,7 +414,7 @@ export default function HomePage() {
                 Login
               </a>
               <a
-                href="/contact-sales"
+                href="/auth?tab=signup"
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
                   display: "block",
@@ -428,7 +428,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Contact Sales
+                Start free trial
               </a>
             </div>
           </div>
@@ -485,7 +485,7 @@ export default function HomePage() {
               }}
             >
               <a
-                href="/contact-sales"
+                href="/auth?tab=signup"
                 style={{
                   display: "inline-block",
                   background: c.blue,
@@ -497,7 +497,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Contact Sales
+                Start your 14-day free trial
               </a>
             </div>
           </div>
@@ -1222,7 +1222,8 @@ export default function HomePage() {
                   ["Monthly credits",        "1",  "5",  "15", "Unlimited"],
                   ["Extra credit packs",      "✓",  "✓",  "✓",  "✓"],
                   ["English + Arabic output", "✓",  "✓",  "✓",  "✓"],
-                  ["All content formats",     "✓",  "✓",  "✓",  "✓"],
+                  ["Property portal copy",    "✓",  "✓",  "✓",  "✓"],
+                  ["WhatsApp & Instagram",    "—",  "—",  "✓",  "✓"],
                   ["Email support",           "—",  "✓",  "✓",  "✓"],
                   ["Priority support",        "—",  "—",  "✓",  "✓"],
                   ["Advanced analytics",      "—",  "—",  "✓",  "✓"],
@@ -1362,11 +1363,11 @@ export default function HomePage() {
               margin: "0 auto 32px",
             }}
           >
-            Talk to our team to see how Enlista can power your agency&apos;s listings, compliance, and analytics.
+            Sign up in minutes and get 14 days free — no credit card required.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             <a
-              href="/contact-sales"
+              href="/auth?tab=signup"
               style={{
                 display: "inline-block",
                 background: c.blue,
@@ -1379,7 +1380,7 @@ export default function HomePage() {
                 fontFamily: "var(--font-jakarta), sans-serif",
               }}
             >
-              Contact Sales
+              Start your 14-day free trial
             </a>
             <a
               href="/auth"
