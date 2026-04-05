@@ -4,9 +4,14 @@ import { createClient } from "@/lib/supabase/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { plan } = await req.json()
+    const { plan, billing = "monthly" } = await req.json()
 
-    if (!plan || !(plan in PLANS)) {
+    // Resolve to annual variant key when billing=annual
+    const planKey: PlanKey = billing === "annual" && (plan === "plus" || plan === "pro")
+      ? (`${plan}_annual` as PlanKey)
+      : (plan as PlanKey)
+
+    if (!planKey || !(planKey in PLANS)) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 })
     }
 
@@ -27,7 +32,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Agency not found" }, { status: 400 })
     }
 
-    const selectedPlan = PLANS[plan as PlanKey]
+    const selectedPlan = PLANS[planKey]
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
     const session = await stripe.checkout.sessions.create({
@@ -39,6 +44,7 @@ export async function POST(req: NextRequest) {
       subscription_data: {
         metadata: {
           plan,
+          billing,
           agency_id: agency.id,
           plan_amount: String(selectedPlan.price),
           plan_credits: String(selectedPlan.credits),
