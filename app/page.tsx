@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
-import { Check, Zap, ArrowRight, Star, Building2, MessageSquare } from "lucide-react";
+import { Check, Zap, ArrowRight, Star, MessageSquare } from "lucide-react";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
