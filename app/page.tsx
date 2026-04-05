@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Check, Zap, ArrowRight, Star, MessageSquare } from "lucide-react";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -108,8 +111,146 @@ function BentoCard({
   );
 }
 
+// ─── Pricing data ─────────────────────────────────────────────────────────────
+
+const pricingPlans = [
+  {
+    key: "free",
+    name: "Free",
+    tagline: "Try before you commit",
+    priceLabel: "Free",
+    priceSub: "forever",
+    creditsLabel: "1 listing/month",
+    cta: "Get started free",
+    ctaHref: "/auth?tab=signup",
+    highlight: false,
+    features: [
+      "Full AI listing generation",
+      "English + Arabic output",
+      "Property portal copy (Bayut, PF, Dubizzle)",
+      "Compact listing & highlight bullets",
+      "1 listing credit per month",
+    ],
+  },
+  {
+    key: "plus",
+    name: "Plus",
+    tagline: "For active individual agents",
+    priceLabel: "$25",
+    priceSub: "per month",
+    creditsLabel: "5 listings/month",
+    cta: "Start with Plus",
+    ctaHref: null,
+    highlight: false,
+    features: [
+      "Everything in Free",
+      "5 listing credits per month",
+      "Credits reset on the 1st",
+      "Buy extra credits anytime",
+      "Email support",
+    ],
+  },
+  {
+    key: "pro",
+    name: "Pro",
+    tagline: "For high-volume agents",
+    priceLabel: "$40",
+    priceSub: "per month",
+    creditsLabel: "15 listings/month",
+    cta: "Start with Pro",
+    ctaHref: null,
+    highlight: true,
+    badge: "Most popular",
+    features: [
+      "Everything in Plus",
+      "WhatsApp & Instagram copy",
+      "15 listing credits per month",
+      "Priority support",
+      "Advanced analytics",
+      "Early access to new features",
+    ],
+  },
+  {
+    key: "enterprise",
+    name: "Enterprise",
+    tagline: "For brokerages & teams",
+    priceLabel: "Custom",
+    priceSub: "",
+    creditsLabel: "Unlimited listings",
+    cta: "Contact sales",
+    ctaHref: "/contact-sales",
+    highlight: false,
+    features: [
+      "Minimum 10 agents",
+      "Dedicated account manager",
+      "White-label platform option",
+      "Priority AI processing",
+      "Custom onboarding & training",
+      "SLA guarantee",
+      "Admin dashboard & analytics",
+      "Bulk listing management",
+    ],
+  },
+];
+
+const creditPacks = [
+  { key: "credits_5",  label: "5 Credits",  price: "$15", perCredit: "$3.00 per credit" },
+  { key: "credits_10", label: "10 Credits", price: "$25", perCredit: "$2.50 per credit", popular: true },
+  { key: "credits_20", label: "20 Credits", price: "$40", perCredit: "$2.00 per credit" },
+];
+
+const pricingFaqs = [
+  { q: "What counts as one credit?", a: "Each time you click \"Generate\" to produce a listing, one credit is used. Saving or editing an existing listing does not use credits." },
+  { q: "Do unused monthly credits roll over?", a: "Monthly credits reset on the 1st of each month and do not roll over. Extra credits you purchase are permanent — they never expire." },
+  { q: "Can I buy extra credits on any plan?", a: "Yes. Extra credit packs are available on all plans including Free. They stack on top of your monthly allowance." },
+  { q: "What happens when I run out of credits?", a: "You'll see a prompt in the sidebar and when you try to generate. You can immediately purchase a credit pack or upgrade your plan without losing any work." },
+  { q: "What qualifies as Enterprise?", a: "Enterprise is designed for brokerages with 10 or more agents. It includes a custom per-agent rate, a brokerage admin dashboard, and optional white-labelling of the platform." },
+  { q: "Can I switch plans at any time?", a: "Yes. Upgrades take effect immediately. Downgrades take effect at the end of your current billing cycle." },
+];
+
+// ──────────────────────────────────────────────────────────────────────────────
+
 export default function HomePage() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [loadingPack, setLoadingPack] = useState<string | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  async function handlePlanCta(planKey: string) {
+    setLoadingPlan(planKey);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planKey }),
+      });
+      const data = await res.json();
+      if (res.status === 401) {
+        router.push(`/auth?tab=signup&plan=${planKey}`);
+        return;
+      }
+      if (data.url) window.location.href = data.url;
+    } catch { /* ignore */ } finally {
+      setLoadingPlan(null);
+    }
+  }
+
+  async function handleBuyPack(packKey: string) {
+    setLoadingPack(packKey);
+    try {
+      const res = await fetch("/api/stripe/buy-credits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pack: packKey }),
+      });
+      const data = await res.json();
+      if (res.status === 401) { router.push("/auth?tab=signin"); return; }
+      if (data.url) window.location.href = data.url;
+    } catch { /* ignore */ } finally {
+      setLoadingPack(null);
+    }
+  }
   return (
     <div
       className={`${plusJakarta.variable} ${jetbrainsMono.variable}`}
@@ -191,7 +332,7 @@ export default function HomePage() {
               Login
             </a>
             <a
-              href="/contact-sales"
+              href="/auth?tab=signup"
               style={{
                 display: "inline-block",
                 background: c.blue,
@@ -204,7 +345,7 @@ export default function HomePage() {
                 textDecoration: "none",
               }}
             >
-              Contact Sales
+              Start free trial
             </a>
           </div>
           {/* Mobile hamburger */}
@@ -273,7 +414,7 @@ export default function HomePage() {
                 Login
               </a>
               <a
-                href="/contact-sales"
+                href="/auth?tab=signup"
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
                   display: "block",
@@ -287,7 +428,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Contact Sales
+                Start free trial
               </a>
             </div>
           </div>
@@ -344,7 +485,7 @@ export default function HomePage() {
               }}
             >
               <a
-                href="/contact-sales"
+                href="/auth?tab=signup"
                 style={{
                   display: "inline-block",
                   background: c.blue,
@@ -356,7 +497,7 @@ export default function HomePage() {
                   textDecoration: "none",
                 }}
               >
-                Contact Sales
+                Start your 14-day free trial
               </a>
             </div>
           </div>
@@ -849,408 +990,341 @@ export default function HomePage() {
       {/* Pricing */}
       <section
         id="pricing"
-        style={{ padding: "64px 24px", maxWidth: 1280, margin: "0 auto" }}
+        style={{ padding: "80px 24px 0", background: "#F7F8FC" }}
       >
-        <SectionLabel>Pricing</SectionLabel>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            flexWrap: "wrap",
-            gap: 16,
-            marginBottom: 32,
-          }}
-        >
-          <h2
-            style={{
-              fontWeight: 800,
-              fontSize: "clamp(28px, 4vw, 44px)",
-              color: c.dark,
-            }}
-          >
-            Transparent pricing.
+        <div style={{ maxWidth: 1120, margin: "0 auto", paddingBottom: 96 }}>
+
+        {/* Hero */}
+        <div style={{ textAlign: "center", padding: "0 0 56px" }}>
+          <h2 style={{
+            fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 800,
+            color: "#0F172A", lineHeight: 1.15, marginBottom: 16,
+          }}>
+            Pay for what you generate.
             <br />
-            No surprises.
+            <span style={{ color: "#1D4ED8" }}>Nothing more.</span>
           </h2>
-          <p style={{ color: c.muted, maxWidth: 280, fontSize: 13 }}>
-            All plans in AED. Cancel anytime. 7-day free trial included on
-            every tier.
-          </p>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 6,
+            background: "#EFF6FF", border: "1px solid #BFDBFE",
+            borderRadius: 100, padding: "5px 14px",
+          }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8", letterSpacing: "0.04em" }}>
+              CANCEL ANYTIME
+            </span>
+          </div>
         </div>
+
+        {/* Plan cards */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: 16,
+            gap: 20,
+            alignItems: "stretch",
           }}
         >
-          {/* Solo */}
-          <div
-            style={{
-              background: c.white,
-              border: `1.5px solid ${c.border}`,
-              borderRadius: 12,
-              padding: 36,
-            }}
-          >
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: c.muted,
-                marginBottom: 20,
-              }}
-            >
-              Solo
-            </p>
+          {pricingPlans.map((plan) => (
             <div
+              key={plan.key}
               style={{
-                fontWeight: 800,
-                fontSize: 52,
-                lineHeight: 1,
-                color: c.dark,
+                background: plan.highlight ? "linear-gradient(160deg, #1D4ED8 0%, #1e3a8a 100%)" : "#fff",
+                border: plan.highlight ? "none" : "1.5px solid #EAECF0",
+                borderRadius: 20,
+                padding: 28,
+                boxShadow: plan.highlight
+                  ? "0 16px 48px rgba(29,78,216,0.3)"
+                  : "0 2px 12px rgba(0,0,0,0.04)",
+                position: "relative",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              75
-            </div>
-            <p
-              style={{
-                fontSize: 12,
-                color: c.muted,
-                marginBottom: 28,
-                marginTop: 4,
-              }}
-            >
-              AED / month
-            </p>
-            <div style={{ marginBottom: 28 }}>
-              {[
-                { label: "10 active listings", on: true },
-                { label: "AI copy — English", on: true },
-                { label: "Bayut & Property Finder", on: true },
-                { label: "Basic analytics", on: true },
-                { label: "Arabic copy", on: false },
-                { label: "Lead scoring", on: false },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    fontSize: 13,
-                    color: item.on ? c.text : c.muted,
-                    padding: "9px 0",
-                    borderBottom: `1px solid ${c.border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: item.on ? c.green : c.border,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {item.on ? "✓" : "–"}
-                  </span>
-                  {item.label}
+              {plan.badge && (
+                <div style={{
+                  position: "absolute", top: 20, right: 20,
+                  background: "#FDE68A", color: "#92400E",
+                  fontSize: 10, fontWeight: 800, letterSpacing: "0.06em",
+                  padding: "3px 10px", borderRadius: 100,
+                  display: "flex", alignItems: "center", gap: 4,
+                }}>
+                  <Star size={9} style={{ fill: "#92400E" }} />
+                  {plan.badge.toUpperCase()}
                 </div>
-              ))}
-            </div>
-            <a
-              href="/contact-sales"
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "center",
-                border: `1.5px solid ${c.border}`,
-                color: c.text,
-                padding: "10px 24px",
-                fontWeight: 500,
-                fontSize: 13,
-                borderRadius: 6,
-                textDecoration: "none",
-              }}
-            >
-              Contact Sales
-            </a>
-          </div>
+              )}
 
-          {/* Boutique */}
-          <div
-            style={{
-              background: c.white,
-              border: `1.5px solid ${c.border}`,
-              borderRadius: 12,
-              padding: 36,
-            }}
-          >
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: c.muted,
-                marginBottom: 20,
-              }}
-            >
-              Boutique
-            </p>
-            <div
-              style={{
-                fontWeight: 800,
-                fontSize: 52,
-                lineHeight: 1,
-                color: c.dark,
-              }}
-            >
-              120
-            </div>
-            <p
-              style={{
-                fontSize: 12,
-                color: c.muted,
-                marginBottom: 28,
-                marginTop: 4,
-              }}
-            >
-              AED / month
-            </p>
-            <div style={{ marginBottom: 28 }}>
-              {[
-                { label: "50 active listings", on: true },
-                { label: "AI copy — EN + AR", on: true },
-                { label: "All 3 portals", on: true },
-                { label: "Advanced analytics", on: true },
-                { label: "Lead scoring", on: true },
-                { label: "WhatsApp bot", on: false },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    fontSize: 13,
-                    color: item.on ? c.text : c.muted,
-                    padding: "9px 0",
-                    borderBottom: `1px solid ${c.border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: item.on ? c.green : c.border,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {item.on ? "✓" : "–"}
+              {/* Plan header */}
+              <div style={{ marginBottom: 20 }}>
+                <p style={{
+                  fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: plan.highlight ? "rgba(255,255,255,0.55)" : "#9CA3AF", marginBottom: 4,
+                }}>
+                  {plan.name}
+                </p>
+                <p style={{ fontSize: 12, color: plan.highlight ? "rgba(255,255,255,0.5)" : "#6B7280", marginBottom: 16 }}>
+                  {plan.tagline}
+                </p>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                  <span style={{
+                    fontSize: plan.key === "enterprise" ? 26 : 36, fontWeight: 800,
+                    color: plan.highlight ? "#fff" : "#0F172A", lineHeight: 1,
+                  }}>
+                    {plan.priceLabel}
                   </span>
-                  {item.label}
+                  <span style={{ fontSize: 12, color: plan.highlight ? "rgba(255,255,255,0.45)" : "#9CA3AF" }}>
+                    {plan.priceSub}
+                  </span>
                 </div>
-              ))}
-            </div>
-            <a
-              href="/contact-sales"
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "center",
-                border: `1.5px solid ${c.border}`,
-                color: c.text,
-                padding: "10px 24px",
-                fontWeight: 500,
-                fontSize: 13,
-                borderRadius: 6,
-                textDecoration: "none",
-              }}
-            >
-              Contact Sales
-            </a>
-          </div>
+                <div style={{
+                  marginTop: 8, display: "inline-flex", alignItems: "center", gap: 5,
+                  background: plan.highlight ? "rgba(255,255,255,0.1)" : "#F0F9FF",
+                  borderRadius: 6, padding: "4px 10px",
+                }}>
+                  <Zap size={11} color={plan.highlight ? "rgba(255,255,255,0.7)" : "#1D4ED8"} />
+                  <span style={{ fontSize: 12, fontWeight: 600, color: plan.highlight ? "rgba(255,255,255,0.8)" : "#1D4ED8" }}>
+                    {plan.creditsLabel}
+                  </span>
+                </div>
+              </div>
 
-          {/* Agency — Recommended */}
-          <div
-            style={{
-              background: c.dark,
-              border: `1.5px solid ${c.dark}`,
-              borderRadius: 12,
-              padding: 36,
-              color: "white",
-            }}
-          >
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.4)",
-                marginBottom: 20,
-              }}
-            >
-              Agency · Recommended
-            </p>
-            <div
-              style={{
-                fontWeight: 800,
-                fontSize: 52,
-                lineHeight: 1,
-                color: c.blueLight,
-              }}
-            >
-              250
-            </div>
-            <p
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.4)",
-                marginBottom: 28,
-                marginTop: 4,
-              }}
-            >
-              AED / month
-            </p>
-            <div style={{ marginBottom: 28 }}>
-              {[
-                "Unlimited listings",
-                "All portals",
-                "AI copy — EN + AR",
-                "Advanced analytics",
-                "Lead scoring",
-                "WhatsApp bot",
-                "RERA compliance check",
-                "5 team seats",
-              ].map((label) => (
-                <div
-                  key={label}
+              {/* CTA */}
+              {plan.ctaHref ? (
+                <Link
+                  href={plan.ctaHref}
                   style={{
-                    fontSize: 13,
-                    color: "rgba(255,255,255,0.7)",
-                    padding: "9px 0",
-                    borderBottom: "1px solid rgba(255,255,255,0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                    width: "100%", padding: "12px 0", borderRadius: 10, textDecoration: "none",
+                    fontSize: 14, fontWeight: 700,
+                    background: plan.highlight ? "#fff" : plan.key === "free" ? "#0F172A" : "#EFF6FF",
+                    color: plan.highlight ? "#1D4ED8" : plan.key === "free" ? "#fff" : "#1D4ED8",
+                    marginBottom: 24, boxSizing: "border-box",
                   }}
                 >
-                  <span style={{ fontSize: 11, color: c.green, flexShrink: 0 }}>
-                    ✓
-                  </span>
-                  {label}
-                </div>
-              ))}
-            </div>
-            <a
-              href="/contact-sales"
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "center",
-                background: c.blue,
-                color: "white",
-                padding: "10px 24px",
-                fontWeight: 600,
-                fontSize: 13,
-                borderRadius: 6,
-                textDecoration: "none",
-              }}
-            >
-              Contact Sales
-            </a>
-          </div>
+                  {plan.cta}
+                  <ArrowRight size={14} />
+                </Link>
+              ) : (
+                <button
+                  onClick={() => handlePlanCta(plan.key)}
+                  disabled={!!loadingPlan}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                    width: "100%", padding: "12px 0", borderRadius: 10,
+                    fontSize: 14, fontWeight: 700, border: "none", cursor: loadingPlan ? "not-allowed" : "pointer",
+                    background: plan.highlight ? "#fff" : "#EFF6FF",
+                    color: "#1D4ED8",
+                    fontFamily: "inherit",
+                    opacity: loadingPlan && loadingPlan !== plan.key ? 0.5 : 1,
+                    marginBottom: 24,
+                  }}
+                >
+                  {loadingPlan === plan.key ? "Redirecting..." : plan.cta}
+                  <ArrowRight size={14} />
+                </button>
+              )}
 
-          {/* Enterprise */}
-          <div
-            style={{
-              background: c.white,
-              border: `1.5px solid ${c.border}`,
-              borderRadius: 12,
-              padding: 36,
-            }}
-          >
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: c.muted,
-                marginBottom: 20,
-              }}
-            >
-              Enterprise
-            </p>
-            <div
-              style={{
-                fontWeight: 800,
-                fontSize: 52,
-                lineHeight: 1,
-                color: c.dark,
-              }}
-            >
-              Custom
+              {/* Feature list */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+                {plan.features.map((f) => (
+                  <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+                    <div style={{
+                      width: 18, height: 18, borderRadius: 5,
+                      background: plan.highlight ? "rgba(255,255,255,0.15)" : "#EFF6FF",
+                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                    }}>
+                      <Check size={11} color={plan.highlight ? "#fff" : "#1D4ED8"} strokeWidth={2.5} />
+                    </div>
+                    <span style={{ fontSize: 13, color: plan.highlight ? "rgba(255,255,255,0.85)" : "#374151", lineHeight: 1.4 }}>
+                      {f}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
             </div>
-            <p
-              style={{
-                fontSize: 12,
-                color: c.muted,
-                marginBottom: 28,
-                marginTop: 4,
-              }}
-            >
-              Volume pricing
+          ))}
+        </div>
+
+        {/* Credit packs */}
+        <div style={{ marginTop: 72 }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
+            <h2 style={{ fontSize: 26, fontWeight: 800, color: "#0F172A", marginBottom: 8 }}>
+              Need a few more listings?
+            </h2>
+            <p style={{ fontSize: 14, color: "#6B7280" }}>
+              Buy extra credits on any plan — they never expire and stack on top of your monthly allowance.
             </p>
-            <div style={{ marginBottom: 28 }}>
-              {[
-                "Unlimited listings",
-                "Custom integrations",
-                "Full AI suite",
-                "Market analytics",
-                "Dedicated manager",
-                "Custom team seats",
-                "API + SLA",
-              ].map((label) => (
-                <div
-                  key={label}
+          </div>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 16, maxWidth: 700, margin: "0 auto",
+          }}>
+            {creditPacks.map((pack) => (
+              <button
+                key={pack.key}
+                onClick={() => handleBuyPack(pack.key)}
+                disabled={!!loadingPack}
+                style={{
+                  padding: "20px 20px 18px", borderRadius: 16, cursor: loadingPack ? "not-allowed" : "pointer",
+                  border: pack.popular ? "2px solid #1D4ED8" : "1.5px solid #EAECF0",
+                  background: pack.popular ? "#EFF6FF" : "#fff",
+                  fontFamily: "inherit", textAlign: "left",
+                  opacity: loadingPack && loadingPack !== pack.key ? 0.5 : 1,
+                  boxShadow: pack.popular ? "0 4px 20px rgba(29,78,216,0.12)" : "none",
+                }}
+              >
+                {pack.popular && (
+                  <div style={{
+                    fontSize: 9, fontWeight: 800, letterSpacing: "0.08em", color: "#1D4ED8",
+                    background: "#DBEAFE", display: "inline-block",
+                    padding: "2px 8px", borderRadius: 100, marginBottom: 10,
+                  }}>
+                    BEST VALUE
+                  </div>
+                )}
+                <div style={{ fontSize: 18, fontWeight: 800, color: "#0F172A", marginBottom: 2 }}>{pack.label}</div>
+                <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 12 }}>{pack.perCredit}</div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 22, fontWeight: 800, color: "#1D4ED8" }}>{pack.price}</span>
+                  <ArrowRight size={16} color={pack.popular ? "#1D4ED8" : "#9CA3AF"} />
+                </div>
+                {loadingPack === pack.key && (
+                  <p style={{ fontSize: 11, color: "#6B7280", marginTop: 6, textAlign: "center" }}>Redirecting...</p>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Comparison table */}
+        <div style={{ marginTop: 80 }}>
+          <h2 style={{ textAlign: "center", fontSize: 24, fontWeight: 800, color: "#0F172A", marginBottom: 32 }}>
+            Compare plans
+          </h2>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <thead>
+                <tr>
+                  {["Feature", "Free", "Plus", "Pro", "Enterprise"].map((h, i) => (
+                    <th key={h} style={{
+                      padding: "12px 16px", textAlign: i === 0 ? "left" : "center",
+                      fontSize: 12, fontWeight: 700, color: "#6B7280",
+                      borderBottom: "2px solid #EAECF0", whiteSpace: "nowrap",
+                    }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Monthly credits",        "1",  "5",  "15", "Unlimited"],
+                  ["Extra credit packs",      "✓",  "✓",  "✓",  "✓"],
+                  ["English + Arabic output", "✓",  "✓",  "✓",  "✓"],
+                  ["Property portal copy",    "✓",  "✓",  "✓",  "✓"],
+                  ["WhatsApp & Instagram",    "—",  "—",  "✓",  "✓"],
+                  ["Email support",           "—",  "✓",  "✓",  "✓"],
+                  ["Priority support",        "—",  "—",  "✓",  "✓"],
+                  ["Advanced analytics",      "—",  "—",  "✓",  "✓"],
+                  ["Admin dashboard",         "—",  "—",  "—",  "✓"],
+                  ["White-label platform",    "—",  "—",  "—",  "✓"],
+                  ["Dedicated account mgr",   "—",  "—",  "—",  "✓"],
+                  ["SLA guarantee",           "—",  "—",  "—",  "✓"],
+                  ["Portal integrations",     "—",  "—",  "—",  "✓"],
+                ].map(([label, free, plus, pro, ent], i) => (
+                  <tr key={label} style={{ background: i % 2 === 0 ? "#FAFAFA" : "#fff" }}>
+                    <td style={{ padding: "11px 16px", color: "#374151", fontWeight: 500 }}>{label}</td>
+                    {[free, plus, pro, ent].map((val, j) => (
+                      <td key={j} style={{ padding: "11px 16px", textAlign: "center", color: val === "—" ? "#D1D5DB" : val === "✓" ? "#1D4ED8" : "#0F172A", fontWeight: val === "✓" ? 700 : 600 }}>
+                        {val}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+                <tr style={{ background: "#F7F8FC" }}>
+                  <td style={{ padding: "14px 16px", fontWeight: 700, color: "#0F172A" }}>Price</td>
+                  {["Free", "$25/mo", "$40/mo", "Custom"].map((p, i) => (
+                    <td key={i} style={{ padding: "14px 16px", textAlign: "center", fontWeight: 800, color: i === 2 ? "#1D4ED8" : "#0F172A" }}>
+                      {p}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div style={{ marginTop: 80, maxWidth: 680, margin: "80px auto 0" }}>
+          <h2 style={{ textAlign: "center", fontSize: 24, fontWeight: 800, color: "#0F172A", marginBottom: 32 }}>
+            Common questions
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {pricingFaqs.map((faq, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "#fff", border: "1.5px solid #EAECF0",
+                  borderRadius: 12, overflow: "hidden",
+                }}
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   style={{
-                    fontSize: 13,
-                    color: c.text,
-                    padding: "9px 0",
-                    borderBottom: `1px solid ${c.border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
+                    width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "16px 20px", background: "none", border: "none", cursor: "pointer",
+                    fontFamily: "inherit", textAlign: "left",
                   }}
                 >
-                  <span style={{ fontSize: 11, color: c.green, flexShrink: 0 }}>
-                    ✓
-                  </span>
-                  {label}
-                </div>
-              ))}
-            </div>
-            <a
-              href="/contact-sales"
-              style={{
-                display: "block",
-                textAlign: "center",
-                border: `1.5px solid ${c.border}`,
-                color: c.text,
-                padding: "10px 24px",
-                fontWeight: 500,
-                fontSize: 13,
-                borderRadius: 6,
-                textDecoration: "none",
-              }}
-            >
-              Contact Sales
-            </a>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: "#0F172A" }}>{faq.q}</span>
+                  <span style={{
+                    fontSize: 18, color: "#9CA3AF", lineHeight: 1,
+                    transform: openFaq === i ? "rotate(45deg)" : "none",
+                    transition: "transform 0.2s", flexShrink: 0, marginLeft: 12,
+                  }}>+</span>
+                </button>
+                {openFaq === i && (
+                  <div style={{ padding: "0 20px 16px" }}>
+                    <p style={{ fontSize: 13, color: "#6B7280", lineHeight: 1.6, margin: 0 }}>{faq.a}</p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* Enterprise CTA */}
+        <div style={{
+          marginTop: 72, background: "linear-gradient(135deg, #0F1829 0%, #1D3461 100%)",
+          borderRadius: 24, padding: "48px 40px", textAlign: "center",
+        }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: 12, background: "rgba(255,255,255,0.08)",
+            display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px",
+          }}>
+            <MessageSquare size={22} color="#5DA3FF" />
+          </div>
+          <h2 style={{ fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 10 }}>
+            Running a brokerage?
+          </h2>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", maxWidth: 420, margin: "0 auto 28px" }}>
+            Enterprise plans start at 10 agents with a dedicated account manager, white-label options, and custom per-agent pricing.
+          </p>
+          <Link
+            href="/contact-sales"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              background: "#fff", color: "#0F1829",
+              fontSize: 14, fontWeight: 700, padding: "13px 28px", borderRadius: 10,
+              textDecoration: "none",
+            }}
+          >
+            Talk to our team
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+
         </div>
       </section>
 
@@ -1289,11 +1363,11 @@ export default function HomePage() {
               margin: "0 auto 32px",
             }}
           >
-            Talk to our team to see how Enlista can power your agency&apos;s listings, compliance, and analytics.
+            Sign up in minutes and get 14 days free — no credit card required.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             <a
-              href="/contact-sales"
+              href="/auth?tab=signup"
               style={{
                 display: "inline-block",
                 background: c.blue,
@@ -1306,7 +1380,7 @@ export default function HomePage() {
                 fontFamily: "var(--font-jakarta), sans-serif",
               }}
             >
-              Contact Sales
+              Start your 14-day free trial
             </a>
             <a
               href="/auth"

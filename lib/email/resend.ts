@@ -1,6 +1,10 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
+  return _resend
+}
 const FROM = 'Enlista <hello@enlista.io>'
 
 export type EmailPayload =
@@ -35,7 +39,7 @@ export async function sendTransactionalEmail(payload: EmailPayload) {
 
   const html = buildEmailHtml(payload)
 
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await getResend().emails.send({
     from: FROM,
     to: payload.to,
     subject: subjects[payload.type],
@@ -52,7 +56,7 @@ function buildEmailHtml(payload: EmailPayload): string {
 
   switch (payload.type) {
     case 'welcome':
-      return `${base}<h2>Welcome, ${payload.agencyName}!</h2><p>Your 7-day free trial is now active. Generate your first listing at <a href="https://enlista.io/new">enlista.io/new</a>.</p>${footer}`
+      return `${base}<h2>Welcome, ${payload.agencyName}!</h2><p>Your 14-day free trial is now active. Generate your first listing at <a href="https://enlista.io/new">enlista.io/new</a>.</p>${footer}`
     case 'trial_expiry':
       return `${base}<h2>Your trial expires on ${payload.expiresAt}</h2><p>Upgrade now to keep generating listings for ${payload.agencyName}.</p>${footer}`
     case 'payment_failed':

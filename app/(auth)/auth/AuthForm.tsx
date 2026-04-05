@@ -265,12 +265,12 @@ export default function AuthForm() {
             Enlist<span style={{ color: '#1D4ED8' }}>a</span>
           </h1>
           <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
-            {tab === 'signin' ? 'Sign in to your agency account' : 'List it. In Arabic. In 30 seconds.'}
+            {tab === 'signin' ? 'Sign in to your account' : '14-day free trial · No credit card required'}
           </p>
         </div>
 
-        {/* Tab switcher — only show when signup tab is explicitly requested */}
-        {tabParam === 'signup' && (
+        {/* Tab switcher */}
+        {(
           <div style={{
             display: 'flex',
             background: '#F2F4F7',
@@ -581,7 +581,7 @@ export default function AuthForm() {
         {/* Footer toggle */}
         <p style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: '#64748B', marginBottom: 0 }}>
           {tab === 'signin' ? (
-            <>Don&apos;t have an account?{' '}<a href="/contact-sales" style={{ color: '#1D4ED8', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>Contact Sales</a></>
+            <>Don&apos;t have an account?{' '}<button onClick={() => switchTab('signup')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Start free trial</button></>
           ) : (
             <>Already have an account?{' '}<button onClick={() => switchTab('signin')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Sign in</button></>
           )}

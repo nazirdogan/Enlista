@@ -1,5 +1,5 @@
 import { permanentRedirect } from 'next/navigation'
 
 export default function SignupPage() {
-  permanentRedirect('/contact-sales')
+  permanentRedirect('/auth?tab=signup')
 }
