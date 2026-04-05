@@ -216,6 +216,7 @@ export default function HomePage() {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [loadingPack, setLoadingPack] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
   async function handlePlanCta(planKey: string) {
     setLoadingPlan(planKey);
@@ -223,7 +224,7 @@ export default function HomePage() {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planKey }),
+        body: JSON.stringify({ plan: planKey, billing }),
       });
       const data = await res.json();
       if (res.status === 401) {
@@ -1007,11 +1008,59 @@ export default function HomePage() {
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             background: "#EFF6FF", border: "1px solid #BFDBFE",
-            borderRadius: 100, padding: "5px 14px",
+            borderRadius: 100, padding: "5px 14px", marginBottom: 28,
           }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8", letterSpacing: "0.04em" }}>
               CANCEL ANYTIME
             </span>
+          </div>
+
+          {/* Billing toggle */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
+            <button
+              onClick={() => setBilling("monthly")}
+              style={{
+                fontSize: 14, fontWeight: billing === "monthly" ? 700 : 500,
+                color: billing === "monthly" ? "#0F172A" : "#9CA3AF",
+                background: "none", border: "none", cursor: "pointer",
+                fontFamily: "inherit", padding: "2px 4px",
+              }}
+            >
+              Monthly
+            </button>
+            <div
+              onClick={() => setBilling(billing === "monthly" ? "annual" : "monthly")}
+              style={{
+                width: 44, height: 24, borderRadius: 100, cursor: "pointer",
+                background: billing === "annual" ? "#1D4ED8" : "#D1D5DB",
+                position: "relative", transition: "background 0.2s",
+              }}
+            >
+              <div style={{
+                position: "absolute", top: 3, left: billing === "annual" ? 23 : 3,
+                width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+              }} />
+            </div>
+            <button
+              onClick={() => setBilling("annual")}
+              style={{
+                fontSize: 14, fontWeight: billing === "annual" ? 700 : 500,
+                color: billing === "annual" ? "#0F172A" : "#9CA3AF",
+                background: "none", border: "none", cursor: "pointer",
+                fontFamily: "inherit", padding: "2px 4px",
+                display: "flex", alignItems: "center", gap: 8,
+              }}
+            >
+              Annual
+              <span style={{
+                fontSize: 11, fontWeight: 800, color: "#065F46",
+                background: "#D1FAE5", border: "1px solid #6EE7B7",
+                borderRadius: 100, padding: "2px 8px", letterSpacing: "0.03em",
+              }}>
+                SAVE 15%
+              </span>
+            </button>
           </div>
         </div>
 
@@ -1065,17 +1114,41 @@ export default function HomePage() {
                 <p style={{ fontSize: 12, color: plan.highlight ? "rgba(255,255,255,0.5)" : "#6B7280", marginBottom: 16 }}>
                   {plan.tagline}
                 </p>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                  <span style={{
-                    fontSize: plan.key === "enterprise" ? 26 : 36, fontWeight: 800,
-                    color: plan.highlight ? "#fff" : "#0F172A", lineHeight: 1,
-                  }}>
-                    {plan.priceLabel}
-                  </span>
-                  <span style={{ fontSize: 12, color: plan.highlight ? "rgba(255,255,255,0.45)" : "#9CA3AF" }}>
-                    {plan.priceSub}
-                  </span>
-                </div>
+                {/* Price — switches with billing toggle for plus/pro */}
+                {(() => {
+                  const isDiscountable = plan.key === "plus" || plan.key === "pro";
+                  const annualMonthly = plan.key === "plus" ? 21.25 : plan.key === "pro" ? 34 : null;
+                  const showAnnual = billing === "annual" && isDiscountable;
+                  return (
+                    <div>
+                      <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                        <span style={{
+                          fontSize: plan.key === "enterprise" ? 26 : 36, fontWeight: 800,
+                          color: plan.highlight ? "#fff" : "#0F172A", lineHeight: 1,
+                        }}>
+                          {showAnnual ? `$${annualMonthly}` : plan.priceLabel}
+                        </span>
+                        <span style={{ fontSize: 12, color: plan.highlight ? "rgba(255,255,255,0.45)" : "#9CA3AF" }}>
+                          {showAnnual ? "/ mo" : plan.priceSub}
+                        </span>
+                      </div>
+                      {showAnnual && (
+                        <div style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                          <span style={{ fontSize: 12, color: plan.highlight ? "rgba(255,255,255,0.35)" : "#9CA3AF", textDecoration: "line-through" }}>
+                            ${plan.key === "plus" ? "25" : "40"}/mo
+                          </span>
+                          <span style={{
+                            fontSize: 11, fontWeight: 700, color: plan.highlight ? "#6EE7B7" : "#065F46",
+                            background: plan.highlight ? "rgba(110,231,183,0.15)" : "#D1FAE5",
+                            borderRadius: 100, padding: "1px 7px",
+                          }}>
+                            billed ${plan.key === "plus" ? "255" : "408"}/yr
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
                 <div style={{
                   marginTop: 8, display: "inline-flex", alignItems: "center", gap: 5,
                   background: plan.highlight ? "rgba(255,255,255,0.1)" : "#F0F9FF",
