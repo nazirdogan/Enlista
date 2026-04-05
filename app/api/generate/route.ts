@@ -90,11 +90,18 @@ Style rules:
   }
 }
 
-function buildPrompt(data: PropertyData): string {
+function buildPrompt(data: PropertyData, includeAllPlatforms: boolean): string {
   const propertyDescription = buildPropertyDescription(data)
   const tone = data.tone || 'professional'
   const styleContext = getStyleContext(tone)
   const communityTag = data.community?.replace(/\s+/g, '') ?? 'Dubai'
+
+  const socialCopySpec = includeAllPlatforms
+    ? `
+  "whatsapp_text": "WhatsApp-ready broker message (max 150 words). Start with a property emoji, then key specs as emoji-bulleted lines (🛏 🚿 📐 💰), price prominently, then 2-sentence lifestyle or investment pitch, then CTA. Professional broker tone — not salesy.",
+
+  "instagram_caption": "Instagram caption (max 120 words of body text, then hashtags on new lines). Aspirational tone matching the listing style. End body with a CTA. Then add 18-22 relevant hashtags on the next line including #DubaiRealEstate #UAE #${communityTag} #PropertyFinder #Bayut and property-specific tags.",`
+    : ''
 
   return `You are an elite UAE real estate copywriter. You have studied how the top agencies in Dubai write listings — Betterhomes, Allsopp & Allsopp, Engel & Völkers, Espace, Hamptons International, and Provident Estate. You know what works on Bayut and Property Finder.
 
@@ -114,11 +121,7 @@ Generate exactly the following outputs in JSON format. Each output must reflect 
 
   "highlight_bullets": "Key property highlights as a clean bullet list. Format: exactly 6-8 bullet points starting with '•'. Each bullet is a complete fact or USP (e.g. '• Full Marina view from living room and master bedroom', '• 1,247 sq ft BUA across an open-plan layout'). No fluff, no repetition. Suitable for the 'Key Features' section on Bayut/Property Finder.",
 
-  "headline_title": "A pipe-separated listing title card following the Dubai agency convention. Format: [Beds/Type] | [Condition/Status] | [View or Key Feature] | [Location Hook] | [Investment or Lifestyle Angle]. Example: '2BR | Full Marina View | Fully Furnished | Vacant Now | High ROI'. Maximum 5 pipe-separated segments. All caps for each segment. Make it scannable and click-worthy.",
-
-  "whatsapp_text": "WhatsApp-ready broker message (max 150 words). Start with a property emoji, then key specs as emoji-bulleted lines (🛏 🚿 📐 💰), price prominently, then 2-sentence lifestyle or investment pitch, then CTA. Professional broker tone — not salesy.",
-
-  "instagram_caption": "Instagram caption (max 120 words of body text, then hashtags on new lines). Aspirational tone matching the listing style. End body with a CTA. Then add 18-22 relevant hashtags on the next line including #DubaiRealEstate #UAE #${communityTag} #PropertyFinder #Bayut and property-specific tags."
+  "headline_title": "A pipe-separated listing title card following the Dubai agency convention. Format: [Beds/Type] | [Condition/Status] | [View or Key Feature] | [Location Hook] | [Investment or Lifestyle Angle]. Example: '2BR | Full Marina View | Fully Furnished | Vacant Now | High ROI'. Maximum 5 pipe-separated segments. All caps for each segment. Make it scannable and click-worthy.",${socialCopySpec}
 }
 
 Return only valid JSON, no markdown code blocks, no extra text.`
@@ -145,7 +148,7 @@ function getPlanLimit(plan: string): number {
 }
 
 async function checkAndDecrementCredits(userId: string): Promise<
-  | { ok: true; creditsRemaining: number; extraCredits: number }
+  | { ok: true; plan: string; creditsRemaining: number; extraCredits: number }
   | { ok: false; error: string; creditsRemaining: number; extraCredits: number }
 > {
   const db = createAdminClient()
@@ -203,7 +206,7 @@ async function checkAndDecrementCredits(userId: string): Promise<
     return { ok: false, error: 'Failed to update credits', creditsRemaining, extraCredits: agency.extra_credits }
   }
 
-  return { ok: true, creditsRemaining: newMonthly, extraCredits: newExtra }
+  return { ok: true, plan: agency.plan, creditsRemaining: newMonthly, extraCredits: newExtra }
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -259,8 +262,11 @@ export async function POST(request: Request) {
     )
   }
 
+  const userPlan = creditResult.plan
+  const includeAllPlatforms = userPlan === 'pro' || userPlan === 'enterprise'
+
   const client = new Anthropic({ apiKey })
-  const prompt = buildPrompt(body)
+  const prompt = buildPrompt(body, includeAllPlatforms)
 
   try {
     const message = await client.messages.create({
@@ -280,6 +286,12 @@ export async function POST(request: Request) {
       generated = JSON.parse(raw)
     } catch {
       return Response.json({ error: 'Failed to parse AI response' }, { status: 500 })
+    }
+
+    // Enforce platform gating — strip social copy for free/plus regardless of what AI returned
+    if (!includeAllPlatforms) {
+      delete generated.whatsapp_text
+      delete generated.instagram_caption
     }
 
     const listing = {

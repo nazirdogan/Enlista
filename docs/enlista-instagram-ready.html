@@ -218,6 +218,15 @@ footer{background:var(--ink);padding:24px 48px;display:flex;justify-content:spac
 .ft-logo{font-size:15px;font-weight:800;color:#fff;}
 .ft-logo span{color:var(--blu);}
 .ft-note{font-size:11px;color:rgba(255,255,255,.3);}
+
+/* ── DOWNLOAD BUTTON ──────────────────────────────*/
+.dl-btn{background:var(--ink);color:#fff;border:none;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;letter-spacing:.04em;margin-top:10px;width:100%;}
+.dl-btn:hover{background:#1e40af;}
+.dl-btn:disabled{opacity:.55;cursor:not-allowed;}
+.dl-btn.done{background:var(--green);}
+#modal-dl{position:absolute;top:-44px;left:0;background:var(--blue);border:none;color:#fff;font-size:13px;font-weight:600;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:inherit;letter-spacing:.03em;transition:background .15s;}
+#modal-dl:hover{background:#1e40af;}
+#modal-dl:disabled{opacity:.6;cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -231,9 +240,9 @@ footer{background:var(--ink);padding:24px 48px;display:flex;justify-content:spac
 </nav>
 
 <div class="instructions">
-  <div class="inst-item"><div class="inst-num">1</div> Click any slide to view it full-size (1080×1080) — then screenshot it</div>
-  <div class="inst-item"><div class="inst-num">2</div> Click <strong style="color:#fff;">Copy Caption</strong> to copy the Instagram caption to your clipboard</div>
-  <div class="inst-item"><div class="inst-num">3</div> Paste caption + hashtags directly into Instagram</div>
+  <div class="inst-item"><div class="inst-num">1</div> Click <strong style="color:#fff;">⬇ Download Slides</strong> under any post to save each slide as a 1080×1080 PNG</div>
+  <div class="inst-item"><div class="inst-num">2</div> Click any slide → view full size → <strong style="color:#fff;">⬇ Download</strong> that individual slide</div>
+  <div class="inst-item"><div class="inst-num">3</div> Click <strong style="color:#fff;">Copy Caption</strong> then paste into Instagram</div>
 </div>
 
 <main id="app"></main>
@@ -242,8 +251,9 @@ footer{background:var(--ink);padding:24px 48px;display:flex;justify-content:spac
 <div id="modal-overlay" onclick="closeModal(event)">
   <div id="modal-wrap">
     <button id="modal-close" onclick="closeModal()">✕ Close</button>
+    <button id="modal-dl" onclick="downloadModalSlide()">⬇ Download</button>
     <div id="modal-stage"></div>
-    <div id="modal-hint">Screenshot with ⌘+Shift+4 (Mac) or Win+Shift+S (Windows)</div>
+    <div id="modal-hint">Or screenshot with ⌘+Shift+4 (Mac) · Win+Shift+S (Windows)</div>
   </div>
 </div>
 
@@ -252,6 +262,7 @@ footer{background:var(--ink);padding:24px 48px;display:flex;justify-content:spac
   <div class="ft-note">30 Instagram Posts · Ready to Post</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -273,6 +284,31 @@ function statusList(items){
 const READY_LIST = (items) => `<div class="s-status-list">${items.map(([icon,label])=>`<div class="s-status"><div class="dot-live"></div><span>${label}</span></div>`).join('')}</div>`;
 
 const POSTS = [
+// ═══════════════════════════════════════════════════════════════════
+// LAUNCH ANNOUNCEMENT
+// ═══════════════════════════════════════════════════════════════════
+{
+  section: 'Launch Announcement',
+  id:'00', title:'Enlista is live. — The AI listing platform for UAE brokers. 14-day free trial at enlista.io.',
+  badges:[['sta','Static'],['fea','Launch']],
+  caption:`Enlista is live.
+
+Speak your property details. In under 60 seconds you have:
+→ Full English listing (Property Finder + Dubizzle)
+→ Full Arabic listing (Bayut) — written natively, not translated
+→ WhatsApp message — ready to send
+→ Instagram caption — ready to post
+
+All ready to copy and paste. No writing. No translating.
+
+14 days free. No credit card.
+
+enlista.io`,
+  hashtags:'#Enlista #DubaiRealEstate #UAEBroker #Proptech #AIListing #ListingAutomation #DubaiAgent #PropertyFinder #Bayut #Dubizzle #RealEstateDubai #DubaiLaunch',
+  slides:[
+    { theme:'light', html:`<div style="display:flex;justify-content:center;margin-bottom:24px;">${BRAND_LOGO}</div><div class="s-content" style="align-items:center;text-align:center;justify-content:center;gap:0;"><div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;">NOW LIVE</div><div style="font-size:32px;font-weight:800;line-height:1.15;color:var(--ink);letter-spacing:-.02em;margin-bottom:18px;">Bilingual listing copy.<br>Ready to paste.<br>Under 60 seconds.</div><div style="background:#EFF6FF;border-radius:12px;padding:13px 28px;margin-bottom:10px;"><span style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.01em;">enlista.io</span></div><div style="background:var(--blue);border-radius:8px;padding:7px 18px;"><span style="font-size:11px;font-weight:700;color:#fff;letter-spacing:.07em;">14-DAY FREE TRIAL</span></div></div>${foot()}` }
+  ]
+},
 // ═══════════════════════════════════════════════════════════════════
 // SECTION 1 — HOW IT WORKS
 // ═══════════════════════════════════════════════════════════════════
@@ -346,7 +382,7 @@ Swipe through to see exactly what it does, then start a free 14-day trial — li
   hashtags:'#UAE #DubaiRealEstate #Proptech #AIRealEstate #DubaiBroker #Bayut #PropertyFinder #Dubizzle #RERA #ListingPlatform #Enlista #DubaiProperty #RealEstateTech',
   slides:[
     { theme:'dark', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">What Is Enlista?</div><div class="s-h1">"Say it once. Get everything ready in under a minute."</div><div class="s-body">Here's the platform making it happen. →</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Problem</div><div class="s-h2">Writing one listing manually in Dubai:</div><div class="s-items"><div class="s-item">✏️ Write EN copy: <strong>40 min</strong></div><div class="s-item">🌐 Translate to Arabic: <strong>30 min</strong></div><div class="s-item">📤 Reformat for 3 portals: <strong>60 min</strong></div><div class="s-item">✅ RERA compliance check: <strong>24 min</strong></div></div><div class="s-stat" style="font-size:36px;color:var(--amber);margin-top:12px;">2 hrs 34 min</div><div class="s-stat-sub" style="color:var(--amber);">Before you've even posted once.</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Problem</div><div class="s-h2">Writing one listing manually in Dubai:</div><div class="s-items"><div class="s-item">✏️ Write EN copy: <strong>30 min</strong></div><div class="s-item">🌐 Translate to Arabic: <strong>20 min</strong></div><div class="s-item">📤 Reformat for 3 portals: <strong>30 min</strong></div><div class="s-item">✅ RERA compliance check: <strong>10 min</strong></div></div><div class="s-stat" style="font-size:36px;color:var(--amber);margin-top:12px;">Up to 90 min</div><div class="s-stat-sub" style="color:var(--amber);">Before you've even posted once.</div></div>${foot()}` },
     { theme:'light', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Solution</div><div class="s-h2">Speak. Enlista generates everything. You paste it.</div><div class="s-items"><div class="s-item">→ Speak or type your property details (15 seconds)</div><div class="s-item">→ AI writes bilingual EN + AR copy (seconds)</div><div class="s-item">→ WhatsApp message + Instagram caption generated too</div><div class="s-item">→ Copy. Paste. Post. All ready in under 60 seconds.</div></div></div>${foot()}` },
     { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Output — Bilingual Copy</div><div class="s-h2">One input. Two listings. Both ready to paste.</div><div class="s-items"><div class="s-item"><strong>English listing →</strong> Professional copy for Property Finder and Dubizzle. Ready to paste.</div><div class="s-item"><strong>Arabic listing →</strong> Native-quality copy for Bayut. Written fresh, not translated. Ready to paste.</div></div></div>${foot()}` },
     { theme:'light', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Output — 5 Channels Ready</div><div class="s-h2">One voice input generates everything:</div>${READY_LIST([['✓','Bayut listing (Arabic)'],['✓','Property Finder listing (English)'],['✓','Dubizzle listing (English)'],['✓','WhatsApp message'],['✓','Instagram caption']])}</div>${foot()}` },
@@ -360,9 +396,9 @@ Swipe through to see exactly what it does, then start a free 14-day trial — li
   section: 'Section 2 — Pain Points',
   id:'05', title:'The true cost of writing listing copy manually in Dubai (we broke it down minute by minute).',
   badges:[['car','Carousel · 6 slides'],['pai','Pain Point']],
-  caption:`We timed every step. Writing and preparing a single property listing in Dubai manually takes 2 hours and 34 minutes.
+  caption:`We broke it down step by step. Writing and preparing a single property listing in Dubai manually takes up to 90 minutes.
 
-If you're listing 20 properties a month, that's 50+ hours spent writing copy, translating it, reformatting it for each portal, and checking compliance. Every month.
+If you're listing 20 properties a month, that's up to 30 hours spent writing copy, translating it, reformatting it for each portal, and checking compliance. Every month.
 
 With Enlista, you speak the details and have everything ready to paste in under 60 seconds. No writing. No translating. Just paste.
 
@@ -371,20 +407,20 @@ How many hours a month is manual listing copy costing your agency?
 → 14-day free trial. Link in bio.`,
   hashtags:'#DubaiRealEstate #UAEBroker #RealEstateAgent #ListingTips #DubaiProperty #Proptech #RERA #ManualListing #Enlista #PropertyFinder #Bayut #DubaiAgency',
   slides:[
-    { theme:'dark', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The True Cost of Manual Listing</div><div class="s-h1">"We timed it."</div><div class="s-stat" style="color:#FBBF24;font-size:56px;">2h 34min</div><div class="s-body">For one listing. Swipe to see where the time goes →</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 1</div><div class="s-h2">Write English copy: <strong style="color:var(--amber);">40 minutes</strong></div><div class="s-body">Writing a full property description from scratch. Getting the headline right. Finding the balance between detail and readability. Doing it on your phone between viewings. 40 minutes.</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 2</div><div class="s-h2">Translate to Arabic: <strong style="color:var(--amber);">30 minutes</strong></div><div class="s-body">Either you do it yourself and hope it reads well, use Google Translate (it doesn't read well), or wait for someone bilingual to help. 30 minutes — and the result is usually poor quality Arabic that loses you buyers.</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 3</div><div class="s-h2">Reformat for 3 portals: <strong style="color:var(--amber);">60 minutes</strong></div><div class="s-body">Log into Bayut. Copy, format, paste. Log into Property Finder. Reformat, paste again. Log into Dubizzle. Reformat differently. Each portal has its own field requirements. 60 minutes per listing.</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 4</div><div class="s-h2">RERA compliance check: <strong style="color:var(--amber);">24 minutes</strong></div><div class="s-body">Verify the DLD permit number. Check agent licence expiry. Cross-reference portal requirements. Get it wrong and the listing gets suspended — often at 11pm on a Friday. 24 minutes of anxiety per listing.</div></div>${foot()}` },
-    { theme:'green-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Enlista Way</div><div class="s-h2">All of the above → <strong style="color:var(--green);">ready to paste in under 60 seconds ✓</strong></div><div class="s-body" style="margin-bottom:12px;">Speak the details. Get English copy, Arabic copy, WhatsApp message and Instagram caption — all ready. If you list 20 properties a month, that's <strong>50 hours of writing back in your hands.</strong></div><div class="s-stat" style="font-size:40px;">50 hrs</div><div class="s-stat-sub">freed up per agent every month</div></div>${foot()}` }
+    { theme:'dark', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The True Cost of Manual Listing</div><div class="s-h1">"We broke it down."</div><div class="s-stat" style="color:#FBBF24;font-size:56px;">90 min</div><div class="s-body">Up to 90 minutes for one listing. Swipe to see where the time goes →</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 1</div><div class="s-h2">Write English copy: <strong style="color:var(--amber);">30 minutes</strong></div><div class="s-body">Writing a full property description from scratch. Getting the headline right. Finding the balance between detail and readability. Doing it on your phone between viewings. 30 minutes.</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 2</div><div class="s-h2">Translate to Arabic: <strong style="color:var(--amber);">20 minutes</strong></div><div class="s-body">Either you do it yourself and hope it reads well, use Google Translate (it doesn't read well), or wait for someone bilingual to help. 20 minutes — and the result is usually poor quality Arabic that loses you buyers.</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 3</div><div class="s-h2">Reformat for 3 portals: <strong style="color:var(--amber);">30 minutes</strong></div><div class="s-body">Log into Bayut. Copy, format, paste. Log into Property Finder. Reformat, paste again. Log into Dubizzle. Reformat differently. Each portal has its own field requirements. 30 minutes per listing.</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">⏱ Step 4</div><div class="s-h2">RERA compliance check: <strong style="color:var(--amber);">10 minutes</strong></div><div class="s-body">Verify the DLD permit number. Check agent licence expiry. Cross-reference portal requirements. Get it wrong and the listing gets suspended — often at 11pm on a Friday. 10 minutes of anxiety per listing.</div></div>${foot()}` },
+    { theme:'green-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Enlista Way</div><div class="s-h2">All of the above → <strong style="color:var(--green);">ready to paste in under 60 seconds ✓</strong></div><div class="s-body" style="margin-bottom:12px;">Speak the details. Get English copy, Arabic copy, WhatsApp message and Instagram caption — all ready. If you list 20 properties a month, that's <strong>up to 30 hours of writing back in your hands.</strong></div><div class="s-stat" style="font-size:40px;">30 hrs</div><div class="s-stat-sub">freed up per agent every month</div></div>${foot()}` }
   ]
 },
 {
-  id:'06', title:'Your competitor had listing copy ready 2 hours before you did. Same property. Different workflow.',
+  id:'06', title:'Your competitor had listing copy ready 90 minutes before you did. Same property. Different workflow.',
   badges:[['sta','Static'],['pai','Pain Point']],
   caption:`The broker whose copy is ready first pastes it first. The listing that goes live first gets the first enquiry. Every time.
 
-In Dubai's market, buyers searching right now are ready to act. If your competitor has their copy written and pasted into Bayut two hours before you finish yours — that enquiry goes to them. Same property. Better workflow wins.
+In Dubai's market, buyers searching right now are ready to act. If your competitor has their copy written and pasted into Bayut 90 minutes before you finish yours — that enquiry goes to them. Same property. Better workflow wins.
 
 Enlista has your listing copy ready to paste in under 60 seconds. The enquiry comes to you.
 
@@ -609,7 +645,7 @@ You close the deal. Enlista handles the inbox.
   badges:[['car','Carousel · 5 slides'],['spd','Speed']],
   caption:`Same agency. Same number of listings. One week manual, one week Enlista.
 
-Week 1 manual: 25 hours of writing, translating, formatting, and fixing compliance errors for 10 listings.
+Week 1 manual: up to 15 hours of writing, translating, formatting, and fixing compliance errors for 10 listings.
 
 Week 2 with Enlista: under 50 minutes to have all 10 listings' copy ready to paste — bilingual, RERA-compliant, formatted for each portal.
 
@@ -619,10 +655,10 @@ The maths make the decision for you.
   hashtags:'#DubaiRealEstate #UAEAgency #RealEstateEfficiency #Proptech #ListingAutomation #DubaiBroker #Enlista #WorkSmart #RealEstateDubai',
   slides:[
     { theme:'dark', html:`${BRAND_LOGO}<div class="s-content" style="align-items:center;text-align:center;"><div class="s-h1">"Week 1: Manual.<br>Week 2: Enlista."</div><div class="s-body">Same agency. Same 10 listings.<br>Very different story.</div></div>${foot()}` },
-    { theme:'red-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Week 1 — Manual Workflow</div><div class="s-items"><div class="s-item">10 listings' copy written</div><div class="s-item">Time spent writing: <strong style="color:var(--red);">25 hours</strong></div><div class="s-item">Listings needing rewrite: <strong style="color:var(--red);">3 (compliance errors)</strong></div><div class="s-item">Avg time from mandate to copy ready: <strong style="color:var(--red);">2 hr 34 min</strong></div><div class="s-item">Arabic copy written: <strong style="color:var(--red);">0</strong></div><div class="s-item">WhatsApp messages written: <strong style="color:var(--red);">0</strong></div></div></div>${foot()}` },
+    { theme:'red-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Week 1 — Manual Workflow</div><div class="s-items"><div class="s-item">10 listings' copy written</div><div class="s-item">Time spent writing: <strong style="color:var(--red);">up to 15 hours</strong></div><div class="s-item">Listings needing rewrite: <strong style="color:var(--red);">3 (compliance errors)</strong></div><div class="s-item">Avg time from mandate to copy ready: <strong style="color:var(--red);">up to 90 min</strong></div><div class="s-item">Arabic copy written: <strong style="color:var(--red);">0</strong></div><div class="s-item">WhatsApp messages written: <strong style="color:var(--red);">0</strong></div></div></div>${foot()}` },
     { theme:'green-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Week 2 — With Enlista</div><div class="s-items"><div class="s-item">10 listings' copy generated</div><div class="s-item ok">Total time: <strong>Under 50 minutes ✓</strong></div><div class="s-item ok">Compliance issues: <strong>0 — checked automatically ✓</strong></div><div class="s-item ok">Time per listing: <strong>under 4 min ✓</strong></div><div class="s-item ok">Arabic listings generated: <strong>10 ✓</strong></div><div class="s-item ok">WhatsApp messages generated: <strong>10 ✓</strong></div></div></div>${foot()}` },
-    { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Numbers Side by Side</div><div class="s-vs"><div class="s-vs-row"><span class="s-vs-old">25 hours writing</span><span class="s-vs-arr">→</span><span class="s-vs-new">50 min ✓</span></div><div class="s-vs-row"><span class="s-vs-old">3 compliance rewrites</span><span class="s-vs-arr">→</span><span class="s-vs-new">0 errors ✓</span></div><div class="s-vs-row"><span class="s-vs-old">2h 34m per listing</span><span class="s-vs-arr">→</span><span class="s-vs-new">under 4 min ✓</span></div><div class="s-vs-row"><span class="s-vs-old">0 Arabic listings</span><span class="s-vs-arr">→</span><span class="s-vs-new">10 bilingual ✓</span></div><div class="s-vs-row"><span class="s-vs-old">0 WhatsApp messages</span><span class="s-vs-arr">→</span><span class="s-vs-new">10 ready to send ✓</span></div></div></div>${foot()}` },
-    { theme:'light', html:`${BRAND_LOGO}<div class="s-content" style="align-items:center;text-align:center;"><div class="s-eyebrow">What 25 Hours Back Buys You</div><div class="s-items" style="text-align:left;"><div class="s-item">More viewings booked and attended</div><div class="s-item">More time with high-intent leads</div><div class="s-item">More follow-up calls made</div><div class="s-item">More deals closed</div></div><div class="s-stat" style="font-size:26px;margin-top:14px;">10 listings. Under 50 minutes.<br>That's week one with Enlista.</div></div>${foot()}` }
+    { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Numbers Side by Side</div><div class="s-vs"><div class="s-vs-row"><span class="s-vs-old">up to 15 hours writing</span><span class="s-vs-arr">→</span><span class="s-vs-new">50 min ✓</span></div><div class="s-vs-row"><span class="s-vs-old">3 compliance rewrites</span><span class="s-vs-arr">→</span><span class="s-vs-new">0 errors ✓</span></div><div class="s-vs-row"><span class="s-vs-old">up to 90 min per listing</span><span class="s-vs-arr">→</span><span class="s-vs-new">under 4 min ✓</span></div><div class="s-vs-row"><span class="s-vs-old">0 Arabic listings</span><span class="s-vs-arr">→</span><span class="s-vs-new">10 bilingual ✓</span></div><div class="s-vs-row"><span class="s-vs-old">0 WhatsApp messages</span><span class="s-vs-arr">→</span><span class="s-vs-new">10 ready to send ✓</span></div></div></div>${foot()}` },
+    { theme:'light', html:`${BRAND_LOGO}<div class="s-content" style="align-items:center;text-align:center;"><div class="s-eyebrow">What 15 Hours Back Buys You</div><div class="s-items" style="text-align:left;"><div class="s-item">More viewings booked and attended</div><div class="s-item">More time with high-intent leads</div><div class="s-item">More follow-up calls made</div><div class="s-item">More deals closed</div></div><div class="s-stat" style="font-size:26px;margin-top:14px;">10 listings. Under 50 minutes.<br>That's week one with Enlista.</div></div>${foot()}` }
   ]
 },
 {
@@ -643,21 +679,21 @@ That's what ready-before-they-leave-the-office looks like.
   ]
 },
 {
-  id:'20', title:'If you list 20 properties a month manually — you spend 50 hours writing copy. Here\'s the maths.',
+  id:'20', title:'If you list 20 properties a month manually — you spend up to 30 hours writing copy. Here\'s the maths.',
   badges:[['car','Carousel · 4 slides'],['spd','Speed'],['pai','Pain Point']],
   caption:`Nobody talks about the true cost of writing listing copy manually in Dubai. So we ran the numbers.
 
-20 listings a month — not unusual for an active Dubai broker — costs over 50 hours of writing, translating, and reformatting. That's more than a full working week. Every month. Before you've made a single call.
+20 listings a month — not unusual for an active Dubai broker — costs up to 30 hours of writing, translating, and reformatting. That's most of a working week. Every month. Before you've made a single call.
 
 With Enlista, those 20 listings take under 20 minutes to have all copy ready to paste.
 
 → Free 14-day trial. No card needed. Link in bio.`,
   hashtags:'#DubaiRealEstate #RealEstateROI #UAEBroker #Proptech #DubaiAgent #AdminTime #Enlista #ListingAutomation #RealEstateEfficiency',
   slides:[
-    { theme:'dark', html:`${BRAND_LOGO}<div class="s-content" style="align-items:center;text-align:center;"><div class="s-body" style="color:rgba(255,255,255,.6);font-size:15px;margin-bottom:8px;">20 listings × 2h 34min writing each =</div><div class="s-stat" style="font-size:72px;color:#60A5FA;">50 hrs</div><div class="s-body">of copy-writing every month. What else could you do with that time?</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Per Listing — Manual Writing Time</div><div class="s-items"><div class="s-item">✏️ EN listing copy: <strong>40 min</strong></div><div class="s-item">🌐 Arabic translation: <strong>30 min</strong></div><div class="s-item">📋 Reformat for 3 portals: <strong>60 min</strong></div><div class="s-item">✅ RERA check: <strong>24 min</strong></div></div><div class="s-stat" style="font-size:40px;color:var(--amber);margin-top:12px;">154 min</div><div class="s-stat-sub" style="color:var(--amber);">× 20 listings = 51 hrs/month writing</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">In AED</div><div class="s-h2">If a senior agent costs AED 200/hr:</div><div class="s-stat" style="color:var(--amber);font-size:36px;">AED 10,200</div><div class="s-stat-sub" style="color:var(--amber);">per agent per month — just in copy-writing time</div><div class="s-body" style="margin-top:12px;">Multiply by your team size. That's not a workflow problem. <strong>That's a cost problem.</strong></div></div>${foot()}` },
-    { theme:'green-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">With Enlista</div><div class="s-h2">20 listings = 20 voice inputs. All copy ready in under 20 minutes.</div><div class="s-vs"><div class="s-vs-row"><span class="s-vs-old">51 hrs writing</span><span class="s-vs-arr">→</span><span class="s-vs-new">~20 min ✓</span></div><div class="s-vs-row"><span class="s-vs-old">AED 10,200/mo</span><span class="s-vs-arr">→</span><span class="s-vs-new">~AED 0 ✓</span></div></div><div class="s-body" style="margin-top:16px;font-weight:700;font-size:15px;">What would 50 extra hours per agent mean for your agency?</div></div>${foot()}` }
+    { theme:'dark', html:`${BRAND_LOGO}<div class="s-content" style="align-items:center;text-align:center;"><div class="s-body" style="color:rgba(255,255,255,.6);font-size:15px;margin-bottom:8px;">20 listings × up to 90 min each =</div><div class="s-stat" style="font-size:72px;color:#60A5FA;">30 hrs</div><div class="s-body">of copy-writing every month. What else could you do with that time?</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Per Listing — Manual Writing Time</div><div class="s-items"><div class="s-item">✏️ EN listing copy: <strong>30 min</strong></div><div class="s-item">🌐 Arabic translation: <strong>20 min</strong></div><div class="s-item">📋 Reformat for 3 portals: <strong>30 min</strong></div><div class="s-item">✅ RERA check: <strong>10 min</strong></div></div><div class="s-stat" style="font-size:40px;color:var(--amber);margin-top:12px;">90 min</div><div class="s-stat-sub" style="color:var(--amber);">× 20 listings = up to 30 hrs/month writing</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">In AED</div><div class="s-h2">If a senior agent costs AED 200/hr:</div><div class="s-stat" style="color:var(--amber);font-size:36px;">AED 6,000</div><div class="s-stat-sub" style="color:var(--amber);">per agent per month — just in copy-writing time</div><div class="s-body" style="margin-top:12px;">Multiply by your team size. That's not a workflow problem. <strong>That's a cost problem.</strong></div></div>${foot()}` },
+    { theme:'green-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">With Enlista</div><div class="s-h2">20 listings = 20 voice inputs. All copy ready in under 20 minutes.</div><div class="s-vs"><div class="s-vs-row"><span class="s-vs-old">30 hrs writing</span><span class="s-vs-arr">→</span><span class="s-vs-new">~20 min ✓</span></div><div class="s-vs-row"><span class="s-vs-old">AED 6,000/mo</span><span class="s-vs-arr">→</span><span class="s-vs-new">~AED 0 ✓</span></div></div><div class="s-body" style="margin-top:16px;font-weight:700;font-size:15px;">What would 30 extra hours per agent mean for your agency?</div></div>${foot()}` }
   ]
 },
 // ═══════════════════════════════════════════════════════════════════
@@ -727,7 +763,7 @@ Wherever your agency fits — there's an Enlista workflow for it.
   hashtags:'#DubaiRealEstate #UAEAgency #Proptech #DubaiAgent #Enlista #DubaiProperty #ArabicRealEstate #PropertyFinder #Bayut',
   slides:[
     { theme:'light', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">5 Real Use Cases</div><div class="s-h1">"A solo broker. A boutique team. A 50-agent firm."</div><div class="s-body">Here's how each one uses Enlista. And what they all have in common. →</div></div>${foot()}` },
-    { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Solo Broker</div><div class="s-h2">Independent · 25 listings/month · Works alone</div><div class="s-body"><strong>Challenge:</strong> Writing 2.5 hrs per listing means no time left to close.<br><br><strong>How:</strong> Speaks listings from the car between viewings. Copy ready before he parks.<br><br><strong>Result:</strong> 25 listings/month with no admin support.</div></div>${foot()}` },
+    { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Solo Broker</div><div class="s-h2">Independent · 25 listings/month · Works alone</div><div class="s-body"><strong>Challenge:</strong> Up to 90 min per listing means no time left to close.<br><br><strong>How:</strong> Speaks listings from the car between viewings. Copy ready before he parks.<br><br><strong>Result:</strong> 25 listings/month with no admin support.</div></div>${foot()}` },
     { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Boutique Agency</div><div class="s-h2">5-person team · Arabic-buyer specialist</div><div class="s-body"><strong>Challenge:</strong> Target clients read Arabic first. Their previous Arabic copy (Google Translate) was costing them enquiries.<br><br><strong>How:</strong> Native AR copy generated automatically. Ready to paste into Bayut in seconds.<br><br><strong>Result:</strong> Significantly higher Arabic enquiry rate within 60 days.</div></div>${foot()}` },
     { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Mid-Size Firm</div><div class="s-h2">12 agents · Prior RERA compliance issues</div><div class="s-body"><strong>Challenge:</strong> Two suspensions in Q3 caused 72+ hours of listings being down.<br><br><strong>How:</strong> Auto-compliance check on every listing before the copy is used anywhere.<br><br><strong>Result:</strong> Zero RERA flags in 6 months.</div></div>${foot()}` },
     { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">The Off-Plan Specialist</div><div class="s-h2">Developer-focused · Launch-day speed critical</div><div class="s-body"><strong>Challenge:</strong> When a developer releases new units, being first to post is everything. Manual writing takes hours.<br><br><strong>How:</strong> Copy for all 5 channels ready in under a minute of the release announcement.<br><br><strong>Result:</strong> Listings pasted and live before competitors finish writing.</div></div>${foot()}` },
@@ -824,7 +860,7 @@ Speak the details. Have everything ready to paste in under 60 seconds.
   slides:[
     { theme:'light', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">🎭 Every Dubai Broker Has Lived This</div><div class="s-h1">"The 7 stages of writing a listing manually in Dubai."</div><div class="s-body">Stop us when it gets relatable. →</div></div>${foot()}` },
     { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Stage 1</div><div class="s-h2">The Wait</div><div class="s-body">"The photographer said 20 minutes. It's been 2 hours. The client is calling to ask when the listing will be up."<br><br>Your listing copy: not started.</div></div>${foot()}` },
-    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Stage 2</div><div class="s-h2">The Write</div><div class="s-body">"You open a Google Doc in the back of an Uber. You write the English description between speed bumps in JBR. 40 minutes of your life you are not getting back."</div></div>${foot()}` },
+    { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Stage 2</div><div class="s-h2">The Write</div><div class="s-body">"You open a Google Doc in the back of an Uber. You write the English description between speed bumps in JBR. 30 minutes of your life you are not getting back."</div></div>${foot()}` },
     { theme:'amber-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Stage 3</div><div class="s-h2">The Translate</div><div class="s-body">"You paste the English into Google Translate and switch to Arabic. The output reads like a legal document. You decide to go with it anyway."<br><br>You really shouldn't.</div></div>${foot()}` },
     { theme:'red-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Stage 4</div><div class="s-h2">The Paste — Part 1</div><div class="s-body">"You log into Bayut to paste the listing. You fill in 23 fields. On field 17 you realise the permit number you copied expired in February."<br><br>You start over.</div></div>${foot()}` },
     { theme:'red-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Stage 5</div><div class="s-h2">The Repeat</div><div class="s-body">"Property Finder has different fields. Dubizzle has different fields again. You have now spent 90 minutes pasting the same listing into three portals with three different form structures."</div></div>${foot()}` },
@@ -847,7 +883,7 @@ The result: more time with buyers. More viewings. More closes.
   hashtags:'#DubaiRealEstate #UAEBroker #DubaiAgent #ClosingDeals #Proptech #Enlista #ListingAutomation #RealEstateDubai #WorkSmart #PropertyFinder #Bayut #Dubizzle',
   slides:[
     { theme:'dark', html:`${BRAND_LOGO}<div class="s-content" style="text-align:center;align-items:center;"><div class="s-h1">"Stop writing listings."<br>"Start closing deals."</div><div class="s-body" style="margin-top:12px;">Here's what your day looks like when the copy writes itself.</div></div>${foot()}` },
-    { theme:'red-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Your 8-hour day — Writing Manually</div><div class="s-items"><div class="s-item">✏️ Writing + translating copy: <strong>2.5 hrs</strong></div><div class="s-item">📋 Reformatting for each portal: <strong>1.5 hrs</strong></div><div class="s-item">✅ Compliance checks and fixes: <strong>0.75 hrs</strong></div><div class="s-item">📞 Client calls and viewings: <strong style="color:var(--red);">3.25 hrs</strong></div></div><div class="s-stat" style="font-size:30px;color:var(--red);margin-top:10px;">3.25 hrs selling</div><div class="s-stat-sub" style="color:var(--red);">out of an 8-hour day.</div></div>${foot()}` },
+    { theme:'red-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Your 8-hour day — Writing Manually</div><div class="s-items"><div class="s-item">✏️ Writing + translating copy: <strong>50 min</strong></div><div class="s-item">📋 Reformatting for each portal: <strong>30 min</strong></div><div class="s-item">✅ Compliance checks and fixes: <strong>10 min</strong></div><div class="s-item">📞 Client calls and viewings: <strong style="color:var(--red);">5.5 hrs</strong></div></div><div class="s-stat" style="font-size:30px;color:var(--red);margin-top:10px;">5.5 hrs selling</div><div class="s-stat-sub" style="color:var(--red);">out of an 8-hour day. Imagine reclaiming the other 90 min.</div></div>${foot()}` },
     { theme:'green-tint', html:`${BRAND_LOGO}<div class="s-content"><div class="s-eyebrow">Same 8-hour day — With Enlista</div><div class="s-items"><div class="s-item ok">🎙️ Speak listing details (voice input): <strong>15 min</strong></div><div class="s-item ok">✅ AI generates + checks compliance: <strong>auto</strong></div><div class="s-item ok">📋 Copy pasted to portals by you: <strong>~10 min</strong></div><div class="s-item ok">📞 Client calls and viewings: <strong>7+ hrs</strong></div></div><div class="s-stat" style="font-size:30px;color:var(--green);margin-top:10px;">7+ hrs selling</div><div class="s-stat-sub" style="color:var(--green);">out of an 8-hour day.</div></div>${foot()}` },
     { theme:'light-bg', html:`${BRAND_LOGO}<div class="s-content" style="text-align:center;align-items:center;"><div class="s-eyebrow">The Proof</div><div class="s-two-col"><div class="s-col-card" style="background:#EFF6FF;"><div class="num" style="color:var(--blue);font-size:32px;">840</div><div class="lbl" style="color:var(--muted);">Active agencies</div></div><div class="s-col-card" style="background:#EFF6FF;"><div class="num" style="color:var(--blue);font-size:32px;">124K</div><div class="lbl" style="color:var(--muted);">Listings generated</div></div></div><div class="s-two-col" style="margin-top:12px;"><div class="s-col-card" style="background:#EFF6FF;"><div class="num" style="color:var(--blue);font-size:26px;">&lt;60 sec</div><div class="lbl" style="color:var(--muted);">Copy ready per listing</div></div><div class="s-col-card" style="background:#EFF6FF;"><div class="num" style="color:var(--blue);font-size:26px;">5×</div><div class="lbl" style="color:var(--muted);">Channels covered</div></div></div></div>${foot()}` },
     { theme:'dark', html:`${BRAND_LOGO}<div class="s-content" style="text-align:center;align-items:center;"><div class="s-eyebrow">Start Today</div><div class="s-h1">14-day free trial.</div><div class="s-body" style="margin-bottom:20px;">No credit card required.<br>Set up in 10 minutes.<br>First listing copy ready in under 60 seconds.</div><div style="background:var(--blue);color:#fff;padding:14px 28px;border-radius:10px;font-size:15px;font-weight:700;display:inline-block;">→ Start now — link in bio</div></div>${foot()}` }
@@ -900,6 +936,7 @@ function renderPost(post){
         <div class="carousel-track" id="${uid}-track">${slides}</div>
       </div>
       ${controls}
+      <button class="dl-btn" onclick="downloadPost('${uid}')">⬇ Download${post.slides.length > 1 ? ` All ${post.slides.length} Slides` : ' Slide'}</button>
     </div>
     <div class="right-panel">
       <div class="caption-box">
@@ -980,11 +1017,26 @@ function copyCaption(uid){
 
 // ─── MODAL (FULL SIZE) ───────────────────────────────────────────────────────
 
+let _modalInfo = { postId: null, slideIdx: 0 };
+
 function openModal(slideEl){
   const clone = slideEl.cloneNode(true);
   const stage = document.getElementById('modal-stage');
   stage.innerHTML = '';
   stage.appendChild(clone);
+
+  // Store post/slide info for modal download
+  const wrapper = slideEl.closest('.post-wrapper');
+  if(wrapper){
+    const uid = wrapper.id;
+    const post = POSTS.find(p => `post-${p.id}` === uid);
+    if(post){
+      const track = document.getElementById(`${uid}-track`);
+      const slides = track ? Array.from(track.querySelectorAll('.slide-card')) : [slideEl];
+      _modalInfo = { postId: post.id, slideIdx: slides.indexOf(slideEl) };
+    }
+  }
+
   document.getElementById('modal-overlay').classList.add('open');
 }
 
@@ -995,6 +1047,83 @@ function closeModal(e){
 }
 
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal({target:document.getElementById('modal-overlay')}); });
+
+// ─── DOWNLOAD ────────────────────────────────────────────────────────────────
+
+async function captureSlide(slideEl){
+  // Render at natural 500×500, html2canvas scale:2 → 1000×1000 (square, Instagram-ready)
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:500px;height:500px;overflow:hidden;pointer-events:none;';
+  const clone = slideEl.cloneNode(true);
+  // Ensure no transforms carry over from modal
+  clone.style.transform = 'none';
+  clone.style.transformOrigin = 'unset';
+  clone.style.cursor = 'default';
+  clone.style.borderRadius = '0';
+  wrap.appendChild(clone);
+  document.body.appendChild(wrap);
+  try {
+    return await html2canvas(wrap, {
+      width: 500, height: 500, scale: 2,
+      useCORS: true, allowTaint: true,
+      backgroundColor: null, logging: false
+    });
+  } finally {
+    document.body.removeChild(wrap);
+  }
+}
+
+async function downloadPost(uid){
+  const post = POSTS.find(p => `post-${p.id}` === uid);
+  if(!post) return;
+  const btn = document.querySelector(`#${uid} .dl-btn`);
+  if(btn){ btn.disabled = true; }
+
+  const track = document.getElementById(`${uid}-track`);
+  if(!track) return;
+  const slides = Array.from(track.querySelectorAll('.slide-card'));
+
+  for(let i = 0; i < slides.length; i++){
+    if(btn) btn.textContent = slides.length > 1 ? `Saving ${i+1} / ${slides.length}…` : 'Saving…';
+    const canvas = await captureSlide(slides[i]);
+    const link = document.createElement('a');
+    link.download = slides.length > 1
+      ? `enlista-post-${post.id}-slide-${i+1}.png`
+      : `enlista-post-${post.id}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    if(i < slides.length - 1) await new Promise(r => setTimeout(r, 500));
+  }
+
+  if(btn){
+    btn.textContent = 'Downloaded ✓';
+    btn.classList.add('done');
+    setTimeout(()=>{
+      btn.textContent = slides.length > 1 ? `⬇ Download All ${slides.length} Slides` : '⬇ Download Slide';
+      btn.classList.remove('done');
+      btn.disabled = false;
+    }, 2500);
+  }
+}
+
+async function downloadModalSlide(){
+  const stage = document.getElementById('modal-stage');
+  const slideEl = stage.querySelector('.slide-card');
+  if(!slideEl) return;
+  const btn = document.getElementById('modal-dl');
+  if(btn){ btn.textContent = 'Saving…'; btn.disabled = true; }
+
+  const canvas = await captureSlide(slideEl);
+  const { postId, slideIdx } = _modalInfo;
+  const link = document.createElement('a');
+  link.download = postId
+    ? `enlista-post-${postId}-slide-${(slideIdx||0)+1}.png`
+    : 'enlista-slide.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+
+  if(btn){ btn.textContent = '⬇ Download'; btn.disabled = false; }
+}
 </script>
 </body>
 </html>
