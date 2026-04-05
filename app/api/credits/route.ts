@@ -13,18 +13,25 @@ function getPlanCreditLimit(plan: string): number {
 }
 
 export async function GET() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const isDev = process.env.NODE_ENV === 'development'
+  let userId: string | null = null
 
-  if (!user) {
-    return NextResponse.json({ error: "Unauthenticated" }, { status: 401 })
+  if (isDev && process.env.DEV_USER_ID) {
+    userId = process.env.DEV_USER_ID
+  } else {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: "Unauthenticated" }, { status: 401 })
+    }
+    userId = user.id
   }
 
   const db = createAdminClient()
   const { data: agency, error } = await db
     .from('agencies')
     .select('id, plan, credits_remaining, extra_credits, credits_reset_at')
-    .eq('user_id', user.id)
+    .eq('user_id', userId)
     .single()
 
   if (error || !agency) {
