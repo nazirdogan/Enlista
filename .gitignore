@@ -47,3 +47,6 @@ scripts/outreach/agents.json
 # Local docs (not for repo)
 *.xlsx
 *.docx
+
+# Superpowers brainstorm sessions
+.superpowers/
