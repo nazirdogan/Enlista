@@ -221,7 +221,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         background: '#0F1829', alignItems: 'center',
         justifyContent: 'space-between', padding: '0 16px', zIndex: 50,
       }} className="md:hidden flex">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 8px)', gridTemplateRows: 'repeat(3, 8px)', gap: 2 }}>
             <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
             <div style={{ borderRadius: 2, background: '#5DA3FF' }} />
@@ -236,7 +236,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <span style={{ fontWeight: 800, fontSize: 16, color: 'white', letterSpacing: '-0.04em' }}>
             Enlist<span style={{ color: '#5DA3FF' }}>a</span>
           </span>
-        </div>
+        </Link>
 
         {/* Mobile credit chip */}
         {credits && credits.plan !== 'enterprise' && (

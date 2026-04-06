@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import Link from 'next/link'
+import { PublicNav } from '@/components/PublicNav'
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -143,19 +144,12 @@ export default function ContactSalesPage() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '24px 16px',
       }}
     >
-      {/* Header */}
-      <div style={{ width: '100%', maxWidth: 560, marginBottom: 32 }}>
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontWeight: 800, fontSize: 20, color: c.dark }}>
-            Enlist<span style={{ color: c.blue }}>a</span>
-          </span>
-        </Link>
-      </div>
+      <PublicNav />
 
       {/* Card */}
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 16px' }}>
       <div
         style={{
           width: '100%',
@@ -396,6 +390,7 @@ export default function ContactSalesPage() {
           Login
         </Link>
       </p>
+      </div>
     </div>
   )
 }

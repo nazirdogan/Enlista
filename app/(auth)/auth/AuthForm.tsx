@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -261,9 +262,11 @@ export default function AuthForm() {
       }}>
         {/* Wordmark */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <h1 style={{ fontWeight: 800, fontSize: 24, color: '#0F1829', margin: 0 }}>
-            Enlist<span style={{ color: '#1D4ED8' }}>a</span>
-          </h1>
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <h1 style={{ fontWeight: 800, fontSize: 24, color: '#0F1829', margin: 0 }}>
+              Enlist<span style={{ color: '#1D4ED8' }}>a</span>
+            </h1>
+          </Link>
           <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
             {tab === 'signin' ? 'Sign in to your account' : '14-day free trial · No credit card required'}
           </p>

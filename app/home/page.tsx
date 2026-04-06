@@ -1,4 +1,5 @@
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { PublicNav } from "@/components/PublicNav";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -119,86 +120,7 @@ export default function HomePage() {
         color: c.text,
       }}
     >
-      {/* Nav */}
-      <nav
-        style={{
-          background: c.white,
-          borderBottom: `1px solid ${c.border}`,
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
-          boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-          padding: "12px 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <div style={{ fontWeight: 800, fontSize: 17, color: c.dark }}>
-            Enlist<span style={{ color: c.blue }}>a</span>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              fontSize: 13,
-            }}
-          >
-            {["Platform", "Clients", "Pricing", "Automations"].map((label, i) => {
-              const hrefs = ["#features", "#testimonials", "#pricing", "/whatsapp-automation"];
-              return (
-                <a
-                  key={label}
-                  href={hrefs[i]}
-                  style={{
-                    color: c.muted,
-                    padding: "6px 12px",
-                    borderRadius: 6,
-                    textDecoration: "none",
-                    fontWeight: 400,
-                  }}
-                >
-                  {label}
-                </a>
-              );
-            })}
-          </div>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <a
-            href="/auth"
-            style={{
-              display: "inline-block",
-              border: `1.5px solid ${c.border}`,
-              color: c.text,
-              padding: "10px 24px",
-              fontWeight: 500,
-              fontSize: 13,
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
-          >
-            Login
-          </a>
-          <a
-            href="/contact-sales"
-            style={{
-              display: "inline-block",
-              background: c.blue,
-              color: "white",
-              padding: "10px 24px",
-              fontFamily: "var(--font-jakarta), sans-serif",
-              fontWeight: 600,
-              fontSize: 13,
-              borderRadius: 6,
-              textDecoration: "none",
-            }}
-          >
-            Contact Sales
-          </a>
-        </div>
-      </nav>
+      <PublicNav />
 
       {/* Hero */}
       <section

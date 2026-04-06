@@ -20,7 +20,7 @@ export function AdminSidebar() {
   return (
     <aside className="w-[200px] bg-[#1a1a2e] flex flex-col shrink-0 h-screen sticky top-0">
       <div className="px-4 py-5 border-b border-white/10">
-        <div className="text-white text-sm font-bold">Enlista</div>
+        <Link href="/dashboard" className="text-white text-sm font-bold hover:text-white/80 transition-colors">Enlista</Link>
         <div className="text-white/35 text-[10px] uppercase tracking-widest mt-0.5">Admin CRM</div>
       </div>
       <nav className="flex-1 py-3">

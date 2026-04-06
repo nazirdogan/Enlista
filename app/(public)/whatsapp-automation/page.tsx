@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Plus_Jakarta_Sans } from 'next/font/google'
+import { PublicNav } from '@/components/PublicNav'
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -171,45 +172,7 @@ export default function WhatsAppAutomationPage() {
       color: c.text,
     }}>
 
-      {/* ── Nav ─────────────────────────────────────────────────────────────── */}
-      <nav style={{
-        background: c.white,
-        borderBottom: `1px solid ${c.border}`,
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-        padding: '12px 24px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <a href="/home" style={{ fontWeight: 800, fontSize: 17, color: c.dark, textDecoration: 'none' }}>
-            Enlist<span style={{ color: c.blue }}>a</span>
-          </a>
-          <div style={{ display: 'flex', gap: 8, fontSize: 13 }}>
-            {[['Platform', '/home#features'], ['Pricing', '/pricing'], ['WhatsApp', '#how-it-works']].map(([label, href]) => (
-              <a key={label} href={href} style={{ color: label === 'WhatsApp' ? c.wa : c.muted,
-                padding: '6px 12px', borderRadius: 6, textDecoration: 'none', fontWeight: label === 'WhatsApp' ? 600 : 400 }}>
-                {label}
-              </a>
-            ))}
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <a href="/auth" style={{ display: 'inline-block', border: `1.5px solid ${c.border}`,
-            color: c.text, padding: '10px 24px', fontWeight: 500, fontSize: 13,
-            borderRadius: 6, textDecoration: 'none' }}>
-            Login
-          </a>
-          <a href="/contact-sales" style={{ display: 'inline-block', background: c.blue,
-            color: 'white', padding: '10px 24px', fontWeight: 600, fontSize: 13,
-            borderRadius: 6, textDecoration: 'none' }}>
-            Contact Sales
-          </a>
-        </div>
-      </nav>
+      <PublicNav />
 
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
       <section style={{ padding: '64px 24px 48px', maxWidth: 1280, margin: '0 auto' }}>

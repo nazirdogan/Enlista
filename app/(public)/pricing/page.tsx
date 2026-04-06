@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { PublicNav } from '@/components/PublicNav'
 import { Check, Zap, ArrowRight, Star, Building2, MessageSquare } from 'lucide-react'
 
 // ─── Plan data ────────────────────────────────────────────────────────────────
@@ -195,35 +196,7 @@ export default function PricingPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#F7F8FC', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
 
-      {/* ── Nav ── */}
-      <nav style={{
-        background: '#fff', borderBottom: '1px solid #EAECF0',
-        padding: '0 32px', height: 60,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        position: 'sticky', top: 0, zIndex: 50,
-      }}>
-        <Link href="/dashboard" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 9px)', gridTemplateRows: 'repeat(3, 9px)', gap: 2.5 }}>
-            {[1,1,1,1,1,0,1,1,1].map((on, i) => (
-              <div key={i} style={{ borderRadius: 2, background: on ? '#1D4ED8' : 'rgba(29,78,216,0.15)' }} />
-            ))}
-          </div>
-          <span style={{ fontWeight: 800, fontSize: 17, color: '#0F172A', letterSpacing: '-0.04em' }}>
-            Enlist<span style={{ color: '#1D4ED8' }}>a</span>
-          </span>
-        </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link href="/auth?tab=signin" style={{ fontSize: 13, color: '#6B7280', textDecoration: 'none', fontWeight: 500 }}>
-            Sign in
-          </Link>
-          <Link href="/auth?tab=signup" style={{
-            fontSize: 13, fontWeight: 600, color: '#fff',
-            background: '#1D4ED8', padding: '8px 16px', borderRadius: 8, textDecoration: 'none',
-          }}>
-            Get started free
-          </Link>
-        </div>
-      </nav>
+      <PublicNav />
 
       <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px 96px' }}>
 

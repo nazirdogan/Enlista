@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { PublicNav } from "@/components/PublicNav";
 import { useRouter } from "next/navigation";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { Check, Zap, ArrowRight, Star, MessageSquare } from "lucide-react";
@@ -212,7 +213,6 @@ const pricingFaqs = [
 
 export default function HomePage() {
   const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [loadingPack, setLoadingPack] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -264,177 +264,7 @@ export default function HomePage() {
         color: c.text,
       }}
     >
-      {/* Nav */}
-      <nav
-        style={{
-          background: c.white,
-          borderBottom: `1px solid ${c.border}`,
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
-          boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-          padding: "12px 24px",
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-            {/* Grid mark — 3×3 cells forming "E" */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 10px)', gridTemplateRows: 'repeat(3, 10px)', gap: 3 }}>
-              <div style={{ borderRadius: 2, background: c.blue }} />
-              <div style={{ borderRadius: 2, background: c.blue }} />
-              <div style={{ borderRadius: 2, background: c.blue }} />
-              <div style={{ borderRadius: 2, background: c.blue }} />
-              <div style={{ borderRadius: 2, background: c.blue }} />
-              <div style={{ borderRadius: 2, background: `rgba(29,78,216,0.14)` }} />
-              <div style={{ borderRadius: 2, background: c.blue }} />
-              <div style={{ borderRadius: 2, background: c.blue }} />
-              <div style={{ borderRadius: 2, background: c.blue }} />
-            </div>
-            <span style={{ fontWeight: 800, fontSize: 17, color: c.dark, letterSpacing: '-0.04em' }}>
-              Enlist<span style={{ color: c.blue }}>a</span>
-            </span>
-          </div>
-          {/* Desktop nav links */}
-          <div className="hidden md:flex" style={{ gap: 8, fontSize: 13 }}>
-            {["How It Works", "Clients", "Pricing", "Automations"].map((label, i) => {
-              const hrefs = ["#features", "#testimonials", "#pricing", "/whatsapp-automation"];
-              return (
-                <a
-                  key={label}
-                  href={hrefs[i]}
-                  style={{
-                    color: c.muted,
-                    padding: "6px 12px",
-                    borderRadius: 6,
-                    textDecoration: "none",
-                    fontWeight: 400,
-                  }}
-                >
-                  {label}
-                </a>
-              );
-            })}
-          </div>
-          {/* Desktop CTA buttons */}
-          <div className="hidden md:flex" style={{ alignItems: "center", gap: 10 }}>
-            <a
-              href="/auth"
-              style={{
-                display: "inline-block",
-                border: `1.5px solid ${c.border}`,
-                color: c.text,
-                padding: "10px 24px",
-                fontWeight: 500,
-                fontSize: 13,
-                borderRadius: 6,
-                textDecoration: "none",
-              }}
-            >
-              Login
-            </a>
-            <a
-              href="/auth?tab=signup"
-              style={{
-                display: "inline-block",
-                background: c.blue,
-                color: "white",
-                padding: "10px 24px",
-                fontFamily: "var(--font-jakarta), sans-serif",
-                fontWeight: 600,
-                fontSize: 13,
-                borderRadius: 6,
-                textDecoration: "none",
-              }}
-            >
-              Start free trial
-            </a>
-          </div>
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: c.dark }}
-            aria-label="Toggle menu"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {mobileMenuOpen ? (
-                <>
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </>
-              ) : (
-                <>
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </>
-              )}
-            </svg>
-          </button>
-        </div>
-        {/* Mobile dropdown */}
-        {mobileMenuOpen && (
-          <div className="md:hidden" style={{ paddingTop: 16, paddingBottom: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-            {["How It Works", "Clients", "Pricing", "Automations"].map((label, i) => {
-              const hrefs = ["#features", "#testimonials", "#pricing", "/whatsapp-automation"];
-              return (
-                <a
-                  key={label}
-                  href={hrefs[i]}
-                  onClick={() => setMobileMenuOpen(false)}
-                  style={{
-                    color: c.muted,
-                    padding: "10px 12px",
-                    borderRadius: 6,
-                    textDecoration: "none",
-                    fontWeight: 400,
-                    fontSize: 15,
-                    display: "block",
-                  }}
-                >
-                  {label}
-                </a>
-              );
-            })}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 8 }}>
-              <a
-                href="/auth"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  border: `1.5px solid ${c.border}`,
-                  color: c.text,
-                  padding: "11px 24px",
-                  fontWeight: 500,
-                  fontSize: 14,
-                  borderRadius: 6,
-                  textDecoration: "none",
-                }}
-              >
-                Login
-              </a>
-              <a
-                href="/auth?tab=signup"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  background: c.blue,
-                  color: "white",
-                  padding: "11px 24px",
-                  fontWeight: 600,
-                  fontSize: 14,
-                  borderRadius: 6,
-                  textDecoration: "none",
-                }}
-              >
-                Start free trial
-              </a>
-            </div>
-          </div>
-        )}
-      </nav>
+      <PublicNav />
 
       {/* Hero */}
       <section
@@ -985,6 +815,135 @@ export default function HomePage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* WhatsApp Automation */}
+      <section
+        id="whatsapp-automation"
+        style={{ padding: "80px 24px", background: c.dark }}
+      >
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          {/* Header */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 56, alignItems: "center", marginBottom: 64 }}>
+            <div>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600,
+                background: "rgba(37,211,102,0.15)", color: "#25D366", marginBottom: 20 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#25D366", display: "inline-block" }} />
+                New — WhatsApp Automation
+              </span>
+              <h2 style={{ fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 800, lineHeight: 1.1,
+                color: "#fff", margin: "0 0 20px" }}>
+                Your listings,{" "}
+                <span style={{ color: "#25D366" }}>followed up</span>{" "}
+                instantly.
+              </h2>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.55)", lineHeight: 1.8, margin: "0 0 32px", maxWidth: 460 }}>
+                Enlista automatically qualifies every lead and books viewings over WhatsApp — the moment someone enquires. No manual chasing. No missed deals.
+              </p>
+              {/* Stats */}
+              <div style={{ display: "flex", gap: 36, marginBottom: 36, flexWrap: "wrap" }}>
+                {[
+                  ["< 30 sec", "first reply time"],
+                  ["5 questions", "to qualify a lead"],
+                  ["24 / 7", "automated follow-up"],
+                ].map(([num, label]) => (
+                  <div key={num}>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff" }}>{num}</div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>{label}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <a href="/whatsapp-automation" style={{ display: "inline-flex", alignItems: "center", gap: 8,
+                  background: "#25D366", color: "white", padding: "13px 28px",
+                  fontWeight: 600, fontSize: 14, borderRadius: 8, textDecoration: "none",
+                  boxShadow: "0 4px 16px rgba(37,211,102,0.35)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  See How It Works
+                </a>
+                <a href="/contact-sales" style={{ display: "inline-flex", alignItems: "center", gap: 8,
+                  border: "1.5px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.8)",
+                  padding: "13px 28px", fontWeight: 500, fontSize: 14, borderRadius: 8, textDecoration: "none" }}>
+                  Book a Demo
+                </a>
+              </div>
+            </div>
+
+            {/* Phone mockup */}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div style={{ width: 280, background: "#1a1a2e", borderRadius: 28,
+                padding: "12px 12px 20px", boxShadow: "0 32px 64px rgba(0,0,0,0.5)",
+                border: "3px solid #2a2a3e" }}>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
+                  <div style={{ width: 80, height: 6, borderRadius: 4, background: "#2a2a3e" }} />
+                </div>
+                <div style={{ background: "#128C7E", borderRadius: "12px 12px 0 0",
+                  padding: "10px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#25D366",
+                    display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Enlista Bot</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.6)" }}>● online</div>
+                  </div>
+                </div>
+                <div style={{ background: "#ECE5DD", padding: "12px 10px", borderRadius: "0 0 12px 12px" }}>
+                  {([
+                    { sender: "bot", text: "Hi! 👋 You enquired about the 2BR in Dubai Marina. What's your budget?\n\n1. Below AED 1.9M\n2. AED 1.9M–2.2M\n3. Above AED 2.2M", time: "9:01 AM" },
+                    { sender: "lead", text: "2", time: "9:03 AM" },
+                    { sender: "bot", text: "Perfect match! 🎯 Cash buyer or mortgage?", time: "9:03 AM" },
+                    { sender: "lead", text: "Cash buyer", time: "9:04 AM" },
+                    { sender: "bot", text: "Great! Reply BOOK to choose a viewing slot 📅", time: "9:04 AM" },
+                  ] as { sender: string; text: string; time: string }[]).map((msg, i) => (
+                    <div key={i} style={{ display: "flex", justifyContent: msg.sender === "bot" ? "flex-start" : "flex-end", marginBottom: 8 }}>
+                      <div style={{
+                        maxWidth: "85%",
+                        background: msg.sender === "bot" ? "#fff" : "#DCF8C6",
+                        borderRadius: msg.sender === "bot" ? "2px 12px 12px 12px" : "12px 2px 12px 12px",
+                        padding: "8px 12px",
+                        boxShadow: "0 1px 2px rgba(0,0,0,0.12)",
+                      }}>
+                        <div style={{ fontSize: 11, color: "#1a1a1a", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{msg.text}</div>
+                        <div style={{ fontSize: 10, color: "#999", textAlign: "right", marginTop: 2 }}>{msg.time} ✓✓</div>
+                      </div>
+                    </div>
+                  ))}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
+                    background: "#1E293B", borderRadius: 8, padding: "6px 12px", marginTop: 4 }}>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Lead score</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#22c55e",
+                      background: "rgba(34,197,94,0.12)", padding: "2px 10px", borderRadius: 12 }}>
+                      🔥 HOT — 92/100
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Feature cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+            {[
+              { icon: "🎯", title: "Lead Qualification", desc: "5 smart questions score every lead as Hot, Warm, or Cold — automatically." },
+              { icon: "📅", title: "Viewing Booking", desc: "Leads pick a slot from your calendar. Confirmation and reminders sent instantly." },
+              { icon: "🔔", title: "Instant Agent Alerts", desc: "You get a WhatsApp summary with full lead score the moment they qualify." },
+              { icon: "📊", title: "Bayut & PF Ready", desc: "Works with enquiries from Bayut, Property Finder, Dubizzle, and direct WA links." },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 12, padding: 24 }}>
+                <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 8 }}>{title}</div>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>{desc}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
