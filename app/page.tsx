@@ -5,6 +5,7 @@ import { PublicNav } from "@/components/PublicNav";
 import { useRouter } from "next/navigation";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { Check, Zap, ArrowRight, Star, MessageSquare } from "lucide-react";
+import { HeroCard } from "@/components/HeroCard";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -267,218 +268,98 @@ export default function HomePage() {
       <PublicNav />
 
       {/* Hero */}
-      <section
-        style={{ padding: "64px 24px 48px", maxWidth: 1280, margin: "0 auto" }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 48,
-            alignItems: "center",
-          }}
-        >
-          {/* Left */}
+      <section style={{ padding: '64px 24px 48px', maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: 48,
+          alignItems: 'center',
+        }}>
+          {/* Left: copy */}
           <div>
-            <h1
-              style={{
-                fontWeight: 800,
-                fontSize: "clamp(36px, 5vw, 60px)",
-                lineHeight: 1.08,
-                color: c.dark,
-                marginBottom: 20,
-              }}
-            >
-              Listing management
-              <br />
-              that actually
-              <br />
-              <span style={{ color: c.blue }}>moves the needle.</span>
+            {/* Pill */}
+            <div style={{
+              display: 'inline-block',
+              background: c.bluePale,
+              color: c.blue,
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '.08em',
+              textTransform: 'uppercase',
+              padding: '5px 12px',
+              borderRadius: 20,
+              marginBottom: 18,
+            }}>
+              For UAE property agents
+            </div>
+
+            {/* Headline */}
+            <h1 style={{
+              fontWeight: 800,
+              fontSize: 'clamp(36px, 5vw, 60px)',
+              lineHeight: 1.08,
+              color: c.dark,
+              marginBottom: 20,
+            }}>
+              Less typing.<br />
+              More viewings.<br />
+              <span style={{ color: c.blue }}>More closings.</span>
             </h1>
-            <p
-              style={{
-                color: c.muted,
-                fontSize: 16,
-                lineHeight: 1.8,
-                maxWidth: 440,
-                marginBottom: 36,
-              }}
-            >
-              AI-powered listing copy, multi-portal sync, lead scoring and RERA
-              compliance for UAE real estate agencies — in one clean dashboard.
+
+            {/* Subtitle */}
+            <p style={{
+              color: c.muted,
+              fontSize: 16,
+              lineHeight: 1.8,
+              maxWidth: 440,
+              marginBottom: 36,
+            }}>
+              Describe a property and get a ready-to-publish listing in English and Arabic.
+              Set up a WhatsApp flow once and every new enquiry gets handled — even at 2am.
             </p>
-            <div
-              style={{
-                display: "flex",
-                gap: 10,
-                flexWrap: "wrap",
-                marginBottom: 40,
-              }}
-            >
+
+            {/* CTAs */}
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 24 }}>
               <a
                 href="/auth?tab=signup"
                 style={{
-                  display: "inline-block",
+                  display: 'inline-block',
                   background: c.blue,
-                  color: "white",
-                  padding: "10px 24px",
+                  color: 'white',
+                  padding: '10px 24px',
                   fontWeight: 600,
                   fontSize: 13,
                   borderRadius: 6,
-                  textDecoration: "none",
+                  textDecoration: 'none',
                 }}
               >
-                Start your 14-day free trial
+                Start free trial
+              </a>
+              <a
+                href="/auth"
+                style={{
+                  display: 'inline-block',
+                  border: `1.5px solid ${c.border}`,
+                  color: c.text,
+                  padding: '10px 24px',
+                  fontWeight: 500,
+                  fontSize: 13,
+                  borderRadius: 6,
+                  textDecoration: 'none',
+                }}
+              >
+                Login
               </a>
             </div>
+
+            {/* Trust signals */}
+            <p style={{ fontSize: 11, color: c.muted }}>
+              ✓ No credit card required &nbsp;·&nbsp; ✓ Setup in 5 minutes &nbsp;·&nbsp; ✓ RERA compliant
+            </p>
           </div>
 
-          {/* Right: Dashboard bento */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {/* Stats row */}
-            <div
-              style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}
-            >
-              {[
-                { label: "Listings", val: "247", sub: "↑ 18%", subColor: c.green, valColor: c.dark },
-                { label: "Hot Leads", val: "34", sub: "↑ 6 today", subColor: c.green, valColor: c.blue },
-                { label: "RERA", val: "✓", sub: "All clean", subColor: c.green, valColor: c.green },
-              ].map((item) => (
-                <BentoCard
-                  key={item.label}
-                  style={{ padding: 16, textAlign: "center" }}
-                >
-                  <p style={{ fontSize: 11, color: c.muted, marginBottom: 4 }}>
-                    {item.label}
-                  </p>
-                  <p
-                    style={{
-                      fontWeight: 800,
-                      fontSize: 28,
-                      color: item.valColor,
-                    }}
-                  >
-                    {item.val}
-                  </p>
-                  <p style={{ fontSize: 11, color: item.subColor }}>
-                    {item.sub}
-                  </p>
-                </BentoCard>
-              ))}
-            </div>
-
-            {/* Chart */}
-            <BentoCard>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: 16,
-                }}
-              >
-                <p style={{ fontWeight: 600, fontSize: 13 }}>
-                  Enquiries this week
-                </p>
-                <Badge variant="blue">+24%</Badge>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  gap: 6,
-                  height: 64,
-                }}
-              >
-                {[
-                  { h: "40%", bg: c.border, op: 1 },
-                  { h: "55%", bg: c.border, op: 1 },
-                  { h: "48%", bg: c.blueLight, op: 0.5 },
-                  { h: "70%", bg: c.blueLight, op: 0.5 },
-                  { h: "60%", bg: c.blueLight, op: 0.7 },
-                  { h: "85%", bg: c.blueLight, op: 0.8 },
-                  { h: "100%", bg: c.blue, op: 1 },
-                ].map((bar, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      height: bar.h,
-                      background: bar.bg,
-                      opacity: bar.op,
-                      borderRadius: "3px 3px 0 0",
-                    }}
-                  />
-                ))}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: 8,
-                  fontSize: 10,
-                  color: c.muted,
-                  fontFamily: "var(--font-jetbrains), monospace",
-                }}
-              >
-                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-                  <span key={d}>{d}</span>
-                ))}
-              </div>
-            </BentoCard>
-
-            {/* Portal status */}
-            <BentoCard>
-              <p style={{ fontWeight: 600, fontSize: 13, marginBottom: 12 }}>
-                Portal Status
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {["Bayut", "Property Finder", "Dubizzle"].map((portal) => (
-                  <div
-                    key={portal}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span style={{ fontSize: 13 }}>{portal}</span>
-                    <Badge variant="green">● Live</Badge>
-                  </div>
-                ))}
-              </div>
-            </BentoCard>
-
-            {/* AI copy snippet */}
-            <BentoCard style={{ background: c.dark }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 12,
-                }}
-              >
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
-                  AI Copy — EN
-                </p>
-                <Badge variant="green" style={{ fontSize: 10 }}>
-                  Generated
-                </Badge>
-              </div>
-              <p
-                style={{
-                  fontFamily: "var(--font-jetbrains), monospace",
-                  fontSize: 11,
-                  color: "rgba(255,255,255,0.7)",
-                  lineHeight: 1.7,
-                }}
-              >
-                &ldquo;Exceptional 3BR in Downtown Dubai with Burj views, private gym,
-                and premium finishes throughout…&rdquo;
-              </p>
-            </BentoCard>
-          </div>
+          {/* Right: tabbed graphic */}
+          <HeroCard />
         </div>
       </section>
 
