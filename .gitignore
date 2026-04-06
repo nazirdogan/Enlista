@@ -37,3 +37,13 @@ next-env.d.ts
 
 # outreach data
 scripts/outreach/agents.json
+
+# Claude Code worktrees and internals
+.claude/worktrees/
+
+# Office temp/lock files
+.~lock.*
+
+# Local docs (not for repo)
+*.xlsx
+*.docx
