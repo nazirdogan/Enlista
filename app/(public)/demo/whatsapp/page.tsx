@@ -98,6 +98,7 @@ export default function WhatsAppDemoPage() {
               />
             ))}
           </div>
+          {/* Hide counter during closing/booking steps (not qualification questions) */}
           {currentStepIndex >= 0 && (
             <div style={{ fontSize: 11, color: muted }}>
               Question {Math.min(progressIndex + 1, STEPS.length)} of {STEPS.length}
