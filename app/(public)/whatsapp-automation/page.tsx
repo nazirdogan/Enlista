@@ -175,7 +175,7 @@ export default function WhatsAppAutomationPage() {
       <PublicNav />
 
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
-      <section style={{ padding: '64px 24px 48px', maxWidth: 1280, margin: '0 auto' }}>
+      <section style={{ padding: '40px 24px 32px', maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 56, alignItems: 'center' }}>
 
           {/* Left */}
@@ -249,10 +249,10 @@ export default function WhatsAppAutomationPage() {
                 </div>
               </div>
               {/* Chat area */}
-              <div style={{ background: '#ECE5DD', padding: '12px 10px', minHeight: 380,
+              <div style={{ background: '#ECE5DD', padding: '12px 10px', height: 240,
                 borderRadius: '0 0 12px 12px', overflowY: 'auto' }}>
                 <ChatBubble sender="bot" time="9:01 AM"
-                  text={"Hi! I'm the virtual assistant for Ahmed Al Mansoori 🏙️\n\nI saw you enquired about the 2BR in Dubai Marina. Quick question — what's your budget range?\n\n1. Below AED 1.9M\n2. AED 1.9M–2.2M\n3. Above AED 2.2M\n\nReply with 1, 2 or 3."} />
+                  text={"Hi! 👋 You enquired about the 2BR in Dubai Marina. What's your budget?\n\n1. Below AED 1.9M\n2. AED 1.9M–2.2M\n3. Above AED 2.2M"} />
                 <ChatBubble sender="lead" time="9:03 AM" text="2" />
                 <ChatBubble sender="bot" time="9:03 AM"
                   text={"Perfect match! 🎯 Are you a cash buyer or planning a mortgage?"} />
