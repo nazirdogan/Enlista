@@ -247,7 +247,7 @@ function ActReveal({
         {/* Booking card */}
         <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(37,211,102,0.08)', borderRadius: 10, border: '1px solid rgba(37,211,102,0.15)' }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: wa, marginBottom: 4 }}>📅 Viewing Booked</div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>Mon 7 Apr — 10:00 AM · Marina Heights</div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{answers.book_slots?.label ?? 'Mon 7 Apr — 10:00 AM'} · Marina Heights</div>
         </div>
 
         <a

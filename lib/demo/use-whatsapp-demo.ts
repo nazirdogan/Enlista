@@ -51,8 +51,9 @@ export function useWhatsAppDemo(): WhatsAppDemoState {
 
       const result = processAnswer(step, input)
 
-      // Timer not cleaned up intentionally — demo-only; React 18 silently
-      // discards state updates on unmounted components without throwing.
+      // Timer is not cancelled on unmount — intentional for this demo page.
+      // The 1500ms delay is short and the page is not re-entered during that window.
+      // In production, store the timer ID in a useRef and clear it in a useEffect cleanup.
       setTimeout(() => {
         if (result.botText) {
           const botMsg: DemoMessage = {
