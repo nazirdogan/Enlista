@@ -73,8 +73,9 @@ export function processAnswer(step: QuestionStep, input: string): ConversationRe
       const medium = raw === '2' || raw.includes('1–3') || raw.includes('1-3') || raw.includes('three') || raw.includes('quarter')
       const slow = raw === '3' || raw.includes('3–6') || raw.includes('3-6') || raw.includes('six') || raw.includes('half')
       const exploring = raw === '4' || raw.includes('explor') || raw.includes('just look') || raw.includes('brows')
-      const points = exploring ? 0 : slow ? 10 : 20
-      const label = fast ? 'Within 1 month' : medium ? '1–3 months' : slow ? '3–6 months' : 'Just exploring'
+      const bucket = exploring ? 'exploring' : slow ? 'slow' : fast ? 'fast' : 'medium'
+      const points = bucket === 'exploring' ? 0 : bucket === 'slow' ? 10 : 20
+      const label = bucket === 'exploring' ? 'Just exploring' : bucket === 'slow' ? '3–6 months' : bucket === 'fast' ? 'Within 1 month' : '1–3 months'
       return {
         nextStep: 'financing',
         botText: 'Thanks! Are you a cash buyer or planning a mortgage?',
@@ -134,7 +135,7 @@ export function processAnswer(step: QuestionStep, input: string): ConversationRe
     }
 
     case 'book_slots': {
-      const slot2 = raw === '2' || (raw.includes('3') && raw.includes('pm')) || raw.includes('afternoon')
+      const slot2 = raw === '2' || raw.includes('3:00') || raw.includes('afternoon')
       const slot3 = raw === '3' || raw.includes('tue') || (raw.includes('11') && !raw.includes('10'))
       const slotLabel = slot3
         ? 'Tue 8 Apr — 11:00 AM'
