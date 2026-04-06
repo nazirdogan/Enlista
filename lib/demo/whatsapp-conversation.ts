@@ -70,9 +70,9 @@ export function processAnswer(step: QuestionStep, input: string): ConversationRe
 
     case 'timeline': {
       const fast = raw === '1' || raw.includes('1 month') || raw.includes('one month') || raw.includes('asap') || raw.includes('urgent')
-      const medium = raw === '2' || raw.includes('1–3') || raw.includes('1-3') || raw.includes('three') || raw.includes('quarter')
       const slow = raw === '3' || raw.includes('3–6') || raw.includes('3-6') || raw.includes('six') || raw.includes('half')
       const exploring = raw === '4' || raw.includes('explor') || raw.includes('just look') || raw.includes('brows')
+      // Any non-exploring, non-slow, non-fast input (e.g. "2", "1-3 months") defaults to the medium bucket
       const bucket = exploring ? 'exploring' : slow ? 'slow' : fast ? 'fast' : 'medium'
       const points = bucket === 'exploring' ? 0 : bucket === 'slow' ? 10 : 20
       const label = bucket === 'exploring' ? 'Just exploring' : bucket === 'slow' ? '3–6 months' : bucket === 'fast' ? 'Within 1 month' : '1–3 months'
