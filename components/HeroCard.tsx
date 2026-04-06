@@ -22,12 +22,14 @@ export function HeroCard() {
       flexDirection: 'column',
     }}>
       {/* Tab strip */}
-      <div style={{ display: 'flex', borderBottom: `1px solid ${border}`, flexShrink: 0 }}>
+      <div role="tablist" style={{ display: 'flex', borderBottom: `1px solid ${border}`, flexShrink: 0 }}>
         {(['listing', 'whatsapp'] as const).map((t) => {
           const active = tab === t
           return (
             <button
               key={t}
+              role="tab"
+              aria-selected={active}
               onClick={() => setTab(t)}
               style={{
                 flex: 1,
@@ -35,9 +37,9 @@ export function HeroCard() {
                 fontSize: 11,
                 fontWeight: active ? 700 : 500,
                 color: active ? blue : '#94a3b8',
+                border: 'none',
                 borderBottom: active ? `2px solid ${blue}` : '2px solid transparent',
                 background: active ? '#fff' : '#FAFAFA',
-                border: 'none',
                 cursor: 'pointer',
                 textAlign: 'center',
                 fontFamily: 'inherit',
@@ -53,7 +55,7 @@ export function HeroCard() {
       <div style={{ position: 'relative', height: 370, flexShrink: 0 }}>
 
         {/* Listing tab */}
-        <div style={{
+        <div aria-hidden={tab !== 'listing'} style={{
           position: 'absolute', inset: 0, padding: 16,
           display: tab === 'listing' ? 'flex' : 'none',
           flexDirection: 'column', gap: 10,
@@ -140,7 +142,7 @@ export function HeroCard() {
         </div>
 
         {/* WhatsApp tab */}
-        <div style={{
+        <div aria-hidden={tab !== 'whatsapp'} style={{
           position: 'absolute', inset: 0, padding: 16,
           display: tab === 'whatsapp' ? 'flex' : 'none',
           flexDirection: 'column', gap: 8,
