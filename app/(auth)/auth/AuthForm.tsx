@@ -216,7 +216,7 @@ export default function AuthForm() {
         console.error('Agency creation error:', agencyError)
       }
 
-      toast.success('Account created! Welcome to Enlista.')
+      toast.success('Welcome to Enlista.io')
 
       // Attribute signup to outreach campaign if token present
       const outreachToken = typeof window !== 'undefined'
@@ -581,7 +581,7 @@ export default function AuthForm() {
         {/* Footer toggle */}
         <p style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: '#64748B', marginBottom: 0 }}>
           {tab === 'signin' ? (
-            <>Don&apos;t have an account?{' '}<button onClick={() => switchTab('signup')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Start free trial</button></>
+            <>Don&apos;t have an account?{' '}<button onClick={() => switchTab('signup')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Sign Up</button></>
           ) : (
             <>Already have an account?{' '}<button onClick={() => switchTab('signin')} style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}>Sign in</button></>
           )}
