@@ -51,6 +51,8 @@ export function useWhatsAppDemo(): WhatsAppDemoState {
 
       const result = processAnswer(step, input)
 
+      // Timer not cleaned up intentionally — demo-only; React 18 silently
+      // discards state updates on unmounted components without throwing.
       setTimeout(() => {
         if (result.botText) {
           const botMsg: DemoMessage = {
