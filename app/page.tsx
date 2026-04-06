@@ -296,8 +296,8 @@ export default function HomePage() {
           </div>
           {/* Desktop nav links */}
           <div className="hidden md:flex" style={{ gap: 8, fontSize: 13 }}>
-            {["How It Works", "Clients", "Pricing"].map((label, i) => {
-              const hrefs = ["#features", "#testimonials", "#pricing"];
+            {["How It Works", "Clients", "Pricing", "Automations"].map((label, i) => {
+              const hrefs = ["#features", "#testimonials", "#pricing", "/whatsapp-automation"];
               return (
                 <a
                   key={label}
@@ -375,8 +375,8 @@ export default function HomePage() {
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
           <div className="md:hidden" style={{ paddingTop: 16, paddingBottom: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-            {["How It Works", "Clients", "Pricing"].map((label, i) => {
-              const hrefs = ["#features", "#testimonials", "#pricing"];
+            {["How It Works", "Clients", "Pricing", "Automations"].map((label, i) => {
+              const hrefs = ["#features", "#testimonials", "#pricing", "/whatsapp-automation"];
               return (
                 <a
                   key={label}

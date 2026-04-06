@@ -37,8 +37,8 @@ const plans = [
     key: 'plus',
     name: 'Plus',
     tagline: 'For active individual agents',
-    price: 25,
-    priceLabel: '$25',
+    price: 15,
+    priceLabel: '$15',
     priceSub: 'per month',
     credits: 5,
     creditsLabel: '5 listings/month',
@@ -58,8 +58,8 @@ const plans = [
     key: 'pro',
     name: 'Pro',
     tagline: 'For high-volume agents',
-    price: 40,
-    priceLabel: '$40',
+    price: 30,
+    priceLabel: '$30',
     priceSub: 'per month',
     credits: 15,
     creditsLabel: '15 listings/month',
@@ -105,9 +105,9 @@ const plans = [
 ]
 
 const creditPacks = [
-  { key: 'credits_5',  label: '5 Credits',  price: '$15', perCredit: '$3.00' },
-  { key: 'credits_10', label: '10 Credits', price: '$25', perCredit: '$2.50', popular: true },
-  { key: 'credits_20', label: '20 Credits', price: '$40', perCredit: '$2.00' },
+  { key: 'credits_5',  label: '5 Credits',  price: '$20', perCredit: '$4.00' },
+  { key: 'credits_10', label: '10 Credits', price: '$30', perCredit: '$3.00', popular: true },
+  { key: 'credits_20', label: '20 Credits', price: '$50', perCredit: '$2.50' },
 ]
 
 const faqs = [
@@ -497,7 +497,7 @@ export default function PricingPage() {
                 ))}
                 <tr style={{ background: '#F7F8FC' }}>
                   <td style={{ padding: '14px 16px', fontWeight: 700, color: '#0F172A' }}>Price</td>
-                  {['Free', '$25/mo', '$40/mo', 'Custom'].map((p, i) => (
+                  {['Free', '$15/mo', '$30/mo', 'Custom'].map((p, i) => (
                     <td key={i} style={{ padding: '14px 16px', textAlign: 'center', fontWeight: 800, color: i === 2 ? '#1D4ED8' : '#0F172A' }}>
                       {p}
                     </td>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista — Launch Post Options · White + Centred Logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0F1829;--blue:#1D4ED8;--blu:#3B82F6;--green:#059669;--amber:#D97706;--red:#DC2626;--muted:#64748B;--border:#DDE3EC;--bg:#F2F4F7;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;}
+a{text-decoration:none;color:inherit;}
+
+/* ── NAV ─────────────────────────────────────── */
+nav{background:var(--ink);padding:14px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.nav-logo{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.02em;}
+.nav-logo span{color:var(--blu);}
+.nav-right{display:flex;align-items:center;gap:16px;}
+.nav-pill{background:var(--blue);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:6px;}
+.nav-tag{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.04em;}
+
+/* ── INSTRUCTIONS ────────────────────────────── */
+.instructions{background:#1e40af;padding:12px 48px;display:flex;align-items:center;gap:40px;flex-wrap:wrap;}
+.inst-item{display:flex;align-items:center;gap:9px;font-size:12px;color:rgba(255,255,255,.85);}
+.inst-num{background:rgba(255,255,255,.18);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#fff;flex-shrink:0;}
+
+/* ── MAIN ─────────────────────────────────────── */
+main{max-width:1180px;margin:0 auto;padding:40px 48px;}
+
+/* ── SECTION DIVIDER ─────────────────────────── */
+.sec-div{display:flex;align-items:center;gap:16px;margin:52px 0 24px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+
+/* ── POST WRAPPER ─────────────────────────────── */
+.post-wrapper{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:28px;}
+.post-header{display:flex;align-items:flex-start;gap:14px;padding:20px 24px 18px;border-bottom:1px solid var(--border);}
+.post-num{font-size:26px;font-weight:800;color:var(--blue);min-width:44px;line-height:1;}
+.post-meta{flex:1;}
+.post-title{font-size:14px;font-weight:700;color:var(--ink);line-height:1.4;margin-bottom:7px;}
+.badges{display:flex;gap:5px;flex-wrap:wrap;}
+.badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;white-space:nowrap;}
+.b-car{background:#EFF6FF;color:var(--blue);}
+.b-sta{background:#ECFDF5;color:var(--green);}
+.b-fea{background:#FFFBEB;color:var(--amber);}
+
+/* ── POST BODY ────────────────────────────────── */
+.post-body{padding:24px;display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;}
+
+/* ── CAROUSEL / SLIDE AREA ───────────────────── */
+.slide-area{position:relative;flex-shrink:0;}
+.carousel-viewport{width:500px;height:500px;overflow:hidden;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.1);}
+.carousel-track{display:flex;transition:transform .35s cubic-bezier(.4,0,.2,1);height:500px;}
+.carousel-controls{display:flex;align-items:center;gap:10px;margin-top:12px;}
+.nav-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s;color:var(--ink);}
+.nav-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.slide-counter{font-size:12px;font-weight:700;color:var(--muted);min-width:40px;text-align:center;}
+.dots{display:flex;gap:5px;align-items:center;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .15s;}
+.dot.active{background:var(--blue);width:18px;border-radius:3px;}
+
+/* ── SLIDE CARDS ──────────────────────────────── */
+.slide-card{width:500px;height:500px;flex-shrink:0;padding:36px;display:flex;flex-direction:column;position:relative;cursor:pointer;overflow:hidden;}
+.slide-card.light{background:#fff;color:var(--ink);}
+.slide-card.light-bg{background:#F8FAFC;color:var(--ink);}
+.slide-card.green-tint{background:#F0FDF4;color:var(--ink);}
+.slide-card.red-tint{background:#FEF2F2;color:var(--ink);}
+.slide-card::after{content:'⤢  Click to view full size';position:absolute;inset:0;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;letter-spacing:.04em;opacity:0;transition:opacity .2s;border-radius:0;}
+.slide-card:hover::after{opacity:1;}
+
+.s-logo-wrap{flex-shrink:0;line-height:0;}
+.s-content{flex:1;display:flex;flex-direction:column;justify-content:center;padding:4px 0;}
+.s-eyebrow{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:10px;}
+.light .s-eyebrow,.light-bg .s-eyebrow{color:var(--blue);}
+.green-tint .s-eyebrow{color:var(--green);}
+.red-tint .s-eyebrow{color:var(--red);}
+.s-h1{font-size:30px;font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px;color:var(--ink);}
+.s-h2{font-size:20px;font-weight:700;line-height:1.3;margin-bottom:10px;color:var(--ink);}
+.s-body{font-size:13px;line-height:1.65;color:#374151;}
+.s-body strong{font-weight:700;color:var(--ink);}
+.s-items{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+.s-item{font-size:13px;line-height:1.5;padding:9px 13px;border-radius:8px;background:#F8FAFC;color:#374151;}
+.s-item strong{font-weight:700;color:var(--ink);}
+.s-stat{font-size:60px;font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:6px;color:var(--blue);}
+.s-stat-sub{font-size:13px;font-weight:500;color:var(--muted);}
+.s-status-list{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.s-status{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.05);}
+.s-status:last-child{border-bottom:none;}
+.dot-live{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 6px rgba(5,150,105,.5);}
+.s-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:14px;}
+.s-foot-tag{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(0,0,0,.2);}
+
+/* ── RIGHT PANEL (caption) ────────────────────── */
+.right-panel{flex:1;min-width:280px;}
+.caption-box{background:#F8FAFC;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.caption-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);}
+.caption-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);}
+.copy-btn{background:var(--blue);color:#fff;border:none;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;letter-spacing:.04em;}
+.copy-btn:hover{background:#1e40af;}
+.copy-btn.done{background:var(--green);}
+.caption-text{padding:14px 16px;font-size:12px;line-height:1.7;color:#374151;white-space:pre-line;cursor:text;user-select:text;border-bottom:1px solid var(--border);}
+.hashtag-hdr{padding:10px 16px 6px;font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);}
+.hashtags{padding:0 16px 14px;font-size:11px;color:var(--blue);line-height:1.9;cursor:text;user-select:text;}
+
+/* ── MODAL ────────────────────────────────────── */
+#modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:1000;cursor:pointer;}
+#modal-overlay.open{display:flex;}
+#modal-wrap{position:relative;cursor:default;}
+#modal-close{position:absolute;top:-44px;right:0;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;}
+#modal-hint{position:absolute;bottom:-32px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.35);}
+#modal-stage{width:1080px;height:1080px;overflow:hidden;}
+#modal-stage .slide-card{width:540px;height:540px;transform:scale(2);transform-origin:top left;cursor:default;border-radius:0;}
+#modal-stage .slide-card::after{display:none;}
+
+/* ── FOOTER ───────────────────────────────────── */
+footer{background:var(--ink);padding:24px 48px;display:flex;justify-content:space-between;align-items:center;margin-top:40px;}
+.ft-logo{font-size:15px;font-weight:800;color:#fff;}
+.ft-logo span{color:var(--blu);}
+.ft-note{font-size:11px;color:rgba(255,255,255,.3);}
+
+/* ── DOWNLOAD BUTTON ──────────────────────────── */
+.dl-btn{background:var(--ink);color:#fff;border:none;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;letter-spacing:.04em;margin-top:10px;width:100%;}
+.dl-btn:hover{background:#1e40af;}
+.dl-btn:disabled{opacity:.55;cursor:not-allowed;}
+.dl-btn.done{background:var(--green);}
+#modal-dl{position:absolute;top:-44px;left:0;background:var(--blue);border:none;color:#fff;font-size:13px;font-weight:600;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:inherit;letter-spacing:.03em;transition:background .15s;}
+#modal-dl:hover{background:#1e40af;}
+#modal-dl:disabled{opacity:.6;cursor:not-allowed;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Enlist<span>a</span></div>
+  <div class="nav-right">
+    <div class="nav-tag">Launch Post · 5 White Options · April 2026</div>
+    <div class="nav-pill">Pick One</div>
+  </div>
+</nav>
+
+<div class="instructions">
+  <div class="inst-item"><div class="inst-num">1</div> Click <strong style="color:#fff;">⬇ Download Slides</strong> under any option to save as 1080×1080 PNG</div>
+  <div class="inst-item"><div class="inst-num">2</div> Click any slide → view full size → <strong style="color:#fff;">⬇ Download</strong> that slide</div>
+  <div class="inst-item"><div class="inst-num">3</div> Click <strong style="color:#fff;">Copy Caption</strong> then paste into Instagram</div>
+</div>
+
+<main id="app"></main>
+
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-wrap">
+    <button id="modal-close" onclick="closeModal()">✕ Close</button>
+    <button id="modal-dl" onclick="downloadModalSlide()">⬇ Download</button>
+    <div id="modal-stage"></div>
+    <div id="modal-hint">Or screenshot with ⌘+Shift+4 (Mac) · Win+Shift+S (Windows)</div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-logo">Enlist<span>a</span></div>
+  <div class="ft-note">Launch Post Options · White + Centred Logo</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+const BRAND_LOGO = 'ENLISTA_LOGO_PH';
+
+const LOGO_LIGHT = `<div class="s-logo-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 56" height="22" style="display:block;"><rect x="0" y="0" width="16" height="16" rx="3" fill="#2563EB"/><rect x="20" y="0" width="16" height="16" rx="3" fill="#2563EB"/><rect x="40" y="0" width="16" height="16" rx="3" fill="#2563EB"/><rect x="0" y="20" width="16" height="16" rx="3" fill="#2563EB"/><rect x="20" y="20" width="16" height="16" rx="3" fill="#2563EB"/><rect x="40" y="20" width="16" height="16" rx="3" fill="#DBEAFE"/><rect x="0" y="40" width="16" height="16" rx="3" fill="#2563EB"/><rect x="20" y="40" width="16" height="16" rx="3" fill="#2563EB"/><rect x="40" y="40" width="16" height="16" rx="3" fill="#2563EB"/><text x="72" y="43" font-family="'Plus Jakarta Sans','Inter',sans-serif" font-size="36" font-weight="800" letter-spacing="-1.5"><tspan fill="#0F172A">Enlist</tspan><tspan fill="#2563EB">a</tspan></text></svg></div>`;
+
+function foot(tag='enlista.io'){
+  return `<div class="s-foot"><div class="s-foot-tag">${tag}</div></div>`;
+}
+
+const READY_LIST = (items) => `<div class="s-status-list">${items.map(([,label])=>`<div class="s-status"><div class="dot-live"></div><span>${label}</span></div>`).join('')}</div>`;
+
+// Centred logo wrapper helper
+const CLOGO = `<div style="display:flex;justify-content:center;margin-bottom:20px;">${BRAND_LOGO}</div>`;
+
+const POSTS = [
+{
+  section: 'White + Centred Logo — Pick One',
+  id:'W1', title:'W1 — Clean & direct. URL and trial badge front and centre.',
+  badges:[['sta','Static · 1 slide'],['fea','Launch']],
+  caption:`Enlista is live.
+
+Speak your property details. In under 60 seconds you have:
+→ Full English listing (Property Finder + Dubizzle)
+→ Full Arabic listing (Bayut) — written natively, not translated
+→ WhatsApp message — ready to send
+→ Instagram caption — ready to post
+
+All ready to copy and paste. No writing. No translating.
+
+14 days free. No credit card.
+
+enlista.io`,
+  hashtags:'#Enlista #DubaiRealEstate #UAEBroker #Proptech #AIListing #ListingAutomation #DubaiAgent #PropertyFinder #Bayut #Dubizzle #RealEstateDubai #DubaiLaunch',
+  slides:[
+    { theme:'light', html:`${CLOGO}<div class="s-content" style="align-items:center;text-align:center;justify-content:center;gap:0;"><div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;">NOW LIVE</div><div style="font-size:32px;font-weight:800;line-height:1.15;color:var(--ink);letter-spacing:-.02em;margin-bottom:18px;">Bilingual listing copy.<br>Ready to paste.<br>Under 60 seconds.</div><div style="background:#EFF6FF;border-radius:12px;padding:13px 28px;margin-bottom:10px;"><span style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.01em;">enlista.io</span></div><div style="background:var(--blue);border-radius:8px;padding:7px 18px;"><span style="font-size:11px;font-weight:700;color:#fff;letter-spacing:.07em;">14-DAY FREE TRIAL</span></div></div>${foot()}` }
+  ]
+},
+{
+  id:'W2', title:'W2 — "There\'s a faster way." Before vs after. Subtle red → green contrast.',
+  badges:[['car','Carousel · 3 slides'],['fea','Launch']],
+  caption:`There's a faster way to get listing copy ready.
+
+Enlista is live today.
+
+The old way: up to 90 minutes of writing, translating, and reformatting for every single listing.
+
+The new way: speak your property details. Get everything ready to paste in under 60 seconds.
+
+Full English listing. Full Arabic listing. WhatsApp message. Instagram caption. RERA compliance checked.
+
+All from one voice input.
+
+14-day free trial — no credit card required.
+
+enlista.io`,
+  hashtags:'#Enlista #DubaiRealEstate #UAEBroker #Proptech #AIListing #ListingAutomation #DubaiAgent #PropertyFinder #Bayut #Dubizzle #RealEstateDubai #DubaiLaunch',
+  slides:[
+    { theme:'light', html:`${CLOGO}<div class="s-content" style="align-items:center;text-align:center;"><div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;">ENLISTA IS LIVE</div><div style="font-size:34px;font-weight:800;line-height:1.15;color:var(--ink);letter-spacing:-.02em;margin-bottom:14px;">There's a faster way<br>to list a property<br>in Dubai.</div><div style="font-size:13px;color:var(--muted);line-height:1.7;">Up to 90 min of writing → under 60 seconds.<br><strong style="color:var(--ink);">Swipe to see →</strong></div></div>${foot()}` },
+    { theme:'light', html:`${CLOGO}<div class="s-content"><div style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#DC2626;margin-bottom:10px;">THE OLD WAY</div><div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;">One listing. Manual.</div><div style="display:flex;flex-direction:column;gap:7px;"><div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:#FEF2F2;border-radius:8px;font-size:12px;"><span>✏️ Write English copy</span><strong style="color:#DC2626;">30 min</strong></div><div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:#FEF2F2;border-radius:8px;font-size:12px;"><span>🌐 Translate to Arabic</span><strong style="color:#DC2626;">20 min</strong></div><div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:#FEF2F2;border-radius:8px;font-size:12px;"><span>📋 Reformat for 3 portals</span><strong style="color:#DC2626;">30 min</strong></div><div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:#FEF2F2;border-radius:8px;font-size:12px;"><span>✅ RERA compliance</span><strong style="color:#DC2626;">10 min</strong></div></div><div style="text-align:right;margin-top:10px;font-size:22px;font-weight:800;color:#DC2626;">Up to 90 min</div></div>${foot()}` },
+    { theme:'light', html:`${CLOGO}<div class="s-content"><div style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#059669;margin-bottom:10px;">THE NEW WAY — ENLISTA</div><div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;">Same listing. All five outputs.</div><div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;"><div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:#F0FDF4;border-radius:8px;font-size:12px;"><span>✓ Bayut (Arabic) + PF + Dubizzle</span><strong style="color:#059669;">Ready</strong></div><div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:#F0FDF4;border-radius:8px;font-size:12px;"><span>✓ WhatsApp message</span><strong style="color:#059669;">Ready</strong></div><div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:#F0FDF4;border-radius:8px;font-size:12px;"><span>✓ Instagram caption</span><strong style="color:#059669;">Ready</strong></div></div><div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#EFF6FF;border-radius:10px;"><span style="font-size:18px;font-weight:800;color:var(--ink);">enlista.io</span><span style="font-size:11px;font-weight:700;background:var(--blue);color:#fff;padding:5px 12px;border-radius:6px;">14 days free</span></div></div>${foot()}` }
+  ]
+},
+{
+  id:'W3', title:'W3 — "&lt;60 seconds" as the hero number. Outputs as bordered cards. Dark CTA panel.',
+  badges:[['car','Carousel · 3 slides'],['fea','Launch']],
+  caption:`Under 60 seconds.
+
+That's how long it takes with Enlista. Speak your property details. Get everything ready to paste.
+
+Full English listing. Full Arabic listing. WhatsApp message. Instagram caption.
+
+Enlista is live today. 14-day free trial, no credit card required.
+
+enlista.io`,
+  hashtags:'#Enlista #DubaiRealEstate #UAEBroker #Proptech #AIListing #ListingAutomation #DubaiAgent #PropertyFinder #Bayut #Dubizzle #RealEstateDubai #DubaiLaunch',
+  slides:[
+    { theme:'light', html:`${CLOGO}<div class="s-content" style="align-items:center;text-align:center;"><div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">ENLISTA IS LIVE</div><div style="font-size:90px;font-weight:800;color:var(--ink);line-height:.9;letter-spacing:-.04em;">&lt;60</div><div style="font-size:16px;font-weight:600;color:var(--muted);margin:8px 0 16px;">seconds</div><div style="font-size:13px;color:var(--ink);line-height:1.65;max-width:300px;margin:0 auto;">From voice to bilingual listing copy, WhatsApp message, and Instagram caption. All ready to paste.</div></div>${foot()}` },
+    { theme:'light', html:`${CLOGO}<div class="s-content"><div style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;">ONE VOICE INPUT GENERATES</div><div style="display:flex;flex-direction:column;gap:8px;"><div style="padding:12px 16px;border:1.5px solid #DBEAFE;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:var(--ink);">Bayut listing</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Native Arabic · ready to paste</div></div><div style="padding:12px 16px;border:1.5px solid #DBEAFE;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:var(--ink);">Property Finder + Dubizzle</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">English · ready to paste</div></div><div style="padding:12px 16px;border:1.5px solid #DBEAFE;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:var(--ink);">WhatsApp message</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Ready to send</div></div><div style="padding:12px 16px;border:1.5px solid #DBEAFE;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:var(--ink);">Instagram caption</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Ready to post</div></div></div></div>${foot()}` },
+    { theme:'light', html:`${CLOGO}<div class="s-content" style="align-items:center;text-align:center;"><div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;">840 UAE agencies. 124,000 listings.<br>Now open to everyone.</div><div style="width:100%;padding:18px;background:var(--ink);border-radius:14px;margin-bottom:12px;"><div style="font-size:28px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:4px;">enlista.io</div><div style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.04em;">14-DAY FREE TRIAL · NO CREDIT CARD</div></div><div style="font-size:12px;color:var(--muted);">Link in bio →</div></div>${foot()}` }
+  ]
+},
+{
+  id:'W4', title:'W4 — Brand story. "We built this because..." Emotional and purposeful.',
+  badges:[['car','Carousel · 3 slides'],['fea','Launch']],
+  caption:`We built Enlista because UAE brokers were spending up to 90 minutes writing copy for a single listing.
+
+English. Arabic. Bayut. Property Finder. Dubizzle. WhatsApp. Instagram. All separate. All manual. All the same information, entered over and over again.
+
+That needed to end.
+
+Enlista is live today. Speak your property details once. Get everything ready to paste in under 60 seconds.
+
+14-day free trial, no credit card.
+
+enlista.io`,
+  hashtags:'#Enlista #DubaiRealEstate #UAEBroker #Proptech #AIListing #ListingAutomation #DubaiAgent #PropertyFinder #Bayut #Dubizzle #RealEstateDubai #DubaiLaunch',
+  slides:[
+    { theme:'light', html:`${CLOGO}<div class="s-content" style="text-align:center;align-items:center;"><div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;">WHY WE BUILT THIS</div><div style="font-size:20px;font-weight:700;color:var(--ink);line-height:1.55;margin-bottom:14px;">"UAE brokers were spending up to 90 minutes writing copy for a single listing.<br><br>That needed to end."</div><div style="font-size:12px;color:var(--muted);">Enlista is live today. →</div></div>${foot()}` },
+    { theme:'light', html:`${CLOGO}<div class="s-content"><div style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;">THE SAME INFORMATION. ENTERED EVERYWHERE.</div><div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;"><div style="font-size:13px;padding:8px 14px;background:#F8FAFC;border-radius:8px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Bayut</span> · Arabic · manual</div><div style="font-size:13px;padding:8px 14px;background:#F8FAFC;border-radius:8px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Property Finder</span> · English · manual</div><div style="font-size:13px;padding:8px 14px;background:#F8FAFC;border-radius:8px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Dubizzle</span> · English · manual</div><div style="font-size:13px;padding:8px 14px;background:#F8FAFC;border-radius:8px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">WhatsApp</span> · manual</div><div style="font-size:13px;padding:8px 14px;background:#F8FAFC;border-radius:8px;color:var(--muted);"><span style="color:var(--ink);font-weight:600;">Instagram</span> · manual</div></div><div style="font-size:14px;font-weight:700;color:var(--ink);">Not any more.</div></div>${foot()}` },
+    { theme:'light', html:`${CLOGO}<div class="s-content" style="align-items:center;text-align:center;"><div style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#059669;margin-bottom:12px;">NOW — ONE VOICE INPUT</div><div style="font-size:15px;font-weight:700;color:var(--ink);line-height:1.6;margin-bottom:18px;">Speak once. All five outputs ready to paste. Under 60 seconds. Every listing.</div><div style="width:100%;padding:16px 20px;border:2px solid var(--ink);border-radius:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:20px;font-weight:800;color:var(--ink);">enlista.io</span><span style="font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.05em;">14 DAYS FREE</span></div><div style="font-size:11px;color:var(--muted);">No credit card required</div></div>${foot()}` }
+  ]
+},
+{
+  id:'W5', title:'W5 — Maximum breathing room. Minimal copy. Premium feel. Let the design speak.',
+  badges:[['car','Carousel · 2 slides'],['fea','Launch']],
+  caption:`Enlista is live.
+
+The AI listing platform for UAE brokers.
+
+Speak your property details. Get bilingual copy for every portal, a WhatsApp message, and an Instagram caption — all ready to paste in under 60 seconds.
+
+Try it free for 14 days.
+
+enlista.io`,
+  hashtags:'#Enlista #DubaiRealEstate #UAEBroker #Proptech #AIListing #ListingAutomation #DubaiAgent #PropertyFinder #Bayut #Dubizzle #RealEstateDubai #DubaiLaunch',
+  slides:[
+    { theme:'light', html:`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;"><div style="margin-bottom:28px;">${BRAND_LOGO}</div><div style="width:48px;height:2px;background:var(--blue);border-radius:2px;margin-bottom:24px;"></div><div style="font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Now Live</div><div style="font-size:28px;font-weight:800;color:var(--ink);line-height:1.2;letter-spacing:-.02em;margin-bottom:10px;">The AI listing platform<br>for UAE brokers.</div><div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:24px;">Bilingual copy. Every portal.<br>Ready to paste. Under 60 seconds.</div><div style="width:40px;height:2px;background:var(--border);border-radius:2px;"></div></div>${foot()}` },
+    { theme:'light', html:`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;"><div style="margin-bottom:28px;">${BRAND_LOGO}</div><div style="width:48px;height:2px;background:var(--blue);border-radius:2px;margin-bottom:24px;"></div><div style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#059669;margin-bottom:14px;">14-Day Free Trial</div><div style="font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-.03em;margin-bottom:6px;">enlista.io</div><div style="font-size:13px;color:var(--muted);margin-bottom:22px;">No credit card required.</div><div style="width:40px;height:2px;background:var(--border);border-radius:2px;"></div></div>${foot()}` }
+  ]
+}
+];
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+
+const BADGE_CLASS = {car:'b-car',sta:'b-sta',fea:'b-fea'};
+
+function renderBadges(arr){
+  return arr.map(([k,label])=>`<span class="badge ${BADGE_CLASS[k]||''}">${label}</span>`).join('');
+}
+
+function renderSlide(slide){
+  const html = slide.html.replace(/ENLISTA_LOGO_PH/g, LOGO_LIGHT);
+  return `<div class="slide-card ${slide.theme}" data-slide onclick="openModal(this)">${html}</div>`;
+}
+
+function renderPost(post){
+  const isCarousel = post.slides.length > 1;
+  const uid = `post-${post.id}`;
+  const slides = post.slides.map(s=>renderSlide(s)).join('');
+  const controls = isCarousel ? `
+    <div class="carousel-controls">
+      <button class="nav-btn" onclick="prevSlide('${uid}')">←</button>
+      <div class="dots" id="${uid}-dots">
+        ${post.slides.map((_,i)=>`<div class="dot${i===0?' active':''}" onclick="goSlide('${uid}',${i})"></div>`).join('')}
+      </div>
+      <span class="slide-counter" id="${uid}-counter">1 / ${post.slides.length}</span>
+      <button class="nav-btn" onclick="nextSlide('${uid}')">→</button>
+    </div>` : '';
+  return `
+<div class="post-wrapper" id="${uid}">
+  <div class="post-header">
+    <div class="post-num">${post.id}</div>
+    <div class="post-meta">
+      <div class="post-title">${post.title}</div>
+      <div class="badges">${renderBadges(post.badges)}</div>
+    </div>
+  </div>
+  <div class="post-body">
+    <div class="slide-area">
+      <div class="carousel-viewport">
+        <div class="carousel-track" id="${uid}-track">${slides}</div>
+      </div>
+      ${controls}
+      <button class="dl-btn" onclick="downloadPost('${uid}')">⬇ Download${post.slides.length > 1 ? ` All ${post.slides.length} Slides` : ' Slide'}</button>
+    </div>
+    <div class="right-panel">
+      <div class="caption-box">
+        <div class="caption-hdr">
+          <div class="caption-lbl">Instagram Caption</div>
+          <button class="copy-btn" onclick="copyCaption('${uid}')">Copy Caption</button>
+        </div>
+        <div class="caption-text" id="${uid}-cap">${post.caption}</div>
+        <div class="hashtag-hdr">Hashtags</div>
+        <div class="hashtags">${post.hashtags}</div>
+      </div>
+    </div>
+  </div>
+</div>`;
+}
+
+function buildApp(){
+  const app = document.getElementById('app');
+  let html = '';
+  let lastSection = '';
+  POSTS.forEach(post => {
+    if(post.section && post.section !== lastSection){
+      html += `<div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">${post.section}</div><div class="sec-div-line"></div></div>`;
+      lastSection = post.section;
+    }
+    html += renderPost(post);
+  });
+  app.innerHTML = html;
+}
+
+buildApp();
+
+// ─── CAROUSEL ────────────────────────────────────────────────────────────────
+
+const carouselState = {};
+function getState(uid){ if(!carouselState[uid]) carouselState[uid]={current:0}; return carouselState[uid]; }
+function goSlide(uid,n){
+  const track=document.getElementById(`${uid}-track`);
+  if(!track) return;
+  const slides=track.querySelectorAll('.slide-card');
+  const state=getState(uid);
+  state.current=((n%slides.length)+slides.length)%slides.length;
+  track.style.transform=`translateX(-${state.current*500}px)`;
+  document.querySelectorAll(`#${uid}-dots .dot`).forEach((d,i)=>d.classList.toggle('active',i===state.current));
+  const counter=document.getElementById(`${uid}-counter`);
+  if(counter) counter.textContent=`${state.current+1} / ${slides.length}`;
+}
+function nextSlide(uid){ goSlide(uid,getState(uid).current+1); }
+function prevSlide(uid){ goSlide(uid,getState(uid).current-1); }
+
+// ─── COPY CAPTION ────────────────────────────────────────────────────────────
+
+function copyCaption(uid){
+  const cap=document.getElementById(`${uid}-cap`);
+  if(!cap) return;
+  const text=cap.innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.querySelector(`#${uid} .copy-btn`);
+    if(btn){btn.textContent='Copied ✓';btn.classList.add('done');setTimeout(()=>{btn.textContent='Copy Caption';btn.classList.remove('done');},2000);}
+  }).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    const btn=document.querySelector(`#${uid} .copy-btn`);
+    if(btn){btn.textContent='Copied ✓';btn.classList.add('done');setTimeout(()=>{btn.textContent='Copy Caption';btn.classList.remove('done');},2000);}
+  });
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+
+let _modalInfo={postId:null,slideIdx:0};
+
+function openModal(slideEl){
+  const clone=slideEl.cloneNode(true);
+  const stage=document.getElementById('modal-stage');
+  stage.innerHTML='';
+  stage.appendChild(clone);
+  const wrapper=slideEl.closest('.post-wrapper');
+  if(wrapper){
+    const uid=wrapper.id;
+    const post=POSTS.find(p=>`post-${p.id}`===uid);
+    if(post){
+      const track=document.getElementById(`${uid}-track`);
+      const slides=track?Array.from(track.querySelectorAll('.slide-card')):[slideEl];
+      _modalInfo={postId:post.id,slideIdx:slides.indexOf(slideEl)};
+    }
+  }
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modal-overlay')||e.currentTarget.id==='modal-close'){
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal({target:document.getElementById('modal-overlay')});});
+
+// ─── DOWNLOAD ────────────────────────────────────────────────────────────────
+
+async function captureSlide(slideEl){
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:fixed;left:-9999px;top:0;width:500px;height:500px;overflow:hidden;pointer-events:none;';
+  const clone=slideEl.cloneNode(true);
+  clone.style.transform='none';clone.style.transformOrigin='unset';clone.style.cursor='default';clone.style.borderRadius='0';
+  wrap.appendChild(clone);document.body.appendChild(wrap);
+  try{
+    return await html2canvas(wrap,{width:500,height:500,scale:2,useCORS:true,allowTaint:true,backgroundColor:null,logging:false});
+  }finally{document.body.removeChild(wrap);}
+}
+
+async function downloadPost(uid){
+  const post=POSTS.find(p=>`post-${p.id}`===uid);
+  if(!post) return;
+  const btn=document.querySelector(`#${uid} .dl-btn`);
+  if(btn){btn.disabled=true;}
+  const track=document.getElementById(`${uid}-track`);
+  if(!track) return;
+  const slides=Array.from(track.querySelectorAll('.slide-card'));
+  for(let i=0;i<slides.length;i++){
+    if(btn) btn.textContent=slides.length>1?`Saving ${i+1} / ${slides.length}…`:'Saving…';
+    const canvas=await captureSlide(slides[i]);
+    const link=document.createElement('a');
+    link.download=slides.length>1?`enlista-launch-${post.id}-slide-${i+1}.png`:`enlista-launch-${post.id}.png`;
+    link.href=canvas.toDataURL('image/png');link.click();
+    if(i<slides.length-1) await new Promise(r=>setTimeout(r,500));
+  }
+  if(btn){
+    btn.textContent='Downloaded ✓';btn.classList.add('done');
+    setTimeout(()=>{btn.textContent=slides.length>1?`⬇ Download All ${slides.length} Slides`:'⬇ Download Slide';btn.classList.remove('done');btn.disabled=false;},2500);
+  }
+}
+
+async function downloadModalSlide(){
+  const stage=document.getElementById('modal-stage');
+  const slideEl=stage.querySelector('.slide-card');
+  if(!slideEl) return;
+  const btn=document.getElementById('modal-dl');
+  if(btn){btn.textContent='Saving…';btn.disabled=true;}
+  const canvas=await captureSlide(slideEl);
+  const{postId,slideIdx}=_modalInfo;
+  const link=document.createElement('a');
+  link.download=postId?`enlista-launch-${postId}-slide-${(slideIdx||0)+1}.png`:'enlista-launch-slide.png';
+  link.href=canvas.toDataURL('image/png');link.click();
+  if(btn){btn.textContent='⬇ Download';btn.disabled=false;}
+}
+</script>
+</body>
+</html>

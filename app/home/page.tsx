@@ -145,8 +145,8 @@ export default function HomePage() {
               fontSize: 13,
             }}
           >
-            {["Platform", "Clients", "Pricing"].map((label, i) => {
-              const hrefs = ["#features", "#testimonials", "#pricing"];
+            {["Platform", "Clients", "Pricing", "Automations"].map((label, i) => {
+              const hrefs = ["#features", "#testimonials", "#pricing", "/whatsapp-automation"];
               return (
                 <a
                   key={label}
