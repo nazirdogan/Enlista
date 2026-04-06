@@ -12,7 +12,7 @@ const text = '#1E293B'
 const NAV_LINKS = [
   { label: 'Platform', href: '/#features' },
   { label: 'Clients', href: '/#testimonials' },
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Pricing', href: '/#pricing' },
   { label: 'Automations', href: '/whatsapp-automation' },
 ]
 

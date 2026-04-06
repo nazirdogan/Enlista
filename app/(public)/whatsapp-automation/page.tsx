@@ -249,19 +249,16 @@ export default function WhatsAppAutomationPage() {
                 </div>
               </div>
               {/* Chat area */}
-              <div style={{ background: '#ECE5DD', padding: '12px 10px', height: 240,
-                borderRadius: '0 0 12px 12px', overflowY: 'auto' }}>
+              <div style={{ background: '#ECE5DD', padding: '10px 10px 6px',
+                borderRadius: '0 0 12px 12px' }}>
                 <ChatBubble sender="bot" time="9:01 AM"
-                  text={"Hi! 👋 You enquired about the 2BR in Dubai Marina. What's your budget?\n\n1. Below AED 1.9M\n2. AED 1.9M–2.2M\n3. Above AED 2.2M"} />
+                  text={"Hi! 👋 You enquired about the 2BR in Dubai Marina. What's your budget?\n1. Below AED 1.9M  2. AED 1.9M–2.2M  3. Above AED 2.2M"} />
                 <ChatBubble sender="lead" time="9:03 AM" text="2" />
                 <ChatBubble sender="bot" time="9:03 AM"
-                  text={"Perfect match! 🎯 Are you a cash buyer or planning a mortgage?"} />
+                  text={"Perfect match! 🎯 Cash buyer or mortgage?"} />
                 <ChatBubble sender="lead" time="9:04 AM" text="Cash buyer" />
                 <ChatBubble sender="bot" time="9:04 AM"
-                  text={"Great! Ahmed will be in touch within 30 mins.\n\nWould you like to book a viewing now?\n\nReply BOOK to choose a slot 📅"} />
-                <ChatBubble sender="lead" time="9:05 AM" text="BOOK" />
-                <ChatBubble sender="bot" time="9:05 AM"
-                  text={"Available this week:\n\n1. Mon 7 Apr — 10:00 AM\n2. Mon 7 Apr — 3:00 PM\n3. Tue 8 Apr — 11:00 AM\n\nReply with your preferred slot."} />
+                  text={"Great! Reply BOOK to choose a viewing slot 📅"} />
               </div>
               {/* Lead score pill */}
               <div style={{ margin: '10px 4px 0', background: '#1E293B', borderRadius: 10, padding: '8px 14px',
