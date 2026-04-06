@@ -119,6 +119,14 @@ function ActChat({
       padding: '40px 20px',
       gap: 24,
     }}>
+      {/* Keyframe at component root — not inside conditional — consistent with WhatsAppPhone pattern */}
+      <style>{`
+        @keyframes pulse-in {
+          from { opacity: 0; transform: scale(0.92); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: wa, textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 8 }}>
           Act 2 — Live Chat
@@ -139,28 +147,20 @@ function ActChat({
       />
 
       {isDone && (
-        <>
-          <style>{`
-            @keyframes pulse-in {
-              from { opacity: 0; transform: scale(0.92); }
-              to   { opacity: 1; transform: scale(1); }
-            }
-          `}</style>
-          <button
-            onClick={onReveal}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: '#8b5cf6', color: '#fff',
-              padding: '14px 32px', borderRadius: 10,
-              fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
-              boxShadow: '0 6px 24px rgba(139,92,246,0.4)',
-              fontFamily: 'var(--font-jakarta), sans-serif',
-              animation: 'pulse-in 0.4s ease-out',
-            }}
-          >
-            See what Ahmed just received 🔥
-          </button>
-        </>
+        <button
+          onClick={onReveal}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: '#8b5cf6', color: '#fff',
+            padding: '14px 32px', borderRadius: 10,
+            fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
+            boxShadow: '0 6px 24px rgba(139,92,246,0.4)',
+            fontFamily: 'var(--font-jakarta), sans-serif',
+            animation: 'pulse-in 0.4s ease-out',
+          }}
+        >
+          See what Ahmed just received 🔥
+        </button>
       )}
     </div>
   )
@@ -250,9 +250,12 @@ function ActReveal({
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>Mon 7 Apr — 10:00 AM · Marina Heights</div>
         </div>
 
-        <div style={{ marginTop: 14, padding: '9px 14px', background: waDark, borderRadius: 8, textAlign: 'center', fontSize: 12, fontWeight: 600, color: '#fff' }}>
+        <a
+          href="/dashboard"
+          style={{ display: 'block', marginTop: 14, padding: '9px 14px', background: waDark, borderRadius: 8, textAlign: 'center', fontSize: 12, fontWeight: 600, color: '#fff', textDecoration: 'none' }}
+        >
           Open in Enlista Dashboard →
-        </div>
+        </a>
       </div>
 
       {/* CTA */}
