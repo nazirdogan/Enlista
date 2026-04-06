@@ -91,7 +91,7 @@ export function WhatsAppPhone({ messages, isTyping, onSend, disabled }: WhatsApp
 
   return (
     <div style={{
-      width: 300,
+      width: 'min(300px, 100%)',
       background: '#1a1a2e',
       borderRadius: 32,
       padding: '12px 12px 16px',

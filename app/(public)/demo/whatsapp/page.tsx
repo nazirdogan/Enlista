@@ -23,7 +23,7 @@ const STEPS: Array<{ step: string; label: string }> = [
   { step: 'residency', label: 'Residency' },
 ]
 
-const BAND_CONFIG = {
+const BAND_CONFIG: Record<'HOT' | 'WARM' | 'COLD', { emoji: string; color: string; bg: string; label: string }> = {
   HOT:  { emoji: '🔥', color: '#16a34a', bg: '#f0fdf4', label: 'HOT Lead' },
   WARM: { emoji: '🌡️', color: '#d97706', bg: '#fffbeb', label: 'WARM Lead' },
   COLD: { emoji: '❄️', color: '#2563eb', bg: '#eff6ff', label: 'COLD Lead' },
@@ -33,7 +33,8 @@ export default function WhatsAppDemoPage() {
   const { messages, step, isTyping, isDone, score, band, sendMessage, restart } = useWhatsAppDemo()
 
   const currentStepIndex = STEPS.findIndex(s => s.step === step)
-  const progressIndex = isDone ? STEPS.length : Math.max(currentStepIndex, 0)
+  // Pin to STEPS.length when done OR when in closing/booking steps (not in STEPS array)
+  const progressIndex = isDone || currentStepIndex === -1 ? STEPS.length : currentStepIndex
   const bandConf = BAND_CONFIG[band]
 
   return (
