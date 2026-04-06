@@ -368,7 +368,7 @@ export default function WhatsAppAutomationPage() {
               ['⚡', '#8B5CF6', 'AI processing'],
               ['🔔', c.amber, 'Agent alert'],
               ['✅', c.green, 'Completed'],
-            ].map(([icon, color, label]) => (
+            ].map(([, color, label]) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6,
                 fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: color as string }} />
@@ -449,7 +449,7 @@ export default function WhatsAppAutomationPage() {
                       ['Financing', 'Cash buyer', 20, c.green],
                       ['Intent', 'Investment', 15, c.amber],
                       ['Eligibility', 'UAE Resident', 3, c.amber],
-                    ].map(([label, val, pts, col]) => (
+                    ].map(([label, , pts, col]) => (
                       <div key={label as string} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <div style={{ fontSize: 12, color: c.muted, width: 80, flexShrink: 0 }}>{label}</div>
                         <div style={{ flex: 1, height: 6, background: c.border, borderRadius: 3, overflow: 'hidden' }}>
@@ -759,7 +759,7 @@ export default function WhatsAppAutomationPage() {
           </h2>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', lineHeight: 1.8,
             margin: '0 0 36px' }}>
-            Every hour your listing sits without an instant reply is a deal going to another agent. Enlista's WhatsApp automation replies in 30 seconds — while you sleep.
+            Every hour your listing sits without an instant reply is a deal going to another agent. Enlista&apos;s WhatsApp automation replies in 30 seconds — while you sleep.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="/contact-sales" style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -786,7 +786,7 @@ export default function WhatsAppAutomationPage() {
           Enlist<span style={{ color: c.blue }}>a</span>
         </div>
         <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
-          © 2026 Enlista. Built for Dubai's real estate agents.
+          © 2026 Enlista. Built for Dubai&apos;s real estate agents.
         </div>
         <div style={{ display: 'flex', gap: 20, fontSize: 12 }}>
           {[['Home', '/home'], ['Pricing', '/pricing'], ['Contact Sales', '/contact-sales']].map(([label, href]) => (
