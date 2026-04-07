@@ -6,6 +6,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Menu, X, LayoutDashboard, Plus, List, BarChart2, Settings, Zap, ShoppingBag } from 'lucide-react'
 import OutOfCreditsModal from '@/components/OutOfCreditsModal'
+import TrialBanner from '@/components/TrialBanner'
+import TrialExpiredModal from '@/components/TrialExpiredModal'
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -19,9 +21,13 @@ interface CreditInfo {
   plan: string
   creditsRemaining: number
   extraCredits: number
+  listingCredits: number
   totalCredits: number
   creditLimit: number
   nextReset: string
+  accountStatus: string
+  trialEndsAt: string | null
+  daysRemaining: number | null
 }
 
 function PlanLabel({ plan }: { plan: string }) {
@@ -61,6 +67,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [credits, setCredits] = useState<CreditInfo | null>(null)
   const [buyModalOpen, setBuyModalOpen] = useState(false)
   const [userEmail, setUserEmail] = useState('')
+  const [accountStatus, setAccountStatus] = useState<string | null>(null)
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null)
 
   const fetchCredits = useCallback(async () => {
     try {
@@ -68,6 +76,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (res.ok) {
         const data = await res.json()
         setCredits(data)
+        setAccountStatus(data.accountStatus ?? null)
+        setDaysRemaining(data.daysRemaining ?? null)
       }
     } catch {
       // non-critical — credits will be null (hidden)
@@ -293,6 +303,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main content */}
       <main style={{ flex: 1, background: '#F2F4F7', minHeight: '100vh', paddingTop: 48 }} className="md:ml-[240px] md:pt-0">
         <div style={{ maxWidth: 1280, margin: '0 auto' }} className="p-4 md:p-8">
+          {accountStatus === 'trial' && daysRemaining !== null && (
+            <TrialBanner daysRemaining={daysRemaining} />
+          )}
           {children}
         </div>
       </main>
@@ -307,6 +320,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           extraCredits={credits.extraCredits}
         />
       )}
+
+      {accountStatus === 'trial_expired' && <TrialExpiredModal />}
     </div>
   )
 }
