@@ -28,9 +28,11 @@ export default function TrialExpiredModal() {
           width: 56, height: 56, borderRadius: '50%',
           background: '#FEF2F2', margin: '0 auto 20px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 28,
         }}>
-          ⏰
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
         </div>
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0F1829', margin: '0 0 10px' }}>

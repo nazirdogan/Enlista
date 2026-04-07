@@ -99,8 +99,10 @@ export default function SettingsPage() {
   }, [])
 
   useEffect(() => {
-    fetchReferralStats()
-  }, [fetchReferralStats])
+    if (tab === 'referrals') {
+      fetchReferralStats()
+    }
+  }, [tab, fetchReferralStats])
 
   const handleSave = async () => {
     if (!agency) return
@@ -347,7 +349,7 @@ export default function SettingsPage() {
           {referralStats && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
               {[
-                { label: 'Referrals sent', value: referralStats.sent },
+                { label: 'People referred', value: referralStats.sent },
                 { label: 'Successful referrals', value: referralStats.converted },
                 { label: 'Credits earned total', value: referralStats.totalCreditsEarned },
                 { label: 'Current credit balance', value: referralStats.currentBalance },
