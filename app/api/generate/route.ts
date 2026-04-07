@@ -132,6 +132,9 @@ Return only valid JSON, no markdown code blocks, no extra text.`
 interface AgencyCredits {
   id: string
   plan: string
+  account_status: string
+  trial_ends_at: string | null
+  listing_credits: number
   credits_remaining: number
   extra_credits: number
   credits_reset_at: string | null
@@ -149,18 +152,42 @@ function getPlanLimit(plan: string): number {
 
 async function checkAndDecrementCredits(userId: string): Promise<
   | { ok: true; plan: string; creditsRemaining: number; extraCredits: number }
-  | { ok: false; error: string; creditsRemaining: number; extraCredits: number }
+  | { ok: false; error: string; creditsRemaining: number; extraCredits: number; trialExpired?: boolean; upgradeRequired?: boolean }
 > {
   const db = createAdminClient()
 
   const { data: agency, error: fetchErr } = await db
     .from('agencies')
-    .select('id, plan, credits_remaining, extra_credits, credits_reset_at')
+    .select('id, plan, account_status, trial_ends_at, credits_remaining, extra_credits, listing_credits, credits_reset_at')
     .eq('user_id', userId)
     .single<AgencyCredits>()
 
   if (fetchErr || !agency) {
     return { ok: false, error: 'Agency not found', creditsRemaining: 0, extraCredits: 0 }
+  }
+
+  // ── Trial status check ────────────────────────────────────────────────────
+  if (agency.account_status === 'trial') {
+    const now = new Date()
+    const trialEnds = agency.trial_ends_at ? new Date(agency.trial_ends_at) : null
+    if (trialEnds && now > trialEnds) {
+      await db.from('agencies').update({ account_status: 'trial_expired' }).eq('id', agency.id)
+      return {
+        ok: false,
+        error: 'Your 30-day free trial has expired. Upgrade to keep generating listings.',
+        creditsRemaining: 0,
+        extraCredits: 0,
+        trialExpired: true,
+      }
+    }
+  } else if (agency.account_status === 'trial_expired' || agency.account_status === 'cancelled') {
+    return {
+      ok: false,
+      error: 'Your account does not have an active subscription. Please upgrade to continue.',
+      creditsRemaining: 0,
+      extraCredits: 0,
+      upgradeRequired: true,
+    }
   }
 
   // Auto-reset if we've rolled into a new calendar month
@@ -174,6 +201,19 @@ async function checkAndDecrementCredits(userId: string): Promise<
       .from('agencies')
       .update({ credits_remaining: creditsRemaining, credits_reset_at: now.toISOString() })
       .eq('id', agency.id)
+  }
+
+  // Deduct listing_credits (referral credits) first before monthly quota
+  if (agency.listing_credits > 0) {
+    const { error: updateErr } = await db
+      .from('agencies')
+      .update({ listing_credits: agency.listing_credits - 1 })
+      .eq('id', agency.id)
+    if (updateErr) {
+      console.error('Failed to decrement listing_credits:', updateErr)
+      return { ok: false, error: 'Failed to update credits', creditsRemaining, extraCredits: agency.extra_credits }
+    }
+    return { ok: true, plan: agency.plan, creditsRemaining, extraCredits: agency.extra_credits }
   }
 
   const totalCredits = creditsRemaining + agency.extra_credits
