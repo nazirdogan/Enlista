@@ -282,14 +282,18 @@ export async function POST(request: Request) {
   // ── Credit check & decrement ──────────────────────────────────────────────
   const creditResult = await checkAndDecrementCredits(userId)
   if (!creditResult.ok) {
+    // Use 403 for trial/auth blocks, 402 for out-of-credits
+    const status = (creditResult.trialExpired || creditResult.upgradeRequired) ? 403 : 402
     return Response.json(
       {
         error: creditResult.error,
         creditsRemaining: creditResult.creditsRemaining,
         extraCredits: creditResult.extraCredits,
-        outOfCredits: true,
+        outOfCredits: !creditResult.trialExpired && !creditResult.upgradeRequired,
+        ...(creditResult.trialExpired && { trialExpired: true }),
+        ...(creditResult.upgradeRequired && { upgradeRequired: true }),
       },
-      { status: 402 }
+      { status }
     )
   }
 
