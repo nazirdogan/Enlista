@@ -16,10 +16,12 @@ ALTER TABLE agencies
   ADD COLUMN IF NOT EXISTS listing_credits integer NOT NULL DEFAULT 0;
 
 -- 2. Backfill trial_ends_at for all rows
+-- `is_trial` and `trial_started_at` are present since migration 002_outreach.sql
 UPDATE agencies
 SET trial_ends_at = COALESCE(trial_started_at, created_at) + INTERVAL '30 days';
 
 -- 3. Backfill account_status and subscribed_at for active (non-trial) users
+-- `is_trial` and `trial_started_at` are present since migration 002_outreach.sql
 UPDATE agencies
 SET
   account_status = 'active',
@@ -38,12 +40,17 @@ WHERE is_trial = true;
 CREATE OR REPLACE FUNCTION set_referral_code_on_insert()
 RETURNS trigger AS $$
 DECLARE
-  chars text := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  code  text;
-  i     int;
+  chars    text := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  code     text;
+  i        int;
+  attempts int := 0;
 BEGIN
   IF new.referral_code IS NULL THEN
     LOOP
+      attempts := attempts + 1;
+      IF attempts > 10 THEN
+        RAISE EXCEPTION 'Could not generate unique referral code after 10 attempts';
+      END IF;
       code := 'ENL-';
       FOR i IN 1..5 LOOP
         code := code || substr(chars, floor(random() * 36 + 1)::int, 1);
@@ -64,13 +71,19 @@ CREATE TRIGGER set_referral_code
 -- 6. Backfill referral codes for existing rows that have none
 DO $$
 DECLARE
-  rec   record;
-  chars text := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  code  text;
-  i     int;
+  rec      record;
+  chars    text := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  code     text;
+  i        int;
+  attempts int;
 BEGIN
   FOR rec IN SELECT id FROM agencies WHERE referral_code IS NULL LOOP
+    attempts := 0;
     LOOP
+      attempts := attempts + 1;
+      IF attempts > 10 THEN
+        RAISE EXCEPTION 'Could not generate unique referral code after 10 attempts for agency %', rec.id;
+      END IF;
       code := 'ENL-';
       FOR i IN 1..5 LOOP
         code := code || substr(chars, floor(random() * 36 + 1)::int, 1);
@@ -90,11 +103,13 @@ CREATE TABLE IF NOT EXISTS referrals (
   created_at         timestamptz NOT NULL DEFAULT now(),
   converted_at       timestamptz,
   credits_awarded    boolean     NOT NULL DEFAULT false,
-  credits_awarded_at timestamptz
+  credits_awarded_at timestamptz,
+  CONSTRAINT chk_credits_awarded_consistency
+    CHECK (credits_awarded = (credits_awarded_at IS NOT NULL))
 );
 
 -- 8. Indexes
-CREATE INDEX IF NOT EXISTS idx_agencies_referral_code ON agencies(referral_code);
+-- Note: idx_agencies_referral_code is omitted — the UNIQUE constraint on referral_code already creates an index.
 CREATE INDEX IF NOT EXISTS idx_agencies_referred_by   ON agencies(referred_by_agency_id);
 CREATE INDEX IF NOT EXISTS idx_referrals_referrer     ON referrals(referrer_agency_id);
 CREATE INDEX IF NOT EXISTS idx_referrals_referred     ON referrals(referred_agency_id);
