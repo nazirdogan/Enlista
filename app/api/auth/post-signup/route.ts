@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
   const isDev = process.env.NODE_ENV === 'development'
   let userId: string | null = null
 
+  // DEV ONLY: skips auth. Ensure NODE_ENV is never 'development' in staging/production.
   if (isDev && process.env.DEV_USER_ID) {
     userId = process.env.DEV_USER_ID
   } else {
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => ({}))
-  const refCode: string | null = body.refCode ?? null
+  const refCode: string | null = typeof body.refCode === 'string' ? body.refCode : null
 
   const db = createAdminClient()
 
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
   const { data: referrerAgency } = await db
     .from('agencies')
     .select('id')
+    // stored codes are always uppercase (DB trigger); toUpperCase() covers case-insensitive match
     .eq('referral_code', refCode.toUpperCase())
     .single()
 
@@ -72,16 +74,24 @@ export async function POST(req: NextRequest) {
   }
 
   // Set referred_by on the new agency
-  await db
+  const { error: updateErr } = await db
     .from('agencies')
     .update({ referred_by_agency_id: referrerAgency.id })
     .eq('id', newAgency.id)
 
-  // Create referral record
-  await db.from('referrals').insert({
+  if (updateErr) {
+    console.error('[post-signup] referral agency update failed', updateErr)
+    return NextResponse.json({ ok: true })
+  }
+
+  const { error: insertErr } = await db.from('referrals').insert({
     referrer_agency_id: referrerAgency.id,
     referred_agency_id: newAgency.id,
   })
+
+  if (insertErr) {
+    console.error('[post-signup] referral record insert failed', insertErr)
+  }
 
   return NextResponse.json({ ok: true })
 }
