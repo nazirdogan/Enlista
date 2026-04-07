@@ -133,6 +133,8 @@ export default function AuthForm() {
     const params = new URLSearchParams(window.location.search)
     const t = params.get('t')
     if (t) localStorage.setItem('enlista_outreach_token', t)
+    const ref = params.get('ref')
+    if (ref) localStorage.setItem('enlista_ref_code', ref)
   }, [])
 
   const switchTab = (t: Tab) => {
@@ -205,6 +207,8 @@ export default function AuthForm() {
         return
       }
 
+      const trialStartedAt = new Date().toISOString()
+      const trialEndsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       const { error: agencyError } = await supabase.from('agencies').insert({
         user_id: data.user.id,
         name: agencyName,
@@ -212,6 +216,9 @@ export default function AuthForm() {
         phone: phoneNumber,
         city,
         country,
+        account_status: 'trial',
+        trial_started_at: trialStartedAt,
+        trial_ends_at: trialEndsAt,
       })
       if (agencyError && agencyError.code !== '23505') {
         console.error('Agency creation error:', agencyError)
@@ -229,6 +236,20 @@ export default function AuthForm() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: outreachToken, userId: data.user.id }),
         }).then(() => localStorage.removeItem('enlista_outreach_token'))
+      }
+
+      // Call post-signup to send trial email and handle referral attribution
+      const refCode = typeof window !== 'undefined'
+        ? localStorage.getItem('enlista_ref_code')
+        : null
+      if (data.user?.id) {
+        fetch('/api/auth/post-signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refCode }),
+        }).then(() => {
+          if (refCode) localStorage.removeItem('enlista_ref_code')
+        })
       }
 
       router.push('/dashboard')
@@ -268,7 +289,7 @@ export default function AuthForm() {
             </h1>
           </Link>
           <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
-            {tab === 'signin' ? 'Sign in to your account' : '14-day free trial · No credit card required'}
+            {tab === 'signin' ? 'Sign in to your account' : '30-day free trial · No credit card required'}
           </p>
         </div>
 

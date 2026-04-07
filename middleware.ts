@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Dashboard routes: must be authenticated
+  // Dashboard routes: must be authenticated AND have an active subscription
   if (
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/new') ||
@@ -57,6 +57,30 @@ export async function middleware(request: NextRequest) {
   ) {
     if (!user) {
       return NextResponse.redirect(new URL('/auth', request.url))
+    }
+
+    // Skip subscription check when returning from Stripe checkout (webhook may not
+    // have fired yet — the checkout=trial/success param signals this)
+    const fromCheckout = request.nextUrl.searchParams.get('checkout')
+    if (!fromCheckout) {
+      const { data: agency, error: agencyError } = await supabase
+        .from('agencies')
+        .select('account_status')
+        .eq('user_id', user.id)
+        .single()
+
+      // PGRST116 = "no rows" (new user, no agency yet) — redirect to onboarding
+      // Other errors = infrastructure issue — fail open to avoid blocking active subscribers
+      if (agencyError && agencyError.code !== 'PGRST116') {
+        console.error('[middleware] agency lookup failed:', agencyError.message)
+        return supabaseResponse
+      }
+
+      const status = agency?.account_status
+      const allowed = ['trial', 'active']
+      if (!status || !allowed.includes(status)) {
+        return NextResponse.redirect(new URL('/onboarding', request.url))
+      }
     }
   }
 

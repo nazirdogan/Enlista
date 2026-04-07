@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { PageHeading, BentoCard } from '@/components/ui'
 
-type Tab = 'profile' | 'subscription'
+type Tab = 'profile' | 'subscription' | 'referrals'
 
 const TONES = [
   { value: 'professional', label: 'Professional', desc: 'Clean, factual, broker-grade copy' },
@@ -37,6 +37,15 @@ export default function SettingsPage() {
   const [email, setEmail] = useState('')
   const [defaultTone, setDefaultTone] = useState('professional')
   const [defaultDisclaimer, setDefaultDisclaimer] = useState('')
+
+  const [referralCode, setReferralCode] = useState<string | null>(null)
+  const [referralStats, setReferralStats] = useState<{
+    sent: number
+    converted: number
+    totalCreditsEarned: number
+    currentBalance: number
+  } | null>(null)
+  const [referralCopied, setReferralCopied] = useState(false)
 
   const fetchData = useCallback(async () => {
     try {
@@ -72,6 +81,28 @@ export default function SettingsPage() {
   }, [supabase])
 
   useEffect(() => { fetchData() }, [fetchData])
+
+  const fetchReferralStats = useCallback(async () => {
+    try {
+      const res = await fetch('/api/referrals/stats')
+      if (res.ok) {
+        const data = await res.json()
+        setReferralCode(data.referralCode)
+        setReferralStats({
+          sent: data.sent,
+          converted: data.converted,
+          totalCreditsEarned: data.totalCreditsEarned,
+          currentBalance: data.currentBalance,
+        })
+      }
+    } catch { /* non-critical */ }
+  }, [])
+
+  useEffect(() => {
+    if (tab === 'referrals') {
+      fetchReferralStats()
+    }
+  }, [tab, fetchReferralStats])
 
   const handleSave = async () => {
     if (!agency) return
@@ -113,6 +144,7 @@ export default function SettingsPage() {
         {([
           { key: 'profile', label: 'Agency Profile' },
           { key: 'subscription', label: 'Subscription' },
+          { key: 'referrals', label: 'Referrals' },
         ] as { key: Tab; label: string }[]).map((t) => (
           <button
             key={t.key}
@@ -276,6 +308,68 @@ export default function SettingsPage() {
               Upgrade to Agency Plan →
             </button>
           </BentoCard>
+        </div>
+      )}
+
+      {tab === 'referrals' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0F1829', marginBottom: 4 }}>Your Referral Link</h3>
+            <p style={{ fontSize: 13, color: '#64748B', marginBottom: 12 }}>
+              Share this link. When someone signs up and activates a paid plan, you earn 10 listing credits.
+            </p>
+            {referralCode ? (
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  readOnly
+                  value={`https://enlista.io/auth?tab=signup&ref=${referralCode}`}
+                  style={{ ...inputStyle, flex: 1, background: '#F8FAFC', color: '#475569', cursor: 'text' }}
+                />
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`https://enlista.io/auth?tab=signup&ref=${referralCode}`)
+                    setReferralCopied(true)
+                    setTimeout(() => setReferralCopied(false), 2000)
+                  }}
+                  style={{
+                    padding: '11px 16px', borderRadius: 6, border: '1.5px solid #DDE3EC',
+                    background: referralCopied ? '#F0FDF4' : '#FFFFFF', cursor: 'pointer',
+                    fontSize: 13, fontWeight: 600, color: referralCopied ? '#16A34A' : '#0F1829',
+                    fontFamily: 'inherit', whiteSpace: 'nowrap', transition: 'all 0.2s',
+                  }}
+                >
+                  {referralCopied ? 'Copied!' : 'Copy link'}
+                </button>
+              </div>
+            ) : (
+              <p style={{ color: '#94A3B8', fontSize: 13 }}>Loading...</p>
+            )}
+          </div>
+
+          {referralStats && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+              {[
+                { label: 'People referred', value: referralStats.sent },
+                { label: 'Successful referrals', value: referralStats.converted },
+                { label: 'Credits earned total', value: referralStats.totalCreditsEarned },
+                { label: 'Current credit balance', value: referralStats.currentBalance },
+              ].map(({ label, value }) => (
+                <div key={label} style={{
+                  background: '#F8FAFC', borderRadius: 10, padding: '16px 20px',
+                  border: '1px solid #DDE3EC',
+                }}>
+                  <div style={{ fontSize: 24, fontWeight: 800, color: '#0F1829' }}>{value}</div>
+                  <div style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>{label}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div style={{ background: '#EFF6FF', borderRadius: 10, padding: '14px 16px', border: '1px solid #BFDBFE' }}>
+            <p style={{ fontSize: 13, color: '#1E3A8A', margin: 0, lineHeight: 1.6 }}>
+              <strong>How it works:</strong> When someone signs up via your link and activates a paid plan, you instantly receive 10 listing credits. Credits are used automatically before your monthly quota. They never expire.
+            </p>
+          </div>
         </div>
       )}
     </div>

@@ -117,9 +117,12 @@ export async function POST(req: NextRequest) {
 
       // Update agency plan + reset credits to the new plan's monthly allowance
       const creditLimit = getPlanCreditLimit(plan)
+      const isTrialing = sub.status === 'trialing'
       await db.from('agencies').update({
         plan,
-        is_trial: false,
+        is_trial: isTrialing,
+        account_status: isTrialing ? 'trial' : 'active',
+        subscribed_at: isTrialing ? null : new Date().toISOString(),
         credits_remaining: creditLimit,
         credits_reset_at: new Date().toISOString(),
       }).eq('id', agencyId)
@@ -138,19 +141,78 @@ export async function POST(req: NextRequest) {
       const plan = sub.metadata?.plan
       if (!agencyId || !plan) break
 
+      // Skip free/trial invoices — referral credits should only be awarded on actual payment
+      if ((invoice.amount_paid ?? 0) === 0) break
+
       const creditLimit = getPlanCreditLimit(plan)
       await db.from('agencies').update({
+        plan,
+        is_trial: false,
+        account_status: 'active',
+        subscribed_at: new Date().toISOString(),
         credits_remaining: creditLimit,
         credits_reset_at: new Date().toISOString(),
       }).eq('id', agencyId)
 
-      // Keep subscription period_end up to date
       const periodEnd = sub.items.data[0]?.current_period_end
       await db.from('subscriptions').update({
         status: sub.status,
         current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
         updated_at: new Date().toISOString(),
       }).eq('stripe_subscription_id', sub.id)
+
+      // ── Referral credit award ──────────────────────────────────────────────
+      const { data: convertedAgency } = await db
+        .from('agencies')
+        .select('id, name, referred_by_agency_id')
+        .eq('id', agencyId)
+        .single()
+
+      if (convertedAgency?.referred_by_agency_id) {
+        const { data: referral } = await db
+          .from('referrals')
+          .select('id, credits_awarded')
+          .eq('referred_agency_id', agencyId)
+          .eq('referrer_agency_id', convertedAgency.referred_by_agency_id)
+          .single()
+
+        if (referral && !referral.credits_awarded) {
+          const { data: referrer } = await db
+            .from('agencies')
+            .select('id, email, name, listing_credits')
+            .eq('id', convertedAgency.referred_by_agency_id)
+            .single()
+
+          if (referrer) {
+            const newBalance = (referrer.listing_credits ?? 0) + 10
+            await db
+              .from('agencies')
+              .update({ listing_credits: newBalance })
+              .eq('id', referrer.id)
+
+            await db
+              .from('referrals')
+              .update({
+                credits_awarded: true,
+                converted_at: new Date().toISOString(),
+                credits_awarded_at: new Date().toISOString(),
+              })
+              .eq('id', referral.id)
+
+            if (referrer.email) {
+              const { sendTransactionalEmail } = await import('@/lib/email/resend')
+              await sendTransactionalEmail({
+                type: 'credits_awarded',
+                to: referrer.email,
+                agencyName: referrer.name ?? 'your agency',
+                credits: 10,
+                newBalance,
+                referredName: convertedAgency.name ?? 'A new user',
+              }).catch(console.error)
+            }
+          }
+        }
+      }
 
       break
     }
@@ -192,6 +254,7 @@ export async function POST(req: NextRequest) {
       if (agencyId) {
         await db.from('agencies').update({
           plan: 'free',
+          account_status: 'cancelled',
           credits_remaining: 1,
           credits_reset_at: new Date().toISOString(),
         }).eq('id', agencyId)
