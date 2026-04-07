@@ -147,6 +147,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </p>
           )}
 
+          {(credits.listingCredits ?? 0) > 0 && (
+            <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', margin: '5px 0 0' }}>
+              +{credits.listingCredits} referral credits
+            </p>
+          )}
+
           <button
             onClick={() => setBuyModalOpen(true)}
             style={{
