@@ -141,6 +141,9 @@ export async function POST(req: NextRequest) {
       const plan = sub.metadata?.plan
       if (!agencyId || !plan) break
 
+      // Skip free/trial invoices — referral credits should only be awarded on actual payment
+      if ((invoice.amount_paid ?? 0) === 0) break
+
       const creditLimit = getPlanCreditLimit(plan)
       await db.from('agencies').update({
         plan,

@@ -66,9 +66,9 @@ export async function GET() {
   return NextResponse.json({
     plan: agency.plan,
     creditsRemaining,
-    extraCredits: agency.extra_credits,
+    extraCredits: agency.extra_credits ?? 0,
     listingCredits: agency.listing_credits ?? 0,
-    totalCredits: creditsRemaining + agency.extra_credits,
+    totalCredits: creditsRemaining + (agency.extra_credits ?? 0),
     creditLimit: getPlanCreditLimit(agency.plan),
     nextReset: nextReset.toISOString(),
     accountStatus,
