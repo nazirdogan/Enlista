@@ -116,6 +116,7 @@ export async function POST(req: NextRequest) {
       }
 
       // Update agency plan + reset credits to the new plan's monthly allowance
+      // is_trial stays true while the subscription is trialing; cleared on invoice.paid
       const creditLimit = getPlanCreditLimit(plan)
       const isTrialing = sub.status === 'trialing'
       await db.from('agencies').update({
@@ -260,6 +261,32 @@ export async function POST(req: NextRequest) {
         }).eq('id', agencyId)
       }
 
+      break
+    }
+
+    // ── Trial ending in 3 days — send reminder email ───────────────────────
+    case "customer.subscription.trial_will_end": {
+      const sub = event.data.object as Stripe.Subscription
+      const agencyId = sub.metadata?.agency_id
+      if (!agencyId) break
+
+      const { data: agency } = await db
+        .from('agencies')
+        .select('email, name')
+        .eq('id', agencyId)
+        .single()
+
+      if (agency?.email && sub.trial_end) {
+        const trialEndDate = new Date(sub.trial_end * 1000)
+        const expiresAt = trialEndDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+        const { sendTransactionalEmail } = await import('@/lib/email/resend')
+        await sendTransactionalEmail({
+          type: 'trial_expiry',
+          to: agency.email,
+          agencyName: agency.name ?? 'your agency',
+          expiresAt,
+        })
+      }
       break
     }
 

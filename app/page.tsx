@@ -315,7 +315,7 @@ export default function HomePage() {
               marginBottom: 36,
             }}>
               Describe a property and get a ready-to-publish listing in English and Arabic.
-              Set up a WhatsApp flow once and every new enquiry gets handled — even at 2am.
+              Get 24/7 WhatsApp follow-up on every enquiry — we set the automation up for you.
             </p>
 
             {/* CTAs */}

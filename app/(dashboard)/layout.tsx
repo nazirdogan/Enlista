@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Menu, X, LayoutDashboard, Plus, List, BarChart2, Settings, Zap, ShoppingBag } from 'lucide-react'
+import { toast } from 'sonner'
 import OutOfCreditsModal from '@/components/OutOfCreditsModal'
 import TrialBanner from '@/components/TrialBanner'
 import TrialExpiredModal from '@/components/TrialExpiredModal'
@@ -91,10 +92,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => clearInterval(interval)
   }, [fetchCredits])
 
-  // Refresh when returning from a Stripe success redirect
+  // Refresh credits and show toast when returning from Stripe checkout
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('credits') === 'purchased' || params.get('checkout') === 'success') {
+    const checkout = params.get('checkout')
+    if (checkout === 'trial') {
+      fetchCredits()
+      toast.success('Your 14-day free trial has started! You won\'t be charged until the trial ends.')
+    } else if (checkout === 'success' || params.get('credits') === 'purchased') {
       fetchCredits()
     }
   }, [fetchCredits])

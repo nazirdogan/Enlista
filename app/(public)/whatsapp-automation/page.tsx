@@ -613,7 +613,7 @@ export default function WhatsAppAutomationPage() {
               Add automation to your Enlista plan
             </h2>
             <p style={{ fontSize: 15, color: c.muted, maxWidth: 480, margin: '0 auto' }}>
-              WhatsApp Automation is available as a Pro-tier add-on. Start with unlimited listing generation, then upgrade to add 24/7 automated follow-up.
+              WhatsApp Automation is a managed add-on — our team sets it up for you. Start with AI listing generation, then contact us to get your 24/7 automated follow-up configured and live.
             </p>
           </div>
 

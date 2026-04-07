@@ -35,13 +35,25 @@ export async function POST(req: NextRequest) {
     const selectedPlan = PLANS[planKey]
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
+    // Check if this agency already has an active or trialing subscription
+    const { data: existingSub } = await supabase
+      .from('subscriptions')
+      .select('id, status')
+      .eq('agency_id', agency.id)
+      .in('status', ['active', 'trialing', 'past_due'])
+      .maybeSingle()
+
+    const isNewSubscriber = !existingSub
+    const trialDays = isNewSubscriber ? 14 : undefined
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: selectedPlan.priceId, quantity: 1 }],
-      success_url: `${appUrl}/dashboard?checkout=success`,
+      success_url: `${appUrl}/dashboard?checkout=${isNewSubscriber ? 'trial' : 'success'}`,
       cancel_url: `${appUrl}/pricing`,
       allow_promotion_codes: true,
       subscription_data: {
+        ...(trialDays ? { trial_period_days: trialDays } : {}),
         metadata: {
           plan,
           billing,
