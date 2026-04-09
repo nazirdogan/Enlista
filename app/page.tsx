@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PublicNav } from "@/components/PublicNav";
 import { useRouter } from "next/navigation";
@@ -219,6 +219,22 @@ export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   async function handlePlanCta(planKey: string) {
     setLoadingPlan(planKey);
     try {
@@ -268,7 +284,8 @@ export default function HomePage() {
       <PublicNav />
 
       {/* Hero */}
-      <section style={{ padding: '64px 24px 48px', maxWidth: 1280, margin: '0 auto' }}>
+      <div style={{ background: c.white, minHeight: 'calc(100vh - 57px)', display: 'flex', alignItems: 'center' }}>
+      <section style={{ padding: '64px 24px', maxWidth: 1280, margin: '0 auto', width: '100%' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -278,7 +295,7 @@ export default function HomePage() {
           {/* Left: copy */}
           <div>
             {/* Pill */}
-            <div style={{
+            <div className="hero-item hero-d0" style={{
               display: 'inline-block',
               background: c.bluePale,
               color: c.blue,
@@ -294,7 +311,7 @@ export default function HomePage() {
             </div>
 
             {/* Headline */}
-            <h1 style={{
+            <h1 className="hero-item hero-d1" style={{
               fontWeight: 800,
               fontSize: 'clamp(36px, 5vw, 60px)',
               lineHeight: 1.08,
@@ -307,7 +324,7 @@ export default function HomePage() {
             </h1>
 
             {/* Subtitle */}
-            <p style={{
+            <p className="hero-item hero-d2" style={{
               color: c.muted,
               fontSize: 16,
               lineHeight: 1.8,
@@ -319,9 +336,10 @@ export default function HomePage() {
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 24 }}>
+            <div className="hero-item hero-d3" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 24 }}>
               <a
                 href="/auth?tab=signup"
+                className="btn-primary-hover"
                 style={{
                   display: 'inline-block',
                   background: c.blue,
@@ -337,6 +355,7 @@ export default function HomePage() {
               </a>
               <a
                 href="/auth"
+                className="btn-outline-hover"
                 style={{
                   display: 'inline-block',
                   border: `1.5px solid ${c.border}`,
@@ -353,15 +372,18 @@ export default function HomePage() {
             </div>
 
             {/* Trust signals */}
-            <p style={{ fontSize: 11, color: c.muted }}>
+            <p className="hero-item hero-d4" style={{ fontSize: 11, color: c.muted }}>
               ✓ No credit card required &nbsp;·&nbsp; ✓ Setup in 5 minutes &nbsp;·&nbsp; ✓ RERA compliant
             </p>
           </div>
 
           {/* Right: tabbed graphic */}
-          <HeroCard />
+          <div className="hero-bento hero-d2">
+            <HeroCard />
+          </div>
         </div>
       </section>
+      </div>
 
       {/* How It Works */}
       <section
@@ -369,7 +391,7 @@ export default function HomePage() {
         style={{ padding: "64px 24px", maxWidth: 1280, margin: "0 auto" }}
       >
         {/* Header */}
-        <div style={{ marginBottom: 48 }}>
+        <div className="reveal" style={{ marginBottom: 48 }}>
           <SectionLabel>How It Works</SectionLabel>
           <h2
             style={{
@@ -398,7 +420,7 @@ export default function HomePage() {
             marginBottom: 16,
           }}
         >
-          <BentoCard style={{ flex: 1, padding: 32 }}>
+          <BentoCard className="reveal bento-hover" style={{ flex: 1, padding: 32 }}>
             <span
               style={{
                 fontSize: 36,
@@ -441,7 +463,7 @@ export default function HomePage() {
             {"\u2192"}
           </div>
 
-          <BentoCard style={{ flex: 1, padding: 32 }}>
+          <BentoCard className="reveal bento-hover" style={{ flex: 1, padding: 32 }}>
             <span
               style={{
                 fontSize: 36,
@@ -484,7 +506,7 @@ export default function HomePage() {
             {"\u2192"}
           </div>
 
-          <BentoCard style={{ flex: 1, padding: 32 }}>
+          <BentoCard className="reveal bento-hover" style={{ flex: 1, padding: 32 }}>
             <span
               style={{
                 fontSize: 36,
@@ -515,7 +537,7 @@ export default function HomePage() {
         </div>
 
         {/* Sample output card */}
-        <BentoCard style={{ padding: 40, marginTop: 12 }}>
+        <BentoCard className="reveal" style={{ padding: 40, marginTop: 12 }}>
           <span
             style={{
               fontSize: 11,
@@ -604,101 +626,6 @@ export default function HomePage() {
         </BentoCard>
       </section>
 
-      {/* Testimonials */}
-      <section
-        id="testimonials"
-        style={{ padding: "64px 24px", maxWidth: 1280, margin: "0 auto" }}
-      >
-        <SectionLabel>Client Results</SectionLabel>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 16,
-          }}
-        >
-          {[
-            {
-              badge: "Agency in Dubai",
-              quote:
-                "Two days to four minutes. That's a 720× improvement. Enlista replaced our entire publishing workflow.",
-              label: "Head of Operations",
-              avatarBg: c.blue,
-              dark: false,
-            },
-            {
-              badge: "Agency in Dubai Marina",
-              quote:
-                "Our Palm Jumeirah listings convert at 3× the previous rate. The AI copy is indistinguishable from our best agents.",
-              label: "Managing Director",
-              avatarBg: c.dark,
-              dark: false,
-            },
-            {
-              badge: "DLD Certified · Dubai",
-              badgeVariant: "green" as const,
-              quote:
-                "Zero RERA suspensions. The compliance engine is the most reliable system in our entire operation.",
-              label: "Compliance Director",
-              avatarBg: c.green,
-              dark: true,
-            },
-            {
-              badge: "Agency in Abu Dhabi",
-              quote:
-                "600+ listings, 4 portals, one platform. Scaled 40% without adding a single coordinator to our team.",
-              label: "Chief Executive",
-              avatarBg: c.amber,
-              dark: false,
-            },
-          ].map((t, i) => (
-            <div
-              key={i}
-              style={{
-                background: t.dark ? c.dark : c.white,
-                border: `1px solid ${t.dark ? "transparent" : c.border}`,
-                borderRadius: 12,
-                padding: 32,
-              }}
-            >
-              <Badge
-                variant={t.badgeVariant ?? "blue"}
-                style={{ marginBottom: 16 }}
-              >
-                {t.badge}
-              </Badge>
-              <p
-                style={{
-                  fontSize: 16,
-                  lineHeight: 1.8,
-                  color: t.dark ? "rgba(255,255,255,0.85)" : c.text,
-                  marginBottom: 20,
-                  fontStyle: "italic",
-                }}
-              >
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <div
-                style={{
-                  borderTop: `1px solid ${t.dark ? "rgba(255,255,255,0.08)" : c.border}`,
-                  paddingTop: 16,
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 500,
-                    color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
-                  }}
-                >
-                  — {t.label}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* WhatsApp Automation */}
       <section
         id="whatsapp-automation"
@@ -707,7 +634,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           {/* Header */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 56, alignItems: "center", marginBottom: 64 }}>
-            <div>
+            <div className="reveal reveal-left">
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600,
                 background: "rgba(37,211,102,0.15)", color: "#25D366", marginBottom: 20 }}>
@@ -755,7 +682,7 @@ export default function HomePage() {
             </div>
 
             {/* Phone mockup */}
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div className="reveal reveal-right" style={{ display: "flex", justifyContent: "center" }}>
               <div style={{ width: 280, background: "#1a1a2e", borderRadius: 28,
                 padding: "12px 12px 20px", boxShadow: "0 32px 64px rgba(0,0,0,0.5)",
                 border: "3px solid #2a2a3e" }}>
@@ -817,7 +744,7 @@ export default function HomePage() {
               { icon: "🔔", title: "Instant Agent Alerts", desc: "You get a WhatsApp summary with full lead score the moment they qualify." },
               { icon: "📊", title: "Bayut & PF Ready", desc: "Works with enquiries from Bayut, Property Finder, Dubizzle, and direct WA links." },
             ].map(({ icon, title, desc }) => (
-              <div key={title} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)",
+              <div key={title} className="reveal bento-hover" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: 12, padding: 24 }}>
                 <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 8 }}>{title}</div>
@@ -836,7 +763,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1120, margin: "0 auto", paddingBottom: 96 }}>
 
         {/* Hero */}
-        <div style={{ textAlign: "center", padding: "0 0 56px" }}>
+        <div className="reveal" style={{ textAlign: "center", padding: "0 0 56px" }}>
           <h2 style={{
             fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 800,
             color: "#0F172A", lineHeight: 1.15, marginBottom: 16,
@@ -916,6 +843,7 @@ export default function HomePage() {
           {pricingPlans.map((plan) => (
             <div
               key={plan.key}
+              className="reveal pricing-card-hover"
               style={{
                 background: plan.highlight ? "linear-gradient(160deg, #1D4ED8 0%, #1e3a8a 100%)" : "#fff",
                 border: plan.highlight ? "none" : "1.5px solid #EAECF0",
@@ -1060,15 +988,7 @@ export default function HomePage() {
         </div>
 
         {/* Credit packs */}
-        <div style={{ marginTop: 72 }}>
-          <div style={{ textAlign: "center", marginBottom: 36 }}>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: "#0F172A", marginBottom: 8 }}>
-              Need a few more listings?
-            </h2>
-            <p style={{ fontSize: 14, color: "#6B7280" }}>
-              Buy extra credits on any plan — they never expire and stack on top of your monthly allowance.
-            </p>
-          </div>
+        <div className="reveal" style={{ marginTop: 72 }}>
           <div style={{
             display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: 16, maxWidth: 700, margin: "0 auto",
@@ -1110,66 +1030,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Comparison table */}
-        <div style={{ marginTop: 80 }}>
-          <h2 style={{ textAlign: "center", fontSize: 24, fontWeight: 800, color: "#0F172A", marginBottom: 32 }}>
-            Compare plans
-          </h2>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead>
-                <tr>
-                  {["Feature", "Free", "Plus", "Pro", "Enterprise"].map((h, i) => (
-                    <th key={h} style={{
-                      padding: "12px 16px", textAlign: i === 0 ? "left" : "center",
-                      fontSize: 12, fontWeight: 700, color: "#6B7280",
-                      borderBottom: "2px solid #EAECF0", whiteSpace: "nowrap",
-                    }}>
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["Monthly credits",        "1",  "5",  "15", "Unlimited"],
-                  ["Extra credit packs",      "✓",  "✓",  "✓",  "✓"],
-                  ["English + Arabic output", "✓",  "✓",  "✓",  "✓"],
-                  ["Property portal copy",    "✓",  "✓",  "✓",  "✓"],
-                  ["WhatsApp & Instagram",    "—",  "—",  "✓",  "✓"],
-                  ["Email support",           "—",  "✓",  "✓",  "✓"],
-                  ["Priority support",        "—",  "—",  "✓",  "✓"],
-                  ["Advanced analytics",      "—",  "—",  "✓",  "✓"],
-                  ["Admin dashboard",         "—",  "—",  "—",  "✓"],
-                  ["White-label platform",    "—",  "—",  "—",  "✓"],
-                  ["Dedicated account mgr",   "—",  "—",  "—",  "✓"],
-                  ["SLA guarantee",           "—",  "—",  "—",  "✓"],
-                  ["Portal integrations",     "—",  "—",  "—",  "✓"],
-                ].map(([label, free, plus, pro, ent], i) => (
-                  <tr key={label} style={{ background: i % 2 === 0 ? "#FAFAFA" : "#fff" }}>
-                    <td style={{ padding: "11px 16px", color: "#374151", fontWeight: 500 }}>{label}</td>
-                    {[free, plus, pro, ent].map((val, j) => (
-                      <td key={j} style={{ padding: "11px 16px", textAlign: "center", color: val === "—" ? "#D1D5DB" : val === "✓" ? "#1D4ED8" : "#0F172A", fontWeight: val === "✓" ? 700 : 600 }}>
-                        {val}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-                <tr style={{ background: "#F7F8FC" }}>
-                  <td style={{ padding: "14px 16px", fontWeight: 700, color: "#0F172A" }}>Price</td>
-                  {["Free", "AED 92/mo", "AED 147/mo", "Custom"].map((p, i) => (
-                    <td key={i} style={{ padding: "14px 16px", textAlign: "center", fontWeight: 800, color: i === 2 ? "#1D4ED8" : "#0F172A" }}>
-                      {p}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* FAQ */}
-        <div style={{ marginTop: 80, maxWidth: 680, margin: "80px auto 0" }}>
+        <div className="reveal" style={{ marginTop: 80, maxWidth: 680, margin: "80px auto 0" }}>
           <h2 style={{ textAlign: "center", fontSize: 24, fontWeight: 800, color: "#0F172A", marginBottom: 32 }}>
             Common questions
           </h2>
@@ -1202,6 +1064,99 @@ export default function HomePage() {
                     <p style={{ fontSize: 13, color: "#6B7280", lineHeight: 1.6, margin: 0 }}>{faq.a}</p>
                   </div>
                 )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Testimonials */}
+        <div className="reveal" style={{ marginTop: 80 }}>
+          <SectionLabel>Client Results</SectionLabel>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: 16,
+            }}
+          >
+            {[
+              {
+                badge: "Agency in Dubai",
+                quote:
+                  "Two days to four minutes. That's a 720× improvement. Enlista replaced our entire publishing workflow.",
+                label: "Head of Operations",
+                avatarBg: c.blue,
+                dark: false,
+              },
+              {
+                badge: "Agency in Dubai Marina",
+                quote:
+                  "Our Palm Jumeirah listings convert at 3× the previous rate. The AI copy is indistinguishable from our best agents.",
+                label: "Managing Director",
+                avatarBg: c.dark,
+                dark: false,
+              },
+              {
+                badge: "DLD Certified · Dubai",
+                badgeVariant: "green" as const,
+                quote:
+                  "Zero RERA suspensions. The compliance engine is the most reliable system in our entire operation.",
+                label: "Compliance Director",
+                avatarBg: c.green,
+                dark: true,
+              },
+              {
+                badge: "Agency in Abu Dhabi",
+                quote:
+                  "600+ listings, 4 portals, one platform. Scaled 40% without adding a single coordinator to our team.",
+                label: "Chief Executive",
+                avatarBg: c.amber,
+                dark: false,
+              },
+            ].map((t, i) => (
+              <div
+                key={i}
+                className="testimonial-hover"
+                style={{
+                  background: t.dark ? c.dark : c.white,
+                  border: `1px solid ${t.dark ? "transparent" : c.border}`,
+                  borderRadius: 12,
+                  padding: 32,
+                }}
+              >
+                <Badge
+                  variant={t.badgeVariant ?? "blue"}
+                  style={{ marginBottom: 16 }}
+                >
+                  {t.badge}
+                </Badge>
+                <p
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 1.8,
+                    color: t.dark ? "rgba(255,255,255,0.85)" : c.text,
+                    marginBottom: 20,
+                    fontStyle: "italic",
+                  }}
+                >
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div
+                  style={{
+                    borderTop: `1px solid ${t.dark ? "rgba(255,255,255,0.08)" : c.border}`,
+                    paddingTop: 16,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: t.dark ? "rgba(255,255,255,0.4)" : c.muted,
+                    }}
+                  >
+                    — {t.label}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
