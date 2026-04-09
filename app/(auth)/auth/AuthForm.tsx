@@ -101,7 +101,6 @@ export default function AuthForm() {
   const [agencyName, setAgencyName] = useState('')
   const [city, setCity] = useState('')
   const [country, setCountry] = useState('')
-  const [agencyEmail, setAgencyEmail] = useState('')
   const [workEmail, setWorkEmail] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
@@ -144,7 +143,7 @@ export default function AuthForm() {
 
   const allSignUpFilled = Boolean(
     firstName && lastName && agencyName && city && country &&
-    agencyEmail && workEmail && phoneNumber && password && confirmPassword &&
+    workEmail && phoneNumber && password && confirmPassword &&
     !pwError && !confirmPwError
   )
 
@@ -191,7 +190,6 @@ export default function AuthForm() {
             agency_name: agencyName,
             city,
             country,
-            agency_email: agencyEmail,
             phone: phoneNumber,
           },
         },
@@ -212,7 +210,7 @@ export default function AuthForm() {
       const { error: agencyError } = await supabase.from('agencies').insert({
         user_id: data.user.id,
         name: agencyName,
-        email: agencyEmail,
+        email: workEmail,
         phone: phoneNumber,
         city,
         country,
@@ -453,18 +451,6 @@ export default function AuthForm() {
                   onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
                 />
               </div>
-            </div>
-
-            {/* Agency email */}
-            <div>
-              <label style={LABEL}>Agency Email</label>
-              <input
-                type="email" value={agencyEmail} onChange={(e) => setAgencyEmail(e.target.value)}
-                required autoComplete="email" placeholder="info@prestige.ae"
-                style={INPUT}
-                onFocus={(e) => { e.target.style.borderColor = '#1D4ED8' }}
-                onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
-              />
             </div>
 
             {/* Work email */}
