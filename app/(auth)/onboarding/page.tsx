@@ -10,7 +10,7 @@ const PLANS = [
   {
     key: 'plus',
     name: 'Plus',
-    price: '$15',
+    price: 'AED 95',
     priceSub: 'per month after trial',
     credits: 5,
     features: [
@@ -27,7 +27,7 @@ const PLANS = [
   {
     key: 'pro',
     name: 'Pro',
-    price: '$30',
+    price: 'AED 145',
     priceSub: 'per month after trial',
     credits: 15,
     features: [

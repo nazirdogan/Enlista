@@ -12,23 +12,23 @@ interface Props {
 }
 
 const CREDIT_PACKS = [
-  { key: 'credits_5',  label: '5 Credits',  price: '$15', pricePerCredit: '$3.00', popular: false },
-  { key: 'credits_10', label: '10 Credits', price: '$25', pricePerCredit: '$2.50', popular: true  },
-  { key: 'credits_20', label: '20 Credits', price: '$40', pricePerCredit: '$2.00', popular: false },
+  { key: 'credits_5',  label: '5 Credits',  price: 'AED 50', pricePerCredit: 'AED 10.00', popular: false },
+  { key: 'credits_10', label: '10 Credits', price: 'AED 90', pricePerCredit: 'AED 9.00',  popular: true  },
+  { key: 'credits_20', label: '20 Credits', price: 'AED 140', pricePerCredit: 'AED 7.00', popular: false },
 ]
 
 const UPGRADE_PLANS = [
   {
     key: 'plus',
     name: 'Plus',
-    price: '$25/mo',
+    price: 'AED 95/mo',
     credits: 5,
     features: ['5 listings/month', 'All content formats', 'English + Arabic', 'Voice input'],
   },
   {
     key: 'pro',
     name: 'Pro',
-    price: '$40/mo',
+    price: 'AED 145/mo',
     credits: 15,
     features: ['15 listings/month', 'All content formats', 'English + Arabic', 'Priority support', 'Advanced analytics'],
     highlight: true,
