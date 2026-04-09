@@ -5,138 +5,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { PublicNav } from '@/components/PublicNav'
 import { Check, Zap, ArrowRight, Star, Building2, MessageSquare } from 'lucide-react'
+import { PRICING_PLANS, CREDIT_PACKS, PRICING_FAQS } from '@/lib/pricing-data'
 
-// ─── Plan data ────────────────────────────────────────────────────────────────
+// ─── Plan data (imported from lib/pricing-data.ts — edit prices there) ───────
 
-const plans = [
-  {
-    key: 'free',
-    name: 'Free',
-    tagline: 'Try before you commit',
-    price: 0,
-    priceLabel: 'Free',
-    priceSub: 'forever',
-    credits: 1,
-    creditsLabel: '1 listing/month',
-    cta: 'Get started free',
-    ctaHref: '/auth?tab=signup',
-    highlight: false,
-    features: [
-      'Full AI listing generation',
-      'English + Arabic output',
-      'Compact portal version',
-      'Highlight bullets',
-      'WhatsApp & Instagram copy',
-      '1 listing credit per month',
-    ],
-    missing: [
-      'Additional listings',
-      'Priority support',
-    ],
-  },
-  {
-    key: 'plus',
-    name: 'Plus',
-    tagline: 'For active individual agents',
-    price: 95,
-    priceLabel: 'AED 95',
-    priceSub: 'per month',
-    credits: 5,
-    creditsLabel: '5 listings/month',
-    cta: 'Start with Plus',
-    ctaHref: null, // triggers checkout
-    highlight: false,
-    features: [
-      'Everything in Free',
-      '5 listing credits per month',
-      'Credits reset on the 1st',
-      'Buy extra credits anytime',
-      'Email support',
-    ],
-    missing: [],
-  },
-  {
-    key: 'pro',
-    name: 'Pro',
-    tagline: 'For high-volume agents',
-    price: 145,
-    priceLabel: 'AED 145',
-    priceSub: 'per month',
-    credits: 15,
-    creditsLabel: '15 listings/month',
-    cta: 'Start with Pro',
-    ctaHref: null,
-    highlight: true,
-    badge: 'Most popular',
-    features: [
-      'Everything in Plus',
-      '15 listing credits per month',
-      'Priority support',
-      'Advanced analytics',
-      'Early access to new features',
-    ],
-    missing: [],
-  },
-  {
-    key: 'enterprise',
-    name: 'Enterprise',
-    tagline: 'For brokerages & teams',
-    price: null,
-    priceLabel: 'Custom',
-    priceSub: 'per agent / per month',
-    credits: null,
-    creditsLabel: 'Unlimited listings',
-    cta: 'Contact sales',
-    ctaHref: '/contact-sales',
-    highlight: false,
-    minAgents: 10,
-    features: [
-      'Minimum 10 agents',
-      'Dedicated account manager',
-      'White-label platform option',
-      'Priority AI processing',
-      'Custom onboarding & training',
-      'SLA guarantee',
-      'Admin dashboard & analytics',
-      'Bulk listing management',
-      'Portal integrations (Bayut, PF)',
-    ],
-    missing: [],
-  },
-]
-
-const creditPacks = [
-  { key: 'credits_5',  label: '5 Credits',  price: 'AED 50', perCredit: 'AED 10.00' },
-  { key: 'credits_10', label: '10 Credits', price: 'AED 90', perCredit: 'AED 9.00', popular: true },
-  { key: 'credits_20', label: '20 Credits', price: 'AED 140', perCredit: 'AED 7.00' },
-]
-
-const faqs = [
-  {
-    q: 'What counts as one credit?',
-    a: 'Each time you click "Generate" to produce a listing, one credit is used. Saving or editing an existing listing does not use credits.',
-  },
-  {
-    q: 'Do unused monthly credits roll over?',
-    a: 'Monthly credits reset on the 1st of each month and do not roll over. Extra credits you purchase are permanent — they never expire.',
-  },
-  {
-    q: 'Can I buy extra credits on any plan?',
-    a: 'Yes. Extra credit packs are available on all plans including Free. They stack on top of your monthly allowance.',
-  },
-  {
-    q: 'What happens when I run out of credits?',
-    a: 'You\'ll see a prompt in the sidebar and when you try to generate. You can immediately purchase a credit pack or upgrade your plan without losing any work.',
-  },
-  {
-    q: 'What qualifies as Enterprise?',
-    a: 'Enterprise is designed for brokerages with 10 or more agents. It includes a custom per-agent rate, a brokerage admin dashboard, and optional white-labelling of the platform.',
-  },
-  {
-    q: 'Can I switch plans at any time?',
-    a: 'Yes. Upgrades take effect immediately. Downgrades take effect at the end of your current billing cycle.',
-  },
-]
+const plans = PRICING_PLANS
+const creditPacks = CREDIT_PACKS
+const faqs = PRICING_FAQS
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -470,7 +345,7 @@ export default function PricingPage() {
                 ))}
                 <tr style={{ background: '#F7F8FC' }}>
                   <td style={{ padding: '14px 16px', fontWeight: 700, color: '#0F172A' }}>Price</td>
-                  {['Free', 'AED 95/mo', 'AED 145/mo', 'Custom'].map((p, i) => (
+                  {['Free', `AED ${plans.find(p=>p.key==='plus')?.price}/mo`, `AED ${plans.find(p=>p.key==='pro')?.price}/mo`, 'Custom'].map((p, i) => (
                     <td key={i} style={{ padding: '14px 16px', textAlign: 'center', fontWeight: 800, color: i === 2 ? '#1D4ED8' : '#0F172A' }}>
                       {p}
                     </td>

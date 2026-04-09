@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { Check, Zap, ArrowRight, Star, MessageSquare } from "lucide-react";
 import { HeroCard } from "@/components/HeroCard";
+import { PRICING_PLANS, CREDIT_PACKS, PRICING_FAQS, PLAN_PRICES } from "@/lib/pricing-data";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -115,100 +116,10 @@ function BentoCard({
 
 // ─── Pricing data ─────────────────────────────────────────────────────────────
 
-const pricingPlans = [
-  {
-    key: "free",
-    name: "Free",
-    tagline: "Try before you commit",
-    priceLabel: "Free",
-    priceSub: "forever",
-    creditsLabel: "1 listing/month",
-    cta: "Get started free",
-    ctaHref: "/auth?tab=signup",
-    highlight: false,
-    features: [
-      "Full AI listing generation",
-      "English + Arabic output",
-      "Property portal copy (Bayut, PF, Dubizzle)",
-      "Compact listing & highlight bullets",
-      "1 listing credit per month",
-    ],
-  },
-  {
-    key: "plus",
-    name: "Plus",
-    tagline: "For active individual agents",
-    priceLabel: "AED 92",
-    priceSub: "per month",
-    creditsLabel: "5 listings/month",
-    cta: "Start with Plus",
-    ctaHref: null,
-    highlight: false,
-    features: [
-      "Everything in Free",
-      "5 listing credits per month",
-      "Credits reset on the 1st",
-      "Buy extra credits anytime",
-      "Email support",
-    ],
-  },
-  {
-    key: "pro",
-    name: "Pro",
-    tagline: "For high-volume agents",
-    priceLabel: "AED 147",
-    priceSub: "per month",
-    creditsLabel: "15 listings/month",
-    cta: "Start with Pro",
-    ctaHref: null,
-    highlight: true,
-    badge: "Most popular",
-    features: [
-      "Everything in Plus",
-      "WhatsApp & Instagram copy",
-      "15 listing credits per month",
-      "Priority support",
-      "Advanced analytics",
-      "Early access to new features",
-    ],
-  },
-  {
-    key: "enterprise",
-    name: "Enterprise",
-    tagline: "For brokerages & teams",
-    priceLabel: "Custom",
-    priceSub: "",
-    creditsLabel: "Unlimited listings",
-    cta: "Contact sales",
-    ctaHref: "/contact-sales",
-    highlight: false,
-    features: [
-      "Minimum 10 agents",
-      "Dedicated account manager",
-      "White-label platform option",
-      "Priority AI processing",
-      "Custom onboarding & training",
-      "SLA guarantee",
-      "Admin dashboard & analytics",
-      "Bulk listing management",
-    ],
-  },
-];
-
-const creditPacks = [
-  { key: "credits_5",  label: "5 Credits",  price: "AED 56",  perCredit: "AED 11.20 per credit" },
-  { key: "credits_10", label: "10 Credits", price: "AED 92",  perCredit: "AED 9.20 per credit", popular: true },
-  { key: "credits_20", label: "20 Credits", price: "AED 147", perCredit: "AED 7.35 per credit" },
-];
-
-const pricingFaqs = [
-  { q: "What counts as one credit?", a: "Each time you click \"Generate\" to produce a listing, one credit is used. Saving or editing an existing listing does not use credits." },
-  { q: "Do unused monthly credits roll over?", a: "Monthly credits reset on the 1st of each month and do not roll over. Extra credits you purchase are permanent — they never expire." },
-  { q: "Can I buy extra credits on any plan?", a: "Yes. Extra credit packs are available on all plans including Free. They stack on top of your monthly allowance." },
-  { q: "What happens when I run out of credits?", a: "You'll see a prompt in the sidebar and when you try to generate. You can immediately purchase a credit pack or upgrade your plan without losing any work." },
-  { q: "What qualifies as Enterprise?", a: "Enterprise is designed for brokerages with 10 or more agents. It includes a custom per-agent rate, a brokerage admin dashboard, and optional white-labelling of the platform." },
-  { q: "Can I switch plans at any time?", a: "Yes. Upgrades take effect immediately. Downgrades take effect at the end of your current billing cycle." },
-];
+// Pricing data is imported from lib/pricing-data.ts — edit prices there.
+const pricingPlans = PRICING_PLANS;
+const creditPacks = CREDIT_PACKS;
+const pricingFaqs = PRICING_FAQS;
 
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -885,7 +796,7 @@ export default function HomePage() {
                 {/* Price — switches with billing toggle for plus/pro */}
                 {(() => {
                   const isDiscountable = plan.key === "plus" || plan.key === "pro";
-                  const annualMonthly = plan.key === "plus" ? 79 : plan.key === "pro" ? 125 : null;
+                  const annualMonthly = plan.key === "plus" ? PLAN_PRICES.plus.annualMonthly : plan.key === "pro" ? PLAN_PRICES.pro.annualMonthly : null;
                   const showAnnual = billing === "annual" && isDiscountable;
                   return (
                     <div>
@@ -903,14 +814,14 @@ export default function HomePage() {
                       {showAnnual && (
                         <div style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 8 }}>
                           <span style={{ fontSize: 12, color: plan.highlight ? "rgba(255,255,255,0.35)" : "#9CA3AF", textDecoration: "line-through" }}>
-                            AED {plan.key === "plus" ? "92" : "147"}/mo
-                          </span>
+                            AED {plan.key === "plus" ? PLAN_PRICES.plus.monthly : PLAN_PRICES.pro.monthly}/mo
+</span>
                           <span style={{
                             fontSize: 11, fontWeight: 700, color: plan.highlight ? "#6EE7B7" : "#065F46",
                             background: plan.highlight ? "rgba(110,231,183,0.15)" : "#D1FAE5",
                             borderRadius: 100, padding: "1px 7px",
                           }}>
-                            billed AED {plan.key === "plus" ? "937" : "1,499"}/yr
+                            billed AED {plan.key === "plus" ? PLAN_PRICES.plus.annual.toLocaleString() : PLAN_PRICES.pro.annual.toLocaleString()}/yr
                           </span>
                         </div>
                       )}
