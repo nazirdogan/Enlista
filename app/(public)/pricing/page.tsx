@@ -5,12 +5,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { PublicNav } from '@/components/PublicNav'
 import { Check, Zap, ArrowRight, Star, Building2, MessageSquare } from 'lucide-react'
-import { PRICING_PLANS, CREDIT_PACKS, PRICING_FAQS } from '@/lib/pricing-data'
+import { PRICING_PLANS, PRICING_FAQS } from '@/lib/pricing-data'
 
 // ─── Plan data (imported from lib/pricing-data.ts — edit prices there) ───────
 
 const plans = PRICING_PLANS
-const creditPacks = CREDIT_PACKS
 const faqs = PRICING_FAQS
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -18,7 +17,6 @@ const faqs = PRICING_FAQS
 export default function PricingPage() {
   const router = useRouter()
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
-  const [loadingPack, setLoadingPack] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   async function handlePlanCta(planKey: string) {
@@ -42,29 +40,6 @@ export default function PricingPage() {
       // ignore
     } finally {
       setLoadingPlan(null)
-    }
-  }
-
-  async function handleBuyPack(packKey: string) {
-    setLoadingPack(packKey)
-    try {
-      const res = await fetch('/api/stripe/buy-credits', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pack: packKey }),
-      })
-      const data = await res.json()
-      if (res.status === 401) {
-        router.push('/auth?tab=signin')
-        return
-      }
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch {
-      // ignore
-    } finally {
-      setLoadingPack(null)
     }
   }
 
@@ -240,63 +215,6 @@ export default function PricingPage() {
               )}
             </div>
           ))}
-        </div>
-
-        {/* ── Credit packs ── */}
-        <div style={{ marginTop: 72 }}>
-          <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>
-              Need a few more listings?
-            </h2>
-            <p style={{ fontSize: 14, color: '#6B7280' }}>
-              Buy extra credits on any plan — they never expire and stack on top of your monthly allowance.
-            </p>
-          </div>
-
-          <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 16, maxWidth: 700, margin: '0 auto',
-          }}>
-            {creditPacks.map((pack) => (
-              <button
-                key={pack.key}
-                onClick={() => handleBuyPack(pack.key)}
-                disabled={!!loadingPack}
-                style={{
-                  padding: '20px 20px 18px', borderRadius: 16, cursor: loadingPack ? 'not-allowed' : 'pointer',
-                  border: pack.popular ? '2px solid #1D4ED8' : '1.5px solid #EAECF0',
-                  background: pack.popular ? '#EFF6FF' : '#fff',
-                  fontFamily: 'inherit', textAlign: 'left',
-                  opacity: loadingPack && loadingPack !== pack.key ? 0.5 : 1,
-                  transition: 'all 0.15s',
-                  boxShadow: pack.popular ? '0 4px 20px rgba(29,78,216,0.12)' : 'none',
-                }}
-              >
-                {pack.popular && (
-                  <div style={{
-                    fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', color: '#1D4ED8',
-                    background: '#DBEAFE', display: 'inline-block',
-                    padding: '2px 8px', borderRadius: 100, marginBottom: 10,
-                  }}>
-                    BEST VALUE
-                  </div>
-                )}
-                <div style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', marginBottom: 2 }}>
-                  {pack.label}
-                </div>
-                <div style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 12 }}>
-                  {pack.perCredit} per credit
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 22, fontWeight: 800, color: '#1D4ED8' }}>{pack.price}</span>
-                  <ArrowRight size={16} color={pack.popular ? '#1D4ED8' : '#9CA3AF'} />
-                </div>
-                {loadingPack === pack.key && (
-                  <p style={{ fontSize: 11, color: '#6B7280', marginTop: 6, textAlign: 'center' }}>Redirecting...</p>
-                )}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* ── Comparison table (simple) ── */}
