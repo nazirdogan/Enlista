@@ -30,7 +30,7 @@ function makeQueryChain(singleResult: { data: unknown; error: unknown }) {
   // Make it thenable so `await .update({}).eq()` resolves cleanly.
   chain.eq = vi.fn(() => {
     const thenableChain = { ...chain }
-    thenableChain.then = (resolve: (v: unknown) => void, _reject?: unknown) =>
+    thenableChain.then = (resolve: (v: unknown) => void) =>
       resolve({ error: null })
     thenableChain.catch = vi.fn(() => thenableChain)
     return thenableChain
@@ -93,7 +93,6 @@ async function callCreditsRoute(agencyData: ReturnType<typeof makeAgency>) {
     from: () => makeQueryChain({ data: agencyData, error: null }),
   })
   const { GET } = await import('../route')
-  const req = new Request('https://enlista.io/api/credits')
   return GET()
 }
 
@@ -226,7 +225,6 @@ describe('GET /api/credits — trial expiry banner threshold', () => {
       },
     })
     const { GET } = await import('../route')
-    const req = new Request('https://enlista.io/api/credits')
     const res = await GET()
 
     expect(res.status).toBe(401)
