@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlista — 10 Conversion Ads</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0F1829;--blue:#1D4ED8;--blu:#3B82F6;--green:#059669;--amber:#D97706;--red:#DC2626;--muted:#64748B;--border:#DDE3EC;--bg:#F2F4F7;--wa:#25D366;--wa-dark:#128C7E;--wa-light:#E7F9F0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;}
+a{text-decoration:none;color:inherit;}
+
+nav{background:var(--ink);padding:14px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.nav-logo{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.02em;}
+.nav-logo span{color:var(--blu);}
+.nav-right{display:flex;align-items:center;gap:16px;}
+.nav-pill{background:var(--blue);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:6px;}
+.nav-tag{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.04em;}
+
+.tab-bar{background:var(--ink);padding:0 48px;display:flex;border-top:1px solid rgba(255,255,255,.08);position:sticky;top:53px;z-index:199;}
+.tab-btn{background:transparent;border:none;border-bottom:3px solid transparent;color:rgba(255,255,255,.45);font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.06em;padding:13px 20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.tab-btn.active{color:#fff;border-bottom-color:var(--blu);}
+.tab-btn:hover:not(.active){color:rgba(255,255,255,.7);}
+
+.instructions{background:#1e40af;padding:12px 48px;display:flex;align-items:center;gap:40px;flex-wrap:wrap;}
+.inst-item{display:flex;align-items:center;gap:9px;font-size:12px;color:rgba(255,255,255,.85);}
+.inst-num{background:rgba(255,255,255,.18);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#fff;flex-shrink:0;}
+
+main{max-width:1180px;margin:0 auto;padding:40px 48px;}
+
+.sec-div{display:flex;align-items:center;gap:16px;margin:52px 0 24px;}
+.sec-div-line{flex:1;height:1px;background:var(--border);}
+.sec-div-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+
+/* POST WRAPPER — matches brand file */
+.post-wrapper{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:28px;}
+.post-header{display:flex;align-items:flex-start;gap:14px;padding:20px 24px 18px;border-bottom:1px solid var(--border);}
+.post-num{font-size:26px;font-weight:800;color:var(--blue);min-width:44px;line-height:1;}
+.post-num.wa{color:var(--wa-dark);}
+.post-meta{flex:1;}
+.post-title{font-size:14px;font-weight:700;color:var(--ink);line-height:1.4;margin-bottom:7px;}
+.badges{display:flex;gap:5px;flex-wrap:wrap;}
+.badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;white-space:nowrap;}
+.b-blue{background:#EFF6FF;color:var(--blue);}
+.b-green{background:#ECFDF5;color:var(--green);}
+.b-amber{background:#FFFBEB;color:var(--amber);}
+.b-wa{background:var(--wa-light);color:var(--wa-dark);}
+.b-dark{background:rgba(15,24,41,.07);color:var(--ink);}
+.b-red{background:#FEF2F2;color:var(--red);}
+
+.post-body{padding:24px;display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;}
+
+/* LEFT — creative + download */
+.slide-area{position:relative;flex-shrink:0;}
+.ad-frame{width:500px;height:500px;overflow:hidden;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.1);cursor:pointer;position:relative;}
+.ad-frame::after{content:'⤢  Click to view full size';position:absolute;inset:0;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;letter-spacing:.04em;opacity:0;transition:opacity .2s;border-radius:0;}
+.ad-frame:hover::after{opacity:1;}
+.dl-btn{display:block;width:500px;margin-top:10px;background:var(--ink);color:#fff;text-align:center;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;padding:12px 0;border-radius:10px;transition:background .15s;}
+.dl-btn:hover{background:#1D4ED8;}
+
+/* RIGHT — caption + science */
+.right-panel{flex:1;min-width:280px;}
+.caption-box{background:#F8FAFC;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.caption-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);}
+.caption-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);}
+.copy-btn{background:var(--blue);color:#fff;border:none;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;letter-spacing:.04em;}
+.copy-btn:hover{background:#1e40af;}
+.copy-btn.done{background:var(--green);}
+.caption-text{padding:14px 16px;font-size:12px;line-height:1.7;color:#374151;white-space:pre-line;cursor:text;user-select:text;border-bottom:1px solid var(--border);}
+.hashtag-hdr{padding:10px 16px 6px;font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);}
+.hashtags{padding:0 16px 14px;font-size:11px;color:var(--blue);line-height:1.9;cursor:text;user-select:text;}
+
+.science-box{background:#F8FAFC;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.science-hdr{padding:12px 16px;border-bottom:1px solid var(--border);}
+.science-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.science-point{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;color:#374151;}
+.science-point:last-child{border-bottom:none;}
+.sci-icon{flex-shrink:0;margin-top:1px;}
+
+/* MODAL */
+#modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:1000;cursor:pointer;}
+#modal-overlay.open{display:flex;}
+#modal-wrap{position:relative;cursor:default;}
+#modal-close{position:absolute;top:-44px;right:0;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;}
+#modal-stage{width:540px;height:540px;overflow:hidden;border-radius:12px;}
+#modal-hint{position:absolute;bottom:-28px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.35);}
+
+footer{background:var(--ink);padding:24px 48px;display:flex;justify-content:space-between;align-items:center;margin-top:40px;}
+.ft-logo{font-size:15px;font-weight:800;color:#fff;}
+.ft-logo span{color:var(--blu);}
+.ft-note{font-size:11px;color:rgba(255,255,255,.3);}
+
+/* ─── AD CREATIVE CSS ─────────────────────────────────────── */
+.ad{width:500px;height:500px;position:relative;display:flex;flex-direction:column;padding:32px;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;}
+.ad-dark{background:var(--ink);color:#fff;}
+.ad-dark::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(29,78,216,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(29,78,216,.09) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.ad-light{background:#fff;color:var(--ink);}
+.ad-blue{background:linear-gradient(135deg,#1D4ED8 0%,#0F1829 100%);color:#fff;}
+.ad-blue::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.ad-amber{background:#FFFBEB;color:var(--ink);}
+.ad-wa-dark{background:#0C1F1A;color:#fff;}
+.ad-wa-dark::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(37,211,102,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(37,211,102,.07) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.ad-wa-light{background:var(--wa-light);color:var(--ink);}
+
+.ad-top{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+.ad-content{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;}
+.ad-foot{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+
+.wm{font-size:16px;font-weight:800;letter-spacing:-0.03em;line-height:1;}
+.wm-white{color:#fff;} .wm-white span{color:var(--blu);}
+.wm-dark{color:var(--ink);} .wm-dark span{color:var(--blue);}
+.wm-wa{color:var(--wa);} .wm-wa span{color:#fff;}
+.wm-wa-dark{color:var(--wa-dark);} .wm-wa-dark span{color:var(--wa-dark);}
+
+.eyebrow{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+.ey-blue{color:#60A5FA;} .ey-ink{color:var(--blue);} .ey-amber{color:var(--amber);} .ey-wa{color:var(--wa);}
+
+.bp{display:inline-flex;align-items:center;padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700;}
+.bp-blue{background:rgba(59,130,246,.2);color:#60A5FA;}
+.bp-wa{background:rgba(37,211,102,.2);color:var(--wa);}
+.bp-amber{background:rgba(217,119,6,.2);color:#FCD34D;}
+.bp-red{background:rgba(239,68,68,.2);color:#F87171;}
+.bp-white{background:rgba(255,255,255,.15);color:rgba(255,255,255,.85);}
+
+.ad-h1{font-size:26px;font-weight:800;line-height:1.15;letter-spacing:-0.025em;margin-bottom:10px;}
+.ad-h1 em{font-style:normal;color:#60A5FA;}
+.ad-sub{font-size:12.5px;line-height:1.65;color:rgba(255,255,255,.6);margin-bottom:16px;}
+.ad-sub.dark-sub{color:#374151;}
+.ad-sub.amber-sub{color:#92400E;}
+
+.cta-pill{display:inline-flex;align-items:center;gap:5px;padding:10px 18px;border-radius:9px;font-size:12px;font-weight:700;border:none;font-family:inherit;cursor:pointer;}
+.cta-white{background:#fff;color:var(--ink);}
+.cta-blue{background:var(--blue);color:#fff;}
+.cta-wa{background:var(--wa);color:var(--ink);}
+.cta-amber{background:var(--amber);color:#fff;}
+
+.url-tag{font-size:10px;font-weight:600;letter-spacing:.04em;}
+.url-white{color:rgba(255,255,255,.3);}
+.url-dark{color:var(--muted);}
+.url-wa{color:rgba(255,255,255,.3);}
+
+/* Ad-specific elements */
+.compare-row{display:flex;align-items:flex-end;gap:14px;margin:4px 0;}
+.compare-before{font-size:28px;font-weight:800;letter-spacing:-0.03em;color:rgba(255,255,255,.22);text-decoration:line-through;}
+.compare-after{font-size:68px;font-weight:800;letter-spacing:-0.04em;color:#60A5FA;line-height:1;}
+
+.proof-row{display:flex;gap:24px;margin:14px 0;}
+.proof-item{flex:1;}
+.proof-num{font-size:48px;font-weight:800;letter-spacing:-0.04em;line-height:1;color:var(--blue);}
+.proof-label{font-size:11px;font-weight:600;color:var(--muted);margin-top:2px;}
+.proof-divider{width:1px;background:var(--border);align-self:stretch;}
+
+.calc-wrap{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.2);border-radius:12px;padding:14px 16px;margin:12px 0;}
+.calc-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(217,119,6,.12);font-size:12px;}
+.calc-row:last-child{border-bottom:none;font-weight:800;font-size:14px;}
+.calc-label{color:#92400E;font-weight:600;}
+.calc-val{color:var(--amber);font-weight:700;}
+.calc-row:last-child .calc-label{color:var(--ink);}
+.calc-row:last-child .calc-val{color:var(--red);font-size:16px;}
+.calc-eq{font-size:10px;color:#D97706;padding:3px 0;text-align:center;letter-spacing:.04em;}
+
+.wa-mock{background:#E5DDD5;border-radius:10px;padding:12px 12px 8px;margin:10px 0;}
+.wa-mock-hdr{display:flex;align-items:center;gap:7px;margin-bottom:8px;border-bottom:1px solid rgba(0,0,0,.1);padding-bottom:7px;}
+.wa-avatar{width:26px;height:26px;border-radius:50%;background:var(--wa-dark);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.wa-contact{font-size:11px;font-weight:700;color:#111;}
+.wa-status{font-size:9px;color:#667781;}
+.wa-bubbles{display:flex;flex-direction:column;gap:4px;}
+.wa-in{background:#fff;border-radius:6px 6px 6px 0;padding:6px 9px 4px;display:inline-block;max-width:88%;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.wa-out{background:#D9FDD3;border-radius:6px 6px 0 6px;padding:6px 9px 4px;display:inline-block;max-width:88%;margin-left:auto;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.wa-text{font-size:11px;line-height:1.45;color:#111;}
+.wa-meta{display:flex;align-items:center;justify-content:flex-end;gap:3px;margin-top:2px;}
+.wa-time{font-size:9px;color:#667781;}
+.wa-ticks{font-size:10px;color:var(--wa);}
+
+.split-wrap{display:flex;height:100%;}
+.split-l{flex:1;padding:28px 22px;background:#FEF2F2;display:flex;flex-direction:column;}
+.split-r{flex:1;padding:28px 22px;background:#ECFDF5;display:flex;flex-direction:column;}
+.split-tag{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;}
+.split-tag.sl-red{color:var(--red);}
+.split-tag.sl-green{color:var(--green);}
+.split-time{font-size:38px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-top:auto;}
+.split-time.t-red{color:var(--red);}
+.split-time.t-green{color:var(--green);}
+.split-sub{font-size:10px;font-weight:600;margin-top:2px;}
+.split-sub.s-red{color:var(--red);}
+.split-sub.s-green{color:var(--green);}
+.split-bar{position:absolute;bottom:0;left:0;right:0;background:var(--ink);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;}
+.split-verdict{font-size:13px;font-weight:700;color:#fff;letter-spacing:-0.01em;}
+.split-cta{font-size:10px;font-weight:700;color:var(--blu);}
+
+.vol-num{font-size:108px;font-weight:800;letter-spacing:-0.05em;line-height:1;color:var(--amber);}
+.vol-sub{font-size:12px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:.02em;line-height:1.5;}
+.vol-zero{display:flex;align-items:center;gap:8px;margin-top:14px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.2);border-radius:9px;padding:9px 14px;}
+.vol-zero-num{font-size:26px;font-weight:800;color:var(--wa);}
+.vol-zero-text{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);line-height:1.4;}
+
+.timer-row{display:flex;gap:10px;margin:12px 0;}
+.timer-card{flex:1;border-radius:10px;padding:12px;}
+.tc-red{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);}
+.tc-green{background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);}
+.timer-val{font-size:32px;font-weight:800;letter-spacing:-0.03em;line-height:1;}
+.tv-red{color:#F87171;}
+.tv-green{color:var(--wa);}
+.timer-lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.5);margin-top:4px;line-height:1.35;}
+
+.check-list{display:flex;flex-direction:column;gap:9px;margin:12px 0;}
+.check-item{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.4;}
+.check-icon{width:20px;height:20px;border-radius:50%;background:var(--wa-dark);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px;color:#fff;}
+
+.arabic-split{display:flex;height:100%;}
+.ar-l{flex:1;background:var(--ink);padding:28px 22px;display:flex;flex-direction:column;position:relative;}
+.ar-l::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(29,78,216,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(29,78,216,.09) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.ar-r{flex:1;background:#1D4ED8;padding:28px 22px;display:flex;flex-direction:column;}
+.ar-lang{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:12px;}
+.ar-text{font-size:12px;line-height:1.7;color:rgba(255,255,255,.85);font-weight:500;flex:1;}
+.ar-text.rtl{direction:rtl;text-align:right;font-size:12.5px;}
+.ar-claim{font-size:15px;font-weight:800;color:#fff;letter-spacing:-0.015em;line-height:1.2;}
+.ar-claim-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Enlist<span>a</span></div>
+  <div class="nav-right">
+    <div class="nav-tag">10 Conversion Ads · Listing + WhatsApp · April 2026</div>
+    <div class="nav-pill">Ready to Run</div>
+  </div>
+</nav>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showSection('listing')">📋 Listing Generator · 5 Ads</button>
+  <button class="tab-btn" onclick="showSection('wa')">💬 WhatsApp Automations · 5 Ads</button>
+</div>
+
+<div class="instructions">
+  <div class="inst-item"><div class="inst-num">1</div> Click <strong style="color:#fff;">⬇ Download 1080×1080</strong> under each ad to save the PNG</div>
+  <div class="inst-item"><div class="inst-num">2</div> Click any creative to view full size</div>
+  <div class="inst-item"><div class="inst-num">3</div> Click <strong style="color:#fff;">Copy Caption</strong> and paste into Instagram</div>
+</div>
+
+<!-- ─── LISTING SECTION ──────────────────────────────────── -->
+<main id="sec-listing">
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">📋 &nbsp;Listing Generator — 5 Conversion Ads</div><div class="sec-div-line"></div></div>
+
+  <!-- AD 01 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num">01</div>
+      <div class="post-meta">
+        <div class="post-title">Time Attack — Your last listing took 90 minutes. This one takes 47 seconds.</div>
+        <div class="badges"><span class="badge b-blue">Loss Aversion</span><span class="badge b-dark">Specificity</span><span class="badge b-amber">Contrast</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-dark">
+            <div class="ad-top">
+              <div class="wm wm-white">Enlist<span>a</span></div>
+              <div class="bp bp-blue">LISTING GENERATOR</div>
+            </div>
+            <div class="ad-content">
+              <div class="eyebrow ey-blue">Your last listing took</div>
+              <div class="compare-row">
+                <div style="display:flex;flex-direction:column;align-items:center;">
+                  <div class="compare-before">90 min</div>
+                  <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,.22);letter-spacing:.08em;margin-top:2px;">THE OLD WAY</div>
+                </div>
+                <div style="font-size:24px;color:rgba(255,255,255,.25);padding-bottom:20px;">→</div>
+                <div style="display:flex;flex-direction:column;align-items:center;">
+                  <div class="compare-after">47 sec</div>
+                  <div style="font-size:9px;font-weight:600;color:#60A5FA;letter-spacing:.08em;margin-top:2px;">WITH ENLISTA</div>
+                </div>
+              </div>
+              <div class="ad-sub" style="margin-top:12px;margin-bottom:18px;">Bilingual, portal-ready, RERA-compliant listing copy — from your voice in under a minute.</div>
+              <div class="cta-pill cta-white" style="width:fit-content;font-size:11px;">Start free trial →</div>
+            </div>
+            <div class="ad-foot">
+              <div class="url-tag url-white">enlista.ai</div>
+              <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,.18);letter-spacing:.04em;">NO CREDIT CARD</div>
+            </div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_01_listing_time_attack.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,1)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-1">Your last listing took 90 minutes. Your next one takes 47 seconds.
+
+Bilingual. Portal-ready. RERA-checked. All from a 60-second voice note.
+
+Try Enlista free — no credit card needed.
+↓ Link in bio</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #PropTech #Enlista #DubaiBroker #UAEBroker #ListingTips #RealEstateDubai #PropertyFinder #Bayut #DubaiAgent</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">🎯</span><span><strong>Specificity beats vagueness:</strong> "47 seconds" converts better than "under a minute" — odd numbers feel measured and credible, not rounded for marketing.</span></div>
+          <div class="science-point"><span class="sci-icon">🔥</span><span><strong>Loss aversion hook:</strong> Opening with "90 min" forces the broker to feel time already wasted before the solution is offered.</span></div>
+          <div class="science-point"><span class="sci-icon">⚡</span><span><strong>Before/after contrast:</strong> Side-by-side makes the transformation instant to grasp — no reading required to understand the value.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 02 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num">02</div>
+      <div class="post-meta">
+        <div class="post-title">Social Proof — 840 agencies. 124K listings. Still doing yours manually?</div>
+        <div class="badges"><span class="badge b-blue">Social Proof</span><span class="badge b-red">FOMO</span><span class="badge b-dark">Bandwagon</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-light" style="padding:32px 32px 24px;">
+            <div class="ad-top">
+              <div class="wm wm-dark">Enlist<span>a</span></div>
+              <div class="bp" style="background:#EFF6FF;color:var(--blue);">TRUSTED BY UAE BROKERS</div>
+            </div>
+            <div class="ad-content">
+              <div class="eyebrow ey-ink" style="margin-top:6px;">The numbers don't lie</div>
+              <div class="proof-row">
+                <div class="proof-item"><div class="proof-num">840</div><div class="proof-label">UAE agencies</div></div>
+                <div class="proof-divider"></div>
+                <div class="proof-item"><div class="proof-num">124K</div><div class="proof-label">listings generated</div></div>
+              </div>
+              <div class="ad-h1" style="font-size:22px;color:var(--ink);">Still writing yours manually?</div>
+              <div class="ad-sub dark-sub" style="font-size:12px;margin-bottom:18px;">The fastest-growing agencies in Dubai have already switched. Bilingual listing copy, portal-optimised, ready in seconds.</div>
+              <div class="cta-pill cta-blue" style="width:fit-content;font-size:11px;">Join them free →</div>
+            </div>
+            <div class="ad-foot">
+              <div class="url-tag url-dark">enlista.ai</div>
+              <div style="display:flex;align-items:center;gap:4px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--green);"></div><span style="font-size:9px;font-weight:600;color:var(--muted);">Free to start</span></div>
+            </div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_02_listing_social_proof.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,2)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-2">840 UAE agencies. 124,000 listings generated.
+
+Still writing yours by hand?
+
+Enlista turns a 90-minute listing job into 47 seconds. Bilingual, RERA-ready, portal-optimised.
+
+Try it free → enlista.ai</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #PropTech #Enlista #UAEBroker #DubaiAgent #PropertyFinder #Bayut #Dubizzle #RealEstateTech #ListingTools</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">👥</span><span><strong>Social proof principle:</strong> 840 agencies signals widespread adoption — it removes the "will this work for me?" objection before it's raised.</span></div>
+          <div class="science-point"><span class="sci-icon">😰</span><span><strong>FOMO framing:</strong> "Still doing yours manually?" implies the viewer is already behind — mild social pressure that creates urgency without aggression.</span></div>
+          <div class="science-point"><span class="sci-icon">📊</span><span><strong>Credibility via specificity:</strong> 124,000 feels like a live counter, not a marketing estimate. Oddly specific numbers read as trustworthy.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 03 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num">03</div>
+      <div class="post-meta">
+        <div class="post-title">Native Arabic — Actually Arabic. Not auto-translated.</div>
+        <div class="badges"><span class="badge b-blue">Unique Value</span><span class="badge b-green">Credibility</span><span class="badge b-dark">Proof by Demo</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad" style="padding:0;background:var(--ink);">
+            <div class="arabic-split">
+              <div class="ar-l">
+                <div class="ar-lang">🇬🇧 ENGLISH</div>
+                <div class="ar-text"><strong style="color:#fff;font-size:12px;">Marina Heights — 1BR</strong><br><br>Stunning 1-bed in Dubai Marina with panoramic sea views. Fully furnished, high floor, direct beach access. Available immediately.<br><br><span style="color:#60A5FA;font-size:10px;">AED 95,000/yr · Bayut · Property Finder</span></div>
+                <div style="margin-top:auto;position:relative;z-index:1;"><div class="wm wm-white" style="font-size:14px;">Enlist<span>a</span></div></div>
+              </div>
+              <div class="ar-r">
+                <div class="ar-lang">🇦🇪 ARABIC</div>
+                <div class="ar-text rtl"><strong style="color:#fff;font-size:12px;">مارينا هايتس — غرفة نوم</strong><br><br>شقة مميزة في دبي مارينا مع إطلالات بانورامية على البحر. مفروشة بالكامل، دور مرتفع، وصول مباشر إلى الشاطئ. متاحة فوراً.<br><br><span style="color:#93C5FD;font-size:10px;">٩٥,٠٠٠ درهم/سنة</span></div>
+                <div style="margin-top:auto;text-align:right;"><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;">عربي أصيل</div></div>
+              </div>
+            </div>
+            <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(15,24,41,.96);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.07);">
+              <div style="font-size:13px;font-weight:800;color:#fff;letter-spacing:-0.015em;">Actually Arabic. Not auto-translated.</div>
+              <div class="cta-pill cta-white" style="font-size:10px;padding:7px 12px;">Try free →</div>
+            </div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_03_listing_native_arabic.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,3)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-3">Your Arabic listing copy — written by AI, reviewed by native speakers.
+
+Not Google Translated. Not awkward. Actually Arabic.
+
+Enlista generates bilingual EN + AR listing copy for Bayut, Property Finder and Dubizzle — from a 60-second voice note.
+
+↓ Try your first listing free</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #عقارات_دبي #PropTech #Enlista #Bayut #PropertyFinder #ArabicContent #DubaiAgent #BilingualMarketing #UAEProperty</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">👁</span><span><strong>Show don't tell:</strong> Displaying actual bilingual listing copy is more persuasive than any feature bullet. The viewer thinks "I could use that right now."</span></div>
+          <div class="science-point"><span class="sci-icon">🌍</span><span><strong>Calling out the inferior alternative:</strong> "Not auto-translated" targets the #1 objection — Dubai brokers have seen machine-translated Arabic and know it embarrasses them on portals.</span></div>
+          <div class="science-point"><span class="sci-icon">✅</span><span><strong>Proof by demonstration:</strong> The Arabic text itself is the proof. If it looks right, the viewer is already half-converted before reading any copy.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 04 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num">04</div>
+      <div class="post-meta">
+        <div class="post-title">ROI Maths — How much is manual listing costing you?</div>
+        <div class="badges"><span class="badge b-amber">Loss Framing</span><span class="badge b-blue">Self-Discovery</span><span class="badge b-dark">Anchoring</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-amber">
+            <div class="ad-top">
+              <div class="wm wm-dark">Enlist<span>a</span></div>
+              <div class="bp" style="background:rgba(217,119,6,.15);color:var(--amber);">YOUR TIME = MONEY</div>
+            </div>
+            <div class="ad-content">
+              <div class="eyebrow ey-amber" style="margin-top:4px;">Run the numbers</div>
+              <div class="ad-h1" style="color:var(--ink);font-size:20px;margin-bottom:4px;">How much is manual listing costing you?</div>
+              <div class="calc-wrap">
+                <div class="calc-row"><span class="calc-label">Listings per week</span><span class="calc-val">× 3</span></div>
+                <div class="calc-row"><span class="calc-label">Minutes per listing</span><span class="calc-val">× 90 min</span></div>
+                <div class="calc-row"><span class="calc-label">Broker hourly rate</span><span class="calc-val">AED 500/hr</span></div>
+                <div class="calc-eq">= your weekly time cost</div>
+                <div class="calc-row"><span class="calc-label">Weekly cost of doing it manually</span><span class="calc-val">AED 3,750</span></div>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:#92400E;">Enlista costs a fraction of that. <span style="color:var(--amber);">And takes 47 seconds.</span></div>
+            </div>
+            <div class="ad-foot">
+              <div class="url-tag url-dark">enlista.ai</div>
+              <div class="cta-pill cta-amber" style="font-size:10px;padding:8px 13px;">Stop the bleed →</div>
+            </div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_04_listing_roi_maths.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,4)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-4">Quick maths for Dubai brokers 👇
+
+3 listings/week × 90 minutes = 4.5 hours
+At AED 500/hr, that's AED 2,250 of your time. Every week.
+
+Enlista generates the same listing in 47 seconds. Bilingual. Portal-ready.
+
+How much time are you leaving on the table?
+↓ Try free at enlista.ai</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #PropTech #Enlista #DubaiAgent #UAEBroker #RealEstateROI #ListingTips #WorkSmart #DubaiProperty #RealEstateTech</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">🧮</span><span><strong>Self-discovery is more persuasive than assertion:</strong> When viewers do the calculation themselves, they own the conclusion — you don't have to claim anything.</span></div>
+          <div class="science-point"><span class="sci-icon">💸</span><span><strong>Loss framing:</strong> AED 3,750/week is concrete and stinging. Losses loom larger than equivalent gains — this creates urgency through what's already being lost.</span></div>
+          <div class="science-point"><span class="sci-icon">⚓</span><span><strong>Price anchoring:</strong> By leading with AED 3,750, the Enlista subscription fee becomes trivially small by comparison before it's even mentioned.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 05 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num">05</div>
+      <div class="post-meta">
+        <div class="post-title">Free Trial — Your first listing is on us. No card. No catch.</div>
+        <div class="badges"><span class="badge b-green">Zero Risk</span><span class="badge b-blue">Objection Kill</span><span class="badge b-dark">CTA Focus</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-blue" style="align-items:center;text-align:center;justify-content:center;">
+            <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
+              <div class="wm wm-white" style="font-size:20px;margin-bottom:24px;">Enlist<span>a</span></div>
+              <div class="bp bp-white" style="margin-bottom:14px;">LIMITED FREE TRIAL</div>
+              <div style="font-size:36px;font-weight:800;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin-bottom:10px;">Your first listing<br>is on us.</div>
+              <div style="font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.65;max-width:340px;margin-bottom:22px;">No credit card. No setup fee. No catch.<br>Generate a real listing from your voice — right now.</div>
+              <div style="display:flex;gap:14px;margin-bottom:22px;flex-wrap:wrap;justify-content:center;">
+                <div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:rgba(255,255,255,.7);"><span style="color:var(--wa);">✓</span>Bilingual EN + AR</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:rgba(255,255,255,.7);"><span style="color:var(--wa);">✓</span>Portal-ready</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:rgba(255,255,255,.7);"><span style="color:var(--wa);">✓</span>RERA checked</div>
+              </div>
+              <div class="cta-pill cta-white" style="font-size:13px;padding:12px 26px;border-radius:10px;">Start Free Trial →</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:10px;letter-spacing:.04em;">enlista.ai · No card required</div>
+            </div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_05_listing_free_trial.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,5)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-5">Your first listing is free.
+
+No credit card. No setup. No catch.
+
+Speak your property details → get bilingual, portal-ready listing copy in under 60 seconds.
+
+↓ Try Enlista free now at the link in bio</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #FreeTrial #PropTech #Enlista #DubaiAgent #UAEBroker #RealEstateTech #PropertyFinder #Bayut #ListingTools</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">🚪</span><span><strong>Remove every friction point:</strong> "No credit card. No setup fee. No catch." kills three specific objections in a single sentence.</span></div>
+          <div class="science-point"><span class="sci-icon">🎁</span><span><strong>Gift framing:</strong> "On us" frames the trial as a gift, triggering reciprocity — people are more likely to convert post-trial when they feel they've received something.</span></div>
+          <div class="science-point"><span class="sci-icon">📣</span><span><strong>Single dominant CTA:</strong> This ad does one thing only — drive to sign-up. For bottom-of-funnel users who just need the nudge, this is the highest-converting format.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ─── WHATSAPP SECTION ──────────────────────────────────── -->
+<main id="sec-wa" style="display:none;">
+
+  <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">💬 &nbsp;WhatsApp Automations — 5 Conversion Ads</div><div class="sec-div-line"></div></div>
+
+  <!-- AD 06 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num wa">06</div>
+      <div class="post-meta">
+        <div class="post-title">Lead Gone Cold — They messaged 3 hours ago. That lead is gone.</div>
+        <div class="badges"><span class="badge b-wa">WhatsApp</span><span class="badge b-red">Loss Aversion</span><span class="badge b-dark">Guilt Trigger</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-dark">
+            <div class="ad-top">
+              <div class="wm wm-white">Enlist<span>a</span></div>
+              <div class="bp bp-red">LEAD GONE COLD</div>
+            </div>
+            <div class="ad-content">
+              <div class="wa-mock">
+                <div class="wa-mock-hdr">
+                  <div class="wa-avatar">AS</div>
+                  <div><div class="wa-contact">Ahmed S.</div><div class="wa-status">last seen 3 hours ago</div></div>
+                </div>
+                <div class="wa-bubbles">
+                  <div class="wa-in"><div class="wa-text">Hi, is this 2BR in JVC still available? What's the price?</div><div class="wa-meta"><span class="wa-time">10:14 AM</span></div></div>
+                  <div style="margin:4px 0 4px 14px;text-align:right;"><div style="display:inline-block;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);border-radius:7px;padding:4px 9px;"><span style="font-size:9px;font-weight:700;color:#F87171;letter-spacing:.04em;">NO REPLY — 3 HOURS AGO</span></div></div>
+                </div>
+              </div>
+              <div class="ad-h1" style="font-size:21px;margin-bottom:6px;">That lead is gone.<br><em>And it happens 12× a day.</em></div>
+              <div class="ad-sub" style="font-size:11.5px;margin-bottom:14px;">Enlista replies instantly — with the right message — while you're showing another property.</div>
+              <div class="cta-pill cta-white" style="width:fit-content;font-size:11px;padding:9px 14px;">Stop losing leads →</div>
+            </div>
+            <div class="ad-foot"><div class="url-tag url-white">enlista.ai</div></div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_06_wa_lead_gone_cold.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,6)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-6">You were showing a property. They messaged asking about another one.
+
+3 hours later — no reply. Lead gone to the next broker who responded.
+
+This happens to the average Dubai broker 12 times a day.
+
+Enlista WhatsApp automations reply instantly — while you're busy closing deals.
+
+↓ Set up in 10 minutes — link in bio</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #WhatsAppAutomation #PropTech #Enlista #LeadManagement #DubaiAgent #UAEBroker #RealEstateTech #LeadResponse #DubaiProperty</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">😣</span><span><strong>Recognition pain:</strong> Every Dubai broker has seen this exact scenario on their phone. The mock chat makes them feel the sting — that recognition is the ad doing its job.</span></div>
+          <div class="science-point"><span class="sci-icon">📉</span><span><strong>Scale the loss:</strong> "It happens 12× a day" escalates from a one-off to a systemic revenue leak. Now they're calculating, not just relating.</span></div>
+          <div class="science-point"><span class="sci-icon">🎯</span><span><strong>Specificity + real scenario:</strong> Real name, real question, real timestamp creates empathy — far more compelling than abstract claims about "missed leads."</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 07 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num wa">07</div>
+      <div class="post-meta">
+        <div class="post-title">Competitor Won — Your competitor replied in 10 seconds. You replied in 2 hours.</div>
+        <div class="badges"><span class="badge b-wa">WhatsApp</span><span class="badge b-red">Competitive Fear</span><span class="badge b-dark">Direct Comparison</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad" style="padding:0;position:relative;">
+            <div class="split-wrap" style="height:456px;">
+              <div class="split-l">
+                <div class="split-tag sl-red">❌ WITHOUT ENLISTA</div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;">
+                  <div class="wa-in" style="max-width:90%;"><div class="wa-text">Hi! Interested in your Marina listing</div><div class="wa-meta"><span class="wa-time">9:02 AM</span></div></div>
+                  <div style="font-size:9px;color:#aaa;padding:4px 2px;">···no reply···</div>
+                  <div style="background:#FEF2F2;border-radius:6px;padding:5px 8px;border:1px solid rgba(220,38,38,.15);display:inline-block;"><div style="font-size:10px;font-weight:700;color:var(--red);">You replied: 2 hrs 17 min later</div></div>
+                </div>
+                <div class="split-time t-red">−2 leads</div>
+                <div class="split-sub s-red">per day, on average</div>
+              </div>
+              <div class="split-r">
+                <div class="split-tag sl-green">✓ WITH ENLISTA</div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;">
+                  <div class="wa-in" style="max-width:90%;"><div class="wa-text">Hi! Interested in your Marina listing</div><div class="wa-meta"><span class="wa-time">9:02 AM</span></div></div>
+                  <div class="wa-out" style="max-width:90%;margin-left:0;align-self:flex-end;"><div class="wa-text">Hi! Thanks for your interest 🏠 The Marina 2BR is available from Dec 1st at AED 120K. Would you like to book a viewing?</div><div class="wa-meta"><span class="wa-time">9:02 AM</span><span class="wa-ticks">✓✓</span></div></div>
+                </div>
+                <div class="split-time t-green">10 sec</div>
+                <div class="split-sub s-green">auto-reply, every time</div>
+              </div>
+            </div>
+            <div class="split-bar">
+              <div class="split-verdict">Who's getting the deal?</div>
+              <div class="split-cta">enlista.ai →</div>
+            </div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_07_wa_competitor_won.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,7)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-7">Your lead messages both you and your competitor at 9am.
+
+You reply at 11:17am. They reply in 10 seconds — automatically.
+
+Who's getting the viewing request?
+
+Enlista WhatsApp automations reply instantly, personally, even while you're sleeping.
+
+↓ Set yours up in 10 minutes</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #WhatsAppAutomation #PropTech #Enlista #DubaiAgent #UAEBroker #LeadResponse #RealEstateTech #CompetitiveEdge #DubaiProperty</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">⚔️</span><span><strong>Direct comparison forces a decision:</strong> Side-by-side eliminates ambiguity — the viewer must choose which side they want to be on, and the answer is obvious.</span></div>
+          <div class="science-point"><span class="sci-icon">😤</span><span><strong>Competitive instinct:</strong> No Dubai broker wants to lose deals to a competitor. The "without" side isn't abstract — it's their current reality, and seeing it compared stings.</span></div>
+          <div class="science-point"><span class="sci-icon">💬</span><span><strong>Show the actual response:</strong> Seeing the quality auto-reply on the right removes the "but will it sound right?" objection before it's raised.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 08 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num wa">08</div>
+      <div class="post-meta">
+        <div class="post-title">Volume Shock — 40 WhatsApp messages a day, typed manually. Enlista brokers send 0.</div>
+        <div class="badges"><span class="badge b-wa">WhatsApp</span><span class="badge b-amber">Shock Value</span><span class="badge b-dark">Contrast</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-dark">
+            <div class="ad-top">
+              <div class="wm wm-white">Enlist<span>a</span></div>
+              <div class="bp bp-amber">WHATSAPP AUTOMATIONS</div>
+            </div>
+            <div class="ad-content" style="align-items:center;text-align:center;">
+              <div class="eyebrow ey-amber">The average broker sends</div>
+              <div class="vol-num">40</div>
+              <div class="vol-sub">WhatsApp messages.<br>Manually. Every single day.</div>
+              <div class="vol-zero">
+                <div class="vol-zero-num">0</div>
+                <div class="vol-zero-text">Enlista brokers send manually.<br><span style="color:rgba(255,255,255,.35);">All automated. Always on.</span></div>
+              </div>
+              <div style="margin-top:14px;"><div class="cta-pill cta-wa" style="font-size:11px;padding:9px 18px;">Automate mine →</div></div>
+            </div>
+            <div class="ad-foot"><div class="url-tag url-white">enlista.ai</div><div style="font-size:9px;font-weight:600;color:rgba(255,255,255,.18);">Setup in 10 min</div></div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_08_wa_volume_shock.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,8)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-8">The average Dubai broker sends 40 WhatsApp messages a day. Manually.
+
+Brokers using Enlista send 0. Everything automated — lead follow-ups, property enquiries, viewing confirmations, status updates.
+
+You stay focused on the deals. Enlista handles the messages.
+
+↓ Set up your WhatsApp automations in 10 minutes</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #WhatsAppAutomation #PropTech #Enlista #DubaiAgent #Automation #WorkSmarter #UAEBroker #RealEstateTech #LeadManagement</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">😱</span><span><strong>Big number + zero contrast:</strong> 40 vs 0 is the most dramatic before/after possible. The gap between them creates instant desire to switch sides.</span></div>
+          <div class="science-point"><span class="sci-icon">😓</span><span><strong>Effort aversion:</strong> "40 messages manually" triggers exhaustion just by reading it — activating the desire to eliminate that work entirely.</span></div>
+          <div class="science-point"><span class="sci-icon">📐</span><span><strong>Scroll-stopping visual hierarchy:</strong> One giant number dominates the creative. In a feed ad you have 1.7 seconds — "40" at 120px stops thumbs.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 09 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num wa">09</div>
+      <div class="post-meta">
+        <div class="post-title">5-Minute Rule — Leads go cold in 5 minutes. Your auto-reply fires in 10 seconds.</div>
+        <div class="badges"><span class="badge b-wa">WhatsApp</span><span class="badge b-red">Urgency</span><span class="badge b-green">Risk Mitigation</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-wa-dark">
+            <div class="ad-top">
+              <div class="wm wm-wa">Enlist<span>a</span></div>
+              <div class="bp bp-wa">RESPONSE SPEED</div>
+            </div>
+            <div class="ad-content">
+              <div class="eyebrow ey-wa">The rule every broker ignores</div>
+              <div class="ad-h1" style="font-size:22px;margin-bottom:6px;">Leads go cold in <span style="color:var(--wa);">5 min.</span><br>Your auto-reply fires in <span style="color:var(--wa);">10 sec.</span></div>
+              <div class="timer-row">
+                <div class="timer-card tc-red">
+                  <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:5px;">Lead decay</div>
+                  <div class="timer-val tv-red">5 min</div>
+                  <div class="timer-lbl">Average time before interest drops 80% and lead moves to next broker</div>
+                </div>
+                <div class="timer-card tc-green">
+                  <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:5px;">Enlista reply</div>
+                  <div class="timer-val tv-green">10 sec</div>
+                  <div class="timer-lbl">Personalised auto-reply fires — even while you're at a viewing</div>
+                </div>
+              </div>
+              <div class="ad-sub" style="font-size:11.5px;margin-bottom:14px;">Don't let 5 minutes cost you a AED 50K commission.</div>
+              <div class="cta-pill cta-wa" style="width:fit-content;font-size:11px;padding:9px 14px;">Protect every lead →</div>
+            </div>
+            <div class="ad-foot"><div class="url-tag url-wa">enlista.ai</div></div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_09_wa_five_minute_rule.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,9)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-9">The 5-minute rule: after 5 minutes without a reply, a lead's interest drops by 80%.
+
+They move on to the next broker.
+
+Enlista auto-replies in 10 seconds — with a personalised WhatsApp message, while you're at a viewing, in a meeting, or asleep.
+
+Don't let 5 minutes cost you a AED 50K commission.
+
+↓ Set up your automations in 10 minutes</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #WhatsAppAutomation #PropTech #Enlista #LeadResponse #DubaiAgent #UAEBroker #SalesAutomation #RealEstateTech #DubaiProperty</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">⏱️</span><span><strong>Grounding urgency in research:</strong> The 5-minute lead decay stat lends authority — it makes the problem feel factual and urgent, not manufactured by marketing.</span></div>
+          <div class="science-point"><span class="sci-icon">🛡️</span><span><strong>Insurance framing:</strong> "Protect every lead" positions Enlista as insurance — something you'd be foolish not to have. Insurance sells on risk-aversion, a stronger motivator than aspiration.</span></div>
+          <div class="science-point"><span class="sci-icon">💰</span><span><strong>Stakes anchoring:</strong> "AED 50K commission" makes the cost of inaction concrete. One missed lead > the entire yearly subscription — the viewer does that maths instantly.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD 10 -->
+  <div class="post-wrapper">
+    <div class="post-header">
+      <div class="post-num wa">10</div>
+      <div class="post-meta">
+        <div class="post-title">Set Once, Works Forever — 10 minutes to set up. Works while you sleep.</div>
+        <div class="badges"><span class="badge b-wa">WhatsApp</span><span class="badge b-green">Ease</span><span class="badge b-dark">Passive Benefit</span></div>
+      </div>
+    </div>
+    <div class="post-body">
+      <div class="slide-area">
+        <div class="ad-frame" onclick="openModal(this)">
+          <div class="ad ad-wa-light">
+            <div class="ad-top">
+              <div class="wm wm-wa-dark">Enlist<span>a</span></div>
+              <div class="bp" style="background:rgba(18,140,126,.12);color:var(--wa-dark);">WHATSAPP AUTOMATIONS</div>
+            </div>
+            <div class="ad-content">
+              <div class="eyebrow" style="color:var(--wa-dark);margin-top:4px;">One setup. Forever running.</div>
+              <div class="ad-h1" style="font-size:24px;color:var(--ink);margin-bottom:12px;">Set up in 10 minutes.<br><span style="color:var(--wa-dark);">Works while you sleep.</span></div>
+              <div class="check-list">
+                <div class="check-item"><div class="check-icon">✓</div><div><strong>10 minutes to set up</strong> — connect WhatsApp, define your flows</div></div>
+                <div class="check-item"><div class="check-icon">✓</div><div><strong>Replies 24 hours a day</strong> — enquiries, follow-ups, viewings</div></div>
+                <div class="check-item"><div class="check-icon">✓</div><div><strong>Never misses a lead</strong> — automatic, personalised, instant</div></div>
+                <div class="check-item"><div class="check-icon">✓</div><div><strong>You stay focused on closing</strong> — Enlista handles the messages</div></div>
+              </div>
+            </div>
+            <div class="ad-foot">
+              <div class="url-tag" style="color:rgba(0,0,0,.28);">enlista.ai</div>
+              <div class="cta-pill" style="background:var(--wa-dark);color:#fff;font-size:11px;padding:9px 14px;">Start free →</div>
+            </div>
+          </div>
+        </div>
+        <a class="dl-btn" href="ad_exports/enlista_10_wa_set_and_forget.png" download>⬇ Download 1080×1080</a>
+      </div>
+      <div class="right-panel">
+        <div class="caption-box">
+          <div class="caption-hdr">
+            <div class="caption-lbl">Instagram Caption</div>
+            <button class="copy-btn" onclick="copyCaption(this,10)">Copy Caption</button>
+          </div>
+          <div class="caption-text" id="cap-10">The last WhatsApp setup you'll ever do.
+
+✓ 10 minutes to configure
+✓ Replies 24/7 — automatically
+✓ Never misses an enquiry again
+✓ You stay focused on closing deals
+
+Enlista handles follow-ups, enquiries, viewing confirmations, and lead nurturing — while you're out showing properties.
+
+↓ Set up in 10 minutes — link in bio</div>
+          <div class="hashtag-hdr">Hashtags</div>
+          <div class="hashtags">#DubaiRealEstate #WhatsAppAutomation #PropTech #Enlista #DubaiAgent #UAEBroker #WorkSmart #Automation #RealEstateTech #PassiveIncome</div>
+        </div>
+        <div class="science-box">
+          <div class="science-hdr"><div class="science-lbl">Why This Will Convert</div></div>
+          <div class="science-point"><span class="sci-icon">🛌</span><span><strong>"Works while you sleep" is proven direct-response copy:</strong> It triggers the dream of passive, effortless results — and for WhatsApp automations, it's literally true.</span></div>
+          <div class="science-point"><span class="sci-icon">⚡</span><span><strong>Setup time as a barrier-killer:</strong> "10 minutes" removes the "I don't have time to configure this" objection before it forms. Lower perceived effort = higher conversion rate.</span></div>
+          <div class="science-point"><span class="sci-icon">✅</span><span><strong>Checklist psychology:</strong> Four checkmarks feel like a complete, trustworthy promise. Each tick builds confidence — the brain registers confirmation with every line.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-wrap">
+    <button id="modal-close" onclick="closeModal()">✕ Close</button>
+    <div id="modal-stage"></div>
+    <div id="modal-hint">Click anywhere outside to close</div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-logo">Enlist<span>a</span></div>
+  <div class="ft-note">10 Conversion Ads · Listing Generator + WhatsApp Automations · April 2026</div>
+</footer>
+
+<script>
+function showSection(id) {
+  document.getElementById('sec-listing').style.display = id === 'listing' ? 'block' : 'none';
+  document.getElementById('sec-wa').style.display = id === 'wa' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (id==='listing'&&i===0)||(id==='wa'&&i===1)));
+}
+function openModal(frame) {
+  const ad = frame.querySelector('.ad');
+  if (!ad) return;
+  const clone = ad.cloneNode(true);
+  clone.style.cssText = 'width:540px;height:540px;cursor:default;pointer-events:none;border-radius:0;';
+  const stage = document.getElementById('modal-stage');
+  stage.innerHTML = '';
+  stage.appendChild(clone);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay') || e.currentTarget.id === 'modal-close')
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+function copyCaption(btn, num) {
+  navigator.clipboard.writeText(document.getElementById('cap-'+num).innerText).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('done'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

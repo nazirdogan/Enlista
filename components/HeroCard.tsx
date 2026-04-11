@@ -22,7 +22,12 @@ export function HeroCard() {
       flexDirection: 'column',
     }}>
       {/* Tab strip */}
-      <div role="tablist" style={{ display: 'flex', borderBottom: `1px solid ${border}`, flexShrink: 0 }}>
+      <div role="tablist" style={{
+        position: 'relative',
+        display: 'flex',
+        borderBottom: `1px solid ${border}`,
+        flexShrink: 0,
+      }}>
         {(['listing', 'whatsapp'] as const).map((t) => {
           const active = tab === t
           return (
@@ -38,27 +43,49 @@ export function HeroCard() {
                 fontWeight: active ? 700 : 500,
                 color: active ? blue : '#94a3b8',
                 border: 'none',
-                borderBottom: active ? `2px solid ${blue}` : '2px solid transparent',
                 background: active ? '#fff' : '#FAFAFA',
                 cursor: 'pointer',
                 textAlign: 'center',
                 fontFamily: 'inherit',
+                transition: 'color 300ms ease, background 300ms ease, font-weight 300ms ease',
               }}
             >
               {t === 'listing' ? '🎙️ Listing copy' : '💬 WhatsApp bot'}
             </button>
           )
         })}
+        {/* Sliding indicator */}
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute',
+            left: 0,
+            bottom: -1,
+            height: 2,
+            width: '50%',
+            background: blue,
+            borderRadius: 2,
+            transform: `translateX(${tab === 'listing' ? '0%' : '100%'})`,
+            transition: 'transform 420ms cubic-bezier(0.65, 0, 0.35, 1)',
+            pointerEvents: 'none',
+          }}
+        />
       </div>
 
       {/* Fixed-height panel container */}
-      <div style={{ position: 'relative', height: 370, flexShrink: 0 }}>
+      <div style={{ position: 'relative', height: 370, flexShrink: 0, overflow: 'hidden' }}>
 
         {/* Listing tab */}
         <div aria-hidden={tab !== 'listing'} style={{
           position: 'absolute', inset: 0, padding: 16,
-          display: tab === 'listing' ? 'flex' : 'none',
+          display: 'flex',
           flexDirection: 'column', gap: 10,
+          opacity: tab === 'listing' ? 1 : 0,
+          transform: tab === 'listing'
+            ? 'translateX(0) scale(1)'
+            : 'translateX(-16px) scale(0.985)',
+          transition: 'opacity 360ms ease, transform 420ms cubic-bezier(0.65, 0, 0.35, 1)',
+          pointerEvents: tab === 'listing' ? 'auto' : 'none',
         }}>
           {/* You said */}
           <div style={{
@@ -144,8 +171,14 @@ export function HeroCard() {
         {/* WhatsApp tab */}
         <div aria-hidden={tab !== 'whatsapp'} style={{
           position: 'absolute', inset: 0, padding: 16,
-          display: tab === 'whatsapp' ? 'flex' : 'none',
+          display: 'flex',
           flexDirection: 'column', gap: 8,
+          opacity: tab === 'whatsapp' ? 1 : 0,
+          transform: tab === 'whatsapp'
+            ? 'translateX(0) scale(1)'
+            : 'translateX(16px) scale(0.985)',
+          transition: 'opacity 360ms ease, transform 420ms cubic-bezier(0.65, 0, 0.35, 1)',
+          pointerEvents: tab === 'whatsapp' ? 'auto' : 'none',
         }}>
           {/* Header row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
