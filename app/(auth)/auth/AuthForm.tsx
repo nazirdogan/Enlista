@@ -225,8 +225,10 @@ export default function AuthForm() {
       toast.success('Welcome to Enlista.io')
 
       // Fire Meta pixel StartTrial conversion event
-      if (typeof window !== 'undefined' && typeof (window as Window & { fbq?: Function }).fbq === 'function') {
-        (window as Window & { fbq?: Function }).fbq!('track', 'StartTrial', {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (typeof window !== 'undefined' && typeof (window as any).fbq === 'function') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(window as any).fbq('track', 'StartTrial', {
           currency: 'AED',
           predicted_ltv: 95,
         })
