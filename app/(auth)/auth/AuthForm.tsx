@@ -249,7 +249,21 @@ export default function AuthForm() {
   // ─── Sign In — centred card (unchanged feel) ──────────────────────────────
   if (tab === 'signin') {
     return (
-      <div style={{
+      <>
+        <style>{`
+          @keyframes enlista-spin { to { transform: rotate(360deg); } }
+          @media (max-width: 480px) {
+            .enlista-signin-wrap { padding: 0 !important; background: #fff !important; align-items: flex-start !important; }
+            .enlista-signin-card { border-radius: 0 !important; border: none !important; min-height: 100vh; padding: 40px 20px 36px !important; }
+            /* Prevent iOS zoom */
+            .enlista-signin-card input[type="email"],
+            .enlista-signin-card input[type="password"],
+            .enlista-signin-card input[type="text"] { font-size: 16px !important; }
+          }
+        `}</style>
+      <div
+        className="enlista-signin-wrap"
+        style={{
         minHeight: '100vh',
         background: '#F2F4F7',
         display: 'flex',
@@ -257,7 +271,9 @@ export default function AuthForm() {
         justifyContent: 'center',
         padding: '24px 16px',
       }}>
-        <div style={{
+        <div
+          className="enlista-signin-card"
+          style={{
           width: '100%',
           maxWidth: 440,
           background: '#FFFFFF',
@@ -333,7 +349,7 @@ export default function AuthForm() {
               }}
             >
               {loading
-                ? <><Loader2 style={{ width: 16, height: 16, animation: 'spin 1s linear infinite' }} />Signing In...</>
+                ? <><Loader2 style={{ width: 16, height: 16, animation: 'enlista-spin 1s linear infinite' }} />Signing In...</>
                 : 'Sign In →'}
             </button>
           </form>
@@ -349,6 +365,7 @@ export default function AuthForm() {
           </p>
         </div>
       </div>
+      </>
     )
   }
 
@@ -356,14 +373,39 @@ export default function AuthForm() {
   return (
     <>
       <style>{`
+        /* ── Layout ─────────────────────────────────────────────── */
         .enlista-split { display: flex; min-height: 100vh; }
-        .enlista-left { width: 55%; }
+        .enlista-left  { width: 55%; }
         .enlista-right { width: 45%; }
+
+        /* Mobile header: hidden on desktop, shown on mobile */
+        .enlista-mobile-top { display: none; }
+
+        /* Trust strip on mobile: hidden on desktop (left panel shows it there) */
+        .enlista-mobile-trust { display: none; }
+
+        /* ── Tablet / mobile breakpoint ──────────────────────────── */
         @media (max-width: 860px) {
-          .enlista-split { flex-direction: column; }
-          .enlista-left { display: none; }
-          .enlista-right { width: 100%; min-height: 100vh; }
+          .enlista-split       { flex-direction: column; }
+          .enlista-left        { display: none; }
+          .enlista-right       { width: 100%; min-height: 100vh; padding: 28px 24px 44px !important; align-items: flex-start !important; }
+          .enlista-mobile-top  { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 32px; }
+          .enlista-mobile-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin-top: 28px; }
+
+          /* Prevent iOS auto-zoom: inputs must be ≥ 16px on mobile */
+          .enlista-right input[type="text"],
+          .enlista-right input[type="email"],
+          .enlista-right input[type="password"] { font-size: 16px !important; }
         }
+
+        /* ── Small phones ────────────────────────────────────────── */
+        @media (max-width: 400px) {
+          .enlista-right { padding: 20px 16px 36px !important; }
+        }
+
+        /* ── Spinner ─────────────────────────────────────────────── */
+        @keyframes enlista-spin { to { transform: rotate(360deg); } }
+        .enlista-spin { animation: enlista-spin 1s linear infinite; }
       `}</style>
 
       <div className="enlista-split">
@@ -507,6 +549,26 @@ export default function AuthForm() {
           }}
         >
           <div style={{ width: '100%', maxWidth: 400 }}>
+
+            {/* Mobile-only: wordmark + sign-in link (replaces hidden left panel) */}
+            <div className="enlista-mobile-top">
+              <Link href="/" style={{ textDecoration: 'none' }}>
+                <span style={{ fontWeight: 800, fontSize: 22, color: '#0F1829', letterSpacing: '-0.3px' }}>
+                  Enlist<span style={{ color: '#1D4ED8' }}>a</span>
+                </span>
+              </Link>
+              <button
+                onClick={() => switchTab('signin')}
+                style={{
+                  background: 'none', border: '1.5px solid #DDE3EC', borderRadius: 6,
+                  color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13,
+                  padding: '6px 14px', fontFamily: 'inherit',
+                }}
+              >
+                Sign in
+              </button>
+            </div>
+
             {/* Heading */}
             <div style={{ marginBottom: 32 }}>
               <h2 style={{
@@ -626,7 +688,7 @@ export default function AuthForm() {
                 }}
               >
                 {loading
-                  ? <><Loader2 style={{ width: 16, height: 16, animation: 'spin 1s linear infinite' }} />Creating Account...</>
+                  ? <><Loader2 style={{ width: 16, height: 16, animation: 'enlista-spin 1s linear infinite' }} />Creating Account...</>
                   : 'Start free trial →'}
               </button>
             </form>
@@ -646,11 +708,8 @@ export default function AuthForm() {
               </button>
             </p>
 
-            {/* Mobile trust strip (shown only when left panel is hidden) */}
-            <div style={{
-              display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
-              gap: '6px 16px', marginTop: 24,
-            }}>
+            {/* Mobile trust strip — only visible when left panel is hidden */}
+            <div className="enlista-mobile-trust">
               {TRUST.map((t) => (
                 <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                   <CheckCircle2 size={12} color="#22C55E" />
