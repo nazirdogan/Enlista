@@ -25,11 +25,7 @@ export const CardSlideIn: React.FC<CardSlideInProps> = ({
   });
 
   // Calculate opacity with slight delay (starts fading in at 20% of animation)
-  const opacityProgress = Math.max(0, (progress - 0.1) / 0.9);
-  const opacity = interpolate(opacityProgress, [0, 1], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  const opacity = Math.max(0, (progress - 0.1) / 0.9);
 
   // Calculate translate based on direction
   let translateX = 0;
