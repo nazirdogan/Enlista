@@ -2,10 +2,7 @@ import React from 'react';
 import { Composition } from 'remotion';
 import { CONFIG } from '../config';
 import { Reel1VoiceToCopy } from './Reel1_VoiceToCopy';
-
-const Reel2WhatsAppAuto: React.FC = () => (
-  <div style={{ width: '100%', height: '100%', backgroundColor: '#000' }} />
-);
+import { Reel2WhatsAppAuto } from './Reel2_WhatsAppAuto';
 
 const Reel3TimeSavings: React.FC = () => (
   <div style={{ width: '100%', height: '100%', backgroundColor: '#000' }} />

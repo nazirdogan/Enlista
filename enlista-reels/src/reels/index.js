@@ -2,7 +2,7 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import { Composition } from 'remotion';
 import { CONFIG } from '../config';
 import { Reel1VoiceToCopy } from './Reel1_VoiceToCopy';
-const Reel2WhatsAppAuto = () => (_jsx("div", { style: { width: '100%', height: '100%', backgroundColor: '#000' } }));
+import { Reel2WhatsAppAuto } from './Reel2_WhatsAppAuto';
 const Reel3TimeSavings = () => (_jsx("div", { style: { width: '100%', height: '100%', backgroundColor: '#000' } }));
 const Reel4LeadRaceResponse = () => (_jsx("div", { style: { width: '100%', height: '100%', backgroundColor: '#000' } }));
 export const RemotionRoot = () => {
