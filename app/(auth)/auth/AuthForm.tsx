@@ -457,7 +457,7 @@ export default function AuthForm() {
                 <div style={{ flex: 1.2 }}>
                   <p style={{ margin: '0 0 4px', fontSize: 11, color: '#64748B' }}>Enlista outputs</p>
                   <p style={{ margin: 0, fontSize: 12, color: '#E2E8F0', lineHeight: 1.5 }}>
-                    "Stunning 2BR in JVC with pool views &amp; a sleek open kitchen — priced at AED 1.1M."
+                    &ldquo;Stunning 2BR in JVC with pool views &amp; a sleek open kitchen — priced at AED 1.1M.&rdquo;
                   </p>
                   <p style={{ margin: '6px 0 0', fontSize: 11, color: '#3B82F6' }}>+ Arabic version included</p>
                 </div>
