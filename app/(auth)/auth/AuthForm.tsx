@@ -79,7 +79,8 @@ export default function AuthForm() {
   const [siPassword, setSiPassword] = useState('')
   const [siShowPw, setSiShowPw] = useState(false)
 
-  // Sign-up state — 3 fields only
+  // Sign-up state — 4 fields
+  const [fullName, setFullName] = useState('')
   const [agencyName, setAgencyName] = useState('')
   const [workEmail, setWorkEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -129,7 +130,7 @@ export default function AuthForm() {
     router.replace(`/auth?tab=${t}`)
   }
 
-  const allSignUpFilled = Boolean(agencyName && workEmail && password && !pwError)
+  const allSignUpFilled = Boolean(fullName && agencyName && workEmail && password && !pwError)
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -165,6 +166,7 @@ export default function AuthForm() {
         password,
         options: {
           data: {
+            full_name: fullName,
             agency_name: agencyName,
           },
         },
@@ -520,6 +522,22 @@ export default function AuthForm() {
 
             {/* Form */}
             <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              {/* Full name */}
+              <div>
+                <label style={LABEL}>Full Name</label>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                  autoComplete="name"
+                  placeholder="Sarah Al Mansoori"
+                  style={INPUT}
+                  onFocus={(e) => { e.target.style.borderColor = '#1D4ED8' }}
+                  onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
+                />
+              </div>
+
               {/* Agency name */}
               <div>
                 <label style={LABEL}>Agency Name</label>
