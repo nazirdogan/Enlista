@@ -1,0 +1,24 @@
+{
+  "name": "enlista-reels",
+  "version": "1.0.0",
+  "description": "Instagram Reels video generation using Remotion",
+  "type": "module",
+  "main": "src/reels/index.tsx",
+  "scripts": {
+    "start": "remotion preview",
+    "render": "remotion render",
+    "generate-voice": "node scripts/generate-voice.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "remotion": "^4.0.110",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^18.2.0",
+    "@types/node": "^20.0.0"
+  }
+}
