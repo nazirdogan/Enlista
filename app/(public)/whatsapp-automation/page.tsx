@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import { PublicNav } from '@/components/PublicNav'
 
@@ -162,6 +162,22 @@ function StepCard({ n, role, message, roleColor }: { n: string; role: string; me
 export default function WhatsAppAutomationPage() {
   const [activeFlow, setActiveFlow] = useState<'qualify' | 'book'>('qualify')
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.12 }
+    )
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className={plusJakarta.variable} style={{
       fontFamily: 'var(--font-jakarta), sans-serif',
@@ -179,7 +195,7 @@ export default function WhatsAppAutomationPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 56, alignItems: 'center' }}>
 
           {/* Left */}
-          <div>
+          <div className="reveal reveal-left">
             <Badge variant="wa" style={{ marginBottom: 20 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: c.wa, display: 'inline-block' }} />
               New Feature — WhatsApp Automation
@@ -228,7 +244,7 @@ export default function WhatsAppAutomationPage() {
           </div>
 
           {/* Right — phone mockup with WhatsApp chat */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div className="reveal reveal-right" style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{ width: 300, background: '#1a1a2e', borderRadius: 28,
               padding: '12px 12px 20px', boxShadow: '0 32px 64px rgba(0,0,0,0.35)',
               border: '3px solid #2a2a3e' }}>
@@ -277,7 +293,7 @@ export default function WhatsAppAutomationPage() {
       {/* ── How It Works (flowchart) ─────────────────────────────────────────── */}
       <section id="how-it-works" style={{ background: c.dark, padding: '72px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 52 }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 52 }}>
             <SectionLabel color={c.wa}>End-to-End Automation</SectionLabel>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, color: '#fff', margin: '0 0 14px' }}>
               How It Works
@@ -288,7 +304,7 @@ export default function WhatsAppAutomationPage() {
           </div>
 
           {/* Flow diagram */}
-          <div className="how-it-works-steps" style={{ display: 'flex', alignItems: 'flex-start',
+          <div className="how-it-works-steps reveal" style={{ display: 'flex', alignItems: 'flex-start',
             justifyContent: 'center', gap: 0, flexWrap: 'nowrap', overflowX: 'auto', paddingBottom: 8 }}>
 
             <FlowNode step={1} icon="📲" accent={c.blueLight}
@@ -321,7 +337,7 @@ export default function WhatsAppAutomationPage() {
           </div>
 
           {/* Legend */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 40, flexWrap: 'wrap' }}>
+          <div className="reveal" style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 40, flexWrap: 'wrap' }}>
             {[
               ['🤖', c.wa, 'Bot action'],
               ['👤', c.blueLight, 'Lead action'],
@@ -342,7 +358,7 @@ export default function WhatsAppAutomationPage() {
       {/* ── The Two Flows (tabbed) ───────────────────────────────────────────── */}
       <section style={{ padding: '72px 24px', background: c.bg }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 40 }}>
             <SectionLabel>Automation Flows</SectionLabel>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: c.dark, margin: '0 0 14px' }}>
               Two bots. Zero manual effort.
@@ -352,29 +368,81 @@ export default function WhatsAppAutomationPage() {
             </p>
           </div>
 
-          {/* Tabs */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 36 }}>
-            {([
-              ['qualify', '🎯 Lead Qualification', 'Vet every enquiry automatically'],
-              ['book',    '📅 Viewing Booking',    'Schedule viewings on autopilot'],
-            ] as const).map(([key, label, sub]) => (
-              <button key={key} onClick={() => setActiveFlow(key)}
-                style={{ padding: '12px 24px', borderRadius: 10, cursor: 'pointer',
-                  background: activeFlow === key ? c.wa : c.white,
-                  color: activeFlow === key ? '#fff' : c.muted,
-                  fontWeight: 600, fontSize: 13,
-                  border: activeFlow === key ? 'none' : `1px solid ${c.border}`,
-                  boxShadow: activeFlow === key ? `0 4px 20px ${c.wa}44` : `0 1px 4px rgba(0,0,0,0.06)`,
-                  transition: 'all 0.2s', fontFamily: 'var(--font-jakarta), sans-serif' }}>
-                {label}
-                <div style={{ fontSize: 11, fontWeight: 400, opacity: 0.7, marginTop: 2 }}>{sub}</div>
-              </button>
-            ))}
+          {/* Tabs — segmented control with sliding pill */}
+          <div className="reveal" style={{ display: 'flex', justifyContent: 'center', marginBottom: 36 }}>
+            <div style={{
+              position: 'relative',
+              display: 'inline-flex',
+              gap: 0,
+              background: c.white,
+              padding: 4,
+              borderRadius: 14,
+              border: `1px solid ${c.border}`,
+              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+            }}>
+              {/* Sliding pill background */}
+              <div aria-hidden style={{
+                position: 'absolute',
+                top: 4,
+                bottom: 4,
+                left: 4,
+                width: 'calc(50% - 4px)',
+                background: c.wa,
+                borderRadius: 10,
+                boxShadow: `0 4px 20px ${c.wa}44`,
+                transform: `translateX(${activeFlow === 'qualify' ? '0%' : '100%'})`,
+                transition: 'transform 420ms cubic-bezier(0.65, 0, 0.35, 1), box-shadow 420ms ease',
+                pointerEvents: 'none',
+              }} />
+              {([
+                ['qualify', '🎯 Lead Qualification', 'Vet every enquiry automatically'],
+                ['book',    '📅 Viewing Booking',    'Schedule viewings on autopilot'],
+              ] as const).map(([key, label, sub]) => {
+                const active = activeFlow === key
+                return (
+                  <button key={key} onClick={() => setActiveFlow(key)}
+                    style={{
+                      position: 'relative',
+                      zIndex: 1,
+                      padding: '12px 24px',
+                      borderRadius: 10,
+                      cursor: 'pointer',
+                      background: 'transparent',
+                      color: active ? '#fff' : c.muted,
+                      fontWeight: 600,
+                      fontSize: 13,
+                      border: 'none',
+                      transition: 'color 300ms ease',
+                      fontFamily: 'var(--font-jakarta), sans-serif',
+                      minWidth: 240,
+                    }}>
+                    {label}
+                    <div style={{
+                      fontSize: 11,
+                      fontWeight: 400,
+                      opacity: active ? 0.85 : 0.7,
+                      marginTop: 2,
+                      color: active ? '#fff' : c.muted,
+                      transition: 'color 300ms ease, opacity 300ms ease',
+                    }}>{sub}</div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
-          {/* Flow content */}
-          {activeFlow === 'qualify' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+          {/* Flow content — both panels stacked via grid, cross-fade + slide */}
+          <div className="reveal" style={{ display: 'grid', gridTemplateColumns: '1fr', gridTemplateRows: 'auto' }}>
+            <div aria-hidden={activeFlow !== 'qualify'} style={{
+              gridColumn: 1, gridRow: 1,
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24,
+              opacity: activeFlow === 'qualify' ? 1 : 0,
+              transform: activeFlow === 'qualify'
+                ? 'translateX(0) scale(1)'
+                : 'translateX(-16px) scale(0.985)',
+              transition: 'opacity 360ms ease, transform 420ms cubic-bezier(0.65, 0, 0.35, 1)',
+              pointerEvents: activeFlow === 'qualify' ? 'auto' : 'none',
+            }}>
               {/* Steps */}
               <BentoCard>
                 <div style={{ fontWeight: 700, fontSize: 16, color: c.dark, marginBottom: 20 }}>
@@ -458,10 +526,17 @@ export default function WhatsAppAutomationPage() {
                 </BentoCard>
               </div>
             </div>
-          )}
 
-          {activeFlow === 'book' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+            <div aria-hidden={activeFlow !== 'book'} style={{
+              gridColumn: 1, gridRow: 1,
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24,
+              opacity: activeFlow === 'book' ? 1 : 0,
+              transform: activeFlow === 'book'
+                ? 'translateX(0) scale(1)'
+                : 'translateX(16px) scale(0.985)',
+              transition: 'opacity 360ms ease, transform 420ms cubic-bezier(0.65, 0, 0.35, 1)',
+              pointerEvents: activeFlow === 'book' ? 'auto' : 'none',
+            }}>
               {/* Steps */}
               <BentoCard>
                 <div style={{ fontWeight: 700, fontSize: 16, color: c.dark, marginBottom: 20 }}>
@@ -528,21 +603,21 @@ export default function WhatsAppAutomationPage() {
                 </BentoCard>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </section>
 
       {/* ── What's Included (bento features) ───────────────────────────────────── */}
       <section style={{ padding: '72px 24px', background: c.white, borderTop: `1px solid ${c.border}` }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
             <SectionLabel>Everything You Get</SectionLabel>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: c.dark, margin: 0 }}>
               Built for Dubai agents.
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+          <div className="reveal" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
             {[
               {
                 icon: '⚡',
@@ -601,106 +676,47 @@ export default function WhatsAppAutomationPage() {
               </BentoCard>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ── Pricing ────────────────────────────────────────────────────────────── */}
-      <section id="pricing" style={{ padding: '72px 24px', background: c.bg }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <SectionLabel>Pricing</SectionLabel>
-            <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: c.dark, margin: '0 0 14px' }}>
-              Add automation to your Enlista plan
-            </h2>
-            <p style={{ fontSize: 15, color: c.muted, maxWidth: 480, margin: '0 auto' }}>
-              WhatsApp Automation is a managed add-on — our team sets it up for you. Start with AI listing generation, then contact us to get your 24/7 automated follow-up configured and live.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
-            {/* Pro Plan */}
-            <div style={{ background: c.white, border: `1.5px solid ${c.border}`,
-              borderRadius: 20, padding: 32 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-                textTransform: 'uppercase', color: c.muted, marginBottom: 8 }}>Enlista Pro</div>
-              <div style={{ fontSize: 40, fontWeight: 800, color: c.dark, lineHeight: 1 }}>
-                $99<span style={{ fontSize: 16, fontWeight: 400, color: c.muted }}>/mo</span>
+          {/* Inline CTA — contact sales */}
+          <div className="reveal" style={{
+            marginTop: 48,
+            background: `linear-gradient(145deg, ${c.dark} 0%, #1a2f4e 100%)`,
+            border: `1.5px solid ${c.wa}33`,
+            borderRadius: 20,
+            padding: '36px 40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 24,
+            flexWrap: 'wrap',
+            boxShadow: `0 16px 48px rgba(37,211,102,0.18)`,
+          }}>
+            <div style={{ flex: '1 1 320px', minWidth: 280 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em',
+                textTransform: 'uppercase', color: c.wa, marginBottom: 10 }}>
+                Managed Add-On
               </div>
-              <div style={{ fontSize: 13, color: c.muted, marginBottom: 24, marginTop: 6 }}>
-                Unlimited listings + everything you need to publish
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {['Unlimited listing credits', 'EN + AR bilingual output', 'RERA compliance check',
-                  'WhatsApp & Instagram copy', 'Priority support'].map(f => (
-                  <div key={f} style={{ display: 'flex', gap: 10, fontSize: 13, color: c.text }}>
-                    <span style={{ color: c.green, fontWeight: 700 }}>✓</span> {f}
-                  </div>
-                ))}
-              </div>
-              <a href="/pricing" style={{ display: 'block', marginTop: 24, padding: '12px 20px',
-                textAlign: 'center', border: `1.5px solid ${c.border}`, borderRadius: 10,
-                color: c.text, fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>
-                View Pro Plan
-              </a>
+              <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, color: '#fff',
+                margin: '0 0 10px', lineHeight: 1.25 }}>
+                Ready to automate your lead follow-up?
+              </h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.7, maxWidth: 520 }}>
+                Our team configures the bot, connects your calendar, and tailors the qualification flow to your listings — usually live within a week.
+              </p>
             </div>
-
-            {/* Pro + WhatsApp — highlighted */}
-            <div style={{ background: `linear-gradient(145deg, ${c.dark} 0%, #1a2f4e 100%)`,
-              border: `1.5px solid ${c.wa}33`, borderRadius: 20, padding: 32,
-              boxShadow: `0 16px 48px rgba(37,211,102,0.2)`, position: 'relative' }}>
-              <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)' }}>
-                <Badge variant="wa">⭐ Most Popular</Badge>
-              </div>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-                textTransform: 'uppercase', color: c.wa, marginBottom: 8 }}>Pro + WhatsApp</div>
-              <div style={{ fontSize: 40, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
-                $199<span style={{ fontSize: 16, fontWeight: 400, color: 'rgba(255,255,255,0.45)' }}>/mo</span>
-              </div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 24, marginTop: 6 }}>
-                Everything in Pro + full WhatsApp automation
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {['Everything in Pro', 'Lead qualification bot', 'Automated viewing booking',
-                  'Smart lead scoring (Hot/Warm/Cold)', 'Leads inbox + analytics dashboard',
-                  'EN + AR bot messages', 'Up to 1,000 automated conversations/mo'].map(f => (
-                  <div key={f} style={{ display: 'flex', gap: 10, fontSize: 13,
-                    color: f === 'Everything in Pro' ? 'rgba(255,255,255,0.5)' : '#fff' }}>
-                    <span style={{ color: c.wa, fontWeight: 700 }}>✓</span> {f}
-                  </div>
-                ))}
-              </div>
-              <a href="/contact-sales" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: 8, marginTop: 24, padding: '12px 20px', background: c.wa,
-                borderRadius: 10, color: '#fff', fontWeight: 600, fontSize: 13,
-                textDecoration: 'none', boxShadow: `0 4px 16px ${c.wa}44` }}>
-                <WaIcon size={14} />
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <a href="/contact-sales" style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
+                background: c.wa, color: '#fff', padding: '14px 28px',
+                fontWeight: 600, fontSize: 14, borderRadius: 10, textDecoration: 'none',
+                boxShadow: `0 8px 24px ${c.wa}55`, whiteSpace: 'nowrap' }}>
+                <WaIcon size={16} />
                 Contact Sales
               </a>
-            </div>
-
-            {/* Agency / Enterprise */}
-            <div style={{ background: c.white, border: `1.5px solid ${c.border}`,
-              borderRadius: 20, padding: 32 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-                textTransform: 'uppercase', color: c.muted, marginBottom: 8 }}>Agency / Enterprise</div>
-              <div style={{ fontSize: 40, fontWeight: 800, color: c.dark, lineHeight: 1 }}>
-                Custom
-              </div>
-              <div style={{ fontSize: 13, color: c.muted, marginBottom: 24, marginTop: 6 }}>
-                For brokerages with 10+ agents
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {['Multi-agent team seats', 'White-label branded bot', 'Agency-level reporting',
-                  'Unlimited conversations', 'Dedicated account manager', 'Custom qualification flows'].map(f => (
-                  <div key={f} style={{ display: 'flex', gap: 10, fontSize: 13, color: c.text }}>
-                    <span style={{ color: c.blue, fontWeight: 700 }}>✓</span> {f}
-                  </div>
-                ))}
-              </div>
-              <a href="/contact-sales" style={{ display: 'block', marginTop: 24, padding: '12px 20px',
-                textAlign: 'center', background: c.bluePale, borderRadius: 10,
-                color: c.blue, fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>
-                Talk to Sales
+              <a href="/contact-sales" style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
+                border: `1.5px solid rgba(255,255,255,0.2)`, color: '#fff', padding: '14px 28px',
+                fontWeight: 500, fontSize: 14, borderRadius: 10, textDecoration: 'none',
+                whiteSpace: 'nowrap' }}>
+                Book a Demo →
               </a>
             </div>
           </div>
@@ -709,7 +725,7 @@ export default function WhatsAppAutomationPage() {
 
       {/* ── Final CTA ───────────────────────────────────────────────────────────── */}
       <section style={{ background: c.dark, padding: '80px 24px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 640, margin: '0 auto' }}>
+        <div className="reveal reveal-scale" style={{ maxWidth: 640, margin: '0 auto' }}>
           <div style={{ fontSize: 40, marginBottom: 16 }}>
             <WaIcon size={48} color={c.wa} />
           </div>
