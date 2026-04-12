@@ -224,6 +224,14 @@ export default function AuthForm() {
 
       toast.success('Welcome to Enlista.io')
 
+      // Fire Meta pixel StartTrial conversion event
+      if (typeof window !== 'undefined' && typeof (window as Window & { fbq?: Function }).fbq === 'function') {
+        (window as Window & { fbq?: Function }).fbq!('track', 'StartTrial', {
+          currency: 'AED',
+          predicted_ltv: 95,
+        })
+      }
+
       // Attribute signup to outreach campaign if token present
       const outreachToken = typeof window !== 'undefined'
         ? localStorage.getItem('enlista_outreach_token')
