@@ -1,0 +1,17 @@
+export const BRAND_COLORS = {
+    BLUE: '#1D4ED8',
+    BLUE_LIGHT: '#3B82F6',
+    GREEN: '#059669',
+    AMBER: '#D97706',
+    RED: '#DC2626',
+    WHITE: '#FFFFFF',
+    BLACK: '#0F1829',
+    MUTED: '#64748B',
+    LIGHT_BG: '#F8FAFC',
+    BORDER: '#DDE3EC',
+    BLUE_TINT: '#EFF6FF',
+    GREEN_TINT: '#F0FDF4',
+    AMBER_TINT: '#FFFBEB',
+    RED_TINT: '#FEF2F2',
+};
+//# sourceMappingURL=BrandColors.js.map
