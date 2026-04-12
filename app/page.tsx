@@ -1142,7 +1142,7 @@ export default function HomePage() {
               margin: "0 auto 32px",
             }}
           >
-            Sign up in minutes and get 14 days free — no credit card required.
+            Sign up in minutes and get 30 days free — no credit card required.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             <a
@@ -1159,7 +1159,7 @@ export default function HomePage() {
                 fontFamily: "var(--font-jakarta), sans-serif",
               }}
             >
-              Start your 14-day free trial
+              Start your 30-day free trial
             </a>
             <a
               href="/auth"
