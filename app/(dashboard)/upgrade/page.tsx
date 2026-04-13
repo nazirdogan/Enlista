@@ -33,8 +33,8 @@ export default function UpgradePage({ searchParams }: UpgradePageProps) {
     }
   }
 
-  // Filter to show only Plus and Pro (+ Enterprise) for upgrade flow
-  const upgradeablePlans = PRICING_PLANS.filter(p => ['plus', 'pro', 'enterprise'].includes(p.key))
+  // Filter to show only Plus and Pro for upgrade flow (exclude Enterprise — requires contacting sales)
+  const upgradeablePlans = PRICING_PLANS.filter(p => ['plus', 'pro'].includes(p.key))
 
   return (
     <div>
