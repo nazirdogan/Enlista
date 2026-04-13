@@ -37,7 +37,7 @@ export default function TrialBanner({ daysRemaining }: Props) {
         {message} — upgrade to keep full access.
       </span>
       <Link
-        href="/onboarding"
+        href={`/upgrade?days=${daysRemaining}`}
         style={{
           background: btnBg,
           color: 'white',

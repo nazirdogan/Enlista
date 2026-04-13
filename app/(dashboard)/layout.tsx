@@ -111,6 +111,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [supabase])
 
   const handleSignOut = async () => {
+    document.cookie = 'enlista_persistent=; path=/; max-age=0; SameSite=Lax'
     await supabase.auth.signOut()
     router.push('/login')
   }

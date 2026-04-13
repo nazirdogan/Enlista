@@ -78,6 +78,7 @@ export default function AuthForm() {
   const [siEmail, setSiEmail] = useState('')
   const [siPassword, setSiPassword] = useState('')
   const [siShowPw, setSiShowPw] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
 
   // Sign-up state — 4 fields
   const [fullName, setFullName] = useState('')
@@ -143,6 +144,10 @@ export default function AuthForm() {
       if (error) {
         toast.error(error.message)
       } else {
+        // Set or clear the persistence flag
+        document.cookie = rememberMe
+          ? `enlista_persistent=1; path=/; max-age=31536000; SameSite=Lax${window.location.protocol === 'https:' ? '; Secure' : ''}`
+          : 'enlista_persistent=; path=/; max-age=0; SameSite=Lax'
         router.push('/dashboard')
         router.refresh()
       }
@@ -492,6 +497,25 @@ export default function AuthForm() {
                     </button>
                   </div>
                 </div>
+
+                {/* Keep me signed in */}
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  cursor: 'pointer',
+                  marginTop: -2,
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    style={{ width: 15, height: 15, accentColor: '#1D4ED8', cursor: 'pointer' }}
+                  />
+                  <span style={{ fontSize: 13, color: '#64748B', fontWeight: 500 }}>
+                    Keep me signed in
+                  </span>
+                </label>
 
                 <button
                   type="submit"

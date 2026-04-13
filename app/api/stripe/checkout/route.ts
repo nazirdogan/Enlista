@@ -44,7 +44,25 @@ export async function POST(req: NextRequest) {
       .maybeSingle()
 
     const isNewSubscriber = !existingSub
-    const trialDays = isNewSubscriber ? 14 : undefined
+
+    // Calculate remaining trial days from signup date
+    let trialDays: number | undefined
+    if (isNewSubscriber) {
+      const { data: agencyTrial } = await supabase
+        .from('agencies')
+        .select('trial_started_at, trial_ends_at')
+        .eq('id', agency.id)
+        .single()
+
+      if (agencyTrial?.trial_ends_at) {
+        const now = new Date()
+        const trialEnd = new Date(agencyTrial.trial_ends_at)
+        const daysRemaining = Math.ceil((trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+
+        // Only apply trial if days remaining > 0; otherwise charge immediately
+        trialDays = Math.max(0, daysRemaining) || undefined
+      }
+    }
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -60,6 +78,7 @@ export async function POST(req: NextRequest) {
           agency_id: agency.id,
           plan_amount: String(selectedPlan.price),
           plan_credits: String(selectedPlan.credits),
+          ...(isNewSubscriber && trialDays !== undefined ? { trial_days_calculated: String(trialDays) } : {}),
         },
       },
     })
