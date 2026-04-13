@@ -265,7 +265,7 @@ export default function HomePage() {
                 Start free trial
               </a>
               <a
-                href="/auth"
+                href="/auth?tab=signin"
                 className="btn-outline-hover"
                 style={{
                   display: 'inline-block',
@@ -1162,7 +1162,7 @@ export default function HomePage() {
               Start your 30-day free trial
             </a>
             <a
-              href="/auth"
+              href="/auth?tab=signin"
               style={{
                 display: "inline-block",
                 border: "1.5px solid rgba(255,255,255,0.2)",

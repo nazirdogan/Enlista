@@ -1067,7 +1067,7 @@ export default function HomePage() {
               Contact Sales
             </a>
             <a
-              href="/auth"
+              href="/auth?tab=signin"
               style={{
                 display: "inline-block",
                 border: "1.5px solid rgba(255,255,255,0.2)",

@@ -386,7 +386,7 @@ export default function ContactSalesPage() {
       {/* Footer link */}
       <p style={{ marginTop: 20, fontSize: 13, color: c.muted }}>
         Already have an account?{' '}
-        <Link href="/auth" style={{ color: c.blue, fontWeight: 600, textDecoration: 'none' }}>
+        <Link href="/auth?tab=signin" style={{ color: c.blue, fontWeight: 600, textDecoration: 'none' }}>
           Login
         </Link>
       </p>
