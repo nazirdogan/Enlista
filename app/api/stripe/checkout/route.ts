@@ -45,7 +45,20 @@ export async function POST(req: NextRequest) {
 
     const isNewSubscriber = !existingSub
 
-    // Calculate remaining trial days from signup date
+    // ── Calculated Trial: Use remaining days from user's original 30-day trial ────
+    // Instead of giving a fixed 14-day trial in Stripe, calculate how many days
+    // are left from the user's original signup trial. This ensures they're charged
+    // on the same date regardless of when they upgrade.
+    //
+    // Example:
+    //   User signs up: trial_ends_at = May 13
+    //   User upgrades on day 5 (April 18): days_remaining = 25
+    //   Charged: May 13 (same date as if no upgrade)
+    //
+    // Example (expired):
+    //   User signs up: trial_ends_at = May 13
+    //   User upgrades on day 40 (May 23): days_remaining = negative
+    //   Charged: immediately (0 days trial)
     let trialDays: number | undefined
     if (isNewSubscriber) {
       const { data: agencyTrial } = await supabase
@@ -60,6 +73,9 @@ export async function POST(req: NextRequest) {
         const daysRemaining = Math.ceil((trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 
         // Only apply trial if days remaining > 0; otherwise charge immediately
+        // Using Math.max(0, ...) || undefined ensures:
+        // - Positive days: passed to Stripe
+        // - Zero or negative: omitted (Stripe charges immediately)
         trialDays = Math.max(0, daysRemaining) || undefined
       }
     }
