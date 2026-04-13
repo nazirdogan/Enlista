@@ -246,126 +246,291 @@ export default function AuthForm() {
 
   const inputStyle = (hasError: boolean) => hasError ? INPUT_ERROR : INPUT
 
-  // ─── Sign In — centred card (unchanged feel) ──────────────────────────────
+  // ─── Sign In — split layout (matching signup) ───────────────────────────────
   if (tab === 'signin') {
     return (
       <>
         <style>{`
           @keyframes enlista-spin { to { transform: rotate(360deg); } }
-          @media (max-width: 480px) {
-
-            .enlista-signin-wrap { padding: 0 !important; background: #fff !important; align-items: flex-start !important; }
-            .enlista-signin-card { border-radius: 0 !important; border: none !important; min-height: 100vh; padding: 40px 20px 36px !important; }
-            /* Prevent iOS zoom */
-            .enlista-signin-card input[type="email"],
-            .enlista-signin-card input[type="password"],
-            .enlista-signin-card input[type="text"] { font-size: 16px !important; }
-          }
         `}</style>
-      <div
-        className="enlista-signin-wrap"
-        style={{
-        minHeight: '100vh',
-        background: '#F2F4F7',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px 16px',
-      }}>
-        <div
-          className="enlista-signin-card"
-          style={{
-          width: '100%',
-          maxWidth: 440,
-          background: '#FFFFFF',
-          border: '1px solid #DDE3EC',
-          borderRadius: 16,
-          padding: 'clamp(32px, 5vw, 48px)',
-        }}>
-          {/* Wordmark */}
-          <div style={{ textAlign: 'center', marginBottom: 28 }}>
-            <Link href="/" style={{ textDecoration: 'none' }}>
-              <h1 style={{ fontWeight: 800, fontSize: 24, color: '#0F1829', margin: 0 }}>
-                Enlist<span style={{ color: '#1D4ED8' }}>a</span>
-              </h1>
-            </Link>
-            <p style={{ color: '#64748B', fontSize: 14, marginTop: 6, marginBottom: 0 }}>
-              Sign in to your account
-            </p>
-          </div>
 
-          <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <div>
-              <label style={LABEL}>Email</label>
-              <input
-                type="email"
-                value={siEmail}
-                onChange={(e) => setSiEmail(e.target.value)}
-                required
-                autoComplete="email"
-                placeholder="agent@agency.ae"
-                style={INPUT}
-                onFocus={(e) => { e.target.style.borderColor = '#1D4ED8' }}
-                onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
-              />
-            </div>
-            <div>
-              <label style={LABEL}>Password</label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type={siShowPw ? 'text' : 'password'}
-                  value={siPassword}
-                  onChange={(e) => setSiPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  style={{ ...INPUT, paddingRight: 44 }}
-                  onFocus={(e) => { e.target.style.borderColor = '#1D4ED8' }}
-                  onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
-                />
+        <div className="flex flex-col md:flex-row" style={{ minHeight: '100vh' }}>
+
+          {/* ── Dark panel ───────────────────────────────────────────────── */}
+          <div className="w-full md:w-[55%]" style={{ background: '#0F1829' }}>
+
+            {/* MOBILE ONLY: compact header — wordmark + tagline + trust */}
+            <div
+              className="flex flex-col md:hidden"
+              style={{ padding: '28px 24px 22px', position: 'relative', overflow: 'hidden' }}
+            >
+              {/* Subtle glow */}
+              <div style={{
+                position: 'absolute', top: -60, right: -60,
+                width: 200, height: 200, borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(29,78,216,0.2) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }} />
+              {/* Top row: wordmark + sign up link */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+                <Link href="/" style={{ textDecoration: 'none' }}>
+                  <span style={{ fontWeight: 800, fontSize: 20, color: '#fff', letterSpacing: '-0.3px' }}>
+                    Enlist<span style={{ color: '#3B82F6' }}>a</span>
+                  </span>
+                </Link>
                 <button
-                  type="button"
-                  onClick={() => setSiShowPw(!siShowPw)}
+                  onClick={() => switchTab('signup')}
                   style={{
-                    position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', padding: 0,
+                    background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: 6, color: '#93C5FD', cursor: 'pointer',
+                    fontWeight: 600, fontSize: 12, padding: '5px 12px', fontFamily: 'inherit',
                   }}
-                  aria-label={siShowPw ? 'Hide password' : 'Show password'}
                 >
-                  {siShowPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  Sign up
                 </button>
               </div>
+              {/* Tagline */}
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '0 0 8px', letterSpacing: '-0.4px', lineHeight: 1.2 }}>
+                Less typing. More viewings.
+              </h2>
+              <p style={{ fontSize: 13, color: '#94A3B8', margin: '0 0 14px', lineHeight: 1.5 }}>
+                AI listing descriptions for UAE real estate — bilingual, in seconds.
+              </p>
+              {/* Trust badges */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 14px' }}>
+                {TRUST.map((t) => (
+                  <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <CheckCircle2 size={11} color="#22C55E" />
+                    <span style={{ fontSize: 11, color: '#64748B' }}>{t}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <button
-              type="submit"
-              disabled={loading || !siEmail || !siPassword}
+
+            {/* DESKTOP ONLY: full info panel */}
+            <div
+              className="hidden md:flex flex-col justify-between"
               style={{
-                width: '100%', background: '#1D4ED8', color: 'white',
-                padding: '13px', borderRadius: 6, border: 'none',
-                fontSize: 14, fontWeight: 600,
-                cursor: loading || !siEmail || !siPassword ? 'not-allowed' : 'pointer',
-                opacity: loading || !siEmail || !siPassword ? 0.5 : 1,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                fontFamily: 'inherit', transition: 'opacity 0.15s',
+                height: '100%',
+                minHeight: '100vh',
+                padding: 'clamp(40px, 6vw, 64px)',
+                position: 'relative',
+                overflow: 'hidden',
               }}
             >
-              {loading
-                ? <><Loader2 style={{ width: 16, height: 16, animation: 'enlista-spin 1s linear infinite' }} />Signing In...</>
-                : 'Sign In →'}
-            </button>
-          </form>
+              {/* Subtle background glow */}
+              <div style={{
+                position: 'absolute', top: -120, right: -120,
+                width: 400, height: 400, borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(29,78,216,0.18) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }} />
 
-          <p style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: '#64748B', marginBottom: 0 }}>
-            Don&apos;t have an account?{' '}
-            <button
-              onClick={() => switchTab('signup')}
-              style={{ background: 'none', border: 'none', color: '#1D4ED8', cursor: 'pointer', fontWeight: 600, fontSize: 13, padding: 0, fontFamily: 'inherit' }}
-            >
-              Start free trial
-            </button>
-          </p>
+              <div>
+                {/* Wordmark */}
+                <Link href="/" style={{ textDecoration: 'none', display: 'inline-block', marginBottom: 48 }}>
+                  <span style={{ fontWeight: 800, fontSize: 22, color: '#FFFFFF', letterSpacing: '-0.3px' }}>
+                    Enlist<span style={{ color: '#3B82F6' }}>a</span>
+                  </span>
+                </Link>
+
+                {/* Hero copy */}
+                <h2 style={{
+                  fontSize: 'clamp(26px, 3.5vw, 38px)', fontWeight: 800,
+                  color: '#FFFFFF', lineHeight: 1.2, margin: '0 0 12px', letterSpacing: '-0.5px',
+                }}>
+                  Less typing.<br />More viewings.
+                </h2>
+                <p style={{ fontSize: 16, color: '#94A3B8', margin: '0 0 44px', lineHeight: 1.6 }}>
+                  AI listing descriptions built specifically for UAE real estate. Bilingual, branded, and done in seconds.
+                </p>
+
+                {/* Features */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 44 }}>
+                  {FEATURES.map(({ Icon, title, desc }) => (
+                    <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                      <div style={{
+                        flexShrink: 0, width: 36, height: 36, borderRadius: 8,
+                        background: 'rgba(59,130,246,0.15)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 1,
+                      }}>
+                        <Icon size={17} color="#3B82F6" />
+                      </div>
+                      <div>
+                        <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#F1F5F9' }}>{title}</p>
+                        <p style={{ margin: '3px 0 0', fontSize: 13, color: '#94A3B8', lineHeight: 1.5 }}>{desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Sample output card */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 12, padding: '18px 20px', marginBottom: 36,
+                }}>
+                  <p style={{ margin: '0 0 10px', fontSize: 11, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    Sample output
+                  </p>
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ margin: '0 0 4px', fontSize: 11, color: '#64748B' }}>You type</p>
+                      <p style={{ margin: 0, fontSize: 12, color: '#94A3B8', lineHeight: 1.5 }}>
+                        2BR, JVC, 1.1M AED, pool view, modern kitchen
+                      </p>
+                    </div>
+                    <div style={{ color: '#3B82F6', fontSize: 16, marginTop: 16, flexShrink: 0 }}>→</div>
+                    <div style={{ flex: 1.2 }}>
+                      <p style={{ margin: '0 0 4px', fontSize: 11, color: '#64748B' }}>Enlista outputs</p>
+                      <p style={{ margin: 0, fontSize: 12, color: '#E2E8F0', lineHeight: 1.5 }}>
+                        &ldquo;Stunning 2BR in JVC with pool views &amp; a sleek open kitchen — priced at AED 1.1M.&rdquo;
+                      </p>
+                      <p style={{ margin: '6px 0 0', fontSize: 11, color: '#3B82F6' }}>+ Arabic version included</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Testimonial */}
+                <div style={{ borderLeft: '3px solid #3B82F6', paddingLeft: 16 }}>
+                  <p style={{ margin: '0 0 6px', fontSize: 14, color: '#E2E8F0', lineHeight: 1.6, fontStyle: 'italic' }}>
+                    &ldquo;Two days to four minutes. That&apos;s a 720× improvement in our listing workflow.&rdquo;
+                  </p>
+                  <p style={{ margin: 0, fontSize: 12, color: '#64748B', fontWeight: 600 }}>
+                    Head of Operations, Dubai brokerage
+                  </p>
+                </div>
+              </div>
+
+              {/* Trust strip */}
+              <div style={{
+                display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginTop: 40,
+                paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.07)',
+              }}>
+                {TRUST.map((t) => (
+                  <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <CheckCircle2 size={13} color="#22C55E" />
+                    <span style={{ fontSize: 12, color: '#64748B' }}>{t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── Form panel ───────────────────────────────────────────────── */}
+          <div
+            className="w-full md:w-[45%] flex items-center justify-center"
+            style={{
+              background: '#F8FAFC',
+              padding: 'clamp(24px, 4vw, 56px) clamp(20px, 4vw, 48px)',
+            }}
+          >
+            <div style={{ width: '100%', maxWidth: 400 }}>
+
+              {/* Heading — desktop only (mobile gets wordmark+tagline from dark panel above) */}
+              <div className="hidden md:block" style={{ marginBottom: 32 }}>
+                <h2 style={{ fontSize: 26, fontWeight: 800, color: '#0F1829', margin: '0 0 8px', letterSpacing: '-0.4px' }}>
+                  Sign in
+                </h2>
+                <p style={{ fontSize: 14, color: '#64748B', margin: 0 }}>
+                  Welcome back
+                </p>
+              </div>
+
+              {/* Mobile heading — shorter, no redundant subtext */}
+              <div className="block md:hidden" style={{ marginBottom: 20 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0F1829', margin: '0 0 4px', letterSpacing: '-0.3px' }}>
+                  Sign in
+                </h2>
+                <p style={{ fontSize: 13, color: '#64748B', margin: 0 }}>
+                  To your account
+                </p>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {/* Email */}
+                <div>
+                  <label style={LABEL}>Email</label>
+                  <input
+                    type="email"
+                    value={siEmail}
+                    onChange={(e) => setSiEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    placeholder="you@agency.ae"
+                    style={{ ...INPUT, fontSize: 16 }}
+                    onFocus={(e) => { e.target.style.borderColor = '#1D4ED8' }}
+                    onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
+                  />
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label style={LABEL}>Password</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type={siShowPw ? 'text' : 'password'}
+                      value={siPassword}
+                      onChange={(e) => setSiPassword(e.target.value)}
+                      required
+                      autoComplete="current-password"
+                      placeholder="••••••••"
+                      style={{ ...INPUT, paddingRight: 44, fontSize: 16 }}
+                      onFocus={(e) => { e.target.style.borderColor = '#1D4ED8' }}
+                      onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSiShowPw(!siShowPw)}
+                      style={{
+                        position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                        background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', padding: 0,
+                      }}
+                      aria-label={siShowPw ? 'Hide password' : 'Show password'}
+                    >
+                      {siShowPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading || !siEmail || !siPassword}
+                  style={{
+                    width: '100%', background: '#1D4ED8', color: 'white',
+                    padding: '13px', borderRadius: 8, border: 'none',
+                    fontSize: 15, fontWeight: 700,
+                    cursor: loading || !siEmail || !siPassword ? 'not-allowed' : 'pointer',
+                    opacity: loading || !siEmail || !siPassword ? 0.5 : 1,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    fontFamily: 'inherit', transition: 'opacity 0.15s', marginTop: 4,
+                  }}
+                >
+                  {loading
+                    ? <><Loader2 style={{ width: 16, height: 16, animation: 'enlista-spin 1s linear infinite' }} />Signing In...</>
+                    : 'Sign in →'}
+                </button>
+              </form>
+
+              {/* Footer */}
+              <p style={{ marginTop: 16, textAlign: 'center', fontSize: 13, color: '#64748B', marginBottom: 0 }}>
+                Don&apos;t have an account?{' '}
+                <button
+                  onClick={() => switchTab('signup')}
+                  style={{
+                    background: 'none', border: 'none', color: '#1D4ED8',
+                    cursor: 'pointer', fontWeight: 600, fontSize: 13,
+                    padding: 0, fontFamily: 'inherit',
+                  }}
+                >
+                  Start free trial
+                </button>
+              </p>
+
+            </div>
+          </div>
+
         </div>
-      </div>
       </>
     )
   }
