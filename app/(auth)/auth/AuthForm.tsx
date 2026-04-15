@@ -72,7 +72,7 @@ export default function AuthForm() {
   const tabParam = searchParams.get('tab')
   const [tab, setTab] = useState<Tab>(tabParam === 'signin' ? 'signin' : 'signup')
   const [loading, setLoading] = useState(false)
-  const [welcoming, setWelcoming] = useState(false)
+  const [welcomeMode, setWelcomeMode] = useState<'signup' | 'signin' | null>(null)
   const [sessionChecked, setSessionChecked] = useState(false)
 
   // Sign-in state
@@ -149,6 +149,7 @@ export default function AuthForm() {
         document.cookie = rememberMe
           ? `enlista_persistent=1; path=/; max-age=31536000; SameSite=Lax${window.location.protocol === 'https:' ? '; Secure' : ''}`
           : 'enlista_persistent=; path=/; max-age=0; SameSite=Lax'
+        setWelcomeMode('signin')
         router.push('/dashboard')
         router.refresh()
       }
@@ -202,7 +203,7 @@ export default function AuthForm() {
         console.error('Agency creation error:', agencyError)
       }
 
-      setWelcoming(true)
+      setWelcomeMode('signup')
 
       // Fire Meta pixel StartTrial conversion event
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -248,7 +249,10 @@ export default function AuthForm() {
     }
   }
 
-  if (welcoming) {
+  if (welcomeMode) {
+    const subtitle = welcomeMode === 'signup'
+      ? 'Setting up your account and getting your dashboard ready…'
+      : 'Signing you in and loading your dashboard…'
     return (
       <>
         <style>{`
@@ -348,7 +352,7 @@ export default function AuthForm() {
                 lineHeight: 1.5,
               }}
             >
-              Setting up your account and getting your dashboard ready…
+              {subtitle}
             </p>
           </div>
         </div>

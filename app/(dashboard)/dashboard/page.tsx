@@ -68,47 +68,9 @@ export default async function DashboardPage() {
         }
       />
 
-      {/* Stat row */}
-      <div style={{ display: 'grid', gap: 16, marginBottom: 24 }} className="grid-cols-1 sm:grid-cols-2">
-        {/* Total Listings */}
-        <BentoCard>
-          <p style={{ fontSize: 12, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Total Listings</p>
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10 }}>
-            <span style={{ fontSize: 40, fontWeight: 800, color: '#0F1829', lineHeight: 1, fontFamily: '"JetBrains Mono", monospace' }}>{totalCount ?? 0}</span>
-            <Badge variant="green" style={{ marginBottom: 4 }}>+18%</Badge>
-          </div>
-        </BentoCard>
-
-        {/* Published */}
-        <BentoCard>
-          <p style={{ fontSize: 12, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Published</p>
-          <span style={{ fontSize: 40, fontWeight: 800, color: '#0F1829', lineHeight: 1, fontFamily: '"JetBrains Mono", monospace' }}>{publishedCount}</span>
-        </BentoCard>
-      </div>
-
-      {/* Chart card */}
+      {/* Recent listings — moved to top so the "Create First Listing" CTA
+          is the first thing new users see, especially on mobile */}
       <BentoCard style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <h2 style={{ fontWeight: 700, fontSize: 16, color: '#0F1829', margin: 0 }}>Listing Activity</h2>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 80 }}>
-          {months.map((m, i) => (
-            <div key={m.label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <div style={{
-                width: '100%',
-                height: `${(m.count / maxMonthCount) * 64 + 4}px`,
-                background: i === months.length - 1 ? '#1D4ED8' : 'rgba(59,130,246,0.3)',
-                borderRadius: 4,
-                minHeight: 4,
-              }} />
-              <span style={{ fontSize: 10, color: '#94A3B8' }}>{m.label}</span>
-            </div>
-          ))}
-        </div>
-      </BentoCard>
-
-      {/* Recent listings */}
-      <BentoCard>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ fontWeight: 700, fontSize: 16, color: '#0F1829', margin: 0 }}>Recent Listings</h2>
           <Link href="/listings" style={{ color: '#1D4ED8', textDecoration: 'none', fontSize: 13, fontWeight: 500 }}>
@@ -160,6 +122,45 @@ export default async function DashboardPage() {
             ))}
           </div>
         )}
+      </BentoCard>
+
+      {/* Stat row */}
+      <div style={{ display: 'grid', gap: 16, marginBottom: 24 }} className="grid-cols-1 sm:grid-cols-2">
+        {/* Total Listings */}
+        <BentoCard>
+          <p style={{ fontSize: 12, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Total Listings</p>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10 }}>
+            <span style={{ fontSize: 40, fontWeight: 800, color: '#0F1829', lineHeight: 1, fontFamily: '"JetBrains Mono", monospace' }}>{totalCount ?? 0}</span>
+            <Badge variant="green" style={{ marginBottom: 4 }}>+18%</Badge>
+          </div>
+        </BentoCard>
+
+        {/* Published */}
+        <BentoCard>
+          <p style={{ fontSize: 12, fontWeight: 600, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Published</p>
+          <span style={{ fontSize: 40, fontWeight: 800, color: '#0F1829', lineHeight: 1, fontFamily: '"JetBrains Mono", monospace' }}>{publishedCount}</span>
+        </BentoCard>
+      </div>
+
+      {/* Chart card */}
+      <BentoCard>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <h2 style={{ fontWeight: 700, fontSize: 16, color: '#0F1829', margin: 0 }}>Listing Activity</h2>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 80 }}>
+          {months.map((m, i) => (
+            <div key={m.label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+              <div style={{
+                width: '100%',
+                height: `${(m.count / maxMonthCount) * 64 + 4}px`,
+                background: i === months.length - 1 ? '#1D4ED8' : 'rgba(59,130,246,0.3)',
+                borderRadius: 4,
+                minHeight: 4,
+              }} />
+              <span style={{ fontSize: 10, color: '#94A3B8' }}>{m.label}</span>
+            </div>
+          ))}
+        </div>
       </BentoCard>
     </div>
   )
