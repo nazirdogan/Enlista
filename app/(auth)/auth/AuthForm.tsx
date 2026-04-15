@@ -72,6 +72,7 @@ export default function AuthForm() {
   const tabParam = searchParams.get('tab')
   const [tab, setTab] = useState<Tab>(tabParam === 'signin' ? 'signin' : 'signup')
   const [loading, setLoading] = useState(false)
+  const [welcoming, setWelcoming] = useState(false)
   const [sessionChecked, setSessionChecked] = useState(false)
 
   // Sign-in state
@@ -131,7 +132,7 @@ export default function AuthForm() {
     router.replace(`/auth?tab=${t}`)
   }
 
-  const allSignUpFilled = Boolean(fullName && agencyName && workEmail && password && !pwError)
+  const allSignUpFilled = Boolean(fullName && workEmail && password && !pwError)
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -201,7 +202,7 @@ export default function AuthForm() {
         console.error('Agency creation error:', agencyError)
       }
 
-      toast.success('Welcome to Enlista.io')
+      setWelcoming(true)
 
       // Fire Meta pixel StartTrial conversion event
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -245,6 +246,114 @@ export default function AuthForm() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (welcoming) {
+    return (
+      <>
+        <style>{`
+          @keyframes enlista-spin { to { transform: rotate(360deg); } }
+          @keyframes enlista-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes enlista-pulse-ring {
+            0% { transform: scale(0.85); opacity: 0.6; }
+            100% { transform: scale(1.4); opacity: 0; }
+          }
+        `}</style>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: '#0F1829',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            padding: 24,
+            zIndex: 9999,
+            overflow: 'hidden',
+          }}
+        >
+          {/* Background glow */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              top: '-20%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 600,
+              height: 600,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(29,78,216,0.25) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }}
+          />
+
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              animation: 'enlista-fade-in 400ms ease-out',
+            }}
+          >
+            {/* Spinner with pulse ring */}
+            <div style={{ position: 'relative', width: 64, height: 64, marginBottom: 28 }}>
+              <div
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: '50%',
+                  background: 'rgba(59, 130, 246, 0.25)',
+                  animation: 'enlista-pulse-ring 1.8s ease-out infinite',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Loader2
+                  size={40}
+                  color="#3B82F6"
+                  style={{ animation: 'enlista-spin 1s linear infinite' }}
+                />
+              </div>
+            </div>
+
+            <span
+              style={{
+                fontWeight: 800,
+                fontSize: 28,
+                color: '#FFFFFF',
+                letterSpacing: '-0.5px',
+                marginBottom: 12,
+              }}
+            >
+              Welcome to Enlist<span style={{ color: '#3B82F6' }}>a</span>
+            </span>
+            <p
+              style={{
+                fontSize: 15,
+                color: '#94A3B8',
+                margin: 0,
+                maxWidth: 360,
+                lineHeight: 1.5,
+              }}
+            >
+              Setting up your account and getting your dashboard ready…
+            </p>
+          </div>
+        </div>
+      </>
+    )
   }
 
   if (!sessionChecked) return null
@@ -783,14 +892,16 @@ export default function AuthForm() {
 
               {/* Agency name */}
               <div>
-                <label style={LABEL}>Agency Name</label>
+                <label style={LABEL}>
+                  Agency or brokerage{' '}
+                  <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: '#94A3B8' }}>(optional)</span>
+                </label>
                 <input
                   type="text"
                   value={agencyName}
                   onChange={(e) => setAgencyName(e.target.value)}
-                  required
                   autoComplete="organization"
-                  placeholder="Prestige Properties Dubai"
+                  placeholder="Independent agent? Leave blank"
                   style={{ ...INPUT, fontSize: 16 }}
                   onFocus={(e) => { e.target.style.borderColor = '#1D4ED8' }}
                   onBlur={(e) => { e.target.style.borderColor = '#DDE3EC' }}
